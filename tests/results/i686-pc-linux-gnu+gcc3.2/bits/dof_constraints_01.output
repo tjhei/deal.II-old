@@ -1,0 +1,7 @@
+
+DEAL::3D
+DEAL::Number of cells: 15
+DEAL::Number of dofs: 46
+DEAL::Number of constraints: 12
+DEAL::|A|=0.00000
+DEAL::|B|=8796.84

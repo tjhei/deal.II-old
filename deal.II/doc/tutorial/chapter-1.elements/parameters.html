@@ -1,0 +1,161 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+<!-- deal.II tutorial template
+     Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de> 1999 
+-->
+
+<title>Parameter Input</title>
+    <link href="../dealtut.css" rel="StyleSheet" title="deal.II Tutorial">
+    <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+    <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
+</head>
+
+<!-- Page Body -->
+<body lang="en">
+
+<h1>Parameter Input</h1>
+
+<p>
+When writing a numerical program you will usually wish to keep it flexible
+with regard to parameter settings and the like. Rewriting a program 
+everytime a parameter changes is ever so annoying.
+For this reason <acronym>deal.II</acronym> provides a class 
+called <code>ParameterHandler</code>. This class enables you to easily
+parse a parameter file and extract the values of the parameters.
+The names and allowed values of the parameters can be defined by you.
+</p>
+
+<p class=example>
+<span class=example>Example:</span>
+We enable a program, that is, the class TestCases that really handles
+everything to read parameters from a file given on the command line.
+Everything that is not strictly relevant to parameter input has been cut out.
+</p>
+
+<pre class=example> 
+<code>
+#include &lt;base/parameter_handler.h&gt;
+
+
+#include &lt;fstream&gt;
+#include &lt;cmath&gt;
+#include &lt;cstdlib&gt;
+
+
+
+template &lt;int dim&gt;
+class TestCases : public MultipleParameterLoop::UserClass{
+  public:
+    TestCases ();
+    
+    virtual void declare_parameters (ParameterHandler &amp;prm);
+    virtual void run (ParameterHandler &amp;prm);
+
+};
+
+
+
+template &lt;int dim&gt;
+TestCases&lt;dim&gt;::TestCases () :
+		{};
+
+
+
+template &lt;int dim&gt;
+void TestCases&lt;dim&gt;::declare_parameters (ParameterHandler &amp;prm) {
+  if (dim&gt;=2)
+    prm.declare_entry ("Test run", "zoom in",
+		       Patterns::Sequence("zoom in|ball|curved line|random"));
+  else
+    prm.declare_entry ("Test run", "zoom in",
+		       Patterns::Sequence("zoom in|random"));
+  prm.declare_entry ("Grid file", "grid.1");
+  prm.declare_entry ("Sparsity file", "sparsity.1");
+  prm.declare_entry ("Condensed sparsity file", "sparsity.c.1");
+};
+
+
+
+template &lt;int dim&gt;
+void TestCases&lt;dim&gt;::run (ParameterHandler &amp;prm) {
+  cout &lt;&lt; "Test case = " &lt;&lt; prm.get ("Test run") &lt;&lt; endl
+       &lt;&lt; endl;
+  
+  cout &lt;&lt; "    Making grid..." &lt;&lt; endl;
+
+  string test = prm.get ("Test run");
+  unsigned int test_case;
+  if (test=="zoom in") test_case = 1;
+  else
+    if (test=="ball") test_case = 2;
+    else
+      if (test=="curved line") test_case = 3;
+      else
+	if (test=="random") test_case = 4;
+	else
+	  cerr &lt;&lt; "This test seems not to be implemented!" &lt;&lt; endl;
+  
+  
+  switch (test_case) 
+    {
+      case 1:  // code for case 1: zoom in
+      case 2:  // code for case 2: ball
+      case 3:  // code for case 3: curved line
+      case 4:  // code for case 4: random
+    };
+
+  cout &lt;&lt; "    Writing grid..." &lt;&lt; endl;
+  ofstream out(prm.get("Grid file").c_str());
+  // code for output
+
+};
+
+
+
+int main (int argc, char **argv) {
+  if (argc!=2) 
+    {
+      cout &lt;&lt; "Usage: grid_test parameterfile" &lt;&lt; endl &lt;&lt; endl;
+      return 1;
+    };
+
+  TestCases&lt;2&gt; tests;
+  class MultipleParameterLoop input_data;   //needs at least gcc2.8
+
+  tests.declare_parameters(input_data);
+  input_data.read_input (argv[1]);
+  input_data.loop (tests);
+  
+  return 0;
+};
+</code>
+</pre>
+
+<!-- Page Foot -->
+<hr>
+<table class="navbar">      
+<tr>
+<!-- This is the last chapter.
+  <td>
+    <a href="URLS_NEEDS_TO_BE_SET">Next Chapter: </a>
+  </td>
+-->
+  <td>
+    <a href="toc.html">Back to this chapter's index</a>
+  </td>
+  <td>
+    <a href="../index.html" target="_top">Back to the tutorial index</a>
+  </td>
+</tr>
+</table>
+<hr>
+<address>
+<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<p>
+Last modified: $Date$ 
+</p>
+</body>
+</html>

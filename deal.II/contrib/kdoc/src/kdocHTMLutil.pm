@@ -715,11 +715,11 @@ sub deref
 sub encodeURL
 {
 	my $url = shift;
-	$url =~ s/:/%3A/g;
-	$url =~ s/</%3C/g;
-	$url =~ s/>/%3E/g;
-	$url =~ s/ /%20/g;
-	$url =~ s/%/%25/g;
+	$url =~ s/%/\@25/g;
+	$url =~ s/:/\@3A/g;
+	$url =~ s/</\@3C/g;
+	$url =~ s/>/\@3E/g;
+	$url =~ s/ /\@20/g;
 
 	return $url;
 }

@@ -1,0 +1,701 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Using Modern Features of C++ for Adaptive Finite Element Methods: Dimension-Independent Programming in deal.II</TITLE>
+<META NAME="description" CONTENT="Using Modern Features of C++ for Adaptive Finite Element Methods: Dimension-Independent Programming in deal.II">
+<META NAME="keywords" CONTENT="imacs">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="imacs.css">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/data/allarch/usr/latex2html/icons.gif/next_motif_gr.gif"> 
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/data/allarch/usr/latex2html/icons.gif/up_motif_gr.gif"> 
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/data/allarch/usr/latex2html/icons.gif/previous_motif_gr.gif">   
+<BR>
+<BR><BR>
+<!--End of Navigation Panel-->
+
+<P>
+<FONT SIZE="-1">(Taken from the Proceedings of the 16th IMACS World Congress,
+  Lausanne, Switzerland, 2000)</FONT>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+
+<P>
+
+<P>
+<H1 ALIGN="CENTER">Using Modern Features of C++ for Adaptive Finite Element Methods:
+  Dimension-Independent Programming in deal.II</H1>
+<P ALIGN="CENTER">
+   <STRONG>Wolfgang Bangerth</STRONG>
+</p>
+
+<P ALIGN="CENTER">
+   Institute of Applied Mathematics,
+     University of Heidelberg, Germany. 
+   <br>
+  Email:
+  wolfgang.bangerth@iwr.uni-heidelberg.de
+</P>
+
+<P ALIGN="CENTER"></P>
+<P ALIGN="LEFT"></P>
+
+<P>
+
+<H3>Abstract:</H3>
+<DIV>Modern finite element software tends to become increasingly complex.
+  Techniques like adaptive meshes, error estimation, multigrid methods, or
+  <I>hp</I> finite elements require the programmer to work with extremely
+  complicated data structures and sophisticated algorithms. Designing programs
+  in a maintainable and expandable way while retaining run time efficiency has
+  therefore become a major task in applied numerical analysis. In our
+  experience, this task can only be fulfilled by using modern programming
+  languages and tools.
+  
+  We will show how modern aspects of the C++ programming language, in
+  particular templates, can be used to write algorithms for finite element
+  programs in a dimension-independent way. This enables us to test algorithms
+  in one or two space dimensions while using the same program for large scale
+  computations in three space dimensions as well. It will be demonstrated that
+  this is even possible without much loss in efficiency since tests for the
+  actual space dimension at run time can almost completely be avoided.
+
+<P>
+The idiom above is one of several modern aspects of C++ used in the design
+  of the finite element library <TT>deal.II</TT> developed at the University
+  of Heidelberg. We will give a sketch of its implementation and examples how
+  it is used.
+</DIV>
+<P>
+<P>
+<DL>
+<DT><STRONG>Key words:</STRONG>
+<DD>C++, Adaptive Finite Element Methods, 
+Dimension-Independent Programming.</DL>
+<P>
+
+<H1><A NAME="SECTION00010000000000000000">
+Introduction</A>
+</H1>
+
+<P>
+Developing modern finite element codes involves a significant amount of
+software management tasks. While computations on uniform grids using
+multi-linear elements can be done with programs with a few hundred lines
+of code and in almost any programming language, it is already a non-trivial
+task to write a multigrid solver on uniformly refined grids. Due to the
+relatively simple data structures possible for globally refined grids, such
+codes have most often been written in Fortran and comprise several thousands
+to a few ten thousands of lines of code. On the other hand, modern finite
+element codes offering adaptively refined grids, various different finite
+elements and support for a variety of applications in several different space
+dimensions, can quickly exceed 100.000 lines of code.  Most libraries offering
+support for these topics are written in either C++ or Java (there are too
+many finite element packages written in these languages to give a
+comprehensive list; we refer the reader to [<A
+ HREF="index.html#FEMLists">1</A>] for an overview).
+
+<P>
+C++ and Java are often selected due to the lack of support for
+complex and indirected data structure in Fortran 77. However, they also offer
+far better support for the software management challenges involved with
+packages of this size. For example, object orientation and generic
+programming allow for code reuse. 
+
+<P>
+In this paper, we will discuss an approach to use certain features of C++ to
+enable the programmer to write library components and applications in a way
+that is essentially dimension-independent. The reasons for such an approach
+are two-fold: first, three-dimensional simulations are computationally
+expensive; developing algorithms in two-dimensional programs that can then be
+simply re-compiled for 3D saves significant parts of the development time
+since such programs need not be written twice. Secondly, it is often simpler
+to transfer mathematical ideas into programs if we can think in terms of
+<I>cells</I> and <I>faces</I>, for example, rather than
+<I>quadrilaterals</I> and <I>lines</I>. This is due to the fact that one
+usually develops finite element theory in a dimension-independent way. For
+instance, assembling a matrix (here for Laplace equation) is usually written
+as 
+<!-- MATH: $A_{ij} = \left(\nabla \varphi_i,\nabla \varphi_j\right)_\Omega = \sum_K
+\left(\nabla \varphi_i,\nabla \varphi_j\right)_K,$ -->
+<IMG
+ WIDTH="287" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ A_{ij} = \left(\nabla \varphi_i,\nabla \varphi_j\right)_\Omega = \sum_K
+\left(\nabla \varphi_i,\nabla \varphi_j\right)_K, $">
+where 
+<!-- MATH: $\Omega\subset R^d$ -->
+<IMG
+ WIDTH="56" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.gif"
+ ALT="$\Omega\subset R^d$">is the domain and <I>K</I> are the <I>cells</I> of a triangulation of
+<IMG
+ WIDTH="15" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img3.gif"
+ ALT="$\Omega$">.
+Likewise, error indicators are often evaluated by integration over
+<I>faces</I> of cells. To name only one simple example, the error indicator
+by Kelly <I>et al.</I> [<A
+ HREF="index.html#KGZB83">5</A>] has the form
+<BR><P></P>
+<DIV ALIGN="CENTER">
+
+<!-- MATH: \begin{equation}
+\eta_K^2 =
+  \frac h{24}
+  \left\|\left[\partial_n u_h\right]\right\|^2_{\partial K},
+\end{equation} -->
+
+<TABLE WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD WIDTH=10 ALIGN="LEFT">
+(1)</TD>
+<TD ALIGN="CENTER" NOWRAP><A NAME="eq:kelly">&#160;</A><IMG
+ WIDTH="149" HEIGHT="39"
+ SRC="img4.gif"
+ ALT="\begin{displaymath}
+\eta_K^2 =
+\frac h{24}
+\left\Vert\left[\partial_n u_h\right]\right\Vert^2_{\partial K},
+\end{displaymath}"></TD>
+</TR></TABLE>
+</DIV><BR CLEAR="ALL"><P></P>
+where 
+<!-- MATH: $\partial K$ -->
+<IMG
+ WIDTH="27" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img5.gif"
+ ALT="$\partial K$">
+is the boundary of a cell, which is the union of its faces,
+and 
+<!-- MATH: $\left[\partial_n u_h\right]$ -->
+<IMG
+ WIDTH="47" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img6.gif"
+ ALT="$\left[\partial_n u_h\right]$">
+denotes the jump of the normal derivative of
+the numerical solution <I>u</I><SUB><I>h</I></SUB> at the interface of two cells. It is simpler to
+implement such formulas if the programming idiom supports translating them
+into code in a one-to-one manner. How such a style is implemented in the
+deal.II finite element library (see [<A
+ HREF="index.html#BK99tr">2</A>,<A
+ HREF="index.html#BK99m">3</A>]) will be the subject
+of this paper.
+
+<P>
+The layout of the remainder of this paper is as follows: in Section 2, a brief
+introduction into <I>templates</I> in C++ is given. In Section 3, we explain
+the basics of the use of templates for dimension-independent programming in
+deal.II. Section 4 details how so-called <I>traits classes</I> can be used
+to make dimension-independent programming transparent, and Section 5 shows
+applications of dimension-independent programming.
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Templates in C++</A>
+</H1>
+
+<P>
+Templates are a way by which generic programs can be written in 
+C++ (see [<A
+ HREF="index.html#Str97">6</A>]). For example, a function template might look like this:
+<PRE>
+  template &lt;typename number&gt;
+  number sqr (const number x) { return x*x; };
+</PRE>This template specifies a family of functions that return the square of
+its argument. It is <I>not</I> a function in itself,
+since the data types of the parameter and the return value are not
+fixed. However, it is a template from which the compiler can <I>generate</I>
+a function, if it is told to identify the template type name <TT>number</TT>
+with an actual data type. For example, let <TT>x</TT> be a variable of type
+<TT>double</TT>, then calling <TT>sqr(x)</TT> will lead to the following
+actions on the compiler's side:
+<UL>
+<LI>Look up whether there is a function <TT>sqr(double)</TT>.
+<LI>Look up whether there is a template function from which a function
+  <TT>sqr(double)</TT> can be generated by identifying template types with the
+  types of the arguments; this is the case here, since by matching
+  <TT>number</TT> with <TT>double</TT>, we can obtain a function <TT>sqr</TT>
+  that takes a variable of type <TT>double</TT>; this also fixes the return
+  type of the function. Only now has the template become an actual function
+  with known types and can be compiled.
+<LI>If later we call <TT>sqr(i)</TT> with a variable <TT>i</TT> of type
+  <TT>int</TT>, a second instance of the template is generated and compiled,
+  for which <TT>number</TT> is identified with <TT>int</TT>.
+</UL>It is noted that at the time of compilation, all data types are known and the
+compiler is therefore able to optimize in the same way as if we had written
+the code for variables of type <TT>double</TT> and <TT>int</TT> into separate
+functions. In particular, no run time checks are necessary when using
+templates over regular functions. Templates therefore allow to avoid code
+duplication without penalizing performance, and thus simplify management of
+complex software.
+
+<P>
+Just as for functions, C++ allows the declaration of templatized data types. A
+typical example is an array of elements of a data type that is only
+fixed later. For simplicity, we show how a vector with three elements
+could look like:
+<PRE>
+  template &lt;typename number&gt;
+  class Vector3 {
+    number elements[3];
+    ... // other member variables and functions
+  };
+</PRE>If later we want to use such a data type for a variable, we have to specify
+which data types the elements of the vector shall have:
+<PRE>
+  Vector3&lt;double&gt; double_vector;
+</PRE>Unlike in the case of function templates, we have to specify the data type
+explicitely, with which <TT>number</TT> shall be identified. The reason, of
+course, is that upon declaration we have to specify a full data type, while
+when calling a function the data type of the parameters are already known, so
+the compiler can usually deduce the function template types from the parameter
+types. 
+
+<P>
+Here, again, at the time we write the declaration of <TT>double_vector</TT>,
+the compiler knows all data types and can compile the template class
+<TT>Vector3</TT> into a true data type; a variable of type
+<TT>Vector3&lt;double&gt;</TT> will thus have a size of 24 bytes, while a
+<TT>Vector3&lt;char&gt;</TT> will only take three bytes. Furthermore, the compiler
+is able to optimize accesses to elements of the vector, since the offsets of
+the data elements are known at compile time due to the fact that the size of
+the elements is available.
+
+<P>
+For later reference, we note that template classes can be specialized. For
+example, it is wasteful to store boolean values in classes like
+<TT>Vector3</TT> above, since one could as well store the three values as a
+bit field. This does not require us to introduce another concept, since C++
+allows us to specialize <TT>Vector3&lt;bool&gt;</TT>:
+<PRE>
+  template &lt;&gt;
+  class Vector3&lt;bool&gt; {
+    char bitfield;
+    ...
+  };
+</PRE>Whenever an object of type <TT>Vector3&lt;bool&gt;</TT> is required, this
+specialization is used, while in all other cases, the general template is
+taken. It is noted that the specialization needs not have the same functions
+and member variables; the general template and the specialization are entirely
+separate entities that happen to have the same name. 
+
+<P>
+One of the less well known features of C++ which we will use extensively
+below, is that C++ also allows template parameters to be integral values
+rather than types. For example, assume we want a vector of variable length,
+for which the length is known at compile time, however. Then, the following
+class template might be useful:
+<PRE>
+  template &lt;unsigned int N&gt;
+  class Vector {
+    double elements[N];
+    ...
+  };
+</PRE>If we now declare a variable of type <TT>Vector&lt;3&gt;</TT>, the compiler will
+instantiate an actual class from the template which has exactly three
+elements. Again, at the time the class is compiled, the size is known and the
+compiler can optimize computations involving the template parameter
+<TT>N</TT>. If the class above had a function that computes the square of the
+<I>l</I><SUB>2</SUB>-norm of this vector, it would probably look like this:
+<PRE>
+  template &lt;unsigned int N&gt;
+  double Vector&lt;N&gt;::norm_square () const {
+    double tmp = 0;
+    for (unsigned int i=0; i&lt;N; ++i) tmp += sqr(elements[i]);
+    return tmp;
+  };
+</PRE>A good compiler will usually unroll the loop if <TT>N</TT> is small, since
+then the overhead of the loop is significant. The compiler can do so, since
+the length of the loop is known at compile time, and most modern compilers
+actually perform this optimization.
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+Value templates in deal.II</A>
+</H1>
+
+<P>
+Within the deal.II finite element library, extensive use is made of value
+templates as shown above. At the foundation of the library, there exists a
+template class <TT>Point&lt;dim&gt;</TT> very much like the <TT>Vector&lt;N&gt;</TT>
+above. It denotes a point in a <TT>dim</TT>-dimensional space. Starting from
+this class, a first step towards a triangulation of lines, quadrilaterals, or
+hexahedrons (depending on the dimension we work in) could be the following
+class:
+<PRE>
+  template &lt;int dim&gt;
+  class Cell {
+    Point&lt;dim&gt; vertices[1&lt;&lt;dim];
+    ...
+  };
+</PRE>Here, each cell stores the coordinates in <TT>dim</TT>-dimensional space of
+its 
+<!-- MATH: $\mbox{\texttt{1<<dim}}=2^{dim}$ -->
+<IMG
+ WIDTH="106" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img8.gif"
+ ALT="$\mbox{\texttt{1<<dim}}=2^{dim}$">
+vertices. A simple triangulation would
+contain a list of cells:
+<PRE>
+  template &lt;int dim&gt;
+  class Triangulation {
+    list&lt;Cell&lt;dim&gt; &gt; cells;
+  };
+</PRE><TT>list</TT>, like the <TT>Vector3</TT> above, is another data type that
+accepts the type of the elements it should store as template parameter.
+
+<P>
+In fact, the data types describing a triangulation in deal.II are much more
+complicated than shown here. For example, rather than a <TT>Cell</TT> data
+type, we have classes that describe objects of dimension <TT>structdim</TT> in a
+space of dimension <TT>spacedim</TT>:
+<PRE>
+  template &lt;int structdim, int spacedim&gt;
+  class TriaObject {
+    Point&lt;spacedim&gt; vertex (unsigned int vertex_number);
+    ...
+  };
+</PRE>An object of type <TT>TriaObject&lt;2,3&gt;</TT> would thus describe a quadrilateral
+in a three-dimensional domain, i.e. a face of a cell. It has a function that
+returns the positions of one of the vertices (which are of data type
+<TT>Point&lt;spacedim&gt;</TT>), and it could also have a function that returns a
+pointer to one of its faces, which itself is of type
+<TT>TriaObject&lt;structdim-1, spacedim&gt;</TT>.
+
+<P>
+For cells, the structural dimension is the same as the one of the embedding
+space. Furthermore, in a triangulation they have more properties than other
+objects of arbitrary dimension; for example, they have a fixed number of
+neighbors. It might therefore be useful to derive the cell class from the
+class with <TT>structdim</TT> equal to <TT>spacedim</TT>:
+<PRE>
+  template &lt;int spacedim&gt;
+  class Cell : public TriaObject&lt;spacedim,spacedim&gt; {
+    Cell&lt;spacedim&gt; *                  neighbor (unsigned int number_of_neighbor);
+    TriaObject&lt;spacedim-1,spacedim&gt; * face (unsigned int number_of_face);
+  };
+</PRE>It is stressed again that at the time of compilation all template
+parameters are known, such that no run time checks on their values have to be
+performed. Furthermore, all data types are exactly known, so no casting from
+abstract base classes to actual classes is necessary, thus enhancing type
+safety and by this improving maintainability of the code.
+
+<P>
+Rather than the pointers to cells and faces above, deal.II uses iterators.
+These are principally like pointers, but are significantly more flexible. In
+particular, while the operator <TT>++</TT> applied to a pointer moves it to
+the next consecutive element in memory, an iterator may overload that operator
+to let the result point to any other reasonable location in memory, usually where
+the next cell is located (which may not be the consecutively next location in
+memory). In deal.II, iterators are also used to present different views on
+objects. For example, we have iterators to cells which move to
+the next cell when increased, but also iterators to <I>active</I> cells
+which move to the next cell that is not refined any further; for the latter
+operation, it might be necessary to skip several non-active cells in between.
+Although the iterators operate on the same objects, their ranges represent
+different parts of the collection of cells.
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Traits classes</A>
+</H1>
+
+<P>
+Using classes like <TT>TriaObject&lt;2,3&gt;</TT> is unhandy, in particular since in
+actual implementations, there are several such classes, and changes to the
+internals of the library might require changes to the names or template
+parameters of these classes. Also, in deal.II iterators to other objects are
+declared using a complex framework of templates; for example, an iterator to
+active quadrilaterals might be of type <TT>TriaActiveIterator&lt;2,Cell&lt;2&gt; &gt;</TT>
+or <TT>TriaActiveIterator&lt;3,TriaObject&lt;2,3&gt; &gt;</TT>, depending on the space
+dimension (here 2 or 3, respectively). Finally, iterators to quadrilaterals
+are pointless in one space dimension.
+
+<P>
+For this reason, deal.II uses <I>traits classes</I>. They are used to
+represent typedefs that bind alias names dimension-dependently to actual
+classes, using explicit specializations of classes. For example, the iterators
+above can be defined as follows, disabling support for faces in 1D and mapping
+cell iterators to the respective classes:
+<BR>
+<BR><HR><P></P>
+<PRE>
+template &lt;&gt; class TriaIteratorTraits&lt;1&gt; {
+  typedef TriaActiveIterator&lt;1,Cell&lt;1&gt; &gt;
+                 active_cell_iterator;
+  typedef void * active_face_iterator;
+};
+</PRE><BR><HR><BR>
+<BR><HR><P></P>
+<PRE>
+template &lt;&gt; class TriaIteratorTraits&lt;2&gt; {
+  typedef TriaActiveIterator&lt;2,Cell&lt;2&gt; &gt;
+                 active_cell_iterator;
+  typedef TriaActiveIterator&lt;2,TriaObject&lt;1,2&gt; &gt;
+                 active_face_iterator;
+};
+</PRE><BR><HR><BR>
+<P>
+This way, we can refer to the type
+<TT>TriaIteratorTraits&lt;dim&gt;::active_cell_iterator</TT> and get whatever
+constitutes an iterator to a cell. Note that in this case, no general template
+was declared since there is nothing that might hold for all dimensions for
+which we have not provided specializations.
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+Applications</A>
+</H1>
+
+<P>
+The intent of traits classes is that we are now in the position to write
+functions like the following, that might for example be used as a simple way
+to output the vertices of all cells:
+<PRE>
+  template &lt;int dim&gt;
+  void write_cells (Triangulation&lt;dim&gt; &amp;tria) {
+    TriaIteratorTraits&lt;dim&gt;::active_cell_iterator cell;
+    for (cell=tria.begin_active(); cell!=tria.end(); ++cell)
+      for (int v=0; v&lt;GeometryInfo&lt;dim&gt;::vertices_per_cell; ++v)
+        cout &lt;&lt; cell-&gt;vertex(v) &lt;&lt; endl;
+  };
+</PRE><BR>
+<TT>GeometryInfo</TT> is another traits class that provides informations such
+as the number of vertices, faces, or children per cell, depending on the space
+dimension denoted by its template argument.
+
+<P>
+Likewise, the main loop to compute the error indicator of Eq.&nbsp;(<A HREF="index.html#eq:kelly"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="/data/allarch/usr/latex2html/icons.gif/cross_ref_motif.gif"></A>)
+could look like this:
+<PRE>
+  template &lt;int dim&gt;
+  void ErrorIndicator&lt;dim&gt;::compute_indicators () {
+    QGauss3&lt;dim-1&gt; quadrature_formula;
+    TriaIteratorTraits&lt;dim&gt;::active_cell_iterator cell;
+    for (cell=tria.begin_active(); cell!=tria.end(); ++cell)
+      for (int f=0; f&lt;GeometryInfo&lt;dim&gt;::faces_per_cell; ++f)
+        integrate_on_face (cell-&gt;face(f), quadrature_formula);
+  };
+</PRE><BR> 
+Note how an object describing a three point Gauss formula for quadrature on
+submanifolds is created. Quadrature formulas are only implemented for 1D and
+are obtained recursively by outer product of <TT>dim-1</TT> and
+one-dimensional formulas in the <TT>dim</TT>-dimensional case.
+
+<P>
+It is stressed that in these example, the actual data type of <TT>cell</TT>
+and <TT>cell-&gt;face()</TT> differs depending on the space dimension of the
+triangulation object, so the actual <TT>vertex()</TT> function that is called
+is also dependent. Finally, the number of vertices we print per cell is
+variable. All this information is available at compile time, however, once the
+compiler generates an actual function from the template, so the compiler may
+choose to unroll the inner loop due to its known length.
+
+<P>
+Although the types of the object we work with are different for different
+space dimensions, we are able to write the function in a dimension-independent
+way. In fact, once dimension-dependent classes such as <TT>TriaObject</TT> or
+<TT>Cell</TT> have been defined, it is possible to write almost all algorithms
+in a dimension-independent way. The actual dimension-dependent core of the
+deal.II library is rather small (less than ten per cent) and almost all recent
+extensions are written dimension-independently.
+
+<P>
+It is clear from the above that all classes and algorithms that might
+have different results in different dimensions will need to depend on the
+dimension being passed as template parameter. However, most of them need still
+to be implemented only once, as a general template, rather than once for every
+space dimension as would be the case with more `traditional' approaches where
+we would have iterator classes <TT>active_cell_iterator_1d</TT>,
+<TT>active_cell_iterator_2d</TT>, etc, and in which algorithms such as the
+one above would be copied with slight modifications to adjust for different
+space dimensions.
+
+<P>
+In our approach, such functions are written only once, since they can get the
+data types (such as iterators) and values (as the number of vertices per cell)
+that actually differ between space dimensions using the traits classes
+explained above. On the other hand, if algorithms really differ between space
+dimensions, we are free to explicitely specialize them. For example, in some
+cases algorithms for one-dimensional problems differ slightly from the general
+case since the faces of cells (i.e. the nodes of the subdivision of the
+interval on which we solve a problem) have no extension. Thus, an algorithm
+implementing Eq.&nbsp;(<A HREF="index.html#eq:kelly"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="/data/allarch/usr/latex2html/icons.gif/cross_ref_motif.gif"></A>) would be written once for the special case
+in 1D and once as general template for all other dimensions.
+
+<P>
+However, as noted above, explicit specializations or algorithms are the
+exception and not often necessary outside the library itself. For
+example, in one of the applications of the author (see [<A
+ HREF="index.html#BR99b">4</A>])
+comprising of approximately 20.000 lines of code, there is exactly one
+function that is explicitely specialized, namely the function that sets up the
+coarse grid for the triangulation of the domain. All other functions are
+dimension-independent and can be compiled for whatever dimension we want to
+solve in presently. In fact, when support for 3D became available, it took
+approximately one day of work to adapt the program to run in 3D as well, in
+addition to 1D and 2D where it was already used before.
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">
+Conclusions</A>
+</H1>
+
+<P>
+We have shown how value templates and traits classes can be used in C++ to
+allow for basically dimension-independent programming. This leads to programs
+that can be compiled for several different space dimensions without
+significant run time overhead and without violations of the strong typing
+system of C++. Thus, such programs remain maintainable despite their
+complexity. We also believe that they are good examples of the code reuse
+pattern of object oriented programs, since the same algorithms developed for
+one space dimension can be used without modification for other dimensions as
+well. 
+
+<P>
+What is also important is that although the internals of the deal.II library
+are necessarily complex, and although the details of instantiation of value
+templates are usually not known to most programmers, the idiom described here
+seems to be intuitive to beginners. We have observed that
+dimension-independent programming styles are readily adopted by students even
+if they don't have a full understanding at the start of the semantics of the
+details of the C++ constructs used in their programs. The actual internals of
+the library including most templatized objects like the <TT>TriaObject</TT>
+class are well shielded from the user by the traits classes, and are not used
+in applications directly.
+
+<P>
+To the experienced user of deal.II, dimension-independent programming is an
+efficient way to write programs to test algorithms in lower space dimensions
+and still run in higher dimensions as well. Here, `efficient' is
+interpreted both in terms of run time as well as of time to write a functional
+program. Especially the latter is of major importance in modern numerical
+analysis in research where algorithms are getting increasingly complex and the
+time to implement an algorithm is often more significant than the time to
+actually execute it.
+
+<P>
+<B>Acknowledgments</B> Present development and maintainance of deal.II is a
+joint effort of several people at the University of Heidelberg, the University
+of Minneapolis, and elsewhere.  The author acknowledges the support by the
+German Research Association (DFG) through the Graduiertenkolleg and the SFB
+359 at the IWR, University of Heidelberg.
+
+<P>
+ <H2><A NAME="SECTIONREF">Bibliography</A>
+</H2>
+<DL COMPACT><DD>
+<P>
+<P></P><DT><A NAME="FEMLists"><STRONG>1</STRONG></A>
+<DD>
+Lists of available finite element software can, for example, be found on ``The
+  Object-Oriented Numerics Page'' (<TT>http://www.oonumerics.org/oon</TT>), or
+  the ``Numerical Analysis &amp; Associated Fields Resource Guide''
+  (<TT>http://www.mathcom.com/nafaq/index.html</TT>).
+
+<P>
+<P></P><DT><A NAME="BK99tr"><STRONG>2</STRONG></A>
+<DD>
+W. Bangerth and G. Kanschat.
+<BR><I>Concepts for object-oriented finite element software - the
+  <TT>deal.II</TT> library</I>.
+<BR>Preprint 99-43, SFB 359, Universit&#228;t Heidelberg, Oct. 1999.
+
+<P>
+<P></P><DT><A NAME="BK99m"><STRONG>3</STRONG></A>
+<DD>
+W. Bangerth and G. Kanschat.
+<BR><EM><TT>deal.II</TT> Differential Equations Analysis Library,
+  Technical Reference</EM>.
+<BR>IWR Heidelberg, Oct. 1999.
+<BR><TT>http://gaia.iwr.uni</TT>-<TT>heidelberg.de/~deal/</TT>.
+
+<P>
+<P></P><DT><A NAME="BR99b"><STRONG>4</STRONG></A>
+<DD>
+W. Bangerth and R. Rannacher.
+<BR><EM>Finite element approximation of the acoustic wave equation: Error
+  control and mesh adaptation</EM>.
+<BR>East-West J. Numer. Math., 7 (1999), pp. 263-282.
+
+<P>
+<P></P><DT><A NAME="KGZB83"><STRONG>5</STRONG></A>
+<DD>
+D. W. Kelly, J. P. de S. R. Gago, O. C. Zienkiewicz, and I. Babuska.
+<BR><EM>A posteriori error analysis and adaptive processes in the finite
+  element method: Part I-Error analysis</EM>.
+<BR>Int. J. Num. Meth. Engrg., 19 (1983), pp. 1593-1619.
+
+<P>
+<P></P><DT><A NAME="Str97"><STRONG>6</STRONG></A>
+<DD>
+B. Stroustrup.
+<BR><EM>The C++ Programming Language</EM>.
+<BR>Addison-Wesley, third edition, 1997.
+
+<P>
+</DL>
+<P>
+
+
+<!--
+
+<H1><A NAME="SECTION00080000000000000000">
+  About this document ... </A>
+</H1> 
+ <STRONG>Using Modern Features of C++ for Adaptive Finite Element Methods:
+  Dimension-Independent Programming in deal.II</STRONG><P>
+This document was generated using the
+<A HREF="http://www-dsed.llnl.gov/files/programs/unix/latex2html/manual/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 98.1p1 release (March 2nd, 1998)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996, 1997,
+<A HREF="http://cbl.leeds.ac.uk/nikos/personal.html">Nikos Drakos</A>, 
+Computer Based Learning Unit, University of Leeds.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <tt>-split 2 -antialias imacs.tex</tt>.
+<P>
+The translation was initiated by Wolfgang Bangerth on 2000-08-28<HR>
+-->
+<!--Navigation Panel-->
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/data/allarch/usr/latex2html/icons.gif/next_motif_gr.gif"> 
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/data/allarch/usr/latex2html/icons.gif/up_motif_gr.gif"> 
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/data/allarch/usr/latex2html/icons.gif/previous_motif_gr.gif">   
+<BR>
+<!--End of Navigation Panel-->
+
+
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>2000-08-28</I>
+</ADDRESS>
+</BODY>
+</HTML>

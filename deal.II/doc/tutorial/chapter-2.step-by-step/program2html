@@ -48,6 +48,10 @@ do {
 	# comment // signs
 	s!\s*//\s*(.*)\n!$1!;
 
+	# replace quotation marks by the appropriate HTML quotation marks
+	s!``!&#8220;!g;
+	s!''!&#8221;!g;
+
 	# second, replace section headers, and generate addressable
 	# anchor
 	if ( /\@sect/ ) {
@@ -56,10 +60,6 @@ do {
 	   $sect_name =~ s/\s/_/g;
 	   $_ = "\n<a name=\"$sect_name\"></a>" . $_;
 	}
-
-	# replace quotation marks by the appropriate HTML quotation marks
-	s!``!&#8220;!g;
-	s!''!&#8221;!g;
 
 	# finally print this line
 	print $_, "\n";

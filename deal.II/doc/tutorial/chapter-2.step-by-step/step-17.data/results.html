@@ -91,8 +91,18 @@ cycle 14, and 14 minutes including the second to last step. I lost the timing
 information for the last step, though, but you get the idea. All this is if
 the debug flag in the Makefile was changed to "off", i.e. "optimized", and
 with the generation of graphical output switched off for the reasons stated in
-the program comments above. Here is
-some output generated in the 12th cycle of the program, i.e. with roughly
+the program comments above. The biggest 2d computations we did had roughly 7.1 
+million unknowns, and were done on 32 processes. It took about 40 minutes.
+Not surprisingly, the limiting factor for how far one can go is how much memory
+one has, since every process has to hold the entire mesh and DoFHandler objects, 
+although matrices and vectors are split up. For the 7.1M computation, the memory
+consumption was about 600 bytes per unknown, which is not bad, but one has to 
+consider that this is for every unknown, whether we store the matrix and vector
+entries locally or not.
+</p>
+
+<p>
+Here is some output generated in the 12th cycle of the program, i.e. with roughly
 300,000 unknowns:
 </p>
 

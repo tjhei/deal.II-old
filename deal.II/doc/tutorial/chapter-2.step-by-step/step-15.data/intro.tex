@@ -271,4 +271,26 @@ does not contain much new stuff, but if it explains a few of the techniques
 that are available for nonlinear problems and in particular 1d problems, then
 this is not so bad, after all.
 
+\textbf{Note:} As shown below, the program starts the nonlinear solver from 10 different
+initial values, and outputs the results. This is not actually too many, but we
+did so to keep run-time short (around 1:30 minutes on my laptop). If you want to
+increase the number of realizations, you may want to switch to optimized mode
+(by setting the ``debug-mode'' flag in the Makefile to ``off''), and increase
+the number of realizations to a larger value. On the same machine as above, I
+can compute 100 realizations in optimized mode in about 2 minutes. For
+this particular program, the difference between debug and optimized mode is
+thus about a factor of 7-8, which can be explained by the fact that we ask the
+compiler to do optimizations on the code only in the latter mode, but in most
+part due to the fact that in optimized mode all the ``Assert'' checks are
+thrown out that make sure that function arguments are correct, and that check
+the internal consistency of the library. The library contains several
+thousands of these checks, and they significantly slow down debug
+computations, but we feel that the benefit of finding programming errors
+earlier and including where the problem exactly appeared to be of signicantly
+greater value than faster run-time. After all, all production runs of programs
+should be done in optimized mode anyway.
+
+A slowdown of a factor of 7-8 is unusual, however. For 2d and 3d applications,
+a typical value is around 4. 
+
 \end{document}

@@ -119,24 +119,27 @@ Vector&lt;double&gt; elvec(fe.total_dofs);
 FullMatrix&lt;double&gt; elmat(fe.total_dofs);
   
 for (DoFHandler&lt;2&gt;::active_cell_iterator c = dof.begin_active()
-               				; c != dof.end() ; ++c)
+	; c != dof.end() ; ++c)
 {
   fevalues.reinit(c, stb);
   elmat.clear();
   elvec.clear();
   c-&gt;get_dof_indices(indices);
-    
+
+  // The loop over the quadrature points starts here. In effect, the 
+  // integration is performed in this loop.
   for (unsigned k=0;k&lt;qc.n_quadrature_points;++k)
   {
     for (unsigned i=0;i&lt;fe.total_dofs;++i)
     {
-      const Point&lt;2&gt; dv = fevalues.shape_grad(i,k);
+	const Point&lt;2&gt; dv = fevalues.shape_grad(i,k);
 
 	
       for (unsigned j=0;j&lt;fe.total_dofs;++j)
       {
 	const Point&lt;2&gt; du = fevalues.shape_grad(j,k);
-	  
+	
+	// Perform the integration using the discretized Laplace operator.
 	elmat(i,j) += fevalues.JxW(k)
                       * du * dv
 		      ;

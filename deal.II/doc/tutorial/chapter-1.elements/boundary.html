@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+<!-- deal.II tutorial template
+     Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de> 1999 
+-->
+
+<title></title>
+    <link href="../dealtut.css" rel="StyleSheet" title="deal.II Tutorial">
+    <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+    <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
+</head>
+
+<!-- Page Body -->
+<body lang="en">
+
+<h1>Boundary Conditions</h1>
+
+<h2><a name="boundary">Setting boundary conditions</a></h2>
+
+<p>
+There are two <acronym>deal.II</acronym> functions relevant for us at the moment:
+</p>
+<pre>
+<code>
+void VectorTools::interpolate_boundary_values(...)
+</code>
+</pre>
+<p>
+which does exactly what it says. This function accepts a list of pairs
+of boundary indicators and the according functions and returns a list of
+pairs of degrees of freedom numbers and values denoting the respective 
+Dirichlet boundary values.
+</p>
+<p>
+This output is used by
+</p>
+<pre>
+<code>
+void MatrixTools::apply_boundary_values(...)
+</code>
+</pre>
+<p>
+that inserts the proper boundary conditions into the system of equations.
+</p>
+
+<p class="example">
+<span class="example">Example:</span> We insert Dirichlet boundary conditions into 
+a system of equations of the form <code>Au=f</code>. The vectors <code>u</code> and 
+<code>f</code> and the matrix <code>A</code> have already been initialized, likewise
+the handler for the degrees of freedom <code>dof</code> and the corresponding finite
+element <code>fe</code>.
+</p>
+<pre class="example"><code>
+map&lt;int,double&gt; boundary_values;
+DoFHandler&lt;2&gt;::FunctionMap dirichlet_bc;
+BoundaryFct bfct;
+dirichlet_bc[0]=&amp;bfct;
+VectorTools&lt;2&gt;::interpolate_boundary_values(dof,dirichlet_bc,fe,boundary,boundary_values);
+u.reinit(f);
+MatrixTools&lt;2&gt;::apply_boundary_values(boundary_values,A,u,f);  
+</code></pre>
+<p>
+First, we need a few definitions: 
+</p>
+<ul>
+<li>
+<code>boundary_values</code> maps DoF indices at the boundary computed by <code>interpolate_boundary_values</code> to their respective values.
+</li>
+<li><code>dirichlet_bc</code> maps boundary indicators to boundary functions, supplied by us. All boundary indicators are zero by default, therefore the 
+above statement maps the same function to all the boundaries. The boundary functions compute the boundary values.
+</li>
+<li><code>bfct</code> is a function returning <code>cos(2*PI*x)*sin(2*PI*y)
+</code>, thereby supplying boundary values.
+</ul>
+<p>
+This may seem a bit confusing. What actually happens is the following:
+</p>
+<ol>
+<li><code>interpolate_boundary_values</code> takes the boundary functions
+<code>bfct</code>, its relation to boundaries <code>dirichlet_bc</code> and
+the triangulation <code>dof, fe</code> and returns a
+mapping <code>boundary_values</code> that maps values instead of functions
+to our boundaries. The function looks at <em>all</em> the boundaries. All we
+ever need to do is specify the initial triangulation.
+</li>
+<li><code>apply_boundary_values</code> subsequently takes that mapping and
+our system of equations <tt>Au=f</tt> and inserts the boundary values into
+the system of equations which can then be solved.
+</li>
+</ol>
+
+
+<!-- Page Foot -->
+<hr>
+<table class="navbar">      
+<tr>
+  <td>
+    <a href="condense.html">Next Chapter: Condensing the Hanging Nodes</a>
+  </td>
+  <td>
+    <a href="toc.html">Back to this chapter's index</a>
+  </td>
+  <td>
+    <a href="../index.html" target="_top">Back to the tutorial index</a>
+  </td>
+</tr>
+</table>
+<hr>
+<address>
+<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<p>
+Last modified: $Date$ 
+</p>
+</body>
+</html>

@@ -1,0 +1,35 @@
+# have two states, in which the program can be:
+# comment-mode and program-mode
+$comment_mode = 0;
+$program_mode = 1;
+$state =  $comment_mode;
+while (<>) {
+    # ignore cvs tag
+    next if m!/\*\s*\$Id:!;
+
+    # substitute special characters
+    s/</&lt;/g;
+    s/>/&gt;/g;
+
+    if (($state == $program_mode) && m!^\s*//!)
+    {     
+	$state = $comment_mode;
+	print "</code></pre>\n";
+    }
+    elsif (($state == $comment_mode) && !m!^\s*//!)
+    {     
+	$state = $program_mode;
+	print "<pre><code>\n";
+    }
+    
+    if ($state == $comment_mode) 
+    {
+	m!\s*//\s*(.*)!;
+	print $1, "\n";
+	print "<p>" if  $1 =~ m!^\s*$!;
+    }
+    else
+    {
+	print "        $_";
+    }
+}

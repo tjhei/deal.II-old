@@ -1,0 +1,198 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+<!-- deal.II tutorial template
+     Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de> 1999 
+-->
+
+<title>Error Estimate and Adaptivity</title>
+    <link href="../dealtut.css" rel="StyleSheet" title="deal.II Tutorial">
+    <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+    <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
+</head>
+
+<!-- Page Body -->
+<body lang="en">
+
+<h1>Error Estimate and Adaptivity</h1>
+
+<p>In this chapter we shall discuss</p>
+<ul>
+  <li><a href="#basics">how to use error estimators for adaptive refinement</a>
+  </li>      
+
+  <li><a href="#types">error estimators in <acronym>deal.II</acronym></a>
+  </li>
+
+  <li><a href="#refine">adaptive refinement</a>
+  </li>
+
+  <li><a href="#example">an example</a> of how all this works
+  </li>
+</ul>
+
+
+<h2><a name="basics">How to use error estimates for adaptive refinement</a></h2>
+
+<p>
+The basic principles of using error estimates for adaptive refinement 
+are rather simple. First, you get an error estimate for each cell.
+This error estimate can be interpreted as a 
+mesh function describing the desired local mesh width.
+Second, each and every cell is refined according to this estimate.
+</p>
+<p>
+The implementation of <acronym>deal.II</acronym> handles this principle
+exactly the same way: First, you call an error estimator that returns
+a vector containing the error estimtates for each cell. Second,
+you pass this vector on to a function doing the refinement.
+</p>
+
+<h2><a name="types">Error Estimators in <acronym>deal.II</acronym></a></h2>
+
+<p>
+In <acronym>deal.II</acronym> there is exactly on standard error estimator:
+the error estimator by Kelly, Gago, Zienkiewicz and Babuska that 
+tries to approximate the error per cell by integration of the jump of the
+gradient of the solution along the faces of each cell.
+In theory this error estimator has quite a number of limitations. These 
+limitations as well as its implementation are described in 
+<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/numerics/KellyErrorEstimator.html">
+the documentation for the class <code>KellyErrorEstimator</code></a>.
+In daily use, however, this error estimator has shown itself to behave
+rather like Hamlet: It is laden with theoretical woes and sorrows,
+but at the end of the day all practical problems are...<font size=-1>gone.</font>
+</p>
+
+<p>
+In order to use an error estimator you need the following information
+and objects respectively:
+</p>
+<ul>
+  <li>a <code>DoFHandler&lt;dim&gt; dof</code> giving access to the degrees of 
+	freedom
+  </li> 
+  
+  <li>a <code>Quadrature&lt;dim-1&gt; quadrature</code> describing the
+	quadrature you use for integration
+  </li>
+
+  <li>a <code>FunctionMap neumann_bc</code> &quot;<Q>which denotes a mapping 
+	between a 
+	boundary indicator and the function denoting the boundary values on 
+	this part of the boundary</Q>&quot; (quoted from the 
+	<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/numerics/KellyErrorEstimator.html">
+	  class documentation for <code>KellyErrorEstimator</code></a>)
+  </li>
+      
+  <li>a coefficient <code>coefficient</code> for tuning the error estimator;
+      refer to the <a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/numerics/KellyErrorEstimator.html">
+	  <code>KellyErrorEstimator</code> class documentation</a>
+  </li>
+
+  <li>the number of the selected component <code>selected_component</code>
+      for finite elements with more than one component
+  </li>
+</ul>
+<p>
+The Kelly error estimator is then used the following way:
+</p>
+<ol>
+  <li>Include the include file:<br>
+      <code>#include &lt;numerics/error_estimator.h&gt;</code>
+  </li>
+  
+  <li>Define an error estimator for <code>dim</code> dimensions: <br>
+      <code>KellyErrorEstimator&lt;dim&gt; error_estimate;</code> 
+  </li>
+
+  <li>Make your error estimator estimate each cell's error:<br>
+      <code>void error_estimate::estimate (const DoFHandler&lt;dim&gt; 
+	  &amp;dof, const Quadrature&lt;dim-1&gt;
+	  &amp;quadrature, const FunctionMap &amp;neumann_bc, 
+	  const Vector&lt;double&gt; &amp;solution,
+          Vector&lt;float&gt; &amp;error, const Function&lt;dim&gt; 
+	  *coefficient = 0, const unsigned int selected_component = 0); 
+      </code>
+  </li>
+</ol>
+
+<h2><a name="refinement">Adaptive Refinement</a></h2>
+
+<p>
+All the functions for refinement (and coarsening) are contained
+within the <code>Triangulation</code> class.
+Refinement and coarsening take place by first flagging the cells
+for coarsening or refinement using the functions described below
+and the executing it using 
+<code>void execute_coarsening_and_refinement()</code>. 
+There are several ways of refining or coarsening your grid using
+the output from an error estimator:
+<ul>
+  <li>Refine all cells with an error larger than a given threshold:<br>
+	<code>void refine(const Vector&lt;float&gt; &amp;error, const double
+	  threshold)</code>
+  </li>
+ 
+  <li>Coarsen all cells with an error less than a given threshold:<br>
+	<code>void coarsen(const Vector&lt;float&gt; &amp;error, const double
+	  threshold)</code>
+  </li>
+
+  <li>Refine a certain fraction <code>top_fraction_of_cells</code> with
+	the highest error, at the same time coarsen a certain fraction of
+	cells <code>bottom_fraction_of_cells</code> with the lowest error.<br>
+	<code>void refine_and_coarsen_fixed_number(const Vector&lt;number&gt; 
+	  &amp;error, const double top_fraction_of_cells, const double
+	  bottom_fraction_of_cells)
+	</code>
+  </li>
+
+  <li>Refine those cells which make up a given fraction 
+	<code>top_fraction</code> of the total error,
+	at the same time coarsen a certain fraction of
+	cells <code>bottom_fraction</code> which make up only the 
+	bottom fraction.<br>
+	<code>void refine_and_coarsen_fixed_fraction(const Vector&lt;number&gt; 
+	  &amp;error, const double top_fraction, const double
+	  bottom_fraction)
+	</code>
+  </li>
+</ul>
+
+<p>
+<b>Remember: In order to actually execute the refinement or coarsening 
+you have to call <code>void execute_coarsening_and_refinement()</code>.</b>
+
+
+<h2><a name="example">Example</a></h2>
+
+<p>
+To be provided...
+</p>
+
+
+<!-- Page Foot -->
+<hr>
+<table class="navbar">      
+<tr>
+  <td>
+    <a href="parameters.html">Next Chapter: </a>
+  </td>
+  <td>
+    <a href="toc.html">Back to this chapter's index</a>
+  </td>
+  <td>
+    <a href="../index.html" target="_top">Back to the tutorial index</a>
+  </td>
+</tr>
+</table>
+<hr>
+<address>
+<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<p>
+Last modified: $Date$ 
+</p>
+</body>
+</html>

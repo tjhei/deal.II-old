@@ -1,5 +1,5 @@
 # $Id$
-# Copyright (C) 2001 by Wolfgang Bangerth
+# Copyright (C) 2001, 2002 by Wolfgang Bangerth
 
 
 D = ../..
@@ -16,11 +16,11 @@ endif
 
 # get lists of files we need
 f-files     = $(shell a="`echo source/*.f`"; if test "$$a" != "source/*.f" ; then echo $$a ; fi)
-o-files     = $(f-files:source/%.f=lib/o/%.o)
+o-files     = $(f-files:source/%.f=$(LIBDIR)/contrib/hsl/%.o)
 
 
 
-lib/o/%.o :
+$(LIBDIR)/contrib/hsl/%.o :
 	@echo =====hsl==============optimized==$(MT)== $(<F)
 	@$(F77) $(F77FLAGS.o) -c $< -o $@
 
@@ -56,18 +56,18 @@ clean:
 #of this file.
 #
 #note that we take care if there are no f-files
-lib/Makefile.dep: $(f-files) Makefile
+Makefile.dep: $(f-files) Makefile
 	@echo ============================ Remaking Makefile
-	@(if test "x$(f-files)" != "x" ; then \
+	(if test "x$(f-files)" != "x" ; then \
            for i in source/*.f ; do \
-	     echo $$i | perl -pi -e 's#source/(.*)\.f#lib/o/\1.o:source/\1.f#;' ;\
+	     echo $$i | perl -pi -e 's#source/(.*)\.f#\$$(LIBDIR)/contrib/hsl/\1.o:source/\1.f#;' ;\
 	    done ; \
           fi) \
-		> lib/Makefile.dep
+		> Makefile.dep
 
 
 # include all the dependencies
-include lib/Makefile.dep
+include Makefile.dep
 
 
 .PHONY: clean

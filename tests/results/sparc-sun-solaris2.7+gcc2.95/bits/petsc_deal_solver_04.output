@@ -1,4 +1,4 @@
-JobId Mon May 24 17:43:11 2004
+
 DEAL::Size 32 Unknowns 961
 DEAL::Solver type: t12SolverMinRes1ZQ213PETScWrappers6Vector
 DEAL:minres::Starting value 31.00

@@ -16,10 +16,74 @@
 #include <vector>
 #include <iostream>
 #include <cstdio>
+#include <cstdlib>
 
 #include <unistd.h>
 #include <errno.h>
 #include <sys/errno.h>
+#include <pthread.h>
+#include <signal.h>
+
+#ifdef HAVE_STD_STRINGSTREAM
+#  include <sstream>
+#else
+#  include <strstream>
+#endif
+
+
+pid_t master_pid;
+
+
+extern "C"
+void * monitor_thread (void *) 
+{
+                                   // loop and check every once in a
+                                   // while whether the mother process
+                                   // is still existing or has died
+                                   // without giving us due notice. if
+                                   // the latter is the case, then
+                                   // also exit this process
+                                   //
+                                   // check by calling "ps -p PID",
+                                   // where PID is the pid of the
+                                   // parent. if the return value is
+                                   // non-null, then ps couldn't find
+                                   // out about the parent process, so
+                                   // it is apparently gone
+#ifdef HAVE_STD_STRINGSTREAM
+  std::ostringstream s;
+  s << "ps -p " << master_pid;
+  const char * const command = s.str().c_str();
+#else
+  std::ostrstream s;
+  s << "ps -p " << master_pid << std::ends;
+  const char * const command = s.str();
+#endif
+  
+  while (true)
+    {
+      int ret = std::system (command);
+      if (ret < 0)
+        {
+          std::cerr << "---- Monitor process couldn't start 'ps'!"
+                    << std::endl;
+          std::abort ();
+        }
+      else
+        if (ret != 0)
+          {
+            std::cerr << "---- Master process seems to have died!"
+                      << std::endl;
+            std::abort ();
+          };
+
+                                       // ok, master still running,
+                                       // take a little rest and then
+                                       // ask again
+      std::sleep (10);
+    };
+};
+
 
 
 template <typename T>
@@ -37,6 +101,7 @@ void put (const T *t, const size_t N, const char */*debug_info*/)
   
   fflush (NULL);
 };
+
 
 
 template <typename T>
@@ -75,8 +140,11 @@ int main ()
                                    // of the master process, so that
                                    // we can check whether it is still
                                    // alive or not...
-  pid_t master_pid;
   get (&master_pid, 1, "master_pid");
+                                   // ...and start off a thread that
+                                   // actually checks that
+  pthread_t monitor_thread_id;
+  pthread_create (&monitor_thread_id, 0, &monitor_thread, 0);
   
                                    // then go into the action loop...
   unsigned int N, NZ, NSTEPS, LA, MAXFRT, LIW;
@@ -190,6 +258,11 @@ int main ()
 
           case '7':
           {
+                                             // ok, this is the stop
+                                             // signal. for this, kill
+                                             // the monitor thread,
+                                             // and exit gracefully
+            pthread_kill (monitor_thread_id, SIGKILL);
             exit (0);
             break;
           };

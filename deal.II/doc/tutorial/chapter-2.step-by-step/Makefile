@@ -70,7 +70,7 @@ step-by-step.sgml: $(example-sgmls)
 
 
 clean:
-	-rm $(example-htmls)
+	-rm -f $(example-htmls)
 
 
 # mark the output files as phony, i.e. generate them every time

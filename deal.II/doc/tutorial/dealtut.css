@@ -1,4 +1,8 @@
-<!-- DEAL Tutorial Style Sheet
-     Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de 1999 
--->
-@import url(dealdoc.css);
+
+body { bgcolor: white; background-color: white; }
+
+span.parhead { font-weight: bold;
+     	     }   	     }		
+	
+table.navbar { }
+

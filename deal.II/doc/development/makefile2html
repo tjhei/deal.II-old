@@ -1,11 +1,9 @@
 # Copyright (C) 1999, 2000 by Wolfgang Bangerth, Univerisity of Heidelberg.de
 
-print "<a name=\"CommProg\"></a>\n";
-print "<h1> The commented program</h1>\n";
 
 # ignore the first few lines
 $_ = <>;
-while ( m!^//\*\s*\$Id$!) {
+while ( m!^#\*\s*\$Id$!) {
     $_ = <>;
 }
 
@@ -19,7 +17,7 @@ print "<p>\n";
 
 while (<>) {
     # ignore cvs tag
-    next if m!^//\*\s*\$Id:!;
+    next if m!^#\*\s*\$Id:!;
 
     # substitute special characters
     s/&/&amp;/g;
@@ -27,7 +25,7 @@ while (<>) {
     s/>/&gt;/g;
     s/\t/        /g;
 
-    if (($state == $program_mode) && m!^\s*//!)
+    if (($state == $program_mode) && m!^\s*#!)
     {     
 	$state = $comment_mode;
 	print "</code></pre>\n";
@@ -36,7 +34,7 @@ while (<>) {
     }
     # if in comment mode and no comment line: toggle state.
     # don't do so, if only a blank line
-    elsif (($state == $comment_mode) && !m!^\s*//! && !m!^\s*$!)
+    elsif (($state == $comment_mode) && !m!^\s*#! && !m!^\s*$!)
     {     
 	$state = $program_mode;
 	print "</p>\n";
@@ -46,7 +44,7 @@ while (<>) {
     
     if ($state == $comment_mode) 
     {
-	m!\s*//\s*(.*)!;
+	m!\s*#\s*(.*)!;
 	print $1, "\n";
 	print "</p>\n\n<p>" if  $1 =~ m!^\s*$!;
     }
@@ -59,4 +57,6 @@ while (<>) {
 if ($state == $program_mode) {
    print "</code></pre>\n";
 }
+
+
 

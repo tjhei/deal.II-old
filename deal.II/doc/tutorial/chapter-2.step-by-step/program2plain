@@ -1,6 +1,8 @@
+# Copyright (C) 1999, 2000 by Wolfgang Bangerth, Univerisity of Heidelberg.de
+
 # ignore the first few lines
 $_ = <>;
-while ( m!/\*\s*\$Id$!) {
+while ( m!^//\*\s*\$Id$!) {
     $_ = <>;
 }
 
@@ -19,7 +21,7 @@ END
 
 while (<>) {
     # ignore cvs tag
-    next if m!/\*\s*\$Id:!;
+    next if m!^//\*\s*\$Id:!;
 
     # ignore comment lines
     next if m!^\s*//!;  

@@ -55,9 +55,13 @@ quadrature points.
 <code>
 // Initialize the trial functions on the cell faces.
 FEValues&lt;2&gt; fe_values(fe, quadrature,
-                   UpdateFlags(update_gradients | update_JxW_values));
+                   UpdateFlags(update_values    | 
+                               update_gradients |
+                               update_JxW_values));
 FEFaceValues&lt;2&gt; fe_face_values (fe, face_quadrature,
-                              UpdateFlags(update_JxW_values | update_q_points));
+                              UpdateFlags(update_values     | 
+                                          update_JxW_values |
+                                          update_q_points));
 </code>
 </pre>
 

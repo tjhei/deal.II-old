@@ -721,9 +721,13 @@ sub identifyDecl
 
 	# Multi variables
 	elsif ( $decl =~ m/^
+		\s*(?:typename)?
 		\s*( (?:[\w_:]+(?:\s+[\w_:]+)*? )	# type
 		\s*(?:<.+>)?)						# template
 
+		                                # check for nested types
+                                \s*(?:::[\w_:]+(?:\s+[\w_:]+)*?
+                                      \s*(?:<.+>)?)
 		\s*( (?:\s*(?: [\&\*][\&\*\s]*)? 	# ptr or ref
 			[\w_:]+)						# name
 		\s*(?:\[[^\[\]]*\] (?:\s*\[[^\[\]]*\])*)? # array

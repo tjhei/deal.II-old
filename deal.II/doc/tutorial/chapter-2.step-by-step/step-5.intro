@@ -1,6 +1,7 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
 
+<p>
 This example does not show revolutionary new things, but it shows many
 small improvements over the previous examples, and also many small
 things that can usually be found in finite element programs. Among
@@ -35,3 +36,4 @@ them are:
        preconditioned iterative solvers for the linear systems of
        equations.
 </ul>
+</p>

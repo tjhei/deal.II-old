@@ -1,6 +1,7 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
 
+<p>
 <acronym>deal.II</acronym> has a unique feature which we call
 ``dimension independent programming''. You may have noticed in the
 previous examples that many classes had a number in angle brackets
@@ -22,9 +23,10 @@ working on <code>Triangulation2d</code> and once working with a
 programming and leads to a nuisance to keep the two function in synch
 (at best) or difficult to find errors if the two versions get out of
 synch (at worst; this would probably the more common case).
+</p>
+
 
 <p>
-
 Such obstacles can be circumvented by using some template magic as
 provided by the C++ language: templatized classes and functions are
 not really classes or functions but only a pattern depending on an
@@ -42,15 +44,17 @@ parameter. For example, consider the following piece of code:
     GridGenerator::hyper_cube (triangulation, -1, 1);
   };
 </code></pre>
+</p>
 
+<p>
 At the point where the compiler sees this function, it does not know
 anything about the value of ``dim'', by now there is a whole zoo of
 functions make_grid, one for every possible valueof ``dim''. But since
 the compiler can't know which might be used, it can not compile the
 function. 
+</p>
 
 <p>
-
 However, if later down a function would use the following sequence,
 <pre><code>
   Triangulation&lt;2&gt; triangulation;
@@ -66,19 +70,18 @@ as
     GridGenerator::hyper_cube (triangulation, -1, 1);
   };
 </code></pre>
+</p>
 
 <p>
-
 However, it is worth to note that the function
 <code>GridGenerator::hyper_cube</code> depends on the dimension as
 well, so in this case, the compiler will call the function
 <code>GridGenerator::hyper_cube&lt;2&gt;</code> while if dim were 3,
 it would call <code>GridGenerator::hyper_cube&lt;3&gt;</code> which
 might be (and actually is) a totally unrelated  function.
-
+</p>
 
 <p>
-
 The same can be made with member variables. Consider the following
 function, which might in turn call the above one:
 <pre><code>
@@ -91,7 +94,6 @@ function, which might in turn call the above one:
     ...
   };
 </code></pre>
-
 This function has a member variable of type
 <code>DoFHandler&lt;dim&gt;</code> the size of which may (and does)
 depend on the dimension we are working in. Again, the compiler can't
@@ -103,9 +105,9 @@ which it was called, and compile it. If you call the function several
 times for different dimensions, it will compile it several times, each
 time calling the right ``make_grid'' function and reserving the right
 amount of memory for the member variable.
+</p>
 
 <p>
-
 The <acronym>deal.II</acronym> library is build around this concept
 and that allows you to program in way that will not need to
 distinguish between the space dimensions. It should be noted that in
@@ -115,13 +117,14 @@ has to compile each function for each dimension separately, even there
 it knows the value of ``dim'' at the time of compilation and will
 therefore be able to optimize the ``if'' statement along with the
 unused branch.
+</p>
 
 <p>
-
 In this example program, we will show how to program dimension
 independently (which in fact is even simpler than if you had to take
 care about the dimension) and we will extend the Laplace problem of
 the last example to a program that runs in two and three space
 dimensions at the same time. Other extensions are the use of a
 non-constant right hand side function and of non-zero boundary values.
+</p>
 

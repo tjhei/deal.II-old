@@ -1,0 +1,95 @@
+<a name="Results"></a>
+<h1>Results</h1>
+
+<p>
+The output of the program looks as follows:
+<pre><code>
+Cycle 0:
+   Number of active cells: 20
+Cycle 1:
+   Number of active cells: 44
+Cycle 2:
+   Number of active cells: 86
+Cycle 3:
+   Number of active cells: 164
+Cycle 4:
+   Number of active cells: 344
+Cycle 5:
+   Number of active cells: 656
+Cycle 6:
+   Number of active cells: 1364
+Cycle 7:
+   Number of active cells: 2684
+</code></pre>
+</p>
+
+<p>
+As intended, the number of cells roughly doubles in each cycle. The
+final solution, as written by the program, looks as follows:
+</p>
+
+<p>
+<IMG SRC="step-6.data/final-solution.jpg" ALT="final-solution" WIDTH="300">
+</p>
+
+<p>
+In each cycle, the program furthermore writes the grid in EPS
+format. These are depicted in the following:
+</p>
+
+<p>
+<TABLE WIDTH="100%">
+<tr>
+<td>
+<IMG SRC="step-6.data/grid-0.jpg" ALT="grid-0" WIDTH="300">
+</td>
+<td>
+<IMG SRC="step-6.data/grid-1.jpg" ALT="grid-1" WIDTH="300">
+</td>
+</tr>
+
+<tr>
+<td>
+<IMG SRC="step-6.data/grid-2.jpg" ALT="grid-2" WIDTH="300">
+</td>
+<td>
+<IMG SRC="step-6.data/grid-3.jpg" ALT="grid-3" WIDTH="300">
+</td>
+</tr>
+
+<tr>
+<td>
+<IMG SRC="step-6.data/grid-4.jpg" ALT="grid-4" WIDTH="300">
+</td>
+<td>
+<IMG SRC="step-6.data/grid-5.jpg" ALT="grid-5" WIDTH="300">
+</td>
+</tr>
+</table>
+</p>
+
+<tr>
+<td>
+<IMG SRC="step-6.data/grid-6.jpg" ALT="grid-6" WIDTH="300">
+</td>
+<td>
+<IMG SRC="step-6.data/grid-7.jpg" ALT="grid-7" WIDTH="300">
+</td>
+</tr>
+</table>
+</p>
+
+<p>
+It is clearly visible that the region where the solution has a kink,
+i.e. the circle at radial distance 0.5 from the center, is
+refined most. Furthermore, the central region where the solution is
+very smooth and almost flat, is almost not refined at all, but this
+results from the fact that we did not take into account that the
+coefficient is large there. The region outside is refined rather
+randomly, since the second derivative is constant there and refinement
+is therefore mostly based on the size of the cells and their deviation
+from the optimal square.
+</p>
+
+
+

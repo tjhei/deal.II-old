@@ -1,9 +1,10 @@
 <a name="Results"></a>
 <h1>Results</h1>
 
+<p>
 The program has, after having been run, produced two grids, which look
 like this:
-<p>
+
 <TABLE WIDTH="60%">
 <tr>
 <td>
@@ -14,6 +15,7 @@ like this:
 </td>
 </tr>
 </table>
-<p>
+
 The left one, well, is not very exciting. The right one is - at least
 - unconventional.
+</p>

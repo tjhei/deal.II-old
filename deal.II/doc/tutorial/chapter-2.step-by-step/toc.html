@@ -20,20 +20,30 @@
 <h1>Step-by-Step Examples</h1>
 
 <p>
-In this chapter, we present a collecting of small programs, each more
+In this chapter, we present a collection of small programs, each more
 or less built atop of the previous one, which demonstrate various
 aspects of the library. The general layout of each such example is as
 follows:
 <ol>
   <li> A brief description of what the program does and what is new
-  compared to the previous programs.
+       compared to the previous programs.
   <li> The program, in commented form.
   <li> The output of the program, with some comments.
   <li> Since the program itself usually is a little bit unreadable
-  with all the comments intertwingled, we present the program again,
-  with all comments stripped off, to allow getting an overview of it.
+       with all the comments intertwingled, we present the program again,
+       with all comments stripped off, to allow getting an overview of it.
 </ol>
 </p>
+
+<p>
+The programs themselves can be found at a path which is indicated at
+the beginning of the last section of each example. You can compile
+them by typing ``make'' in the respective directory, and run them
+using ``make run''. The latter command also compiles the program if
+that has not already been done.
+</p>
+
+
 <p>
 At present, the following programs exist:
 </p>
@@ -72,6 +82,11 @@ At present, the following programs exist:
       Using assertions. Non-constant coefficient in
       the elliptic operator. Preconditioning of the CG solver for the
       linear system of equations.
+      </dd>
+
+      <dt><a href="step-6.html">Step 6</a></dt> 
+      <dd><strong>What's new:</strong> Adaptive local
+      refinement. Handling of hanging nodes.
       </dd>
 </dl>
 

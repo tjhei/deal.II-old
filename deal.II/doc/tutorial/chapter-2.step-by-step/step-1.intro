@@ -1,6 +1,7 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
 
+<p>
 In this first example, we do not so very much, but show two
 techniques: what is the syntax to generate triangulation objects, and
 some elements of simple loops over all cells. We create two grids, one
@@ -10,3 +11,4 @@ ring-shaped domain, which is refined towards the inner edge. The
 latter is certainly not very useful and is certainly only rarely used
 in numerical analysis, but looks nice and illustrates how loops over
 cells are written and some of the things you can do with cells.
+</p>

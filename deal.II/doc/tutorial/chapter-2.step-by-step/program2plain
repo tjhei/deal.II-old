@@ -4,12 +4,17 @@ while ( m!/\*\s*\$Id$!) {
     $_ = <>;
 }
 
-print "<a name=\"PlainProg\"></a>\n";
-print "<h1> The plain program</h1>\n";
+print <<END;
+<a name=\"PlainProg\"></a>
+<h1> The plain program</h1>
 
-print "(The program can be found at <i>PROGRAMPATH</i>.)\n <p>\n";
+<p>
+(The program can be found at <i>PROGRAMPATH</i>.)
+</p>
 
-print "<pre><code>\n";
+<p>
+<pre><code>
+END
 
 
 while (<>) {
@@ -20,6 +25,7 @@ while (<>) {
     next if m!^\s*//!;  
 
     # substitute special characters
+    s/&/&amp;/g;
     s/</&lt;/g;
     s/>/&gt;/g;
     s/\t/        /g;
@@ -27,4 +33,4 @@ while (<>) {
     print "  $_";
 }
 
-print "</code></pre>";
+print "</code></pre>\n</p>\n\n";

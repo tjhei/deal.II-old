@@ -1,14 +1,14 @@
 <a name="Results"></a>
 <h1>Results</h1>
 
+<p>
 The program has, after having been run, produced two sparsity
 patterns. We can visualize them using GNUPLOT:
-<pre>
-<code>
+<pre><code>
   set data style points
   plot "sparsity_pattern.1"
-</code>
-</pre>
+</code></pre>
+</p>
 
 <p>
 The results then look like this (every cross denotes an entry which
@@ -17,7 +17,6 @@ zero or not depends on the equation under consideration, but the
 indicated positions in the matrix tell us which shape functions can
 and which can't couple, if the equation is a local, i.e. differential
 one): 
-<p>
 <TABLE WIDTH="60%">
 <tr>
 <td>
@@ -28,16 +27,19 @@ one):
 </td>
 </tr>
 </table>
-<p>
+</p>
 
+<p>
 The different regions in the left picture represent the degrees of
 freedom on the different refinement levels of the triangulation.  As
 can be seen in the right picture, the sparsity pattern is much better
 clustered around the main diagonal of the matrix after
 renumbering. Although this might not be apparent, the number of
 nonzero entries is the same in both pictures, of course.
+</p>
 
 <p>
-
 A common observation is that the more refined the grid is, the better
 the clustering around the diagonal will get.
+</p>
+

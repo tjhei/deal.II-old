@@ -1,6 +1,7 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
 
+<p>
 This is the first example where we actually use finite elements. We
 will solve a simple version of Laplace's equation witht zero boundary
 values, but a nonzero right hand side. This example is still quite
@@ -12,3 +13,4 @@ element programs, which are along the following lines:
   <li> solving the linear system of equations;
   <li> writing results to disk.
 </ul>
+</p>

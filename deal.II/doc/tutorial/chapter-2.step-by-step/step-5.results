@@ -1,10 +1,9 @@
 <a name="Results"></a>
 <h1>Results</h1>
 
-
+<p>
 The output of the program looks as follows:
-<pre>
-<code>
+<pre><code>
 Cycle 0:
    Number of active cells: 20
    Total number of cells: 20
@@ -36,8 +35,8 @@ Cycle 5:
    Number of degrees of freedom: 20609
    200 CG iterations needed to obtain convergence.
 --------------------------------------------------------
-An error occurred in line <206> of file <step-5.cc> in function
-    void Coefficient<2>::value_list<2>(const class vector<Point<2>,__default_alloc_template<false,0> > &, class vector<double,__default_alloc_template<false,0> > &, unsigned int = 0) const
+An error occurred in line &lt;206&gt; of file &lt;step-5.cc&gt; in function
+    void Coefficient&lt;2&gt;::value_list&lt;2&gt;(const class vector&lt;Point&lt;2&gt;,__default_alloc_template&lt;false,0&gt; &gt; &, class vector&lt;double,__default_alloc_template&lt;false,0&gt; &gt; &, unsigned int = 0) const
 The violated condition was: 
     values.size() == n_points
 The name and call sequence of the exception was:
@@ -45,17 +44,19 @@ The name and call sequence of the exception was:
 Additional Information: 
 The vector has size 1 but should have 2 elements.
 --------------------------------------------------------
-</code>
-</pre>
+</code></pre>
+</p>
 
+<p>
 In each cycle, the number of cells quadruples and the number of CG
 iterations roughly doubles. The exception is only raised if the
 respective lines at the end of the programs are un-commented.
+</p>
 
 <p>
-
 In each cycle, the program writes one output graphic file in EPS
 format. They are depicted in the following:
+</p>
 
 <p>
 <TABLE WIDTH="100%">
@@ -85,14 +86,17 @@ format. They are depicted in the following:
 <IMG SRC="step-5.data/solution-5.jpg" ALT="solution-5" WIDTH="300">
 </td>
 </tr>
-
 </table>
-<p>
+</p>
 
+<p>
 Due to the variable coefficient (the curvature there is reduced by the
 same factor by which the coefficient is increased), the top region of
 the solution is flattened. The gradient of the solution is
 discontinuous there, although this is not very clearly visible in the
 pictures above. We will look at this in more detail in the next
 example.
+</p>
+
+
 

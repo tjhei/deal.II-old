@@ -12,11 +12,15 @@ while ( m!/\*\s*\$Id$!) {
 $comment_mode = 0;
 $program_mode = 1;
 $state =  $comment_mode;
+
+print "<p>\n";
+
 while (<>) {
     # ignore cvs tag
     next if m!/\*\s*\$Id:!;
 
     # substitute special characters
+    s/&/&amp;/g;
     s/</&lt;/g;
     s/>/&gt;/g;
     s/\t/        /g;
@@ -25,12 +29,16 @@ while (<>) {
     {     
 	$state = $comment_mode;
 	print "</code></pre>\n";
+	print "\n";
+	print "<p>\n";
     }
     # if in comment mode and no comment line: toggle state.
     # don't do so, if only a blank line
     elsif (($state == $comment_mode) && !m!^\s*//! && !m!^\s*$!)
     {     
 	$state = $program_mode;
+	print "</p>\n";
+	print "\n";
 	print "<pre><code>\n";
     }
     
@@ -38,7 +46,7 @@ while (<>) {
     {
 	m!\s*//\s*(.*)!;
 	print $1, "\n";
-	print "<p>" if  $1 =~ m!^\s*$!;
+	print "</p>\n\n<p>" if  $1 =~ m!^\s*$!;
     }
     else
     {

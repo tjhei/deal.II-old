@@ -6,8 +6,10 @@
      Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de> 1999 
 -->
 
-<title>Data Output</title>
-    <link href="../dealtut.css" rel="StyleSheet" title="deal.II Tutorial">
+<title>deal.II tutorial: Grid and Data Output</title>
+    <link href="../screen.css" rel="StyleSheet" title="deal.II Tutorial" media="screen">
+    <link href="../print.css" rel="StyleSheet" title="deal.II Tutorial" media="print">
+    <link href="../audio.css" rel="StyleSheet" title="deal.II Tutorial" media="aural">
     <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
     <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
 </head>
@@ -17,17 +19,54 @@
 
 <h1>Grid and Data Output</h1>
 
-<h2>Graphics Formats</h2>
+<p>
+Grid and data output becomes a difficult thing as soon as flexibility
+in terms of different output formats and which parts of the data 
+are actually written is required.
+Consequently, there is a bunch of classes in <acronym>deal.II</acronym>, 
+every one dealing with a different aspect of the problem. You, the 
+user, however, need to concern yourself only with two ouput classes:
+<code>GridOut</code> and <code>DataOut</code> handling the output of
+grid and data, respectively.  In addition there is one class for
+each kind of output storing the parameters for this particular 
+format. These parameters are common to both grid and data ouput 
+and are used by both <code>GridOut</code> and <code>DataOut</code>.
+</p>
+
+<p>
+Since <acronym>deal.II</acronym> is fairly versatile when it comes
+to graphics output we shall have to talk about the following topics
+in depth:
+</p>
+
+<ul class="pagetoc">
+  <li><a href="#formats">Graphics formats</a> for 
+	<code>GridOut</code> and <code>DataOut</code>
+  </li>
+  
+  <li><a href="#parameters">Parameters</a> for the different formats
+	common to both <code>GridOut</code> and <code>DataOut</code>
+  </li>
+
+  <li><a href="#dataout_limits">Limitations of <code>DataOut</code></a>
+  </li>
+
+  <li><a href="#usage">Usage of <code>DataOut</code></a>
+  </li>
+
+  <li><a href="#usage">Usage of <code>GridOut</code></a>
+  </li>
+</ul>
+
+<hr>
+
+<h2><a name="formats">Graphics Formats</a></h2>
 <p>
 <acronym>deal.II</acronym> provides a class called <code>DataOut</code>
 dealing with the output of simulation data and a class called
 <code>GridOut</code> handling the output of grid (triangulation) data. 
-Both are 
-fairly versatile 
-and can handle a 
+Both are fairly versatile and can handle a 
 number of different data formats.
-<b>As of this writing (26/6/99) <code>DataOut</code> is being revised.
-When this revision is finished the descriptions below will be updated.</b>
 </p>
 
 <h3><code>DataOut</code> graphics formats</h3>
@@ -68,7 +107,11 @@ The graphics formats available in <code>GridOut</code> are:
 </ul>
 
 
-<h2>Limitations of the <code>DataOut</code> class</h2>
+<hr>
+<hr>
+
+<h2><a name="dataout_limits">Limitations of the <code>DataOut</code> 
+class</a></h2>
 
 <p>
 Grouping of components to vectors is not implemented, i.e. each 
@@ -76,6 +119,9 @@ component must be written independent of the others. It is
 also not possible to write the results of calculations on grids
 with more or less than one degree of freedom per vertex.
 </p>
+
+<hr>
+<hr>
 
 <h2><a name="usage">General description of the usage of 
 <code>DataOut</code></a></h2>
@@ -163,6 +209,8 @@ to a file if you want to use the data later on.
 </tr>
 </table>
 
+
+<hr>
 
 <h2><a name="dataout_formats"><code>DataOut</code> data formats</a></h2>
 
@@ -305,6 +353,9 @@ The data is written using
 </li>
 </ul>
 
+<hr>
+<hr>
+
 <h2><a name="grid_usage">General description of the usage of 
 <code>GridOut</code></a></h2>
 
@@ -381,9 +432,10 @@ to which parameters can be passed.
 </tr>
 <tr>
   <td>1.</td>
-  <td>Use the correct include-file.
+  <td>Use the correct include-files.
   </td>
-  <td><code>#include &lt;basic/grid_out.h&gt;</code>
+  <td><code>#include &lt;basic/grid_out.h&gt;</code><br>
+      <code>#include &lt;basic/data_out_base.h&gt;</code>
   </td>
 </tr>
 <tr>
@@ -392,7 +444,7 @@ to which parameters can be passed.
   <td>Generate an <code>ostream</code> (and, normally, attach it to a file).
   </td>
   <td><code>
-      ostream out;
+      ofstream out("filename");
       </code>
   </td>
 </tr>
@@ -409,7 +461,7 @@ to which parameters can be passed.
   </td>
   <td>Set your parameters (in this example for ucd).
   </td>
-  <td><code>GridOut::UcdFlags ucd_flags;<br> 
+  <td><code>UcdFlags ucd_flags;<br> 
       ucd_flags.write_preamble = 1;<br>
       my_grid_out.set_flags(ucd_flags);
       </code>
@@ -447,9 +499,10 @@ written to a ucd-file as a starting triangulation for
 you will need to explicitly write all of your boundary indicators that
 are not zero to the output file. Otherwise, upon reloading the triangulation,
 all your boundaries will be labelled with the default value, zero.
-There is a flag controlling <code>GridOut</code> with respect to whether
+There is a flag in the class <code>UcdFlags</code>
+controlling <code>GridOut</code> with respect to whether
 boundary indicators are explicitly written: 
-<code>bool GridOut::UcdFlags::write_preamble</code>. It defaults to true, i.e.
+<code>bool UcdFlags::write_preamble</code>. It defaults to true, i.e.
 boundary indicators are written by default and you can use the first,
 simpler method for writing ucd-files.
 </p>
@@ -462,7 +515,19 @@ simpler method for writing ucd-files.
 <h3><a name="grid_eps">Encapsulated Postscript</a></h3>
 
 <p>
+EPS output is performed using the parameters set forth in the class
+<code>EpsFlags</code>. Grid output in the EPS format is always 
+two-dimensional; 3D-grids are viewed from a given viewpoint
+without hidden-line removal.
+EPS output is performed by calling<br>
+<code>GridOut::write_eps (Triangulation&amp; tria, ostream&amp; output)</code>
+<br>
+Alternatively, you can use the general <code>GridOut::write</code> method
+as explained in the part on the <a href="#grid_usage">usage of the 
+<code>GridOut</code> class</a>.
 </p>
+
+
 
 
 

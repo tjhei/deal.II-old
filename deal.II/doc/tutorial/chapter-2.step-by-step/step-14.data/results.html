@@ -252,6 +252,8 @@ Refinement cycle: 8
 Refinement cycle: 9
    Number of degrees of freedom=31438
    Point x-derivative=-0.211258
+</pre>
+</code>
 </p>
 
 <p>
@@ -268,18 +270,101 @@ evaluation shows this:
       </img></a>
     </td>
 </table>
+This time, the grids in refinement cycles 0, 5, 6, 7, 8, and 9 look
+like this:
+<table align="center">
+  <tr>
+    <td width="50%">
+      <a href="step-14.data/point_derivative/grid-0.gif" target="_top">
+      <img alt="Grid 0"
+      src="step-14.data/point_derivative/grid-0.gif">
+      </img></a>
+    </td>
 
-TODO
+    <td width="50%">
+      <a href="step-14.data/point_derivative/grid-5.gif" target="_top">
+      <img alt="Grid 5"
+      src="step-14.data/point_derivative/grid-5.gif">
+      </img></a>
+    </td>
+  </tr>
+
+  <tr>
+    <td width="50%">
+      <a href="step-14.data/point_derivative/grid-6.gif" target="_top">
+      <img alt="Grid 6"
+      src="step-14.data/point_derivative/grid-6.gif">
+      </img></a>
+    </td>
+
+    <td width="50%">
+      <a href="step-14.data/point_derivative/grid-7.gif" target="_top">
+      <img alt="Grid 7"
+      src="step-14.data/point_derivative/grid-7.gif">
+      </img></a>
+    </td>
+  </tr>
+
+  <tr>
+    <td width="50%">
+      <a href="step-14.data/point_derivative/grid-8.gif" target="_top">
+      <img alt="Grid 8"
+      src="step-14.data/point_derivative/grid-8.gif">
+      </img></a>
+    </td>
+
+    <td width="50%">
+      <a href="step-14.data/point_derivative/grid-9.gif" target="_top">
+      <img alt="Grid 9"
+      src="step-14.data/point_derivative/grid-9.gif">
+      </img></a>
+    </td>
+  </tr>
+</table>
+Note the assymetry of the grids compared with those we obtained for
+the point evaluation, which is due to the directionality of the
+x-derivative for which we tailored the refinement criterion.
 </p>
 
 <p>
 Then, it is interesting to compare actually computed values of the
 quantity of interest (i.e. the x-derivative of the solution at one
-point) with those values which we get from computing
-on finer meshes.
-TODO
+point) with a reference value of -0.211289... plus or minus
+0.000002. We get this reference value by computing on finer grid after
+some more mesh refinements, with approximately 130,000 cells.
+Recall that if the error is <em>O(1/N)</em> in the optimal case, then
+taking a mesh with ten times more cells gives us one additional digit
+in the result.
 </p>
 
+<p>
+In the left part of the following chart, you again see the convergence
+of the error towards this extrapolated value, while on the right you
+see a comparison of true and estimated error:
+<table align="center">
+  <tr>
+    <td width="50%">
+      <a href="step-14.data/point_value/error.gif" target="_top">
+      <img alt="Error in point value" width="318"
+      src="step-14.data/point_value/error.gif">
+      </img></a>
+    </td>
+
+    <td width="50%">
+      <a href="step-14.data/point_value/error-estimation.gif" target="_top">
+      <img alt="Error in point value" width="318"
+      src="step-14.data/point_value/error-estimation.gif">
+      </img></a>
+    </td>
+  </tr>
+</table>
+It is obvious that here the error estimates are not as good as
+previously, under-estimation the error by about a factor of 10. At
+least the sign is correct, leading to a slight improvement in the
+estimated values if we sum computed value and estimated error.
+</p>
+
+TODO: explanation!
 
 
 <h2>Step-13 revisited</h2>
@@ -290,8 +375,48 @@ If instead of the <code>Exercise_2_3</code> data set, we choose
 computations of the previous example program, to compare whether the
 results obtained with the help of the dual weighted error estimator
 are better than those we had previously.
-TODO
 </p>
+
+<p>
+First, the meshes after 9 and 10 adaptive refinement cycles,
+respectively, look like this:
+<table align="center">
+  <tr>
+    <td width="50%">
+      <a href="step-14.data/step-13/grid-9.gif"
+       target="_top"><img alt="Grid 9"
+      src="step-14.data/step-13/grid-9.gif">
+      </img></a>
+    </td>
+
+    <td width="50%">
+      <a href="step-14.data/step-13/grid-10.gif"
+       target="_top"><img alt="Grid 10"
+      src="step-14.data/step-13/grid-10.gif">
+      </img></a>
+    </td>
+  </tr>
+</table>
+The features of the solution can still be seen slightly, but since the
+solution is smooth, the roughness of the dual solution entirely
+dominates the mesh refinement criterion, and leads to strongly
+concentrated meshes. The solution after the seventh refinement step is
+like so:
+<table align="center">
+  <tr>
+    <td width="50%" align="center">
+      <a href="step-14.data/step-13/solution-7.gif"
+       target="_top"><img alt="Solution 7"
+      src="step-14.data/step-13/solution-7.gif">
+      </img></a>
+    </td>
+  </tr>
+</table>
+Obviously, the solution is worse at some places, but the mesh
+refinement process should have taken care that these places are not
+important for computing the point value.
+</p>
+TODO
 
 
 <h2>Outlook</h2>

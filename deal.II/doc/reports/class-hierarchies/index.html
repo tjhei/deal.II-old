@@ -484,8 +484,22 @@ individual entries.
   </em></dt>
 
   <dd>
-  Return whether this object is at the boundary. (Only available if
-  the dimension of the object is less than the space dimension.)
+  Return whether this object is at the boundary (if the dimension of
+  the object is less than the space dimension), or one of its faces is
+  at the boundary for cells.
+  </dd>
+
+
+  <dt><em>
+  has_boundary_lines ()
+  </em></dt>
+
+  <dd>
+  Return whether one of the lines bounding this cell is at the
+  boundary. For 1d and 2d this is equivalent to <em>at_boundary</em>,
+  in 3d, there are cases where bounding lines of a hex are at the
+  boundary, while the faces are in the interior. (Only for cell
+  iterators.)
   </dd>
 
 
@@ -523,6 +537,17 @@ individual entries.
   <dd>
   Return the length, area, or volume of an object, depending on the
   dimension of the object.
+  </dd>
+
+
+  <dt><em>
+  point_inside (point)
+  </em></dt>
+
+  <dd>
+  Return whether the given point is inside this cell, or rather the
+  (bi-, tri-)linearly mapped image of the unit cell with the vertices
+  of this cell. (Only for cell iterators.)
   </dd>
 
 

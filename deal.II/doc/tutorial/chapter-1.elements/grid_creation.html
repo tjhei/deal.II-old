@@ -160,43 +160,58 @@ to create a triangulation. This is probably best illustrated by an example.
 definitions and
 function calls needed. Be sure to use them in their appropriate places.
 This example will create a triangulation as shown in this figure. It will
-work only in two dimensions.
+work only in two dimensions. It creates three rectangular cells, the leftmost 
+boundary is a Neumann-boundary.
 </p>
 <pre class="example">
 <code>
-const Point&lt;2&rt; vertices[8] = { Point&lt;2&rt; (0,0),               
-                                 Point&lt;2&rt; (1,0),               
-                                 Point&lt;2&rt; (1,1),
-                                 Point&lt;2&rt; (0,1),            
-                                 Point&lt;2&rt; (2,0),        
-                                 Point&lt;2&rt; (2,1),         
-                                 Point&lt;2&rt; (3,0),      
-                                 Point&lt;2&rt; (3,1)  };
+// First, create an array holding the (2-dimensional) vertices
+const Point&lt;2&gt; vertices[8] = { Point&lt;2&gt; (0,0),               
+                                 Point&lt;2&gt; (1,0),               
+                                 Point&lt;2&gt; (1,1),
+                                 Point&lt;2&gt; (0,1),            
+                                 Point&lt;2&gt; (2,0),        
+                                 Point&lt;2&gt; (2,1),         
+                                 Point&lt;2&gt; (3,0),      
+                                 Point&lt;2&gt; (3,1)  };
+
+// Next, create a two-dimensional array holding the information
+// on what cell consists of which vertices
 const int cell_vertices[3][4] = {{0, 1, 2, 3},      
                                  {1, 4, 5, 2},
                                  {4, 6, 7, 5}};
-                                                                            
-vector&lt;CellData&lt;2&rt; &rt; cells (3, CellData&lt;2&rt;());                
-                                                                                
+
+// Next, create a vector of type CellData&lt;2&gt; that holds the
+// cells
+vector&lt;CellData&lt;2&gt; &gt; cells (3, CellData&lt;2&gt;());             
+
+// The information on the cells is copied into this vector and the 
+// material is set to 0. This index can be used to distinguish cells
+// of different types. 
 for (unsigned int i=0; i&lt;3; ++i)                                        
   {                                                         
     for (unsigned int j=0; j&lt;4; ++j)        
       cells[i].vertices[j] = cell_vertices[i][j];
     cells[i].material_id = 0;
   };
-                                                                         
+
+// The Neumann boundary is set below:
+// Boundaries are parts of cells, therefore the class is called SubCellData
+// to distinguish them from cell data like vertices and material.
 SubCellData boundary_info;                                       
-if (boundary_conditions == wave_from_left_bottom)                
-  {                                               
-                                     // use Neumann bc at left
-                                     // (mirror condition)
-    boundary_info.boundary_lines.push_back (CellData&lt;1&rt;());
-    boundary_info.boundary_lines.back().material_id = 1;
-    boundary_info.boundary_lines[0].vertices[0] = 0; 
-    boundary_info.boundary_lines[0].vertices[1] = 3;
-  };                                          
-                                                       
-coarse_grid-&rt;create_triangulation (vector&lt;Point&lt;2&rt; &rt;(&vertices[0],
+
+// We are using a boundary of cell number 1
+boundary_info.boundary_lines.push_back (CellData&lt;1&gt;());
+
+// The boundary gets a material id of 
+boundary_info.boundary_lines.back().material_id = 1;
+
+// The boundary is between vertices number 1 and 3
+boundary_info.boundary_lines[0].vertices[0] = 0; 
+boundary_info.boundary_lines[0].vertices[1] = 3;
+
+// From this information the triangulation is created 
+coarse_grid-&gt;create_triangulation (vector&lt;Point&lt;2&gt; &gt;(&vertices[0],
                                                        &vertices[8]),
                                                        cells, boundary_info);
 </code>

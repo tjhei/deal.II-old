@@ -38,6 +38,12 @@ DoFHandler&lt;dim&gt; dof;
 // Your degrees of freedom must already be distributed
 
 smstruct.reinit(dof.n_dofs(),dof.n_dofs(),dof.max_couplings_between_dofs());
+
+// If you grid is locally refined, <a href="matrix_structure.html#smstruct">condense the hanging nodes</a> into the
+// structure.
+
+smstruct.compress();
+
 sm.reinit(smstruct);
 </code>
 </pre>

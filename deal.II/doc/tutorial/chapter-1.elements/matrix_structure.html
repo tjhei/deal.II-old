@@ -65,6 +65,7 @@ appropriate places. This example initializes a sparse square matrix structure.
 int dim=2; // For example
 SparseMatrixStruct&lt;double&gt; smstruct;
 DoFHandler&lt;dim&gt; dof;
+ConstraintMatrix hanging_nodes;  // Only necessary for locally refined grids
 
 // Your degrees of freedom must already be distributed
 
@@ -126,7 +127,7 @@ smstruct.compress();
 <table class="navbar">      
 <tr>
   <td>
-    <a href="matrix_generation.html">Next Chapter: MAtrix and Vector Generation</a>
+    <a href="matrix_generation.html">Next Chapter: Matrix and Vector Generation</a>
   </td>
   <td>
     <a href="toc.html">Back to this chapter's index</a>

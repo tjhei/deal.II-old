@@ -2,6 +2,18 @@
 11. 12. 13. 
 21. 22. 23. 
 31. 32. 33. 
+DEAL::Row 0	Col 0	Val 11.000
+DEAL::Row 0	Col 1	Val 12.000
+DEAL::Row 0	Col 2	Val 13.000
+DEAL::Row 1	Col 0	Val 21.000
+DEAL::Row 1	Col 1	Val 22.000
+DEAL::Row 1	Col 2	Val 23.000
+DEAL::Row 2	Col 0	Val 31.000
+DEAL::Row 2	Col 1	Val 32.000
+DEAL::Row 2	Col 2	Val 33.000
+DEAL::Row 1	Col 0	Val 21.000
+DEAL::Row 1	Col 1	Val 22.000
+DEAL::Row 1	Col 2	Val 23.000
 DEAL::Inverse(dim=1):
 DEAL::Inverse(dim=2):
 DEAL::Inverse(dim=3):

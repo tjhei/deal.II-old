@@ -276,8 +276,9 @@ int main ()
           
           default:
           {
-            std::cerr << "Invalid action key ('" << action
-                      << "'=" << static_cast<unsigned int>(action) << ")!!"
+            std::cerr << "------ error " << ret << " on client side!"
+                      << " Invalid action key ('" << action
+                      << "'=" << static_cast<unsigned int>(action) << ")!"
                       << std::endl;
             abort();
           };

@@ -51,7 +51,7 @@ sub tablehead {
 
     print
 "%% Table compiled by filelist.pl 
-%% Jan Schrage <schrage\@gaia.iwr.uni-heidelberg.de> 1999
+%% Jan Schrage <deal\@iwr.uni-heidelberg.de> 1999
 \\begin{table}
 \\caption{Directory listing of $ttitle}
 \\begin{tabular}[l r r]

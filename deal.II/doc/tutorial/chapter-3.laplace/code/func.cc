@@ -1,6 +1,5 @@
 // $Id$
 
-// JS. 
 const char* funcversion = "Functions: $Revision$";
 
 #include "functions.h"

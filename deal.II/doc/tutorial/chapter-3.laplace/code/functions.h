@@ -1,6 +1,5 @@
 // $Id$
 
-// JS.Wird das File ueberhaupt gebraucht ?
 
 #include <base/function.h>
 

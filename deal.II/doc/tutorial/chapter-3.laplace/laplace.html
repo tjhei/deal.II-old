@@ -22,10 +22,9 @@ Let's have a look at the class definition:
 <code>
 class Laplace
 {
-  Function<2>& exact;
-protected:
+
   Triangulation<2> tr;
-  DoFHandler<2> dof_primal;
+  DoFHandler<2> dof;
 
   dSMatrixStruct matrix_structure;
   LapMatrix A;
@@ -35,11 +34,11 @@ protected:
 <code>
 </pre>
 <p>
-These few lines define several important elements: The right hand side of the equation 
-<em>exact</em>, the triangulation <em>tr</em>, i.e. the grid, and a handler for the degrees
-of freedom for the finite elements <em>dof_primal</em>, all for the two-dimensional case. 
-In addition three matrices are defined (the matrix <em>A</em> defining our problem). Note that 
-in order to solve any problem at all with DEAL the definitions above are paramount.
+These few lines define several important elements: The triangulation <code>tr</code>, i.e. the grid, and a handler for the degrees
+of freedom for the finite elements <code>dof</code>, all for the two-dimensional case. 
+In addition one matrix structure and two matrices are defined (the matrix <code>A</code> defining our problem). Further explanation can be found in the 
+chapter <a href="assemble.html#matrix">Assembling the problem</a>. Note that 
+in order to solve any problem at all with <acronym>deal.II</acronym> the definitions above are paramount.
 </p>
 
 <p>
@@ -49,31 +48,19 @@ The constructor has the task of generating a triangulation, too.
 <pre>
 <code>
 public:
-  Laplace(Function<2>& solution);
+  Laplace();
   ~Laplace();
 </code>
 </pre>
 <p>
-The next few functions refine the grid - non-adaptively - assemble the primal problem and
+The next few functions refine the grid - non-adaptively - assemble the problem and
 call the appropriate solver.
 </p>
 <pre>
 <code>
   void remesh(unsigned int global_refine = 0);
-  void assemble_primal(const Function<2>& boundary, const Function<2>& rhs);
-  void solve_primal();
-</code>
-</pre>
-<!--
-  double result(const Function<2>& interior, const Function<2>& boundary);
-  double estimate(const Function<2>& boundary, const Function<2>& rhs);
-  
-  void adapt();
-
-  void write_data(const char* name);
-
-  void fill_vector(dVector& v, const Function<2>& f) const;
--->
+  void assemble();
+  void solve();
 };
 </code>
 </pre>

@@ -12,7 +12,7 @@
 
 <h1>The Laplace Problem</h1>
   
-<h2>Main Program: <a href="../../../examples/01.laplace/main.cc">main.cc</a></h2>
+<h2>Main Program: <a href="code/main.cc">main.cc</a></h2>
 <p>
 The main program has several functions:
 </p>
@@ -46,8 +46,8 @@ the function definition for our solution function are included:
 
 <pre>
 <code>
-#include "<a href="../../../examples/01.laplace/laplace.h">laplace.h</a>"
-#include "<a href="../../../examples/01.laplace/functions.h">functions.h</a>"
+#include "<a href="code/laplace.h">laplace.h</a>"
+#include "<a href="code/functions.h">functions.h</a>"
 </code>
 </pre>
     
@@ -78,7 +78,10 @@ Laplace lap;
 
 <p>
 In addition we need to do some refinement (the command line argument was
-previously stored in the variable <var>firstgrid</var>.
+previously stored in the variable <var>firstgrid</var>. During the first 
+execution
+of the loop global refinement is done <var>firstgrid</var> times, every 
+following time it is done once more.
 </p>
 <pre><code>
 for (unsigned step = 0; step &lt; 3 ; ++step)   
@@ -94,13 +97,11 @@ for (unsigned step = 0; step &lt; 3 ; ++step)
 
 <h4><a name="laplace">Problem assemblage and solution</a></h4>
 <p>
-Our class assembles and solves the primal problem; the solution is exact (as defined above) 
-and the right hand side of the equation is zero (as defined above). If the right
-hand side were not zero we would solve the Poisson equation instead.
+Our class assembles and solves the primal problem.
 </p>
 <pre><code>
-  lap.assemble_primal(boundary, zero); 
-  lap.solve_primal();          
+  lap.assemble(); 
+  lap.solve();          
 </code></pre>
 
 <h4><a name="output">Data output</a></h4>
@@ -108,7 +109,6 @@ hand side were not zero we would solve the Poisson equation instead.
 Finally the solution is written to a file.</p>
 <pre>
 <code>
-  sprintf(fname,"T%02d",step);    
   lap.write_data(fname);   
  }   
 }

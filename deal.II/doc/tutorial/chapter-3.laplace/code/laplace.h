@@ -7,16 +7,16 @@
 #include <grid/dof_constraints.h>
 #include <grid/tria_boundary.h>
 #include <lac/vector_memory.h>
-#include <lac/dvector.h>
-#include <lac/dsmatrix.h>
+#include <lac/vector.h>
+#include <lac/sparsematrix.h>
 
-class AdvMatrix :
-  public dSMatrix
+class AdvMatrix : 
+  public SparseMatrix<double>
 {
 public:
-  void precondition(dVector& dst, const dVector& src) const
+  void precondition(Vector<double>& dst, const Vector<double>& src) const
       {
-	dSMatrix::precondition_SSOR(dst, src);
+	SparseMatrix::precondition_SSOR(dst, src);
       }
 };
 
@@ -26,16 +26,16 @@ class Laplace
 protected:
   Point<2> direction;
   Triangulation<2> tr;
-  DoFHandler<2> dof_primal;
+  DoFHandler<2> dof;
 
-  dSMatrixStruct matrix_structure;
+  SparseMatrixStruct matrix_structure;
   AdvMatrix A;
   
-  dVector u;
-  dVector z;
-  dVector f;
+  Vector<float> u;
+  Vector<float> z;
+  Vector<float> f;
 
-  PrimitiveVectorMemory<dVector> mem;
+  PrimitiveVectorMemory<float> mem;
   
   ConstraintMatrix hanging_nodes;
 
@@ -46,8 +46,8 @@ public:
   ~Laplace();
 
   void remesh(unsigned int global_refine = 0);
-  void assemble_primal();
-  void solve_primal();
+  void assemble();
+  void solve();
 
   void write_data(const char* name);
 };

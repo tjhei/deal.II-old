@@ -11,6 +11,28 @@
 <body>
 <h1>Solving the problem</h1>
 
+<p>
+Now that the problem matrix is assembled we need to define an appropriate
+solver. In this case we use a <tt>CG</tt>-solver with a maximum of 1000 
+iterations and a threshold of 1e-10.
+</p>
+
+<pre><code>
+void
+Laplace::solve_primal()
+{
+
+  SolverControl control(1000, 1.e-10);
+
+  SolverCG<AdvMatrix, dVector> solver(control, mem);
+  
+  solver.solve(A,u,f);
+  
+  hanging_nodes.distribute(u);
+
+}
+</code></pre>
+
 <hr>
 <p>
 <a href="../index.html">Back to the tutorial index</a>

@@ -6,6 +6,10 @@ while (<>) {
 	$newlevel = $1;
 	$text = $2;
 	
+	# replace quotation marks by the appropriate HTML quotation marks
+	$text =~ s!``!&#8220;!g;
+	$text =~ s!''!&#8221;!g;
+
 	# only allow header levels 3 and 4, since higher ones are
 	# reserved for top-level document headers
 	if (! ($newlevel =~ /[34]/)) {

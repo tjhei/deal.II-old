@@ -8,8 +8,10 @@ validate-xrefs:
 	for dir in * ; do \
 	  if test -d $$dir -a ! $$dir = CVS ; then \
 	    cd $$dir ; \
-	    echo "Checking `pwd`" ; \
-	    $(PERL) $D/common/scripts/validate-xrefs.pl *html ; \
+	    if (ls -l | grep html > /dev/null) ; then \
+	      echo "Checking `pwd`" ; \
+	      $(PERL) $D/common/scripts/validate-xrefs.pl *html ; \
+            fi ; \
 	    cd .. ; \
 	  fi ; \
 	done

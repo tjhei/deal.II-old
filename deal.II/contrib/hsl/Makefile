@@ -49,7 +49,7 @@ $(LIBDIR)/libhsl.so: $(forward-declarations) $(o-files)
 # main program, and communicates through a pipe. since this program
 # has actually nothing much to do, compile it in debug mode
 $(LIBDIR)/bin/detached_ma27$(EXEEXT): source/detached_ma27.cc include/hsl/hsl.h \
-				$(lib-contrib-hsl)
+				$(LIBDIR)/libhsl$(lib-suffix)
 	@echo =====hsl=========================$(MT)== Making   $(@F)
 	@$(CXX) $(CXXFLAGS.g) $< -o $@ $(lib-contrib-hsl) $(lib-base.o) $(F77LIBS) -lpthread $(LIBS)
 

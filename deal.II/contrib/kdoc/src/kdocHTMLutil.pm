@@ -393,15 +393,15 @@ sub printDoc
 				if !defined $type;
 
 			if( $lasttype eq "ListItem" && $type ne $lasttype ) {
-				print CLASS "</ul><p>\n";
+				print CLASS "</ul>\n\n<p>\n";
 			}
 
                         if( $type eq "DocText" ) {
                                 print CLASS "", deref( $name, $rootnode );
                         }
                         elsif ( $type eq "Pre" ) {
-                                print CLASS "</p><pre>\n",
-					esc( $name ), "\n</pre><p>";
+                                print CLASS "</p>\n\n<pre>\n",
+					esc( $name ), "\n</pre>\n\n<p>\n";
                         }
 			elsif( $type eq "Ref" ) {
 				my $ref = $node->{Ref};
@@ -414,19 +414,19 @@ sub printDoc
 				}
 			}
 			elsif ( $type eq "DocSection" ) {
-				print CLASS "</p><H3>",
-					deref( $name, $rootnode),"</H3><p>";
+				print CLASS "</p>\n\n<H3>",
+					deref( $name, $rootnode),"</H3>\n<p>\n";
 			}
 			elsif ( $type eq "Image" ) {
-				print CLASS "</p><img url=\"",
-					$node->{Path}, "\"><p>";		
+				print CLASS "</p>\n<img url=\"",
+					$node->{Path}, "\">\n<p>\n";
 			}
                         elsif ( $type eq "ParaBreak" ) {
-                                print CLASS "</p><p>";
+                                print CLASS "</p>\n\n<p>";
                         }
 			elsif ( $type eq "ListItem" ) {
 				if ( $lasttype ne "ListItem" ) {
-					print CLASS "</p><ul>\n";
+					print CLASS "</p>\n\n<ul>\n";
 				}
 				print CLASS "<li>", 
 					deref( $name, $rootnode ), "</li>\n";
@@ -436,10 +436,10 @@ sub printDoc
                 }
 
 		if( $type eq "ListItem" ) {
-			print CLASS "</ul><p>\n";
+			print CLASS "</ul>\n\n<p>\n";
 		}
 
-                print CLASS "</p>";
+                print CLASS "</p>\n";
 
         }
 
@@ -602,18 +602,43 @@ sub deref
 	my $out = "";
 	my $text;
 
-	foreach $text ( split (/(\@\w+\s+[\w:#]+)/, $str ) ) {
-		if ( $text =~ /\@ref\s+([\w:#]+)/ ) {
-			my $name = $1;
-			$name =~ s/^\s*#//g;
-			$out .= wordRef( $name, $rootnode );
+	# escape @x commands
+	foreach $text ( split (/(\@\w+(?:\s+.+?(?=\s)|\{.*?\}))/, $str ) ) {
+
+	        # check whether $text is an @command or the text between
+	        # @commands
+		if (  $text =~ /\@(\w+)(?:\s+(.+?)(?:\s|$)|\{(.*?)\})/ )   {
+                        my $command = $1;
+			my $content = $2 . $3;
+
+			# @ref -- cross reference
+			if ( $command eq "ref" ) {
+			    $content =~ s/^\s*#//g;
+			    $out .= wordRef( $content, $rootnode );
+			}
+
+			# @p  -- typewriter
+			elsif ( $command eq "p" ) {
+			    $out .= "<code>".esc($content)."</code>";
+			}
+
+			# @em -- emphasized
+			elsif ( $command eq "em" ) {
+			    $out .= "<em>".esc($content)."</em>";
+			}
+
+			# @sect1-4 -- section header
+			elsif ( $command =~ /^sect([1-4])$/ ) {
+			    $out .= "<h$1>".esc($content)."</h$1>";
+			}
+
+			# unknown command. warn and copy command
+			else {
+			    print "Unknown command @", $command, "\n";
+			    $out .= esc($text);
+			}
 		}
-		elsif ( $text =~ /\@p\s+([\w:#]+)/ ) {
-			$out .= "<code>".esc($1)."</code>";
-		}
-		elsif ( $text =~/\@em\s+(\w+)/ ) {       # emphasized
-			$out .= "<em>".esc($1)."</em>";
-		}
+		# no @x command, thus regular text
 		else {
 			$out .= esc($text);
 		}

@@ -688,7 +688,7 @@ EOF
 		$type = $m->{NodeType};
 		$name = B( "b", $name );
 
-		print CLASS "<LI>";
+		print CLASS "<LI>\n";
 
 		if( $type eq "var" ) {
 			print CLASS esc( $m->{Type}), " $name\n";
@@ -721,7 +721,7 @@ EOF
 			print CLASS esc($type), " $name\n";
 		}
 
-		print CLASS "</LI>\n";
+		print CLASS "</LI>\n\n";
 	}
 
 print CLASS<<EOF;

@@ -564,12 +564,14 @@ sub identifyDecl
 
 	# Typedef
 	elsif ( $decl =~ /^\s*typedef\s+
+                        (?:typename\s+)?        # `typename' keyword
 			(.*?\s*[\*&]?)		# type
-			\s*([-\w_\:]+)		# name
+			\s+([-\w_\:]+)		# name
+			\s*(\[[-\w_\:<>\s]*\])?              # array
 			\s*[{;]\s*$/xs  ) {
 
-		print "Typedef: <$1> <$2>\n" if $debug;
-		$newNode = newTypedef( $1, $2 );
+		print "Typedef: <$1 $3> <$2>\n" if $debug;
+		$newNode = newTypedef( $1.$3, $2 );
 	}
 
 	# Enum
@@ -657,7 +659,7 @@ sub identifyDecl
 		my $pure = $4 eq "" ? 0 : 1;
 
 		if ( $tpn =~ /((?:\w+\s*::\s*)?operator.*?)\s*$/	# operator
-					|| $tpn =~ /((?:\w*\s*::\s*~?)?[-\w:]+)\s*$/ ) { # normal
+				|| $tpn =~ /((?:\w*(?:\s*<[\w\s_,]*>\s*)?\s*::\s*~?)?[-\w:]+)\s*$/ ) { # normal
 				my $name = $1;
 				$tpn = $`;
 				$newNode = newMethod( $tpn, $name, 
@@ -1145,7 +1147,7 @@ sub newMethod
 	print "Cracked: [$retType] [$name]\n\t[$params]\n\t[$const]\n" 
 		if $debug;
 
-    if ( $retType =~ /([\w\s_<>,]+)\s*::\s*$/ ) {
+    if ( $retType =~ /(\w+(<[\w\s_,]*>|\s*::\s*\w+)*)\s*::\s*$/ ) {
 		# check if stuff before :: got into rettype by mistake.
 		$retType = $`;
 		($name = $1."::".$name);

@@ -84,3 +84,41 @@ shown above demonstrate that our program indeed is able to reduce the energy
 in the solution in each iteration, as should be.
 </p>
 
+<p>
+Since the program did not really deliver the goal we had originally intended
+for (the computation of the minimal energy of finite element spaces), the
+graphical output is also not very exciting. Here are plots of five of the
+first 10 solutions (clicking on a picture gives the unscaled version of the
+image):
+</p>
+
+<p align="center">
+  <a href="step-15.data/solutions-1.png" target="_top"><img
+  src="step-15.data/solutions-1.png" alt="ux" width="60%"></a>
+</p>
+
+<p>
+And here are the first 100 solutions, where each node in each solution is
+represented as a dot. As can be seen, all the solutions cluster somewhat
+around the <i>x<sup>3</sup></i> curve, here shown in turquoise:
+</p>
+
+<p align="center">
+  <a href="step-15.data/solutions-2.png" target="_top"><img
+  src="step-15.data/solutions-2.png" alt="ux" width="60%"></a>
+</p>
+
+<p>
+Note that this behavior is mostly independent of the choice of starting data
+(which we have chosen to be close to this curve), which a posteriori justfies
+our choice. Some of the curves actually show a linear behavior of the solution
+close to the origin; this is particularly obvious when the curves are viewed
+in a log-log plot (not shown here, but rather left as an exercise to the
+reader).
+</p>
+
+<p>
+Given the almost complete absence of interesting results of this program, we
+hope that at least its source code provided some information with respect to
+programming with deal.II
+</p>

@@ -131,4 +131,4 @@ DEAL:3d:subfaces::Quadrature no.14 (6QGaussILi2EE) is exact for polynomials of d
 DEAL:3d:subfaces::Quadrature no.15 (6QGaussILi2EE) is exact for polynomials of degree 9
 DEAL:3d:subfaces::Quadrature no.16 (6QGaussILi2EE) is exact for polynomials of degree 11
 DEAL:3d:subfaces::Quadrature no.17 (6QGaussILi2EE) is exact for polynomials of degree 13
-DEAL:3d:subfaces::Quadrature no.18 (6QGaussILi2EE) is exact for polynomials of degree 15
+DEAL:3d:subfaces::Quadrature no.18 (6QGaussILi2EE) is exact for polynomials of degree 16

@@ -16,7 +16,7 @@ $(example-htmls):
 	@echo ================== Assembling $@
 	@cat head.html > $@
 	@cat $(@:.html=.data/intro.html) >> $@
-	cat $D/examples/$(@:.html=)/$(@:.html=.cc) \
+	@cat $D/examples/$(@:.html=)/$(@:.html=.cc) \
 	  | $(PERL) program2html \
 	  >> $@
 	@cat $(@:.html=.data/results.html) >> $@

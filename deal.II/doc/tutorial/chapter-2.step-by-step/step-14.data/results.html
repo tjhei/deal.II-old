@@ -385,12 +385,27 @@ see a comparison of true and estimated error:
   </tr>
 </table>
 It is obvious that here the error estimates are not as good as
-previously, under-estimation the error by about a factor of 10. At
+previously, under-estimation the error by about a factor of 2-4. At
 least the sign is correct, leading to a slight improvement in the
 estimated values if we sum computed value and estimated error.
 </p>
 
-TODO: explanation!
+<p>
+The difference between true and estimated error can be tracked down to
+the bad approximation of the dual solution. After all, in 2d, the dual
+solution has a <em>1/r</em> singularity near the evaluation point
+(while the dual solution for the point value only has a logarithmic
+singularity there), which does not allow for a good approximation of
+the dual solution by any finite element space. Indeed, computing the
+dual solution with even higher order (i.e. cubic or quartic) finite
+elements does not significantly improve the quality of error
+estimates. Intuitively, the reason is that the numerical approximation
+cannot follow accurately the simgularity of the dual solution; its
+resulting values near the point of evaluation are thus too small, and
+the error is underestimated there. Since the error is very much
+concentrated near the point of evaluation, this spoils the entire
+estimate.
+</p>
 
 
 <h2>Step-13 revisited</h2>

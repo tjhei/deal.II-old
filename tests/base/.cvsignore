@@ -4,3 +4,4 @@
 Makefile.depend
 *.check *.OK
 *.exe
+threads.cc

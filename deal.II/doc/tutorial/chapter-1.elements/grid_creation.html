@@ -96,7 +96,9 @@ away the hypercube [left+right/2,right]<sup>dimension</sup>.
 The hyper-L is mainly of use in testing grid refinement, error estimates etc.
 Boundary conditions of the form <code>u=g</code> on the faces of the original
 hypercube and <code>&part;<sub>n</sub>u=0</code> on the "inner" faces resulting
-from the smaller hypercube taken away.
+from the smaller hypercube taken away  are chosen, this will usually lead to
+a singular solution because of the reentrant corner; these singularities 
+can be used to test the efficiency of error estimators.
 </p>
 
 <p class="example">

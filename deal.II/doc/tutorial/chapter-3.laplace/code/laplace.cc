@@ -88,6 +88,7 @@ Laplace::assemble()
   hanging_nodes.clear();
   dof.make_constraint_matrix(hanging_nodes);
   hanging_nodes.condense(matrix_structure);
+  matrix_structure.compress(); 
   
   // The problem has the form Au=f.
   A.reinit(matrix_structure);

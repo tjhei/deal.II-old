@@ -33,7 +33,8 @@ Before you can build the appropriate matrices for your problem you
 need to ascertain where the components of your matrix are non-zero 
 and generate a structure for storing the matrix accordingly. 
 This structure
-is then used to actually initialize the matrix.
+is then used to actually initialize the matrix, i.e.
+tell the matrix for which elements to allocate memory.
 </p>
 
 <h3>The Standard Sparse Matrix</h3>
@@ -73,10 +74,28 @@ smstruct.reinit(dof.n_dofs(),dof.n_dofs(),dof.max_couplings_between_dofs());
 <h3>Compression of Matrix Structures</h3>
 
 <p>
-Sparse matrix structure can (and indeed must) be compressed. They can be
-compressed because it saves memory and they must be compressed because
-the classes dealing with sparse matrices require it.
+Sparse matrix structures can (and indeed must) be compressed before they are used 
+in objects of the class <code>SparseMatrix&lt;&gt;</code> that actually hold the matrix
+data. The reason for this is the way matrix structures and matrices are generated:
+<ul>
+      <li>Initially a fixed number of non-zero entries is allocated for each matrix row.
+	Usually, though, rows will have much less entries than this maximum number. Rows
+	rows corresponding to degrees of freedom
+	on cells with hanging nodes have more entries than rows corresponding to degrees of freedom
+	in regular regions of the grid.
+      </li>
+      <li> When you compress the matrix structure
+	you stop adding new non-zero entries and all unused entries in each row
+	are deleted. Thus memory is saved.
+      </li>
+      <li> Only now are you allowed to associate this matrix structure
+	to a matrix object which then allocates memory for each non-zero entry,
+	rather than for the maximum number of non-zero entries of each row.
+      </li>
+</ul>
+
 The appropriate function is <code>void SparseMatrixStruct::compress()</code>.
+</p>
 
 <p class="Example">
 <span class="example">Example:</span> Starting from <a href="#smstruct">the example above</a>, we

@@ -50,6 +50,11 @@ The degrees of freedom are distributed on a triangulation using the function<br>
 <code>void DoFHandler::distribute_dofs(const FiniteElement&lt;dim&gt; &amp;)</code><br>
 The argument to <code>distribute_dofs</code> is a finite element that describes
 how many degrees of freedom are located on vertices, lines etc. 
+(<code>FiniteElement</code> objects have much more functionality than only storing
+these numbers. This functionality is discussed partly in the chapter on 
+<a href="matrix_generation.html">matrix and vector
+generation</a>
+and partly in URL_NEEDS_TO_BE_SET.)
 <code>distribute_dofs</code> works its way through the triangulation cell by
 cell, starting at the coarsest level, and numbers every degree of freedom that is not yet numbered.
 For non-multigrid algorithms it considers only active cells, i.e. cells 

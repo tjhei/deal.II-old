@@ -1,6 +1,11 @@
 
-body { bgcolor: white; background-color: white; }
+body { background-image: none;
+       background-color: white; 
+     }
 
+frameset { background-color: white;
+	   border-color: white;
+         }
 
 span.parhead { font-weight: bold;
      	     } 	

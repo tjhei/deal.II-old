@@ -1,7 +1,10 @@
 # $Id$
 # Create proper HTML output from the different example programs
 
-example-directories = $(shell echo ../../../deal.II/examples/step-by-step/step-*)
+# include paths and global variables
+include ../../../common/Make.global_options
+
+example-directories = $(shell echo $D/deal.II/examples/step-by-step/step-*)
 example-names       = $(notdir $(example-directories))
 example-htmls       = $(addsuffix .html,$(example-names))
 
@@ -13,11 +16,11 @@ $(example-htmls):
 	@cat step-by-step.header > $@
 	@cat $(@:.html=.intro) >> $@
 	@cat ../../../deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc) \
-	  | perl program2html \
+	  | $(PERL) program2html \
 	  >> $@
 	@cat $(@:.html=.results) >> $@
 	@cat ../../../deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc) \
-	  | perl program2plain \
+	  | $(PERL) program2plain \
 	  >> $@
 	@cat step-by-step.foot >> $@
 

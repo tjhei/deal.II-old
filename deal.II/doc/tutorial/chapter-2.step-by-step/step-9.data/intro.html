@@ -1,3 +1,624 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
 
+<P>
+In this example, our aims are the following:
+<UL>
+<LI>solve the advection equation 
+<!-- MATH: $\beta \cdot \nabla u = f$ -->
+<IMG
+ WIDTH="78" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img1.gif"
+ ALT="$\beta \cdot \nabla u = f$">;
+<LI>show how we can use multiple threads to get quicker to
+    the desired results if we have a multi-processor machine;
+<LI>develop a simple refinement criterion.
+</UL>While the second aim is difficult to describe in general terms without
+reference to the code, we will discuss the other two aims in the
+following. The use of multiple threads will then be detailed at the
+relevant places within the program. Furthermore, there exists a report on this
+subject, which is also available online from the ``Documentation'' section of
+the deal.II homepage.
+
+<P>
+
+<H4><A NAME="SECTION00000010000000000000">
+Discretizing the advection equation.</A>
+</H4>
+In the present example program, we shall numerically approximate the
+solution of the advection equation
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+\beta \cdot \nabla u = f,
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="77" HEIGHT="27"
+ SRC="step-9.data/intro/img3.gif"
+ ALT="\begin{displaymath}\beta \cdot \nabla u = f,
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+where <IMG
+ WIDTH="13" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img4.gif"
+ ALT="$\beta$">
+is a vector field that describes advection direction and
+speed (which may be dependent on the space variables), <I>f</I> is a source
+function, and <I>u</I> is the solution. The physical process that this
+equation describes is that of a given flow field <IMG
+ WIDTH="13" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img4.gif"
+ ALT="$\beta$">,
+with which
+another substance is transported, the density or concentration of
+which is given by <I>u</I>. The equation does not contain diffusion of this
+second species within its carrier substance, but there are source
+terms.
+
+<P>
+It is obvious that at the inflow, the above equation needs to be
+augmented by boundary conditions:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+u = g \qquad\qquad \text{on $\partial\Omega_-$},
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="159" HEIGHT="28"
+ SRC="step-9.data/intro/img5.gif"
+ ALT="\begin{displaymath}u = g \qquad\qquad \text{on $\partial\Omega_-$},
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+where 
+<!-- MATH: $\partial\Omega_-$ -->
+<IMG
+ WIDTH="35" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img6.gif"
+ ALT="$\partial\Omega_-$">
+describes the inflow portion of the boundary and is
+formally defined by
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+\partial\Omega_-
+=
+  \{\vec x\in \partial\Omega: \beta\cdot\vec n(\vec x) < 0\},
+
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="219" HEIGHT="28"
+ SRC="step-9.data/intro/img7.gif"
+ ALT="\begin{displaymath}\partial\Omega_-
+=
+\{\vec x\in \partial\Omega: \beta\cdot\vec n(\vec x) < 0\},
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+and 
+<!-- MATH: $\vec n(\vec x)$ -->
+<IMG
+ WIDTH="35" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img8.gif"
+ ALT="$\vec n(\vec x)$">
+being the outward normal to the domain at point
+
+<!-- MATH: $\vec x\in\partial\Omega$ -->
+<IMG
+ WIDTH="53" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img9.gif"
+ ALT="$\vec x\in\partial\Omega$">.
+This definition is quite intuitive, since
+as <IMG
+ WIDTH="13" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-9.data/intro/img10.gif"
+ ALT="$\vec n$">
+points outward, the scalar product with <IMG
+ WIDTH="13" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img4.gif"
+ ALT="$\beta$">
+can only
+be negative if the transport direction <IMG
+ WIDTH="13" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img4.gif"
+ ALT="$\beta$">
+points inward, i.e. at
+the inflow boundary. The mathematical theory states that we must not
+pose any boundary condition on the outflow part of the boundary.
+
+<P>
+As it is stated, the transport equation is not stably solvable using
+the standard finite element method, however. The problem is that
+solutions to this equation possess only insufficient regularity
+orthogonal to the transport direction: while they are smooth parallel
+to <IMG
+ WIDTH="13" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img4.gif"
+ ALT="$\beta$">,
+they may be discontinuous perpendicular to this
+direction. These discontinuities lead to numerical instabilities that
+make a stable solution by a straight-forward discretization
+impossible. We will thus use the streamline diffusion stabilized
+formulation, in which we test the equation with test functions 
+<!-- MATH: $v +
+\delta \beta\cdot\nabla v$ -->
+<IMG
+ WIDTH="82" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img11.gif"
+ ALT="$v +
+\delta \beta\cdot\nabla v$">
+instead of <I>v</I>, where <IMG
+ WIDTH="11" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-9.data/intro/img12.gif"
+ ALT="$\delta$">
+is a
+parameter that is chosen in the range of the (local) mesh width <I>h</I>;
+good results are usually obtained by setting 
+<!-- MATH: $\delta=0.1h$ -->
+<IMG
+ WIDTH="62" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-9.data/intro/img13.gif"
+ ALT="$\delta=0.1h$">.
+Note that
+the modification in the test function vanishes as the mesh size tends
+to zero. We will not discuss reasons, pros, and cons of the streamline
+diffusion method, but rather use it ``as is'', and refer the
+interested reader to the sufficiently available literature; every
+recent good book on finite elements should have a discussion of that
+topic.
+
+<P>
+Using the test functions as defined above, the weak formulation of
+our stabilized problem reads: find a discrete function <I>u</I><SUB><I>h</I></SUB> such that
+for all discrete test functions <I>v</I><SUB><I>h</I></SUB> there holds
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+(\beta \cdot \nabla u_h, v_h + \delta \beta\cdot\nabla v_h)_\Omega
+-
+  (\beta\cdot \vec n u_h, v_h)_{\partial\Omega_-}
+  =
+  (f, v_h + \delta \beta\cdot\nabla v_h)_\Omega
+  -
+  (\beta\cdot \vec n g, v_h)_{\partial\Omega_-}.
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="582" HEIGHT="29"
+ SRC="step-9.data/intro/img14.gif"
+ ALT="\begin{displaymath}(\beta \cdot \nabla u_h, v_h + \delta \beta\cdot\nabla v_h)_\...
+...v_h)_\Omega
+-
+(\beta\cdot \vec n g, v_h)_{\partial\Omega_-}.
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+Note that we have included the inflow boundary values into the weak
+form, and that the respective terms to the left hand side operator are
+positive definite due to the fact that 
+<!-- MATH: $\beta\cdot\vec n<0$ -->
+<IMG
+ WIDTH="64" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img15.gif"
+ ALT="$\beta\cdot\vec n<0$">
+on the
+inflow boundary. One would think that this leads to a system matrix
+to be inverted of the form
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+a_{ij} =
+(\beta \cdot \nabla \varphi_i,
+   \varphi_j + \delta \beta\cdot\nabla \varphi_j)_\Omega
+  -
+  (\beta\cdot \vec n \varphi_i, \varphi_j)_{\partial\Omega_-},
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="351" HEIGHT="29"
+ SRC="step-9.data/intro/img16.gif"
+ ALT="\begin{displaymath}a_{ij} =
+(\beta \cdot \nabla \varphi_i,
+\varphi_j + \delta ...
+...
+(\beta\cdot \vec n \varphi_i, \varphi_j)_{\partial\Omega_-},
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+with basis functions 
+<!-- MATH: $\varphi_i,\varphi_j$ -->
+<IMG
+ WIDTH="43" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img17.gif"
+ ALT="$\varphi_i,\varphi_j$">.
+However, this is a
+pitfall that happens to every numerical analyst at least once
+(including the author): we have here expanded the solution
+
+<!-- MATH: $u_h = u_i \varphi_i$ -->
+<IMG
+ WIDTH="72" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img18.gif"
+ ALT="$u_h = u_i \varphi_i$">,
+but if we do so, we will have to solve the 
+problem 
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+\vec u^T A = \vec f^T,
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="75" HEIGHT="27"
+ SRC="step-9.data/intro/img19.gif"
+ ALT="\begin{displaymath}\vec u^T A = \vec f^T,
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+where 
+<!-- MATH: $\vec u=(u_i)$ -->
+<IMG
+ WIDTH="61" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img20.gif"
+ ALT="$\vec u=(u_i)$">,
+i.e. we have to solve the transpose problem of
+what we might have expected naively. In order to obtain the usual form
+of the linear system, it is therefore best to rewrite the weak
+formulation to
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+(v_h + \delta \beta\cdot\nabla v_h, \beta \cdot \nabla u_h)_\Omega
+-
+  (\beta\cdot \vec n v_h, u_h)_{\partial\Omega_-}
+  =
+  (v_h + \delta \beta\cdot\nabla v_h, f)_\Omega
+  -
+  (\beta\cdot \vec n v_h, g)_{\partial\Omega_-}
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="577" HEIGHT="29"
+ SRC="step-9.data/intro/img21.gif"
+ ALT="\begin{displaymath}(v_h + \delta \beta\cdot\nabla v_h, \beta \cdot \nabla u_h)_\...
+...h, f)_\Omega
+-
+(\beta\cdot \vec n v_h, g)_{\partial\Omega_-}
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+and then to obtain
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+a_{ij} =
+(\varphi_i + \delta \beta \cdot \nabla \varphi_i,
+   \beta\cdot\nabla \varphi_j)_\Omega
+  -
+  (\beta\cdot \vec n \varphi_i, \varphi_j)_{\partial\Omega_-},
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="349" HEIGHT="29"
+ SRC="step-9.data/intro/img22.gif"
+ ALT="\begin{displaymath}a_{ij} =
+(\varphi_i + \delta \beta \cdot \nabla \varphi_i,
+...
+...
+(\beta\cdot \vec n \varphi_i, \varphi_j)_{\partial\Omega_-},
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+as system matrix. We will assemble this matrix in the program.
+
+<P>
+There remains the solution of this linear system of equations. As the
+resulting matrix is no more symmetric positive definite, we can't
+employ the usual CG method any more. Suitable for the solution of
+systems as the one at hand is the BiCGStab (bi-conjugate gradients
+stabilized) method, which is also available in deal.II, so we will use
+it.
+
+<P>
+Regarding the exact form of the problem which we will solve, we use
+the following domain and functions (in <I>d</I>=2 space dimensions):
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="442" HEIGHT="144"
+ SRC="step-9.data/intro/img23.gif"
+ ALT="\begin{eqnarray*}\Omega &=& [-1,1]^d \\
+\beta(\vec x)
+&=&
+\left(
+\begin{ar...
+... &=&
+e^{5(1-\vert\vec x\vert^2)} \sin(16\pi\vert\vec x\vert^2).
+\end{eqnarray*}">
+</DIV><P></P>
+<BR CLEAR="ALL">For <I>d</I>&gt;2, we extend <IMG
+ WIDTH="13" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img4.gif"
+ ALT="$\beta$">
+and <IMG
+ WIDTH="20" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img24.gif"
+ ALT="$\vec x_0$">
+by the same as the last
+component. Regarding these functions, we have the following
+annotations:
+<UL>
+<LI>The advection field <IMG
+ WIDTH="13" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img4.gif"
+ ALT="$\beta$">
+transports the solution roughly in
+diagonal direction from lower left to upper right, but with a wiggle
+structure superimposed.
+<LI>The right hand side adds to the field generated by the inflow
+boundary conditions a bulb in the lower left corner, which is then
+transported along.
+<LI>The inflow boundary conditions impose a weighted sinusoidal
+structure that is transported along with the flow field. Since 
+<!-- MATH: $|\vec
+x|\ge 1$ -->
+<IMG
+ WIDTH="51" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img25.gif"
+ ALT="$\vert\vec
+x\vert\ge 1$">
+on the boundary, the weighting term never gets very large.
+</UL>
+<P>
+
+<H4><A NAME="SECTION00000020000000000000">
+A simple refinement criterion.</A>
+</H4>
+In all previous examples with adaptive refinement, we have used an
+error estimator first developed by Kelly et al., which assigns to each
+cell <I>K</I> the following indicator:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+\eta_K =
+\left(
+    \frac {h_K}{12}
+    \int_{\partial K}
+      [\partial_n u_h]^2 \; d\sigma
+  \right)^{1/2},
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="221" HEIGHT="49"
+ SRC="step-9.data/intro/img26.gif"
+ ALT="\begin{displaymath}\eta_K =
+\left(
+\frac {h_K}{12}
+\int_{\partial K}
+[\partial_n u_h]^2 \; d\sigma
+\right)^{1/2},
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+where 
+<!-- MATH: $[\partial n u_h]$ -->
+<IMG
+ WIDTH="48" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img27.gif"
+ ALT="$[\partial n u_h]$">
+denotes the jump of the normal derivatives
+across a face 
+<!-- MATH: $\gamma\subset\partial K$ -->
+<IMG
+ WIDTH="58" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img28.gif"
+ ALT="$\gamma\subset\partial K$">
+of the cell <I>K</I>. It can be
+shown that this error indicator uses a discrete analogue of the second
+derivatives, weighted by a power of the cell size that is adjusted to
+the linear elements assumed to be in use here:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+\eta_K \approx
+C h \| \nabla^2 u \|_K,
+
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="125" HEIGHT="28"
+ SRC="step-9.data/intro/img29.gif"
+ ALT="\begin{displaymath}\eta_K \approx
+C h \Vert \nabla^2 u \Vert _K,
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+which itself is related to the error size in the energy norm.
+
+<P>
+The problem with this error indicator in the present case is that it
+assumes that the exact solution possesses second derivatives. This is
+already questionable for solutions to Laplace's problem in some cases,
+although there most problems allow solutions in <I>H</I><SUP>2</SUP>. If solutions
+are only in <I>H</I><SUP>1</SUP>, then the second derivatives would be singular in
+some parts (of lower dimension) of the domain and the error indicators
+would not reduce there under mesh refinement. Thus, the algorithm
+would continuously refine the cells around these parts, i.e. would
+refine into points or lines (in 2d).
+
+<P>
+However, for the present case, solutions are usually not even in <I>H</I><SUP>1</SUP>(and this missing regularity is not the exceptional case as for
+Laplace's equation), so the error indicator described above is not
+really applicable. We will thus develop an indicator that is based on
+a discrete approximation of the gradient. Although the gradient often
+does not exist, this is the only criterion available to us, at least
+as long as we use continuous elements as in the present
+example. To start with, we note that given two cells <I>K</I>, <I>K</I>' of
+which the centers are connected by the vector 
+<!-- MATH: $\vec y_{KK'}$ -->
+<IMG
+ WIDTH="41" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img30.gif"
+ ALT="$\vec y_{KK'}$">,
+we can
+approximate the directional derivative of a function <I>u</I> as follows:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+\frac{\vec y_{KK'}^T}{|\vec y_{KK'}|} \nabla u
+\approx
+  \frac{u(K') - u(K)}{|\vec y_{KK'}|},
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="196" HEIGHT="46"
+ SRC="step-9.data/intro/img31.gif"
+ ALT="\begin{displaymath}\frac{\vec y_{KK'}^T}{\vert\vec y_{KK'}\vert} \nabla u
+\approx
+\frac{u(K') - u(K)}{\vert\vec y_{KK'}\vert},
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+where <I>u</I>(<I>K</I>) and <I>u</I>(<I>K</I>') denote <I>u</I> evaluated at the centers of the
+respective cells. We now multiply the above approximation by 
+
+<!-- MATH: $\vec y_{KK'}/|\vec y_{KK'}|$ -->
+<IMG
+ WIDTH="95" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img32.gif"
+ ALT="$\vec y_{KK'}/\vert\vec y_{KK'}\vert$">
+and sum over all neighbors <I>K</I>' of <I>K</I>:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+\underbrace{
+\left(\sum_{K'} \frac{\vec y_{KK'} \vec y_{KK'}^T}
+                         {|\vec y_{KK'}|^2}\right)}_{=:Y}
+  \nabla u
+  \approx
+  \sum_{K'}
+  \frac{\vec y_{KK'}}{|\vec y_{KK'}|}
+  \frac{u(K') - u(K)}{|\vec y_{KK'}|}.
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="358" HEIGHT="78"
+ SRC="step-9.data/intro/img33.gif"
+ ALT="\begin{displaymath}\underbrace{
+\left(\sum_{K'} \frac{\vec y_{KK'} \vec y_{KK'}...
+...ec y_{KK'}\vert}
+\frac{u(K') - u(K)}{\vert\vec y_{KK'}\vert}.
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+If the vectors 
+<!-- MATH: $\vec y_{KK'}$ -->
+<IMG
+ WIDTH="41" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img30.gif"
+ ALT="$\vec y_{KK'}$">
+connecting <I>K</I> with its neighbors span
+the whole space (i.e. roughly: <I>K</I> has neighbors in all directions),
+then the term in parentheses in the left hand side expression forms a
+regular matrix, which we can invert to obtain an approximation of the
+gradient of <I>u</I> on <I>K</I>:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+\nabla u
+\approx
+  Y^{-1}
+  \left(
+    \sum_{K'}
+    \frac{\vec y_{KK'}}{|\vec y_{KK'}|}
+    \frac{u(K') - u(K)}{|\vec y_{KK'}|}
+  \right).
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="284" HEIGHT="55"
+ SRC="step-9.data/intro/img34.gif"
+ ALT="\begin{displaymath}\nabla u
+\approx
+Y^{-1}
+\left(
+\sum_{K'}
+\frac{\vec y_{K...
+...}\vert}
+\frac{u(K') - u(K)}{\vert\vec y_{KK'}\vert}
+\right).
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+We will denote the approximation on the right hand side by
+
+<!-- MATH: $\nabla_h u(K)$ -->
+<IMG
+ WIDTH="61" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-9.data/intro/img35.gif"
+ ALT="$\nabla_h u(K)$">,
+and we will use the following quantity as refinement
+criterion:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+\eta_K = h^{1+d/2} |\nabla_h u_h(K)|,
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="165" HEIGHT="28"
+ SRC="step-9.data/intro/img36.gif"
+ ALT="\begin{displaymath}\eta_K = h^{1+d/2} \vert\nabla_h u_h(K)\vert,
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+which is inspired by the following (not rigorous) argument:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="284" HEIGHT="161"
+ SRC="step-9.data/intro/img37.gif"
+ ALT="\begin{eqnarray*}\Vert u-u_h\Vert^2_{L_2}
+&\le&
+C h^2 \Vert\nabla u\Vert^2_{L...
+...\\
+&\approx&
+C
+\sum_K
+h_K^{2+d} \vert\nabla_h u_h(K)\vert^2
+\end{eqnarray*}">
+</DIV><P></P>
+<BR CLEAR="ALL">
+<P>

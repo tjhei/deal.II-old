@@ -41,22 +41,44 @@
 pid_t master_pid;
 
 
+/**
+ * Output an error message and terminate the program.
+ */
+void die (const std::string &text)
+{
+  std::cerr << "----- detached_ma27: " << text
+            << std::endl;
+  abort ();
+};
+
+
+/**
+ * Output an error message and terminate the program. Write two error
+ * codes.
+ */
+template <typename T1, typename T2>
+void die (const std::string &text, const T1 t1, const T2 t2)
+{
+  std::cerr << "----- detached_ma27: " << text
+            << " code1=" << t1 << ", code2=" << t2
+            << std::endl;
+  abort ();
+};
+
+
+
+/**
+ * loop and check every once in a while whether the mother process is
+ * still existing or has died without giving us due notice. if the
+ * latter is the case, then also exit this process
+ *
+ * check by calling "ps -p PID", where PID is the pid of the
+ * parent. if the return value is non-null, then ps couldn't find out
+ * about the parent process, so it is apparently gone
+ */
 extern "C"
 void * monitor_thread (void *) 
 {
-                                   // loop and check every once in a
-                                   // while whether the mother process
-                                   // is still existing or has died
-                                   // without giving us due notice. if
-                                   // the latter is the case, then
-                                   // also exit this process
-                                   //
-                                   // check by calling "ps -p PID",
-                                   // where PID is the pid of the
-                                   // parent. if the return value is
-                                   // non-null, then ps couldn't find
-                                   // out about the parent process, so
-                                   // it is apparently gone
 #ifdef HAVE_STD_STRINGSTREAM
   std::ostringstream s;
   s << "ps -p " << master_pid;
@@ -71,18 +93,10 @@ void * monitor_thread (void *)
     {
       int ret = std::system (command);
       if (ret < 0)
-        {
-          std::cerr << "---- detached_ma27: Monitor process couldn't start 'ps'!"
-                    << std::endl;
-          std::abort ();
-        }
+        die ("detached_ma27: Monitor process couldn't start 'ps'!");
       else
         if (ret != 0)
-          {
-            std::cerr << "---- detached_ma27: Master process seems to have died!"
-                      << std::endl;
-            std::abort ();
-          };
+          die ("---- detached_ma27: Master process seems to have died!");
 
                                        // ok, master still running,
                                        // take a little rest and then
@@ -93,47 +107,47 @@ void * monitor_thread (void *)
 
 
 
+
+/**
+ * Put a certain number of objects to the output stream.
+ */
 template <typename T>
 void put (const T *t, const size_t N, const char */*debug_info*/)
 {
-  try_write:
-  int ret = write (1,
-                   reinterpret_cast<const char *> (t),
-                   sizeof(T) * N);
-                                   // if write call was
-                                   // interrupted, just
-                                   // retry
-  if ((ret<0) && (errno==EINTR))
-    goto try_write;
-  
+                                   // repeat writing until syscall is
+                                   // not interrupted
+  int ret;
+  do
+    ret = write (1, reinterpret_cast<const char *> (t),
+                 sizeof(T) * N);
+  while ((ret<0) && (errno==EINTR));
+  if (ret < 0)
+    die ("error on client side in 'put'", ret, errno);
+  if (ret < static_cast<signed int>(sizeof(T)*N))
+    die ("not everything was written", ret, sizeof(T)*N);
+
   fflush (NULL);
 };
 
 
 
+/**
+ * Read a certain number of objects from the input stream.
+ */
 template <typename T>
 void get (T *t, const size_t N, const char */*debug_info*/)
 {
   unsigned int count = 0;
   while (count < sizeof(T)*N)
     {
-      try_read:
-      int ret = read (0,
-                      reinterpret_cast<char *> (t) + count,
-                      sizeof(T) * N - count);
-                                       // if read call was
-                                       // interrupted, just
-                                       // retry
-      if ((ret<0) && (errno==EINTR))
-        goto try_read;
+      int ret;
+      do
+        ret = read (0, reinterpret_cast<char *> (t) + count,
+                    sizeof(T) * N - count);
+      while ((ret<0) && (errno==EINTR));
       
       if (ret < 0)
-        {
-          std::cerr << "------ error " << ret << " on client side!"
-                    << " errno=" << errno
-                    << std::endl;
-          abort ();
-        }
+        die ("error on client side in 'get'", ret, errno);
       else
         count += ret;
     };
@@ -275,13 +289,8 @@ int main ()
           };
           
           default:
-          {
-            std::cerr << "------ error on client side!"
-                      << " Invalid action key ('" << action
-                      << "'=" << static_cast<unsigned int>(action) << ")!"
-                      << std::endl;
-            abort();
-          };
+                die ("Invalid action key", action,
+                     static_cast<unsigned short int>(action));
         };
     };
 };

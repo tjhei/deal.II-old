@@ -692,8 +692,12 @@ sub identifyDecl
 
 	# Single variable
 	elsif ( $decl =~ /^
-			\s*( (?:[\w_:]+(?:\s+[\w_:]+)*? )# type
+			\s*(  (?:typename\s+)?          # possible typename keyword
+                              (?:[\w_:]+(?:\s+[\w_:]+)*? )# type
 				\s*(?:<.+>)?		# template
+			                                # check for nested types
+                                \s*(?:::[\w_:]+(?:\s+[\w_:]+)*?
+                                      \s*(?:<.+>)?)
 				\s*(?:[\&\*])?		# ptr or ref
 				(?:\s*(?:const|volatile))* )
 			\s*([\w_:]+)			# name

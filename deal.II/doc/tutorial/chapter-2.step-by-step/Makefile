@@ -16,7 +16,7 @@ $(example-htmls):
 	@echo ================== Assembling $@
 	@cat head.html > $@
 	@cat $(@:.html=.data/intro.html) >> $@
-	@cat ../../../deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc) \
+	@cat $D/deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc) \
 	  | $(PERL) program2html \
 	  >> $@
 	@cat $(@:.html=.data/results.html) >> $@
@@ -34,7 +34,7 @@ $(example-sgmls):
 	@echo ================== Assembling $@
 	@cat $(@:.sgml=.data/intro.html) >> $@
 	@echo "</sect2>" >> $@
-	@cat ../../../deal.II/examples/step-by-step/$(@:.sgml=)/$(@:.sgml=.cc) \
+	@cat $D/deal.II/examples/step-by-step/$(@:.sgml=)/$(@:.sgml=.cc) \
 	  | $(PERL) program2html \
 	  >> $@
 	@echo "</sect2>" >> $@

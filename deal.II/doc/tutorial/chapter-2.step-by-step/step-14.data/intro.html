@@ -1,2 +1,550 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
+
+
+<H3><A NAME="SECTION00010000000000000000">
+The maths</A>
+</H3>
+
+<P>
+The Heidelberg group of Professor Rolf Rannacher, to which the three main
+authors of the deal.II library belonged for the PhD time and partly also
+afterwards, has been involved with adaptivity and error estimation for finite
+element discretizations since the mid-90ies. The main achievement is the
+development of error estimates for arbitrary functionals of the solution, and
+of optimal mesh refinement for its computation.
+
+<P>
+We will not discuss the derivation of these concepts in too great detail, but
+will implement the main ideas in the present example program. For a thorough
+introduction into the general idea, we refer to the seminal work of Becker and
+Rannacher [<A HREF="#BR95">9</A>,<A HREF="#BR96r">8</A>], and the overview article of the same authors in
+Acta Numerica [<A HREF="#BR01">5</A>]; the first introduces the concept of error
+estimation and adaptivity for general functional output for the Laplace
+equation, while the second gives many examples of applications of these
+concepts to a large number of other, more complicated equations. For
+applications to individual types of equations, see also the publications by
+Becker [<A HREF="#Bec95">6</A>,<A HREF="#Bec98">7</A>], Kanschat [<A HREF="#Kan96">15</A>,<A HREF="#FK97">11</A>], Suttmeier
+[<A HREF="#Sut96">19</A>,<A HREF="#RS97">16</A>,<A HREF="#RS98c">17</A>,<A HREF="#RS99">18</A>], Bangerth [<A HREF="#BR99b">3</A>,<A HREF="#Ban00w">1</A>,<A HREF="#BR01a">4</A>,<A HREF="#Ban02">2</A>], and
+Hartmann [<A HREF="#HH01">12</A>,<A HREF="#HH01a">14</A>,<A HREF="#HH01b">13</A>].
+
+<P>
+The basic idea is the following: in applications, one is not usually
+interested in the solution per se, but rather in certain aspects of it. For
+example, in simulations of flow problems, one may want to know the lift or
+drag of a body immersed in the fluid; it is this quantity that we want to know
+to best accuracy, and whether the rest of the solution of the describing
+equations is well resolved is not of primary interest. Likewise, in elasticity
+one might want to know about values of the stress at certain points to guess
+whether maximal load values of joints are safe, for example. Or, in radiative
+transfer problems, mean flux intensities are of interest.
+
+<P>
+In all the cases just listed, it is the evaluation of a functional <I>J</I>(<I>u</I>) of
+the solution which we are interested in, rather than the values of <I>u</I>everywhere. Since the exact solution <I>u</I> is not available, but only its
+numerical approximation <I>u</I><SUB><I>h</I></SUB>, it is sensible to ask whether the computed
+value <I>J</I>(<I>u</I><SUB><I>h</I></SUB>) is within certain limits of the exact value <I>J</I>(<I>u</I>), i.e. we
+want to bound the error with respect to this functional, 
+<!-- MATH: $J(u)-J(u_h)$ -->
+<I>J</I>(<I>u</I>)-<I>J</I>(<I>u</I><SUB><I>h</I></SUB>).
+
+<P>
+For simplicity of exposition, we henceforth assume that both the quantity of
+interest <I>J</I>, as well as the equation are linear, and we will in particular
+show the derivation for the Laplace equation with homogeneous Dirichlet
+boundary conditions, although the concept is much more general. For this
+general case, we refer to the references listed above.  The goal is to obtain
+bounds on the error, 
+<!-- MATH: $J(e)=J(u)-J(u_h)$ -->
+<I>J</I>(<I>e</I>)=<I>J</I>(<I>u</I>)-<I>J</I>(<I>u</I><SUB><I>h</I></SUB>). For this, let us denote by <I>z</I> the
+solution of a dual problem, defined as follows:
+<BR>
+<IMG
+ WIDTH="356" HEIGHT="16" ALIGN="center" BORDER="0"
+ SRC="step-14.data/intro/img1.gif"
+ ALT="\begin{gather}a(\varphi,z) = J(\varphi) \qquad \forall \varphi,
+\end{gather}">
+<BR>
+where 
+<!-- MATH: $a(\cdot,\cdot)$ -->
+<IMG
+ WIDTH="40" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img2.gif"
+ ALT="$a(\cdot,\cdot)$">
+is the bilinear form associated with the differential
+equation, and the test functions are chosen from the corresponding solution
+space. Then, taking as special test function <IMG
+ WIDTH="42" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img3.gif"
+ ALT="$\varphi=e$">
+the error, we have
+that
+<BR>
+<IMG
+ WIDTH="323" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-14.data/intro/img4.gif"
+ ALT="\begin{gather}J(e) = a(e,z)
+\end{gather}">
+<BR>
+and we can, by Galerkin orthogonality, rewrite this as
+<BR>
+<IMG
+ WIDTH="342" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-14.data/intro/img5.gif"
+ ALT="\begin{gather}J(e) = a(e,z-\varphi_h)
+\end{gather}">
+<BR>
+for all possible functions <IMG
+ WIDTH="22" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img6.gif"
+ ALT="$\varphi_h$">
+from the discrete test space.
+
+<P>
+Concretely, for Laplace's equation, the error identity reads
+<BR>
+<IMG
+ WIDTH="360" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-14.data/intro/img7.gif"
+ ALT="\begin{gather}J(e) = (\nabla e, \nabla(z-\varphi_h)).
+\end{gather}">
+<BR>
+For reasons that we will not explain, we do not want to use this formula as
+is, but rather split the scalar products into terms on all cells, and
+integrate by parts on each of them:
+<BR>
+<IMG
+ WIDTH="417" HEIGHT="78" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-14.data/intro/img8.gif"
+ ALT="\begin{align*}J(e)
+&=
+\sum_K (\nabla (u-u_h), \nabla (z-\varphi_h))_K
+\\
+&=...
+...u-u_h), z-\varphi_h)_K
++ (\partial_n (u-u_h), z-z_h)_{\partial K}.
+\end{align*}">
+<BR>
+Next we use that 
+<!-- MATH: $-\Delta u=f$ -->
+<IMG
+ WIDTH="69" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img9.gif"
+ ALT="$-\Delta u=f$">,
+and that 
+<!-- MATH: $\partial_n u$ -->
+<IMG
+ WIDTH="30" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img10.gif"
+ ALT="$\partial_n u$">
+is a quantity that is
+continuous almost everywhere, so the terms involving 
+<!-- MATH: $\partial_n u$ -->
+<IMG
+ WIDTH="30" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img10.gif"
+ ALT="$\partial_n u$">
+on one
+cell cancels with that on its neighbor, where the normal vector has the
+opposite sign. At the boundary of the domain, where there is no neighbor cell
+with which this term could cancel, the weight 
+<!-- MATH: $z-\varphi_h$ -->
+<IMG
+ WIDTH="49" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img11.gif"
+ ALT="$z-\varphi_h$">
+can be chosen as
+zero, since <I>z</I> has zero boundary values, and <IMG
+ WIDTH="22" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img6.gif"
+ ALT="$\varphi_h$">
+can be chosen to
+have the same.
+
+<P>
+Thus, we have 
+<BR>
+<IMG
+ WIDTH="370" HEIGHT="34" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-14.data/intro/img12.gif"
+ ALT="\begin{align*}J(e)
+&=
+\sum_K (f+u_h), z-\varphi_h)_K
+- (\partial_n u_h, z-\varphi_h)_{\partial K\backslash \partial\Omega}.
+\end{align*}">
+<BR>
+In a final step, note that when taking the normal derivative of <I>u</I><SUB><I>h</I></SUB>, we mean
+the value of this quantity as taken from this side of the cell (for the usual
+Lagrange elements, derivatives are not continuous across edges). We then
+rewrite the above formula by exchanging half of the edge integral of cell <I>K</I>with the neighbor cell <I>K</I>', to obtain
+<BR>
+<IMG
+ WIDTH="478" HEIGHT="41" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-14.data/intro/img13.gif"
+ ALT="\begin{align*}J(e)
+&=
+\sum_K (f+u_h), z-\varphi_h)_K
+- \frac 12 (\partial_n u...
+...h\vert _{K'},
+z-\varphi_h)_{\partial K\backslash \partial\Omega}.
+\end{align*}">
+<BR>
+Using that for the normal vectors <I>n</I>'=-<I>n</I> holds, we define the jump of the
+normal derivative by
+<BR>
+<IMG
+ WIDTH="349" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-14.data/intro/img14.gif"
+ ALT="\begin{gather*}[\partial_n u_h]:= \partial_n u_h\vert _K + \partial_{n'} u_h\vert _{K'}
+=
+\partial_n u_h\vert _K - \partial_n u_h\vert _{K'},
+\end{gather*}">
+<BR>
+and get the final form after setting the discrete function <IMG
+ WIDTH="22" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img6.gif"
+ ALT="$\varphi_h$">,
+which
+is by now still arbitrary, to the point interpolation of the dual solution,
+
+<!-- MATH: $\varphi_h=I_h z$ -->
+<IMG
+ WIDTH="67" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img15.gif"
+ ALT="$\varphi_h=I_h z$">:
+<BR>
+<IMG
+ WIDTH="400" HEIGHT="41" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-14.data/intro/img16.gif"
+ ALT="\begin{align*}J(e)
+&=
+\sum_K (f+u_h), z-I_h z)_K
+- \frac 12 ([\partial_n u_h],
+z-I_h z)_{\partial K\backslash \partial\Omega}.
+\end{align*}">
+<BR>
+<P>
+With this, we have obtained an exact representation of the error of the finite
+element discretization with respect to arbitrary (linear) functionals
+<IMG
+ WIDTH="30" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img17.gif"
+ ALT="$J(\cdot)$">.
+Its structure is a weighted form of a residual estimator, as both
+
+<!-- MATH: $f+\Delta u_h$ -->
+<IMG
+ WIDTH="63" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img18.gif"
+ ALT="$f+\Delta u_h$">
+and 
+<!-- MATH: $[\partial_n u_h]$ -->
+<IMG
+ WIDTH="47" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img19.gif"
+ ALT="$[\partial_n u_h]$">
+are cell and edge residuals that vanish
+on the exact solution, and <I>z</I>-<I>I</I><SUB><I>h</I></SUB> <I>z</I> are weights indicating how important the
+residuals on a certain cell is for the evaluation of the given functional.
+Furthermore, it is a cell-wise quantity, so we can use it as a mesh refinement
+criterion. The question, is: how to evaluate it? After all, the evaluation
+requires knowledge of the dual solution <I>z</I>, which carries the information
+about the quantity we want to know to best accuracy.
+
+<P>
+In some, very special cases, this dual solution is known. For example, if the
+functional <IMG
+ WIDTH="30" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img17.gif"
+ ALT="$J(\cdot)$">
+is the point evaluation, 
+<!-- MATH: $J(\varphi)=\varphi(x_0)$ -->
+<IMG
+ WIDTH="97" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img20.gif"
+ ALT="$J(\varphi)=\varphi(x_0)$">,
+then
+the dual solution has to satisfy
+<BR>
+<IMG
+ WIDTH="123" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-14.data/intro/img21.gif"
+ ALT="\begin{gather*}-\Delta z = \delta(x-x_0),
+\end{gather*}">
+<BR>
+with the Dirac delta function on the right hand side, and the dual solution is
+the Green's function with respect to the point <I>x</I><SUB>0</SUB>. For simple geometries,
+this function is analytically known, and we could insert it into the error
+representation formula.
+
+<P>
+However, we do not want to restrict ourselves to such special cases. Rather,
+we will compute the dual solution numerically, and approximate <I>z</I> by some
+numerically obtained <IMG
+ WIDTH="11" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-14.data/intro/img22.gif"
+ ALT="$\tilde z$">.
+We note that it is not sufficient to compute
+this approximation <IMG
+ WIDTH="11" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-14.data/intro/img22.gif"
+ ALT="$\tilde z$">
+using the same method as used for the primal
+solution <I>u</I><SUB><I>h</I></SUB>, since then 
+<!-- MATH: $\tilde z-I_h \tilde z=0$ -->
+<IMG
+ WIDTH="83" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-14.data/intro/img23.gif"
+ ALT="$\tilde z-I_h \tilde z=0$">,
+and the overall error
+estimate would be zero. Rather, the approximation <IMG
+ WIDTH="11" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-14.data/intro/img22.gif"
+ ALT="$\tilde z$">
+has to be from a
+larger space than the primal finite element space. There are various ways to
+obtain such an approximation (see the cited literature), and we will choose to
+compute it with a higher order finite element space. While this is certainly
+not the most efficient way, it is simple since we already have all we need to
+do that in place, and it also allows for simple experimenting. For more
+efficient methods, again refer to the given literature, in particular
+[<A HREF="#BR95">9</A>,<A HREF="#BR96r">8</A>,<A HREF="#BR01">5</A>].
+
+<P>
+With this, we end the discussion of the mathematical side of this program and
+turn to the actual implementation.
+
+
+
+<H3><A NAME="SECTION00020000000000000000">
+The software</A>
+</H3>
+
+<P>
+The step-14 example program builds heavily on the techniques already used in
+the step-13 program. Its implementation of the dual weighted residual error
+estimator explained above is done by deriving a second class, properly called
+<TT>DualSolver</TT>, from the <TT>Solver</TT> base class, and having a class
+(<TT>WeightedResidual</TT>) that joins the two again and controls the solution
+of the primal and dual problem, and then uses both to compute the error
+indicator for mesh refinement.
+
+<P>
+The program continues the modular concept of the previous example, by
+implementing the dual functional, describing quantity of interest, by an
+abstract base class, and providing two different functionals which implement
+this interface. Adding a different quantity of interest is thus simple.
+
+<P>
+One of the more fundamental differences is the handling of data. A common case
+is that you develop a program that solves a certain equation, and test it with
+different right hand sides, different domains, different coefficients and
+boundary values, etc. Usually, these have to match, so that exact solutions
+are known, or that their combination makes sense at all.
+
+<P>
+We demonstrate a way how this can be achieved in a simple, yet very flexible
+way. We will put everything that belongs to a certain setup into one class,
+and provide a little C++ mortar around it, so that entire setups (domains,
+coefficients, right hand sides, etc.) can be exchanged by only changing
+something in <I>one</I> place.
+
+<P>
+Going this way a little further, we have also centralized all the other
+parameters that describe how the program is to work in one place, such as the
+order of the finite element, the maximal number of degrees of freedom, the
+evaluation objects that shall be executed on the computed solutions, and so
+on. This allows for simpler configuration of the program, and we will show in
+a later program how to use a library class that can handle setting these
+parameters by reading an input file. The general aim is to reduce the places
+within a program where one may have to look when wanting to change some
+parameter, as it has turned out in practice that one forgets where they are as
+programs grow. Furthermore, putting all options describing what the program
+does in a certain run into a file (that can be stored with the results) helps
+repeatability of results more than if the various flags were set somewhere in
+the program, where their exact values are forgotten after the next change to
+this place.
+
+<P>
+Unfortunately, the program has become rather long. While this admittedly
+reduces its usefulness as an example program, we think that it is a very good
+starting point for development of a program for other kinds of problems,
+involving different equations than the Laplace equation treated here.
+Furthermore, it shows everything that we can show you about our way of a
+posteriori error estimation, and its structure should make it simple for you
+to adjust this method to other problems, other functionals, other geometries,
+coefficients, etc.
+
+<P>
+The author believes that the present program is his masterpiece among the
+example programs, regarding the mathematical complexity, as well as the
+simplicity to add extensions. If you use this program as a basis for your own
+programs, we would kindly like to ask you to state this fact and the name of
+the author of the example program, Wolfgang Bangerth, in publications that
+arise from that, of your program consists in a considerable part of the
+example program.
+
+
+ <H3><A NAME="SECTIONREF">Bibliography</A>
+</H3>
+<DL COMPACT><DD>
+<P>
+<P></P><DT><A NAME="Ban00w"><STRONG>1</STRONG></A>
+<DD>
+Wolfgang Bangerth.
+<BR>Mesh adaptivity and error control for a finite element approximation
+  of the elastic wave equation.
+<BR>In Alfredo Berm&#250;dez, Dolores G&#243;mez, Christophe Hazard, Patrick
+  Joly, and Jean E. Roberts, editors, <EM>Proceedings of the Fifth
+  International Conference on Mathematical and Numerical Aspects of Wave
+  Propagation (Waves2000), Santiago de Compostela, Spain, 2000</EM>, pages
+  725-729. SIAM, 2000.
+
+<P>
+<P></P><DT><A NAME="Ban02"><STRONG>2</STRONG></A>
+<DD>
+Wolfgang Bangerth.
+<BR><EM>Adaptive Finite Element Methods for the Identification of
+  Distributed Coefficient in Partial Differential Equations</EM>.
+<BR>PhD thesis, University of Heidelberg, 2002.
+
+<P>
+<P></P><DT><A NAME="BR99b"><STRONG>3</STRONG></A>
+<DD>
+Wolfgang Bangerth and Rolf Rannacher.
+<BR>Finite element approximation of the acoustic wave equation: Error
+  control and mesh adaptation.
+<BR><EM>East-West J. Numer. Math.</EM>, 7(4):263-282, 1999.
+
+<P>
+<P></P><DT><A NAME="BR01a"><STRONG>4</STRONG></A>
+<DD>
+Wolfgang Bangerth and Rolf Rannacher.
+<BR>Adaptive finite element techniques for the acoustic wave equation.
+<BR><EM>J. Comput. Acoustics</EM>, 9(2):575-591, 2001.
+
+<P>
+<P></P><DT><A NAME="BR01"><STRONG>5</STRONG></A>
+<DD>
+R. Becker and R. Rannacher.
+<BR>An optimal control approach to error estimation and mesh adaptation
+  in finite element methods.
+<BR><EM>Acta Numerica</EM>, 10:1-102, 2001.
+
+<P>
+<P></P><DT><A NAME="Bec95"><STRONG>6</STRONG></A>
+<DD>
+Roland Becker.
+<BR><EM>An Adaptive Finite Element Method for the Incompressible
+  Navier-Stokes Equations on Time-dependent Domains</EM>.
+<BR>Dissertation, Universit&#228;t Heidelberg, 1995.
+
+<P>
+<P></P><DT><A NAME="Bec98"><STRONG>7</STRONG></A>
+<DD>
+Roland Becker.
+<BR>Weighted error estimators for finite element approximations of the
+  incompressible Navier-Stokes equations.
+<BR>Preprint 98-20, SFB 359, Universit&#228;t Heidelberg, 1998.
+
+<P>
+<P></P><DT><A NAME="BR96r"><STRONG>8</STRONG></A>
+<DD>
+Roland Becker and Rolf Rannacher.
+<BR>A feed-back approach to error control in finite element methods:
+  Basic analysis and examples.
+<BR><EM>East-West J. Numer. Math.</EM>, 4:237-264, 1996.
+
+<P>
+<P></P><DT><A NAME="BR95"><STRONG>9</STRONG></A>
+<DD>
+Roland Becker and Rolf Rannacher.
+<BR>Weighted a posteriori error control in FE methods.
+<BR>In et al. H. G. Bock, editor, <EM>ENUMATH 95</EM>, pages 621-637,
+  Paris, September 1998. World Scientific Publ., Singapure.
+<BR>in [<A
+ HREF="#enumath97">10</A>].
+
+<P>
+<P></P><DT><A NAME="enumath97"><STRONG>10</STRONG></A>
+<DD>
+Hans Georg Bock, Franco Brezzi, Roland Glowinsky, Guido Kanschat, Yuri A.
+  Kuznetsov, Jacques P&#233;riaux, and Rolf Rannacher, editors.
+<BR><EM>ENUMATH 97, Proceedings of the 2nd European Conference on
+  Numerical Mathematics and Advanced Applications</EM>, Singapore, 1998. World
+  Scientific.
+
+<P>
+<P></P><DT><A NAME="FK97"><STRONG>11</STRONG></A>
+<DD>
+Christian F&#252;hrer and Guido Kanschat.
+<BR>A posteriori error control in radiative transfer.
+<BR><EM>Computing</EM>, 58(4):317-334, 1997.
+
+<P>
+<P></P><DT><A NAME="HH01"><STRONG>12</STRONG></A>
+<DD>
+Ralf Hartmann and Paul Houston.
+<BR>Adaptive discontinuous Galerkin finite element methods for
+  nonlinear hyperbolic conservation laws.
+<BR>Preprint 2001-20, (SFB 359), IWR Heidelberg, Mai 2001.
+<BR>submitted.
+
+<P>
+<P></P><DT><A NAME="HH01b"><STRONG>13</STRONG></A>
+<DD>
+Ralf Hartmann and Paul Houston.
+<BR>Adaptive discontinuous Galerkin finite element methods for the
+  compressible Euler equations.
+<BR>Preprint 2001-42, (SFB 359), IWR Heidelberg, Dez 2001.
+<BR>submitted.
+
+<P>
+<P></P><DT><A NAME="HH01a"><STRONG>14</STRONG></A>
+<DD>
+Paul Houston and Ralf Hartmann.
+<BR>Goal-oriented a posteriori error estimation for compressible fluid
+  flows.
+<BR>In <EM>Proceedings of ENUMATH 2001</EM>, 2001.
+<BR>submitted.
+
+<P>
+<P></P><DT><A NAME="Kan96"><STRONG>15</STRONG></A>
+<DD>
+Guido Kanschat.
+<BR><EM>Parallel and Adaptive Galerkin Methods for Radiative Transfer
+  Problems</EM>.
+<BR>Dissertation, Universit&#228;t Heidelberg, 1996.
+
+<P>
+<P></P><DT><A NAME="RS97"><STRONG>16</STRONG></A>
+<DD>
+Rolf Rannacher and Franz-Theo Suttmeier.
+<BR>A feed-back approach to error control in finite element methods:
+  Application to linear elasticity.
+<BR><EM>Comp. Mech.</EM>, 19(5):434-446, 1997.
+
+<P>
+<P></P><DT><A NAME="RS98c"><STRONG>17</STRONG></A>
+<DD>
+Rolf Rannacher and Franz-Theo Suttmeier.
+<BR>A posteriori error control in finite element methods via duality
+  techniques: Application to perfect plasticity.
+<BR><EM>Comp. Mech.</EM>, 21(2):123-133, 1998.
+
+<P>
+<P></P><DT><A NAME="RS99"><STRONG>18</STRONG></A>
+<DD>
+Rolf Rannacher and Franz-Theo Suttmeier.
+<BR>A posteriori error control and mesh adaptation for finite element
+  models in elasticity and elasto-plasticity.
+<BR><EM>Comput. Methods Appl. Mech. Engrg.</EM>, pages 333-361, 1999.
+
+<P>
+<P></P><DT><A NAME="Sut96"><STRONG>19</STRONG></A>
+<DD>
+Franz-Theo Suttmeier.
+<BR><EM>Adaptive Finite Element Approximation of Problems in
+  Elasto-Plasticity Theory</EM>.
+<BR>Dissertation, Universit&#228;t Heidelberg, 1996.
+</DL>

@@ -35,10 +35,17 @@ refined grids.
 
 <p>
 Since the concepts used for locally refined grids are so important,
-we do not show much additional new stuff in this example. There will
-be large regions in the code that are unaltered from the previous
-example and which we will not comment on further. The only other new
-thing is a method to catch exceptions in the ``main'' function in
-order to output some information in case the program crashes for some
-reason.
+we do not show much additional new stuff in this example. The most
+important exception is that we show how to use biquadratic elements
+instead of the bilinear ones which we have used in all previous
+examples. In fact, The use of higher order elements is accomplished by
+only replacing three lines of the program, namely the declaration of
+the ``fe'' variable, and the use of an appropriate quadrature formula
+in two places. The rest of the program is unchanged.
+</p>
+
+<p>
+The only other new thing is a method to catch exceptions in the
+``main'' function in order to output some information in case the
+program crashes for some reason.
 </p>

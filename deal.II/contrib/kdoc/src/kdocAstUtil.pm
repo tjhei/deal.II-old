@@ -200,7 +200,11 @@ sub linkNamespaces
 				$node->AddPropList( "ExtNames", $spnode );
 			}
 			else {
-				warn "namespace not found: $space\n";
+			        # warn if namespace not found, but exclude
+			        # namespace std since that is special and
+			        # cannot be found anyway
+				warn "namespace not found: $space\n"
+				    if !($space eq "std");
 			}
 		}
 	}
@@ -360,10 +364,13 @@ ANITER:
 					$in->{astNodeName} );
 
 			if( !defined $ref ) {
-				# ancestor undefined
+				# ancestor undefined. do not warn if
+			        # ancestor comes from namespace std, since
+			        # we will not usually know about that
 				warn "warning: ", $node->{astNodeName},
 					" inherits unknown class '",
-						$in->{astNodeName},"'\n";
+						$in->{astNodeName},"'\n"
+			          if (! ($in->{astNodeName} =~ /^std::/));
 
 				$parent->AddPropList( 'InBy', $node );
 			}

@@ -1,2 +1,215 @@
 <a name="Results"></a>
 <h1>Results</h1>
+
+<h2>Point values</h2>
+
+<p>
+This program offers a lot of possibilities to play around. We can thus
+only show a small part of all possible results that can be obtained
+with the help of this program. However, you are encouraged to just try
+it out, by changing the settings in the main program. Here, we start
+by simple letting it run, unmodified:
+<code>
+<pre>
+Refinement cycle: 0
+   Number of degrees of freedom=72
+   Point value=0.03243
+   Estimated error=0.000702385
+Refinement cycle: 1
+   Number of degrees of freedom=67
+   Point value=0.0324827
+   Estimated error=0.000888953
+Refinement cycle: 2
+   Number of degrees of freedom=130
+   Point value=0.0329619
+   Estimated error=0.000454606
+Refinement cycle: 3
+   Number of degrees of freedom=307
+   Point value=0.0331934
+   Estimated error=0.000241254
+Refinement cycle: 4
+   Number of degrees of freedom=718
+   Point value=0.0333675
+   Estimated error=7.4912e-05
+Refinement cycle: 5
+   Number of degrees of freedom=1691
+   Point value=0.0334104
+   Estimated error=3.47976e-05
+Refinement cycle: 6
+   Number of degrees of freedom=4065
+   Point value=0.0334315
+   Estimated error=1.49476e-05
+Refinement cycle: 7
+   Number of degrees of freedom=9113
+   Point value=0.0334407
+   Estimated error=6.23712e-06
+Refinement cycle: 8
+   Number of degrees of freedom=22303
+   Point value=0.0334445
+</pre>
+</code>
+</p>
+
+<p>
+First let's look what the program actually computed, by looking at
+some of the grids and solutions that were printed:
+TODO
+
+Note the subtle interplay between resolving the corner singularities,
+and resolving around the point of evaluation. It will be rather
+difficult to generate such a mesh by hand, as this would involve to
+judge quantitatively how much which of the four corner singularities
+shall be resolved, and to set the weight compared to the vicinity of
+the evaluation point.
+</p>
+
+<p>
+The program prints the point value and the estimated error in this
+quantity. From extrapolating it, we can guess that the exact value is
+somewhat like 0.0334473, plus or minus 0.0000001 (note that we get
+almost 6 valid digits from only 22,000 (primal) degrees of
+freedom. This number cannot be obtaint from the value of the
+functional alone, but I have used the assumption that the error
+estimator is mostly exact, and extrapolated the computed value plus
+the estimated error, to get an approximation of the true
+value. Computing with more degrees of freedom shows that this
+assumption is indeed valid.
+</p>
+
+<p>
+From the computed results, we can generate two graphs: one that shows
+the convergence of the error J(u)-J(u<sub>h</sub>) (taking the
+extrapolated value as correct) in the point value, and the value that
+we get by adding up computed value J(u<sub>h</sub>) and estimated
+error eta (if the error estimator eta were exact, then the value
+J(u<sub>h</sub>)+eta would equal the exact point value, and the error
+in this quantity would always be zero; however, since the error
+estimator is only a - good - approximation to the true error, we can
+by this only reduce the size of the error). In this graph, we also
+indicate the complexity <em>O(1/N)</em> to show that mesh refinement
+acts optimal in this case. The second chart compares
+true and estimated error, and shows that the two are actually very
+close to each other, even for such a complicated quantity as the point
+value:
+</p>
+
+<table align="center">
+  <tr>
+    <td width="50%">
+      <a href="step-14.data/point_value/error.gif" target="_top">
+      <img alt="Error in point value" width="318"
+      src="step-14.data/point_value/error.gif">
+      </img></a>
+    </td>
+
+    <td width="50%">
+      <a href="step-14.data/point_value/error-estimation.gif" target="_top">
+      <img alt="Error in point value" width="318"
+      src="step-14.data/point_value/error-estimation.gif">
+      </img></a>
+    </td>
+  </tr>
+</table>
+
+
+<h2>Comparing refinement criteria</h2>
+
+<p>
+Since we have accepted quite some effort when using the mesh
+refinement driven by the dual weighted error estimator (for solving
+the dual problem, and for evaluating the error representation), it is
+worth while asking whether that effort was successful. To this end, we
+first compare the achieved error levels for different mesh refinement
+criteria. To generate this data, simply change the value of the mesh
+refinement criterion variable in the main program. The results are thus:
+TODO
+</p>
+
+
+<h2>Evaluation of point stresses</h2>
+
+<p>
+Besides evaluating the values of the solution at a certain point, the
+program also offers the possibility to evaluate the x-derivatives at a
+certain point, and also to tailor mesh refinement for this. To let the
+program compute these quantities, simply replace the two occurences of
+<code>PointValueEvaluation</code> in the main function by
+<code>PointXDerivativeEvaluation</code>, and let the program run:
+<code>
+<pre>
+Refinement cycle: 0
+   Number of degrees of freedom=72
+   Point x-derivative=-0.287759
+   Estimated error=-0.0126173
+Refinement cycle: 1
+   Number of degrees of freedom=61
+   Point x-derivative=-0.283182
+   Estimated error=-0.00774316
+Refinement cycle: 2
+   Number of degrees of freedom=131
+   Point x-derivative=-0.227468
+   Estimated error=-0.00313426
+Refinement cycle: 3
+   Number of degrees of freedom=247
+   Point x-derivative=-0.212132
+   Estimated error=-0.00136114
+Refinement cycle: 4
+   Number of degrees of freedom=541
+   Point x-derivative=-0.210584
+   Estimated error=-0.000555479
+Refinement cycle: 5
+   Number of degrees of freedom=1286
+   Point x-derivative=-0.210758
+   Estimated error=-0.0002261
+Refinement cycle: 6
+   Number of degrees of freedom=2924
+   Point x-derivative=-0.211001
+   Estimated error=-9.38035e-05
+Refinement cycle: 7
+   Number of degrees of freedom=6578
+   Point x-derivative=-0.211151
+   Estimated error=-3.94139e-05
+Refinement cycle: 8
+   Number of degrees of freedom=14780
+   Point x-derivative=-0.211219
+   Estimated error=-1.85456e-05
+Refinement cycle: 9
+   Number of degrees of freedom=31438
+   Point x-derivative=-0.211258
+</p>
+
+<p>
+We again look at the meshes first:
+TODO
+</p>
+
+<p>
+Then, it is interesting to compare actually computed values of the
+quantity of interest (i.e. the x-derivative of the solution at one
+point) with those values which we get from computing
+on finer meshes.
+TODO
+</p>
+
+
+
+<h2>Step-13 revisited</h2>
+
+<p>
+If instead of the <code>Exercise_2_3</code> data set, we choose
+<code>CurvedRidges</code> in the main function, we can redo the
+computations of the previous example program, to compare whether the
+results obtained with the help of the dual weighted error estimator
+are better than those we had previously.
+TODO
+</p>
+
+
+<h2>Outlook</h2>
+
+<p>
+As stated, the program is quite modular, and implementing another test
+case, or another evaluation and dual functional is simple. You are
+encouraged to take the program as a basis for your own experiments,
+and to play a little.
+</p>

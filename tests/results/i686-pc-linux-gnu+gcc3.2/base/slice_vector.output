@@ -2,8 +2,8 @@
 	0	1	2	0	1	2	3
 	2	0	1
 --------------------------------------------------------
-An error occurred in file <slice_vector.h> in function
-    SliceVector<VECTOR>::SliceVector(VECTOR&, unsigned int, unsigned int) [with VECTOR = std::vector<int, std::allocator<int> >]
+An error occurred in file <vector_slice.h> in function
+    VectorSlice<VECTOR>::VectorSlice(VECTOR&, unsigned int, unsigned int) [with VECTOR = const std::vector<int, std::allocator<int> >]
 The violated condition was: 
     (start+length<=v.size())
 The name and call sequence of the exception was:
@@ -13,8 +13,8 @@ Index 5 is not in [0,5[
 --------------------------------------------------------
 DEAL::Abort!!!
 --------------------------------------------------------
-An error occurred in file <slice_vector.h> in function
-    typename VECTOR::reference SliceVector<VECTOR>::operator[](unsigned int) [with VECTOR = std::vector<int, std::allocator<int> >]
+An error occurred in file <vector_slice.h> in function
+    typename VECTOR::reference VectorSlice<VECTOR>::operator[](unsigned int) [with VECTOR = std::vector<int, std::allocator<int> >]
 The violated condition was: 
     (i<length)
 The name and call sequence of the exception was:

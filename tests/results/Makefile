@@ -19,7 +19,7 @@ linkfiles-%:
 			if test -L ../$$TARGET/$$i ; then \
 				rm ../$$TARGET/$$i ; \
 			fi ; \
-			ln -s $$i ../$$TARGET/$$i ; \
+			ln -s ../../$$SOURCE/$$i ../$$TARGET/$$i ; \
 		fi ; \
 	done
 

@@ -2,3 +2,4 @@ Makefile Make.depend
 *.dat
 show_shapes
 show_transform
+*.go

@@ -27,9 +27,9 @@ $(LIBDIR)/contrib/hsl/%.$(OBJEXT) :
 
 # rules
 ifeq ($(enable-shared),yes)
-  lib: $(LIBDIR)/libhsl.so $(LIBDIR)/bin/detached_ma27
+  lib: $(LIBDIR)/libhsl.so $(LIBDIR)/bin/detached_ma27$(EXEEXT)
 else
-  lib: $(LIBDIR)/libhsl.a $(LIBDIR)/bin/detached_ma27
+  lib: $(LIBDIR)/libhsl.a $(LIBDIR)/bin/detached_ma27$(EXEEXT)
 endif
 
 
@@ -48,7 +48,7 @@ $(LIBDIR)/libhsl.so: $(forward-declarations) $(o-files)
 # rule to make the program that runs an MA27 solver detached from the
 # main program, and communicates through a pipe. since this program
 # has actually nothing much to do, compile it in debug mode
-$(LIBDIR)/bin/detached_ma27: source/detached_ma27.cc include/hsl/hsl.h \
+$(LIBDIR)/bin/detached_ma27$(EXEEXT): source/detached_ma27.cc include/hsl/hsl.h \
 				$(lib-contrib-hsl)
 	@echo =====hsl=========================$(MT)== Making   $(@F)
 	@$(CXX) $(CXXFLAGS.g) $< -o $@ $(lib-contrib-hsl) $(lib-base.o) $(F77LIBS) -lpthread

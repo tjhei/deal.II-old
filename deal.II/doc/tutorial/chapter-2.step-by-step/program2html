@@ -5,7 +5,7 @@ print "<h1> The commented program</h1>\n";
 
 # ignore cvs tag
 $_ = <>;
-while ( m!^/[/\*]\s*.Id:!) {
+while ( m!^/[/\*]+\s*.Id:!) {
     $_ = <>;
 }
 
@@ -19,7 +19,7 @@ print "<p>\n";
 
 while (<>) {
     # ignore cvs tag
-    next if m!^/[/\*]\s*.Id:!;
+    next if m!^/[/\*]+\s*.Id:!;
 
     # substitute special characters
     s/&/&amp;/g;

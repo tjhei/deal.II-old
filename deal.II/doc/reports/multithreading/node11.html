@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Parallel Jacobi preconditioning</TITLE>
+<META NAME="description" CONTENT="Parallel Jacobi preconditioning">
+<META NAME="keywords" CONTENT="multithreading">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="multithreading.css">
+<LINK REL="previous" HREF="node10.html">
+<LINK REL="up" HREF="node8.html">
+<LINK REL="next" HREF="node12.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html147"
+ HREF="node12.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html145"
+ HREF="node8.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html141"
+ HREF="node10.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html148"
+ HREF="node12.html">Conclusions</A>
+<B> Up:</B> <A NAME="tex2html146"
+ HREF="node8.html">Applications</A>
+<B> Previous:</B> <A NAME="tex2html142"
+ HREF="node10.html">Assembling the matrix</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00043000000000000000">
+Parallel Jacobi preconditioning</A>
+</H2>
+
+<P>
+When preconditioning a matrix, for example in a Conjugate Gradients solver,
+one may choose the Jacobi scheme for preconditioning. The preconditioned
+vector <IMG
+ WIDTH="12" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.gif"
+ ALT="$\tilde v$">
+is computed from the vector <I>v</I> using the following
+relationship:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+\tilde v_i = \frac 1{a_{ii}} v_i,
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="73" HEIGHT="41"
+ SRC="img3.gif"
+ ALT="\begin{displaymath}\tilde v_i = \frac 1{a_{ii}} v_i,
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+where <I>a</I><SUB><I>ii</I></SUB> are the diagonal elements of the matrix which we are presently
+inverting. As is obvious, the result of preconditioning one element of <I>v</I> is
+entirely independent of all other elements, so this operation is trivially
+parallelizable. In practice, this is done by splitting the interval [0,<I>n</I>)into equal parts 
+<!-- MATH: $[n_i,n_{i+1}), i=0,\dots,p-1$ -->
+<IMG
+ WIDTH="179" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img4.gif"
+ ALT="$[n_i,n_{i+1}), i=0,\dots,p-1$">,
+where <I>n</I> is the size of the
+matrix, and <I>p</I> is the number of processors. Obviously, 
+<!-- MATH: $n_0=0, n_p=n$ -->
+<I>n</I><SUB>0</SUB>=0, <I>n</I><SUB><I>p</I></SUB>=<I>n</I>, and
+
+<!-- MATH: $n_i<n_{i+1}$ -->
+<I>n</I><SUB><I>i</I></SUB>&lt;<I>n</I><SUB><I>i</I>+1</SUB>. 
+
+<P>
+Just like for splitting a range of iterators using the function
+<TT>split_range</TT> used above, there is a function
+<PRE>
+    vector&lt;pair&lt;unsigned int, unsigned int&gt; &gt;
+    split_interval (const unsigned int &amp;begin, const unsigned int &amp;end,
+                    const unsigned int n_intervals);
+</PRE>that splits the interval <TT>[begin,end)</TT> into <TT>n_intervals</TT> equal
+parts. This function will be used to assign each processor its share of
+elements <I>v</I><SUB><I>i</I></SUB>.
+
+<P>
+Furthermore, we will use some functionality provided by the
+<TT>MultithreadInfo</TT> class in <TT>deal.II</TT>. Upon start-up of the
+library, the static variable <TT>multithread_info.n_cpus</TT> is set to the
+number of processors in the computer the program is presently running on.
+<TT>multithread_info</TT> is a global variable of type
+<TT>MultithreadInfo</TT> available in all parts of the library.  Furthermore,
+there is a variable <TT>multithread_info.n_default_threads</TT>, which by
+default is set to <TT>n_cpus</TT>, but which can be changed by the user; it
+denotes the default number of threads which the library shall use whenever
+multi-threading is implemented for some operation. We will use this variable to
+decide how many threads shall be used to precondition the vector.
+
+<P>
+The implementation of the preconditioning function then looks like this:
+<PRE>
+                        // define an abbreviatory data type for an interval
+    typedef pair&lt;unsigned int, unsigned int&gt; Interval;
+
+    void Preconditioner::precondition_jacobi (const Matrix &amp;m,
+                                              const Vector &amp;v,
+                                              Vector       &amp;v_tilde) {
+                            // define an abbreviation to the number
+                            // of threads which we will use
+      const unsigned int n_threads = multithread_info.n_default_threads;
+                            // first split the interval into equal pieces
+      vector&lt;Interval&gt; intervals = Threads::split_interval (0, m.rows(),
+                                                            n_threads);
+ 
+                            // then define a thread manager
+      ACE_Thread_Manager thread_manager;
+                            // and finally start all the threads:
+      for (unsigned int i=0; i&lt;n_threads; ++i)
+        Threads::spawn (thread_manager,
+                   Threads::encapsulate (&amp;Preconditioner::threaded_jacobi)
+                          .collect_args (this, m, v, v_tilde, intervals[i]));
+  
+                            // wait for all the threads to finish
+      thread_manager.wait ();
+    };
+
+
+    void Preconditioner::threaded_jacobi (const Matrix   &amp;m,
+                                          const Vector   &amp;v,
+                                          Vector         &amp;v_tilde,
+                                          const Interval &amp;interval) {
+                           // apply the preconditioner in the given interval
+      for (unsigned int i=interval.first; i&lt;interval.second; ++i)
+        v_tilde(i) = v(i) / m(i,i);
+    };
+</PRE>
+<P>
+It is noted, however, that more practical preconditioners are usually not
+easily parallelized. However, matrix-vector and vector-vector operations can
+often be reduced to independent parts and can then be implemented using
+multiple threads.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html147"
+ HREF="node12.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html145"
+ HREF="node8.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html141"
+ HREF="node10.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html148"
+ HREF="node12.html">Conclusions</A>
+<B> Up:</B> <A NAME="tex2html146"
+ HREF="node8.html">Applications</A>
+<B> Previous:</B> <A NAME="tex2html142"
+ HREF="node10.html">Assembling the matrix</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>2000-04-20</I>
+</ADDRESS>
+</BODY>
+</HTML>

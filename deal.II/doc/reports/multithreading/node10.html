@@ -1,0 +1,311 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Assembling the matrix</TITLE>
+<META NAME="description" CONTENT="Assembling the matrix">
+<META NAME="keywords" CONTENT="multithreading">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="multithreading.css">
+<LINK REL="next" HREF="node11.html">
+<LINK REL="previous" HREF="node9.html">
+<LINK REL="up" HREF="node8.html">
+<LINK REL="next" HREF="node11.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html139"
+ HREF="node11.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html137"
+ HREF="node8.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html131"
+ HREF="node9.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html140"
+ HREF="node11.html">Parallel Jacobi preconditioning</A>
+<B> Up:</B> <A NAME="tex2html138"
+ HREF="node8.html">Applications</A>
+<B> Previous:</B> <A NAME="tex2html132"
+ HREF="node9.html">Writing output detached to</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00042000000000000000">
+Assembling the matrix</A>
+</H2>
+
+<P>
+Setting up the system matrix is usually done by looping over all cells and
+computing the contributions of each cell separately. While the computations of
+the local contributions is strictly independent, we need to transfer these
+contributions to the global matrix afterward. This transfer has to be
+synchronized, in order to avoid that one thread overwrites values that another
+thread has just written.
+
+<P>
+In most cases, building the system matrix in parallel will look like the
+following template:
+<PRE>
+    void MainClass::build_matrix () {
+      // define how many threads will be used (here: 4)
+      const unsigned int n_threads = 4;
+      const unsigned int n_cells_per_thread
+             = triangulation.n_active_cells () / n_threads;
+
+      // define the Mutex that will be used to synchronise
+      // accesses to the matrix
+      ACE_Thread_Mutex mutex;
+
+      // define thread manager
+      ACE_Thread_Manager thread_manager;
+
+      vector&lt;DoFHandler&lt;dim&gt;::active_cell_iterator&gt;
+             first_cells (n_threads),
+             end_cells (n_threads);
+
+      DoFHandler&lt;dim&gt;::active_cell_iterator 
+             present_cell = dof_handler.begin_active ();
+      for (unsigned int thread=0; thread&lt;n_threads; ++thread)
+        {
+          // for each thread: first determine the range of cells on
+          // which it shall operate:
+          first_cells[thread] = present_cell;
+
+          end_cells[thread] = first_cells[thread];
+          if (thread != n_threads-1)
+            for (unsigned int i=0; i&lt;n_cells_per_thread; ++i)
+              ++end_cells[thread];
+          else
+             end_cells[thread] = dof_handler.end();
+
+          // now start a new thread that builds the contributions of
+          // the cells in the given range
+          Threads::spawn (thread_manager,
+                   Threads::encapsulate(&amp;MainClass::build_matrix_threaded)
+                         .collect_args (this,
+                                        first_cells[thread], 
+                                        end_cells[thread],
+                                        mutex));
+
+          // set start iterator for next thread
+          present_cell = end_cells[thread];
+        };
+
+      // wait for the threads to finish
+      thread_manager.wait ();
+    };
+
+
+    void MainClass::build_matrix_threaded 
+         (const DoFHandler&lt;dim&gt;::active_cell_iterator &amp;first_cell,
+          const DoFHandler&lt;dim&gt;::active_cell_iterator &amp;end_cell,
+          ACE_Thread_Mutex                            &amp;mutex) 
+    {
+      FullMatrix&lt;double&gt;   cell_matrix;
+      vector&lt;unsigned int&gt; local_dof_indices;
+
+      DoFHandler&lt;dim&gt;::active_cell_iterator cell;
+      for (cell=first_cell; cell!=end_cell; ++cell)
+        {
+          // compute the elements of the cell matrix
+          ...
+
+          // get the indices of the DoFs of this cell
+          cell-&gt;get_dof_indices (local_dof_indices);
+
+          // now transfer local matrix into the global one.
+          // synchronise this with the other threads
+          mutex.acquire ();
+          for (unsigned int i=0; i&lt;dofs_per_cell; ++i)
+            for (unsigned int j=0; j&lt;dofs_per_cell; ++j)
+              global_matrix.add (local_dof_indices[i],
+                                 local_dof_indices[j],
+                                 cell_matrix(i,j));
+          mutex.release ();
+        };
+    };
+</PRE>
+<P>
+Note that since the <TT>build_matrix_threaded</TT> function takes its
+arguments as references, we have to make sure that the variables to which
+these references point live at least as long as the spawned threads. It is
+thus not possible to use the same variables for start and end iterator for all
+threads, as the following example would do:
+<PRE>
+      ....
+      DoFHandler&lt;dim&gt;::active_cell_iterator 
+             first_cell = dof_handler.begin_active ();
+      for (unsigned int thread=0; thread&lt;n_threads; ++thread)
+        {
+          // for each thread: first determine the range of threads on
+          // which it shall operate:
+          DoFHandler&lt;dim&gt;::active_cell_iterator end_cell = first_cell;
+          if (thread != n_threads-1)
+            for (unsigned int i=0; i&lt;n_cells_per_thread; ++i)
+              ++end_cell;
+          else
+             end_cell = dof_handler.end();
+
+          // now start a new thread that builds the contributions of
+          // the cells in the given range
+          Threads::spawn (thread_manager,
+                 Threads::encapsulate(&amp;MainClass::build_matrix_threaded)
+                       .collect_args (this, first_cell, end_cell, mutex));
+
+          // set start iterator for next thread
+          first_cell = end_cell;
+        };
+      ....
+</PRE>
+<P>
+Since splitting a range of iterators (for example the range
+<TT>begin_active()</TT> to <TT>end()</TT>) is a very common task when setting
+up threads, there is a function
+<PRE>
+    template &lt;typename ForwardIterator&gt;
+    vector&lt;pair&lt;ForwardIterator,ForwardIterator&gt; &gt;
+    split_range (const ForwardIterator &amp;begin, const ForwardIterator &amp;end,
+                 const unsigned int n_intervals);
+</PRE>in the <TT>Threads</TT> namespace that splits the range
+[<TT>begin</TT>,<TT>end</TT>) into <TT>n_intervals</TT> subintervals of
+approximately the same size.
+
+<P>
+Using this function, the thread creation function can now be written as
+follows:
+<PRE>
+    void MainClass::build_matrix () {
+      const unsigned int n_threads = 4;
+      ACE_Thread_Mutex   mutex;
+      ACE_Thread_Manager thread_manager;
+
+      // define starting and end point for each thread
+      typedef DoFHandler&lt;dim&gt;::active_cell_iterator active_cell_iterator;
+      vector&lt;pair&lt;active_cell_iterator,active_cell_iterator&gt; &gt;
+           thread_ranges 
+           = split_range&lt;active_cell_iterator&gt; (dof_handler.begin_active (),
+                                                dof_handler.end (),
+                                                n_threads);
+
+      for (unsigned int thread=0; thread&lt;n_threads; ++thread)
+        spawn (thread_manager,
+               encapsulate(&amp;MainClass::build_matrix_threaded)
+                    .collect_args (this,
+                                   thread_ranges[thread].first,
+                                   thread_ranges[thread].second,
+                                   mutex));
+
+      thread_manager.wait ();
+    };
+</PRE>We have here omitted the <TT>Threads::</TT> prefix to make things more
+readable. Note that we had to explicitly specify the iterator type
+<TT>active_cell_iterator</TT> to the <TT>split_range</TT> function, since
+the two iterators given have different type (<TT>dof_handler.end()</TT> has
+type <TT>DoFHandler&lt;dim&gt; :: raw_cell_iterator</TT>, which can be converted to
+<TT>DoFHandler&lt;dim&gt;::active_cell_iterator</TT>) and C++ requires that either
+the type is explicitly given or the type be unique.
+
+<P>
+A word of caution is in place here: since usually in finite element
+computations, the system matrix is ill-conditioned, small changes in a data
+vector or the matrix can lead to significant changes in the output.
+Unfortunately, since the order in which contributions to elements of the
+matrix or vector are computed can not be predicted when using multiple
+threads, round-off can come into play here. For example, taken from a
+real-world program, the following contributions for an element of a right hand
+side vector are computed from four cells: 
+<!-- MATH: $-3.255208333333328815$ -->
+-3.255208333333328815,
+
+<!-- MATH: $-3.255208333333333694$ -->
+-3.255208333333333694, 
+<!-- MATH: $-3.255208333333333694$ -->
+-3.255208333333333694, and 
+<!-- MATH: $-3.255208333333331526$ -->
+-3.255208333333331526;
+however, due to round-off the sum of these numbers depends on the order in
+which they are summed up, such that the resulting element of the vector
+differed depending on the number of threads used, the number of other programs
+on the computer, and other random sources. In subsequent runs of exactly the
+same programs, the sum was either 
+<!-- MATH: $-13.02083333333332827$ -->
+-13.02083333333332827 or
+
+<!-- MATH: $-13.02083333333332610$ -->
+-13.02083333333332610.  Although the difference is still only in the range
+of round-off error, it caused a change in the fourth digit of a derived, very
+ill-conditioned quantity after the matrix was inverted several times (this
+accuracy in this quantity was not really needed, but it showed up in the
+output and also led to different grid refinement due to comparison with other
+values of almost the same size). Tracking down the source of such problems is
+extremely difficult and frustrating, since they occur non-deterministically in
+subsequent runs of the same program, and it can take several days until the
+actual cause is found.
+
+<P>
+One possible work-around is to reduce the accuracy of the summands such that
+the value of the sum becomes irrespective of the order of the summands. One,
+rather crude method is to use a conversion to data type <TT>float</TT> and
+back; the update loop from above would then look as follows:
+<PRE>
+          for (unsigned int i=0; i&lt;dofs_per_cell; ++i)
+            for (unsigned int j=0; j&lt;dofs_per_cell; ++j)
+              global_matrix.add (local_dof_indices[i],
+                                 local_dof_indices[j],
+                                 static_cast&lt;float&gt;(cell_matrix(i,j)));
+</PRE>Note that the cast back to <TT>double</TT> is performed here implicitly.  The
+question whether a reduction in accuracy in the order shown here is tolerable,
+is problem dependent. There are methods that lose less accuracy than shown
+above.
+
+<P>
+The other, less computationally costly possibility would be to decrease the
+accuracy of the resulting sum, in the hope that all accumulated round-off
+error is deleted. However, this is unsafe since the order dependence remains
+and may even be amplified if the values of the sum lie around a boundary where
+values are rounded up or down when reducing the accuracy. Furthermore,
+problems arise if the summands have different signs and the result of
+summation consists of round-off error only.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html139"
+ HREF="node11.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html137"
+ HREF="node8.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html131"
+ HREF="node9.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html140"
+ HREF="node11.html">Parallel Jacobi preconditioning</A>
+<B> Up:</B> <A NAME="tex2html138"
+ HREF="node8.html">Applications</A>
+<B> Previous:</B> <A NAME="tex2html132"
+ HREF="node9.html">Writing output detached to</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>2000-04-20</I>
+</ADDRESS>
+</BODY>
+</HTML>

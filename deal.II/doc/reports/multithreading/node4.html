@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Operating system dependence and ACE</TITLE>
+<META NAME="description" CONTENT="Operating system dependence and ACE">
+<META NAME="keywords" CONTENT="multithreading">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="multithreading.css">
+<LINK REL="next" HREF="node5.html">
+<LINK REL="previous" HREF="node3.html">
+<LINK REL="up" HREF="node3.html">
+<LINK REL="next" HREF="node5.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html72"
+ HREF="node5.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html70"
+ HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html64"
+ HREF="node3.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html73"
+ HREF="node5.html">C interface to threads</A>
+<B> Up:</B> <A NAME="tex2html71"
+ HREF="node3.html">Creating and managing threads</A>
+<B> Previous:</B> <A NAME="tex2html65"
+ HREF="node3.html">Creating and managing threads</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00031000000000000000">
+Operating system dependence and ACE</A>
+</H2>
+
+<P>
+While all relevant operating systems now support multi-threaded programs, they
+all have different notions on what threads actually are on an operating system
+level, how they shall be managed and created. Even on Unix systems, which are
+usually well-standardized, there are at least three different and mutually
+incompatible interfaces to threads: POSIX threads [<A
+ HREF="node13.html#PosixThreads96">6</A>],
+Solaris threads [<A
+ HREF="node13.html#SolarisThreads92">5</A>], and Linux
+threads. Some operating systems support more than one interface, but there is
+no interface that is supported by all operating systems. Furthermore, other
+systems like Microsoft Windows have interfaces that are incompatible to all
+Unix systems [<A
+ HREF="node13.html#Cus93">3</A>].
+
+<P>
+Writing multi-threaded programs based on the operating system interfaces is
+therefore something inherently incompatible unless much effort is spent to
+port it to a new system. To avoid this, we chose to use the ACE (Adaptive
+Communication Environment, see [<A
+ HREF="node13.html#Sch94">7</A>,<A
+ HREF="node13.html#SW95">8</A>,<A
+ HREF="node13.html#ACE">4</A>]) library which encapsulates
+the operating system dependence and offers a uniform interface to the user.
+
+<P>
+We chose ACE over other libraries, since it runs on almost all relevant
+platforms, including most Unix systems and Microsoft Windows,
+and since it is to our knowledge the only library which is actively developed by a
+large group. Furthermore,
+it also is significantly larger than only thread management, offering
+interprocess communication and communication between different computers, as
+well as many other services. Contrary to most other libraries, it therefore
+offers both the ability to support a growing <TT>deal.II</TT> as well as the
+prospect to support independence also with respect to future platforms.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html72"
+ HREF="node5.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html70"
+ HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html64"
+ HREF="node3.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html73"
+ HREF="node5.html">C interface to threads</A>
+<B> Up:</B> <A NAME="tex2html71"
+ HREF="node3.html">Creating and managing threads</A>
+<B> Previous:</B> <A NAME="tex2html65"
+ HREF="node3.html">Creating and managing threads</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>2000-04-20</I>
+</ADDRESS>
+</BODY>
+</HTML>

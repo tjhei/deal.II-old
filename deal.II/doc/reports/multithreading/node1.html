@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Background</TITLE>
+<META NAME="description" CONTENT="Background">
+<META NAME="keywords" CONTENT="multithreading">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="multithreading.css">
+<LINK REL="next" HREF="node2.html">
+<LINK REL="previous" HREF="index.html">
+<LINK REL="up" HREF="index.html">
+<LINK REL="next" HREF="node2.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html32"
+ HREF="node2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html30"
+ HREF="index.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html24"
+ HREF="index.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html33"
+ HREF="node2.html">Threads</A>
+<B> Up:</B> <A NAME="tex2html31"
+ HREF="index.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html25"
+ HREF="index.html">No Title</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00010000000000000000">
+Background</A>
+</H1>
+
+<P>
+Realistic finite element simulations tend to use enormous amounts of computing
+time and memory. Scientists and programmers have therefore long tried to use
+the combined power of several processors or computers to tackle these
+problems.
+
+<P>
+The usual approach is to use physically separated computers (e.g. clusters) or
+computing units (e.g. processor nodes in a parallel computer), each of which
+is equipped with its own memory, and split the problem at hand into separate
+parts which are then solved on these computing units. Unfortunately, this
+approach tends to pose significant problems, both for the mathematical
+formulation as well as for the application programmer, which make the
+development of such programs overly difficult and expensive.
+
+<P>
+For these reasons, parallelized implementations and their
+mathematical background are still subject to intense research. In recent
+years, however, multi-processor machines have been developed, which pose a
+reasonable alternative to small parallel computers with the advantage of
+simple programming and the possibility to use the same mathematical
+formulation that can also be used for single-processor machines. These
+computers typically have between two and eight processors that can access the
+global memory at equal cost. 
+
+<P>
+Due to this uniform memory access (UMA) architecture, communication can be
+performed in the global memory and is no more costly than access to any other
+memory location. Thus, there is also no more need to change the mathematical
+formulation to reduce communication, and programs using this architecture look
+very much like programs written for single processor machines. 
+
+<P>
+The purpose of this report is to explain the techniques used in
+<TT>deal.II</TT> (see [<A
+ HREF="node13.html#BK99tr">1</A>,<A
+ HREF="node13.html#BK99m">2</A>])
+by which we try to program these computers. We will first
+give a brief introduction in what threads are and what the problems are which
+we have to solve when we want to use multi-threading. The third section takes an
+in-depth look at the way in which the functionality of the operating system is
+represented in a <TT>C++</TT> program in order to allow simple and robust
+programming; in particular, we describe the design decisions which led us to
+implement these parts of the library in the way they are implemented. In the
+fourth section, we show several examples of parallelization and explain how
+they work. Readers who are more interested in actually using the framework
+laid out in this report, rather than the internals, may skip Section 3 and go
+directly to the applications in Section <A HREF="node8.html#sec:applications">4</A> (page
+<A HREF="node8.html#sec:applications"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="../deal.II-paper/cross_ref_motif.gif"></A>). 
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html32"
+ HREF="node2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html30"
+ HREF="index.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html24"
+ HREF="index.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html33"
+ HREF="node2.html">Threads</A>
+<B> Up:</B> <A NAME="tex2html31"
+ HREF="index.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html25"
+ HREF="index.html">No Title</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>2000-04-20</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Threads</TITLE>
+<META NAME="description" CONTENT="Threads">
+<META NAME="keywords" CONTENT="multithreading">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="multithreading.css">
+<LINK REL="next" HREF="node3.html">
+<LINK REL="previous" HREF="node1.html">
+<LINK REL="up" HREF="index.html">
+<LINK REL="next" HREF="node3.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html42"
+ HREF="node3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html40"
+ HREF="index.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html34"
+ HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html43"
+ HREF="node3.html">Creating and managing threads</A>
+<B> Up:</B> <A NAME="tex2html41"
+ HREF="index.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html35"
+ HREF="node1.html">Background</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00020000000000000000">
+Threads</A>
+</H1>
+
+<P>
+The basic entity for programming multi-processor machines are
+<I>threads</I>. They represent parts of the program which are executed in
+parallel. Threads can be considered as separate programs that work on the same
+main memory. On single-processor machines, they are simulated by letting each
+thread run for some time (usually a few milliseconds) before switching to the
+next thread. On multi-processor machines, threads can truly be executed in
+parallel. In order to let programs use more than one thread (which would be
+the regular sequential program), several aspects need to be covered:
+<UL>
+<LI>How do we assign operations to different threads? Of course, operations
+  which depend on each other must not be executed in reverse order. This can
+  be achieved by only letting independent operations run on different threads,
+  or by using synchronization methods. this is mostly a question of program
+  design and thus problem dependent, which is why both aspects will only be
+  briefly touched below.
+<LI>How does the operating system and the whole programming environment
+  support this?
+</UL>As mentioned, only the second aspect can be canonicalized, so we will treat it
+first. Some examples of actual parallelized applications are discussed in
+Section <A HREF="node8.html#sec:applications">4</A>.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html42"
+ HREF="node3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html40"
+ HREF="index.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html34"
+ HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html43"
+ HREF="node3.html">Creating and managing threads</A>
+<B> Up:</B> <A NAME="tex2html41"
+ HREF="index.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html35"
+ HREF="node1.html">Background</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>2000-04-20</I>
+</ADDRESS>
+</BODY>
+</HTML>

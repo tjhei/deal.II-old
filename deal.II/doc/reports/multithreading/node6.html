@@ -1,0 +1,281 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>First approach</TITLE>
+<META NAME="description" CONTENT="First approach">
+<META NAME="keywords" CONTENT="multithreading">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="multithreading.css">
+<LINK REL="next" HREF="node7.html">
+<LINK REL="previous" HREF="node5.html">
+<LINK REL="up" HREF="node3.html">
+<LINK REL="next" HREF="node7.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html92"
+ HREF="node7.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html90"
+ HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html84"
+ HREF="node5.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html93"
+ HREF="node7.html">Second approach</A>
+<B> Up:</B> <A NAME="tex2html91"
+ HREF="node3.html">Creating and managing threads</A>
+<B> Previous:</B> <A NAME="tex2html85"
+ HREF="node5.html">C interface to threads</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00033000000000000000">
+First approach</A>
+</H2>
+
+<P>
+The first idea is the following: assume that we have a class
+<TT>TestClass</TT><P>
+<DIV><A NAME="code:testclass"><B>Code sample  2</B></A> &nbsp; 
+<PRE>
+    class TestClass {
+      public:
+        void test_function (int i, double d);
+    };
+</PRE></DIV><P></P>
+and we would like to call
+<TT>test_object</TT>.<TT>test_function(1,3.1415926)</TT> on a newly created
+thread, where <TT>test_object</TT> is 
+an object of type <TT>TestClass</TT>. We then need an object that encapsulates
+the address of the member function, a pointer to the object for which we want
+to call the function, and both parameters. This class would be suitable:<P>
+<DIV><A NAME="code:memfundata"><B>Code sample  3</B></A> &nbsp; 
+<PRE>
+    struct MemFunData {
+        typedef void (TestClass::*MemFunPtr) (int, double);
+        MemFunPtr  mem_fun_ptr;
+        TestClass *object;
+        int        arg1;
+        double     arg2;
+    };
+</PRE></DIV><P></P>
+
+<P>
+We further need a function that satisfies the signature required by the
+operating systems (or ACE, respectively), see Code Sample
+<A HREF="node5.html#code:signature">1</A>, and that can call the member function 
+if we pass it an object of type <TT>MemFunData</TT>:<P>
+<DIV><A NAME="code:start_thread"><B>Code sample  4</B></A> &nbsp; 
+<PRE>
+    void * start_thread (void *arg_ptr) {
+                        // first reinterpret the void* as a
+                        // pointer to the object which
+                        // encapsulates the arguments
+                        // and addresses:
+      MemFunData *mem_fun_data
+            = reinterpret_cast&lt;MemFunData *&gt;(arg_ptr);
+                        // then call the member function:
+      (mem_fun_data-&gt;object)
+            -&gt;*(mem_fun_data-&gt;mem_fun_ptr) (mem_fun_data-&gt;arg1,
+                                            mem_fun_data-&gt;arg2);
+                        // since the function does not return
+                        // a value, we do so ourselves:
+      return 0;
+    };
+</PRE></DIV><P></P>
+Such functions are called <I>trampoline functions</I> since they only serve
+as jump-off point for other functions.
+
+<P>
+We can then perform the desired call using the following sequence of commands:
+<PRE>
+    MemFunData mem_fun_data;
+    mem_fun_data.mem_fun_ptr = &amp;TestClass::test_function;
+    mem_fun_data.object      = &amp;test_object;
+    mem_fun_data.arg1        = 1;
+    mem_fun_data.arg2        = 3.1415926;
+    
+    ACE_Thread_Manager::spawn (&amp;start_thread,
+                               (void*)&amp;mem_fun_data);
+</PRE><TT>ACE_Thread_Manager::spawn</TT> is the function from ACE that actually
+calls the operating system and tells it to create a new thread and call the
+function which it is given as first parameter (here: <TT>start_thread</TT>)
+with the parameter which is given as second parameter. <TT>start_thread</TT>,
+when called, will then get the address of the function which we wanted to call
+from its parameter, and call it with the values we wanted as arguments.
+
+<P>
+In practice, this would mean that we needed a structure like
+<TT>MemFunData</TT> and a function like <TT>start_thread</TT> for each class
+<TT>TestClass</TT> and all functions <TT>test_function</TT> with different
+signatures. This is clearly not feasible in practice and places an
+inappropriate burden on the programmer who wants to use multiple threads in
+his program. Fortunately, <TT>C++</TT> offers an elegant way for this problem,
+in the form of templates: we first define a data type which encapsulates
+address and arguments for all binary functions:<P>
+<DIV><A NAME="code:memfundata-template"><B>Code sample  5</B></A> &nbsp; 
+<PRE>
+    template &lt;typename Class, typename Arg1, typename Arg2&gt;
+    struct MemFunData {
+        typedef void (Class::*MemFunPtr) (Arg1, Arg2);
+        MemFunPtr  mem_fun_ptr;
+        Class     *object;
+        Arg1       arg1;
+        Arg2       arg2;
+    };
+</PRE></DIV><P></P>
+Next, we need a function that can process these arguments:<P>
+<DIV><A NAME="code:start_thread-template"><B>Code sample  6</B></A> &nbsp; 
+<PRE>
+    template &lt;typename Class, typename Arg1, typename Arg2&gt;
+    void * start_thread (void *arg_ptr) {
+      MemFunData&lt;Class,Arg1,Arg2&gt; *mem_fun_data
+            = reinterpret_cast&lt;MemFunData&lt;Class,Arg1,Arg2&gt;*&gt;(arg_ptr);
+      (mem_fun_data-&gt;object)
+            -&gt;*(mem_fun_data-&gt;mem_fun_ptr) (mem_fun_data-&gt;arg1,
+                                            mem_fun_data-&gt;arg2);
+      return 0;
+    };
+</PRE></DIV><P></P>
+Then we can start the thread as follows:
+<PRE>
+    MemFunData&lt;TestClass,int,double&gt;  mem_fun_data;
+    mem_fun_data.mem_fun_ptr = &amp;TestClass::test_function;
+    mem_fun_data.object      = &amp;test_object;
+    mem_fun_data.arg1        = 1;
+    mem_fun_data.arg2        = 3.1415926;
+    
+    ACE_Thread_Manager::spawn (&amp;start_thread&lt;TestClass,int,double&gt;,
+                               (void*)&amp;mem_fun_data);
+</PRE>Here we first create an object which is suitable to encapsulate the parameters
+of a binary function that is a member function of the <TT>TestClass</TT> class
+and takes an integer and a double. Then we start the thread using the correct
+trampoline function. It is the user's responsibility to choose the correct
+trampoline function (i.e. to specify the correct template parameters) since
+the compiler only sees a <TT>void*</TT> and cannot do any type checking.
+
+<P>
+We can further simplify the process and remove the user responsibility by
+defining the following class and function:<P>
+<DIV><A NAME="code:threadmanager"><B>Code sample  7</B></A> &nbsp; 
+<PRE>
+    class ThreadManager : public ACE_Thread_Manager {
+      public:
+        template &lt;typename Class, typename Arg1, typename Arg2&gt;
+        static void 
+        spawn (MemFunData&lt;Class,Arg1,Arg2&gt; &amp;MemFunData) {
+          ACE_Thread_Manager::spawn (&amp;start_thread&lt;Class,Arg1,Arg2&gt;,
+                                     (void*)&amp;MemFunData);
+        };
+    };
+</PRE></DIV><P></P>
+This way, we can call
+<PRE>
+    ThreadManager::spawn (mem_fun_data);
+</PRE>and the compiler will figure out which the right trampoline function is, since
+it knows the data type of <TT>mem_fun_data</TT> and therefore the values of
+the template parameters in the <TT>ThreadManager:: spawn</TT> function.
+
+<P>
+The way described above is basically the way which is used in <TT>deal.II</TT>
+version 3.0. Some care has to be paid to details, however. In particular,
+<TT>C++</TT> functions often pass references as arguments, which however are
+not assignable after initialization. Therefore, the <TT>MemFunData</TT> class
+needs to have a constructor, and arguments must be set through it. Assume, for
+example, <TT>TestClass</TT> had a second member function
+<PRE>
+        void f (int &amp;i, double &amp;d);
+</PRE>Then, we would have to use <TT>MemFunData&lt;TestClass,int&amp;,doubleSPMamp;&gt;</TT>,
+which in a form without templates would look like this:
+<PRE>
+    struct MemFunData {
+        typedef void (TestClass::*MemFunPtr) (int &amp;, double &amp;);
+        MemFunPtr  mem_fun_ptr;
+        TestClass *object;
+        int       &amp;arg1;
+        double    &amp;arg2;
+    };
+</PRE>The compiler would require us to initialize the references to the two
+parameters at construction time of the <TT>MemFunData</TT> object, since
+it is not possible in <TT>C++</TT> to change to which object a reference
+points to after initialization. Adding a constructor to the
+<TT>MemFunData</TT> class would then enable us to write
+<PRE>
+    int    i = 1;
+    double d = 3.1415926;
+    MemFunData&lt;TestClass,int&amp;,double&amp;&gt;  
+           mem_fun_data (&amp;test_object, i, d, &amp;TestClass::f);
+</PRE>Non-reference arguments could then still be changed after construction. For
+historical reasons, the pointer to the member function is passed as last
+parameter here.
+
+<P>
+The last point is that this interface is only usable for functions with two
+parameters. Basically, the whole process has to be reiterated for any number
+of parameters which we want to support. In <TT>deal.II</TT>, we therefore have
+classes <TT>MemFunData0</TT> through <TT>MemFunData10</TT>, corresponding to
+member function that do not take parameters through functions that take ten
+parameters. Equivalently, we need the respective number of trampoline
+functions. 
+
+<P>
+Additional thoughts need to be taken on virtual member functions and constant
+functions. While the first are handled by the compiler (member function
+pointers can also be to virtual functions, without explicitly stating so), the
+latter can be achieved by writing 
+<TT>MemFunData&lt;const TestClass,int,double&gt;</TT>, which would be the correct
+object if we had declared <TT>test_function</TT> constant.
+
+<P>
+Finally we note that it is often the case that one member function starts a
+new thread by calling another member function of the same object. Thus, the
+declaration most often used is the following:
+<PRE>
+    MemFunData&lt;TestClass,int&amp;,double&amp;&gt;  
+           mem_fun_data (this, 1, 3.1415926, &amp;TestClass::f);
+</PRE>Here, instead of an arbitrary <TT>test_object</TT>, the present object is
+used, which is represented by the <TT>this</TT> pointer.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html92"
+ HREF="node7.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html90"
+ HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html84"
+ HREF="node5.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html93"
+ HREF="node7.html">Second approach</A>
+<B> Up:</B> <A NAME="tex2html91"
+ HREF="node3.html">Creating and managing threads</A>
+<B> Previous:</B> <A NAME="tex2html85"
+ HREF="node5.html">C interface to threads</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>2000-04-20</I>
+</ADDRESS>
+</BODY>
+</HTML>

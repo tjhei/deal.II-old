@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>C interface to threads versus C++</TITLE>
+<META NAME="description" CONTENT="C interface to threads versus C++">
+<META NAME="keywords" CONTENT="multithreading">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="multithreading.css">
+<LINK REL="next" HREF="node6.html">
+<LINK REL="previous" HREF="node4.html">
+<LINK REL="up" HREF="node3.html">
+<LINK REL="next" HREF="node6.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html82"
+ HREF="node6.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html80"
+ HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html74"
+ HREF="node4.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html83"
+ HREF="node6.html">First approach</A>
+<B> Up:</B> <A NAME="tex2html81"
+ HREF="node3.html">Creating and managing threads</A>
+<B> Previous:</B> <A NAME="tex2html75"
+ HREF="node4.html">Operating system dependence and</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00032000000000000000">
+<TT>C</TT> interface to threads versus <TT>C++</TT></A>
+</H2>
+
+<P>
+While ACE encapsulates almost all of the synchronization and interprocess
+interface into <TT>C++</TT> classes, it for some reason does not do so for
+thread creation. Rather it only offers the basic <TT>C</TT> interface:
+when creating a new thread, a function is called which has the following
+signature:<P>
+<DIV><A NAME="code:signature"><B>Code sample  1</B></A> &nbsp; 
+<PRE>
+    void *  f (void * arg);
+</PRE></DIV><P></P>
+Thus, only functions which take a single parameter of type <TT>void*</TT> and
+return a <TT>void*</TT> may be called. Further, these functions must be global
+or static member functions, as opposed to true member functions of
+classes. This is not in line with the <TT>C++</TT> philosophy and in fact does
+not fit well into <TT>deal.II</TT> as well: there is not a single function in
+the library that has this signature.
+
+<P>
+The task of multi-threading support in <TT>deal.II</TT> is therefore to
+encapsulate member functions, arbitrary types and numbers of parameters, and
+return types of functions into mechanisms built atop of ACE. This has been
+done twice for <TT>deal.II</TT>, and we will explain both approaches. At
+present, i.e. with version 3.0, only the first approach is distributed with
+<TT>deal.II</TT>, since the second is still experimental and due to the high
+complexity. The latter approach, however, has clear advantages over the first
+one, and it is planned to switch to it in the next major version of
+<TT>deal.II</TT>. 
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html82"
+ HREF="node6.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html80"
+ HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html74"
+ HREF="node4.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html83"
+ HREF="node6.html">First approach</A>
+<B> Up:</B> <A NAME="tex2html81"
+ HREF="node3.html">Creating and managing threads</A>
+<B> Previous:</B> <A NAME="tex2html75"
+ HREF="node4.html">Operating system dependence and</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>2000-04-20</I>
+</ADDRESS>
+</BODY>
+</HTML>

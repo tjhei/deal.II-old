@@ -1,0 +1,708 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Second approach</TITLE>
+<META NAME="description" CONTENT="Second approach">
+<META NAME="keywords" CONTENT="multithreading">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="multithreading.css">
+<LINK REL="previous" HREF="node6.html">
+<LINK REL="up" HREF="node3.html">
+<LINK REL="next" HREF="node8.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html100"
+ HREF="node8.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html98"
+ HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html94"
+ HREF="node6.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html101"
+ HREF="node8.html">Applications</A>
+<B> Up:</B> <A NAME="tex2html99"
+ HREF="node3.html">Creating and managing threads</A>
+<B> Previous:</B> <A NAME="tex2html95"
+ HREF="node6.html">First approach</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><strong>Subsections</strong></A>
+<UL>
+<LI><A NAME="tex2html102"
+ HREF="node7.html#SECTION00034100000000000000">Finding the correct template parameters.</A>
+<LI><A NAME="tex2html103"
+ HREF="node7.html#SECTION00034200000000000000">Encapsulating the parameters.</A>
+<LI><A NAME="tex2html104"
+ HREF="node7.html#SECTION00034300000000000000">Using these objects.</A>
+<LI><A NAME="tex2html105"
+ HREF="node7.html#SECTION00034400000000000000">Virtual constructors.</A>
+<LI><A NAME="tex2html106"
+ HREF="node7.html#SECTION00034500000000000000">Spawning independent threads.</A>
+<LI><A NAME="tex2html107"
+ HREF="node7.html#SECTION00034600000000000000">Number of parameters. Non-member functions.</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION00034000000000000000">&#160;</A>
+<A NAME="sec:secondapproach">&#160;</A>
+<BR>
+Second approach
+</H2>
+
+<P>
+While the approach outlined above works satisfactorily, it has one serious
+drawback: the programmer has to provide the data types of the arguments of the
+member function himself. While this seems to be a simple task, in practice it
+is often not, as will be explained in the sequel.
+
+<P>
+To expose the problem, we take an example from one of our application programs
+where we would like to call the function
+<PRE>
+    template &lt;int dim&gt;
+    void DoFHandler&lt;dim&gt;::distribute_dofs (const FiniteElement&lt;dim&gt; &amp;,
+                                           const unsigned int);
+</PRE>on a new thread. Correspondingly, we would need to use
+<PRE>
+    MemFunData2&lt;DoFHandler&lt;dim&gt;, const FiniteElement&lt;dim&gt; &amp;, unsigned int&gt;
+        mem_fun_data (dof_handler, fe, 0,
+                      &amp;DoFHandler&lt;dim&gt;::distribute_dofs);
+</PRE>to encapsulate the parameters. However, if one forgets the <TT>const</TT>
+specifier on the second template parameter, one receives the following error
+message (using gcc 2.95.2):
+<PRE>
+  test.cc: In method `void InterstepData&lt;2&gt;::wake_up(unsigned int, Interst
+  epData&lt;2&gt;::PresentAction)':
+  test.cc:683:   instantiated from here
+  test.cc:186: no matching function for call to `ThreadManager::Mem_Fun_Da
+  ta2&lt;DoFHandler&lt;2&gt;,FiniteElement&lt;2&gt; &amp;,unsigned int&gt;::MemFunData2 (DoFHa
+  ndler&lt;2&gt; *, const FiniteElement&lt;2&gt; &amp;, int, void (DoFHandler&lt;2&gt;::*)(const
+   FiniteElement&lt;2&gt; &amp;, unsigned int))'
+  /home/atlas1/wolf/program/newdeal/deal.II/base/include/base/thread_manag
+  er.h:470: candidates are: ThreadManager::MemFunData2&lt;DoFHandler&lt;2&gt;,Fin
+  iteElement&lt;2&gt; &amp;,unsigned int&gt;::MemFunData2(DoFHandler&lt;2&gt; *, FiniteElem
+  ent&lt;2&gt; &amp;, unsigned int, void * (DoFHandler&lt;2&gt;::*)(FiniteElement&lt;2&gt; &amp;, un
+  signed int))
+  /home/atlas1/wolf/program/newdeal/deal.II/base/include/base/thread_manag
+  er.h:480:                 ThreadManager::MemFunData2&lt;DoFHandler&lt;2&gt;,Fin
+  iteElement&lt;2&gt; &amp;,unsigned int&gt;::MemFunData2(DoFHandler&lt;2&gt; *, FiniteElem
+  ent&lt;2&gt; &amp;, unsigned int, void (DoFHandler&lt;2&gt;::*)(FiniteElement&lt;2&gt; &amp;, unsi
+  gned int))
+  /home/atlas1/wolf/program/newdeal/deal.II/base/include/base/thread_manag
+  er.h:486:                 ThreadManager::MemFunData2&lt;DoFHandler&lt;2&gt;,Fin
+  iteElement&lt;2&gt; &amp;,unsigned int&gt;::MemFunData2(const ThreadManager::Mem_Fu
+  n_Data2&lt;DoFHandler&lt;2&gt;,FiniteElement&lt;2&gt; &amp;,unsigned int&gt; &amp;)
+</PRE>
+<P>
+While the compiler is certainly right to complain, the message is not very
+helpful. Furthermore, since interfaces to functions sometimes change, for
+example by adding additional default parameters that do not show up in usual
+code, programs that used to compile do no more so with messages as shown
+above. 
+
+<P>
+Due to the lengthy and complex error messages, even very experienced
+programmers usually need between five and ten minutes until they get an
+expression like this correct. In most cases, they don't get it right in the
+first attempt, so the time used for the right declaration dominates the whole
+setup of starting a new thread. To circumvent this bottleneck at least in most
+cases, we chose to implement a second strategy at encapsulating the parameters
+of member functions. This is done in several steps: first let the compiler
+find out about the right template parameters, then encapsulate the parameters,
+use the objects, and finally solve some technical problems with virtual
+constructors and locking of destruction. We will treat these steps
+sequentially in the following. 
+
+<P>
+
+<H3><A NAME="SECTION00034100000000000000">
+Finding the correct template parameters.</A>
+</H3>
+<TT>C++</TT> offers the possibility of templatized functions that deduce their
+template arguments themselves. In fact, we have used them in the
+<TT>ThreadManager::spawn</TT> function in Code Sample <A HREF="node6.html#code:threadmanager">7</A>
+already. Here, this can be used as follows: assume we have a
+function encapsulation class
+<PRE>
+    template &lt;typename Class, typename Arg1, typename Arg2&gt;
+    class MemFunData { ... };
+</PRE>as above, and a function
+<PRE>
+    template &lt;typename Class, typename Arg1, typename Arg2&gt;
+    MemFunData&lt;Class,Arg1,Arg2&gt;
+    encapsulate (void (Class::*mem_fun_ptr)(Arg1, Arg2)) {
+      return MemFunData&lt;Class,Arg1,Arg2&gt; (mem_fun_ptr);
+    };
+</PRE>Then, if we call this function with the test class of Code Sample
+<A HREF="node6.html#code:testclass">2</A> like this:
+<PRE>
+    encapsulate (&amp;TestClass::test_function);
+</PRE>it can unambiguously determine the template parameters to be
+<TT>Class=TestClass</TT>, <TT>Arg1=int</TT>, <TT>Arg2=double</TT>.
+
+<P>
+
+<H3><A NAME="SECTION00034200000000000000">
+Encapsulating the parameters.</A>
+</H3>
+We should not try to include the argument values for the new thread right
+away, for example by declaring <TT>encapsulate</TT> like this:
+<PRE>
+    template &lt;typename Class, typename Arg1, typename Arg2&gt;
+    MemFunData&lt;Class,Arg1,Arg2&gt;
+    encapsulate (void (Class::*mem_fun_ptr)(Arg1, Arg2),
+                 Arg1  arg1,
+                 Arg2  arg2,
+                 Class object) {
+      return MemFunData&lt;Class,Arg1,Arg2&gt; (mem_fun_ptr, object, arg1, arg2);
+    };
+</PRE>The reason is that for template functions, no parameter promotion is
+performed. Thus, if we called this function as in
+<PRE>
+    encapsulate (&amp;TestClass::test_function,
+                 1, 3,
+                 test_object);
+</PRE>then the compiler would refuse this since from the function pointer it must
+deduce that <TT>Arg2 = double</TT>, but from the parameter ``3'' it must assume
+that <TT>Arg2 = int</TT>. The resulting error message would be similarly lengthy
+as the one shown above.
+
+<P>
+One could instead write <TT>MemFunData</TT> like this:
+<PRE>
+    template &lt;typename Class, typename Arg1, typename Arg2&gt;
+    class MemFunData { 
+      public:
+        typedef void (Class::*MemFunPtr)(Arg1, Arg2);
+
+        MemFunData (MemFunPtr mem_fun_ptr_) {
+          mem_fun_ptr = mem_fun_ptr_;
+        };
+
+        void collect_args (Class *object_,
+                           Arg1   arg1_,
+                           Arg2   arg2_) {
+          object = object_;
+          arg1   = arg1_;
+          arg2   = arg2_;
+        };
+
+        MemFunPtr  mem_fun_ptr;
+        Class     *object;
+        Arg1       arg1;
+        Arg2       arg2;
+    };
+</PRE>One would then create an object of this type including the parameters to be
+passed as follows:
+<PRE>
+    encapsulate(&amp;TestClass::test_function).collect_args(test_object, 1, 3);
+</PRE>Here, the first function call creates an object with the right template
+parameters and storing the member function pointer, and the second one,
+calling a member function, fills in the function arguments. 
+
+<P>
+Unfortunately, this way does not work: if one or more of the parameter types
+is a reference, then the respective reference variable needs to be initialized
+by the constructor, not by <TT>collect_args</TT>. It needs to be known which
+object the reference references at construction time, since later on only the
+referenced object can be assigned, not the reference itself anymore.
+
+<P>
+Since we feel that we are close to a solution, we introduce one more
+indirection, which indeed will be the last one:<P>
+<DIV><B>Code sample  8</B> &nbsp; 
+<PRE>
+    template &lt;typename Class, typename Arg1, typename Arg2&gt;
+    class MemFunData { 
+      public:
+        typedef void (Class::*MemFunPtr)(Arg1, Arg2);
+
+        MemFunData (MemFunPtr mem_fun_ptr_,
+                      Class *object_,
+                      Arg1   arg1_,
+                      Arg2   arg2_) :
+             mem_fun_ptr (mem_fun_ptr_),
+             object      (object_),
+             arg1        (arg1_),
+             arg2        (arg2_)            {};
+
+        MemFunPtr  mem_fun_ptr;
+        Class     *object;
+        Arg1       arg1;
+        Arg2       arg2;
+    };
+
+
+    template &lt;typename Class, typename Arg1, typename Arg2&gt;
+    struct ArgCollector { 
+        typedef void (Class::*MemFunPtr)(Arg1, Arg2);
+
+        ArgCollector (MemFunPtr mem_fun_ptr_) {
+          mem_fun_ptr = mem_fun_ptr_;
+        };
+
+        
+        MemFunData&lt;Class,Arg1,Arg2&gt;
+        collect_args (Class *object_,
+                      Arg1   arg1_,
+                      Arg2   arg2_) {
+          return MemFunData&lt;Class,Arg1,Arg2&gt; (mem_fun_ptr, object,
+                                              arg1, arg2);
+        };
+
+        MemFunPtr  mem_fun_ptr;
+    };
+
+
+    template &lt;typename Class, typename Arg1, typename Arg2&gt;
+    ArgCollector&lt;Class,Arg1,Arg2&gt;
+    encapsulate (void (Class::*mem_fun_ptr)(Arg1, Arg2)) {
+      return ArgCollector&lt;Class,Arg1,Arg2&gt; (mem_fun_ptr);
+    };
+</PRE></DIV><P></P>
+
+<P>
+Now we can indeed write for the test class of Code Sample <A HREF="node6.html#code:testclass">2</A>:
+<PRE>
+    encapsulate(&amp;TestClass::test_function).collect_args(test_object, 1, 3);
+</PRE>The first call creates an object of type <TT>ArgCollector&lt;...&gt;</TT> with the
+right parameters and storing the member function pointer, while the second
+call, a call to a member function of that 
+intermediate class, generates the final object we are interested in, including
+the member function pointer and all necessary parameters. Since
+<TT>collect_args</TT> already has its template parameters fixed from
+<TT>encapsulate</TT>, it can convert between data types.
+
+<P>
+
+<H3><A NAME="SECTION00034300000000000000">
+Using these objects.</A>
+</H3> 
+Now we have an object of the correct type
+automatically generated, without the need to type in any template parameters
+by hand. What can we do with that? First, we can't assign it to a variable of
+that type, e.g. for use in several <TT>spawn</TT> commands:
+<PRE>
+  MemFunData mem_fun_data = encapsulate(...).collect_args(...);
+</PRE>Why? Since we would then have to write the data type of that variable by hand:
+the correct data type is not <TT>MemFunData</TT> as written above, but
+<TT>MemFunData&lt;TestClass,int,double&gt;</TT>. Specifying all these template
+arguments was exactly what we wanted to avoid. However, we can do some such
+thing if the variable to which we assign the result is of a type which is a
+base class of <TT>MemFunData&lt;...&gt;</TT>. Unfortunately, the data values that
+<TT>MemFunData&lt;...&gt;</TT> encapsulates depend on the template parameters, so
+the respective variables in which we store the values can only be placed in
+the derived class and could not be copied when we assign the variable to a
+base class object, since that does not have these variables.
+
+<P>
+What can we do here? Assume we have the following class structure:<P>
+<DIV><B>Code sample  9</B> &nbsp; 
+<PRE>
+    class FunDataBase {};
+
+    template &lt;...&gt; class MemFunData : public FunDataBase 
+    {  /* as above */ };
+
+    class FunEncapsulation {
+      public:
+        FunEncapsulation (FunDataBase *f)
+                   : fun_data_base (f) {};
+        FunDataBase *fun_data_base;
+    };
+
+
+    template &lt;typename Class, typename Arg1, typename Arg2&gt;
+    FunEncapsulation
+    ArgCollector&lt;Class,Arg1,Arg2&gt;::collect_args (Class *object_,
+                                                 Arg1   arg1_,
+                                                 Arg2   arg2_) {
+      return new MemFunData&lt;Class,Arg1,Arg2&gt; (mem_fun_ptr, object,
+                                              arg1, arg2);
+    };
+</PRE></DIV><P></P>
+Note that in the return statement of the <TT>collect_args</TT> function,
+first a cast from <TT>MemFunData*</TT> to <TT>FunDataBase*</TT>, and then a
+constructor call to <TT>FunEncapsulation :: FunEncapsulation (FunDataBase*)</TT>
+was performed.
+
+<P>
+In the example above, the call to <TT>encapsulate(...).collect_args(...)</TT>
+generates an object of type <TT>FunEncapsulation</TT>, which in turn stores a
+pointer to an object of type <TT>FunDataBase</TT>, here to
+<TT>MemFunData&lt;...&gt;</TT> with the correct template parameters. We can assign
+the result to a variable the type of which does not contain any template
+parameters any more, as desired:
+<PRE>
+    FunEncapsulation 
+        fun_encapsulation = encapsulate (&amp;TestClass::test_function)
+                                          .collect_args(test_object, 1, 3);
+</PRE>
+<P>
+But how can we start a thread with this object if we have lost the full
+information about the data types? This can be done as follows: add a variable
+to <TT>FunDataBase</TT> which contains the address of a function that knows
+what to do. This function is usually implemented in the derived classes, and
+its address is passed to the constructor:<P>
+<DIV><B>Code sample  10</B> &nbsp; 
+<PRE>
+    class FunDataBase {
+      public:
+        typedef void * (*ThreadEntryPoint) (void *);
+
+        FunDataBase (ThreadEntryPoint t) :
+                 thread_entry_point (t) {};
+
+        ThreadEntryPoint thread_entry_point;
+    };
+
+    template &lt;...&gt;
+    class MemFunData : public FunDataBase {
+      public:
+                 // among other things, the constructor now does this:
+        MemFunData () :
+                 FunDataBase (&amp;start_thread) {};
+
+        static void * start_thread (void *args) {
+          // do the same as in Code Sample 4 above
+        }
+    };
+
+
+    void spawn (ACE_Thread_Manager &amp;thread_manager,
+                FunEncapsulation   &amp;fun_encapsulation) {
+      thread_manager.spawn (*fun_encapsulation.fun_data_base
+                                      -&gt;thread_entry_point,
+                            &amp;fun_data_base);
+    };
+</PRE></DIV><P></P>
+<TT>fun_encapsulation.fun_data_base-&gt;thread_entry_point</TT> is given
+by the derived class as that function that knows how to handle objects of the
+type which we are presently using. Thus, we can now write the whole sequence
+of function calls (assuming we have an object <TT>thread_manager</TT> of type
+<TT>ACE_Thread_Manager</TT>):
+<PRE>
+    FunEncapsulation 
+        fun_encapsulation = encapsulate (&amp;TestClass::test_function)
+                                          .collect_args(test_object, 1, 3);
+    spawn (thread_manager, fun_encapsulation);
+</PRE>This solves our problem in that no template parameters need to be specified by
+hand any more. The only source for lengthy compiler error messages is if the
+parameters to <TT>collect_args</TT> are in the wrong order or can not be
+casted to the parameters of the member function which we want to call. These
+problems, however, are much more unlikely in our experience, and are also much
+quicker sorted out.
+
+<P>
+
+<H3><A NAME="SECTION00034400000000000000">
+Virtual constructors.</A>
+</H3> While the basic techniques have been fully
+developed now, there are some aspects which we still have to take care of. The
+basic problem here is that the <TT>FunEncapsulation</TT> objects store a
+pointer to an object that was created using the <TT>new</TT> operator. To
+prevent a memory leak, we need to destroy this object at some time, preferably
+in the destructor of <TT>FunEncapsulation</TT>:
+<PRE>
+    FunEncapsulation::~FunEncapsulation () {
+      delete fun_data_base;
+    };
+</PRE>However, what happens if we have copied the object before? In particular, this
+is always the case using the functions above: <TT>collect_args</TT> generates
+a temporary object of type <TT>FunEncapsulation</TT>, but there could be other
+sources of copies as well. If we do not take special precautions, only the
+pointer to the object is copied around, and we end up with stale pointers
+pointing to invalid locations in memory once the first object has been
+destroyed. What we obviously need to do when copying objects of type
+<TT>FunEncapsulation</TT> is to not copy the pointer but to copy the object
+which it points to. Unfortunately, the following copy constructor is not
+possible:
+<PRE>
+    FunEncapsulation::FunEncapsulation (const FunEncapsulation &amp;m) {
+      fun_data_base = new FunDataBase (*m.fun_data_base);
+    };
+</PRE>The reason, of course, is that we do not want to copy that part of the object
+belonging to the abstract base class. But we can emulate something like this
+in the following way (this programming idiom is called ``virtual
+constructors''): <P>
+<DIV><B>Code sample  11</B> &nbsp; 
+<PRE>
+    class FunDataBase {
+      public:
+        // as above
+
+        virtual FunDataBase * clone () const = 0;
+    };
+
+    template &lt;...&gt;
+    class MemFunData : public FunDataBase {
+      public:
+        // as above
+
+                          // copy constructor:
+        MemFunData (const MemFunData&lt;...&gt; &amp;mem_fun_data) {...};
+
+                          // clone the present object, i.e.
+                          // create an exact copy:
+        virtual FunDataBase * clone () const {
+          return new MemFunData&lt;...&gt;(*this);
+        };
+    };
+
+
+    FunEncapsulation::FunEncapsulation (const FunEncapsulation &amp;m) {
+      fun_data_base = m.fun_data_base-&gt;clone ();
+    };
+</PRE></DIV><P></P>
+Thus, whenever the <TT>FunEncapsulation</TT> object is copied, it creates a
+copy of the object it harbors (the <TT>MemFunData&lt;...&gt;</TT> object), and
+therefore always owns its copy. When the destructor is called, it is free to
+delete its copy without affecting other objects (from which it may have been
+copied, or to which it was copied). Similar to the copy constructor, we have
+to modify the copy operator, as well.
+
+<P>
+
+<H3><A NAME="SECTION00034500000000000000">
+Spawning independent threads.</A>
+</H3> 
+
+<P>
+Often, one wants to spawn a thread which will have its own existence until it
+finishes, but is in no way linked to the creating thread any more. An example
+would be the following, assuming a function
+<TT>TestClass::compress_file(const string file_name)</TT> exists and that
+there is an object <TT>thread_manager</TT> not local to this function:
+<PRE>
+  
+    ...
+    string file_name;
+    ...    // write some output to a file
+
+    // now create a thread which runs `gzip' on that output file to reduce
+    // disk space requirements. don't care about that thread any more
+    // after creation, i.e. don't wait for its return
+    FunEncapsulation 
+        fun_encapsulation = encapsulate (&amp;TestClass::compress_file)
+                                  .collect_args(test_object, file_name);
+    spawn (thread_manager, fun_encapsulation);
+
+    // quit the present function
+    return;
+</PRE>The problem here is that the object <TT>fun_encapsulation</TT> goes out
+of scope when we quit the present function, and therefore also deletes its
+pointer to the data which we need to start the new thread. If in this case the
+operating system was a bit lazy in creating the new thread, the function
+<TT>start_thread</TT> would at best find a pointer pointing to an object
+which is already deleted. Further, but this is obvious, if the function is
+taking references or pointers to other objects, it is to be made sure that
+these objects persist at least as long as the spawned thread runs.
+
+<P>
+What one would need to do here at least, is wait until the thread is started
+for sure, before deletion of the <TT>FunEncapsulation</TT> is allowed. To
+this end, we need to use a ``Mutex'', to allow for exclusive operations. A
+Mutex (short for <I>mut</I>ually <I>ex</I>clusive) is an object managed by
+the operating system and which can only be ``owned'' by one thread at a
+time. You can try to ``acquire'' a Mutex, and you can later ``release'' it. If
+you try to acquire it, but the Mutex is owned by another thread, then your
+thread is blocked until the present owner releases it. Mutices (plural of
+``Mutex'') are therefore most often used to guarantee that only one thread is
+presently accessing some object: a thread that wants to access that object
+acquires a Mutex related to that object and only releases it once the access
+if finished; if in the meantime another thread wants to access that object as
+well, it has to acquire the Mutex, but since the Mutex is presently owned
+already, the second thread is blocked until the first one has finished its
+access. 
+
+<P>
+Alternatively, one can use Mutices to synchronize things. We will use it for
+the following purpose: the Mutex is acquired by the starting thread; when
+later the destructor of the <TT>FunEncapsulation</TT> class (running on the
+same thread) is called, it tries to acquire the lock again; it will thus only
+continue its operations once the Mutex has been released by someone, which we
+do on the spawned thread once we don't need the data of the
+<TT>FunEncapsulation</TT> object any more and destruction is safe.
+
+<P>
+All this can then be done in the following way:<P>
+<DIV><B>Code sample  12</B> &nbsp; 
+<PRE>
+    class FunEncapsulation {
+      public:
+        ...       // as before
+        ~FunEncapsulation ();
+    };
+
+
+    class FunDataBase {
+      public:
+        ...       // as before
+        Mutex       lock;
+    };
+
+    template &lt;typename Class, typename Arg1, typename Arg2&gt;
+    void * start_thread (void *arg_ptr) {
+      MemFunData&lt;Class,Arg1,Arg2&gt; *mem_fun_data
+            = reinterpret_cast&lt;MemFunData *&gt;(arg_ptr);
+
+      // copy the data arguments:
+      MemFunData&lt;Class,Arg1,Arg2&gt;::MemFunPtr
+              mem_fun_ptr = mem_fun_data-&gt;mem_fun_ptr;
+      Class * object      = mem_fun_data-&gt;object;
+      Arg1    arg1        = mem_fun_data-&gt;arg1;
+      Arg2    arg2        = mem_fun_data-&gt;arg2;
+
+      // data is now copied, so the original object may be deleted:
+      mem_fun_data-&gt;lock.release ();
+
+      // now call the thread function:
+      object-&gt;*mem_fun_ptr (arg1, arg2);
+
+      return 0;
+    };
+
+
+    FunEncapsulation::~FunEncapsulation () {
+      // wait until the data is copied by the new thread and
+      // `release' is called by `start_thread':
+      fun_data_base-&gt;lock.acquire ();
+      // now delete the object which is no more needed
+      delete fun_data_base;
+    };
+
+
+    void spawn (ACE_Thread_Manager  &amp;thread_manager,
+                FunEncapsulation &amp;fun_encapsulation) {
+      // lock the fun_encapsulation object
+      fun_encapsulation.fun_data_base-&gt;lock.acquire ();
+      thread_manager.spawn (*fun_encapsulation.fun_data_base
+                                      -&gt;thread_entry_point,
+                            &amp;fun_data_base);
+    };
+</PRE></DIV><P></P>
+When we call <TT>spawn</TT>, we set a lock
+on the destruction of the <TT>FunEncapsulation</TT> object just before we
+start the new thread. This lock is only released when inside the new thread
+(i.e. inside the <TT>start_thread</TT> function) all arguments have been
+copied to a safe place. Now we have local copies and don't need the ones from the
+<TT>fun_encapsulation</TT> object any more, which we indicate by
+releasing the lock. Inside the destructor of that object, we wait until we can
+obtain the lock, which is only after it has been released by the newly started
+thread; after having waited till this moment, the destruction can go on
+safely, and we can exit the function from which the thread was started, if we
+like so.
+
+<P>
+The scheme just described also works if we start multiple threads using only
+one object of type <TT>FunEncapsulation</TT>:
+<PRE>
+    FunEncapsulation 
+        fun_encapsulation = encapsulate (&amp;TestClass::test_function)
+                                  .collect_args(test_object, arg_value);
+    spawn (thread_manager, fun_encapsulation);
+    spawn (thread_manager, fun_encapsulation);
+
+    // quit the present function
+    return;
+</PRE>Here, when starting the second thread the spawn function has to wait until the
+newly started first thread has released its lock on the object; however, this
+delay is small and should not pose a noticeable problem. Thus, no special
+treatment of this case is necessary, and we can in a simple way emulate the
+<TT>spawn_n</TT> function provided by most operating systems, which spawns
+several new threads at once:
+<PRE>
+    void spawn_n (ACE_Thread_Manager &amp;thread_manager,
+                  FunEncapsulation   &amp;fun_encapsulation,
+                  const unsigned int  n_threads) {
+      for (unsigned int i=0; i&lt;n_threads; ++i)
+        spawn (thread_manager, fun_encapsulation);
+    };
+</PRE>A direct support of the <TT>spawn_n</TT> function of the operating system
+would be difficult, though, since each of the new threads would call
+<TT>lock.release()</TT>, even though the lock was only acquired once.
+
+<P>
+Since we have now made sure that objects are not deleted too early, even the
+following sequence is possible, which does not involve any named variables at
+all, only a temporary one, which immediately released after the call to
+<TT>spawn</TT>: <P>
+<DIV><B>Code sample  13</B> &nbsp; 
+<PRE>
+    spawn (thread_manager, 
+           encapsulate (&amp;TestClass::test_function)
+              .collect_args(test_object, arg_value));
+</PRE></DIV><P></P>
+We most often use this very short idiom in the applications in Section
+<A HREF="node8.html#sec:applications">4</A> and in our own programs.
+
+<P>
+
+<H3><A NAME="SECTION00034600000000000000">
+Number of parameters. Non-member functions.</A>
+</H3>
+Above, we have explained how we can define classes for a binary member
+function. This approach is easily extended to member functions taking any
+number of parameters. We simply have to write classes <TT>MemFunData0</TT>,
+<TT>MemFunData1</TT>, and so on, which encapsulate member functions that take
+zero, one, etc parameters. Likewise, we have to have classes
+<TT>ArgCollectorN</TT> for each number of parameters, and functions
+<TT>encapsulate</TT> that return an object of type
+<TT>ArgCollectorN</TT>. Since functions can be overloaded on their argument
+types, we need not call the <TT>encapsulate</TT> functions differently.
+
+<P>
+All of which has been said above can also easily be adopted to global
+functions or static member functions. Instead of the classes
+<TT>MemFunDataN</TT> we can then use classes <TT>FunDataN</TT> that are also
+derived from <TT>FunDataBase</TT>. The respective <TT>ArgCollector</TT>
+classes then collect only the arguments, not the object on which we will
+operate. The class, <TT>FunEncapsulation</TT> is not affected by this, nor is
+<TT>FunDataBase</TT>. 
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html100"
+ HREF="node8.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html98"
+ HREF="node3.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html94"
+ HREF="node6.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html101"
+ HREF="node8.html">Applications</A>
+<B> Up:</B> <A NAME="tex2html99"
+ HREF="node3.html">Creating and managing threads</A>
+<B> Previous:</B> <A NAME="tex2html95"
+ HREF="node6.html">First approach</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>2000-04-20</I>
+</ADDRESS>
+</BODY>
+</HTML>

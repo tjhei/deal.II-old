@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Writing output detached to disk</TITLE>
+<META NAME="description" CONTENT="Writing output detached to disk">
+<META NAME="keywords" CONTENT="multithreading">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="multithreading.css">
+<LINK REL="next" HREF="node10.html">
+<LINK REL="previous" HREF="node8.html">
+<LINK REL="up" HREF="node8.html">
+<LINK REL="next" HREF="node10.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html129"
+ HREF="node10.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html127"
+ HREF="node8.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html121"
+ HREF="node8.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html130"
+ HREF="node10.html">Assembling the matrix</A>
+<B> Up:</B> <A NAME="tex2html128"
+ HREF="node8.html">Applications</A>
+<B> Previous:</B> <A NAME="tex2html122"
+ HREF="node8.html">Applications</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00041000000000000000">
+Writing output detached to disk</A>
+</H2>
+
+<P>
+The output classes, i.e. basically the classes <TT>DataOut</TT> and
+<TT>DataOutStack</TT> and their base classes, follow a strictly hierarchical
+model of data flow. The two terminal classes know about such things as
+triangulations, degrees of freedom, or finite elements, but they translate
+this structured information into a rather simple intermediate format. This
+conversion is done in the <TT>build_patches</TT> functions of these
+classes. The actual output routines only convert this intermediate format into
+one of the supported graphics formats, which is then a relatively simple task.
+
+<P>
+This separation of processing of structured data and actual output of the
+intermediate format was chosen since the actual output routines became rather
+complex with growing scope of the whole library. For example, we had to update
+all output functions when vector-valued finite elements were supported, and we
+had to do so again when discontinuous elements were developed. This became an
+unmanageable burden with the growing number of output formats, and we decided
+that an intermediate format would be more appropriate, which is created by
+only one function, but can be written to output formats by a number of
+different functions.
+
+<P>
+In the present context, this has the following implications: once the
+intermediate data is created by the <TT>build_patches</TT> function, we need
+no more preserve the data from which it was made (i.e. the grid which it was
+computed on, or the vector holding the actual solution values) and we can go
+on with computing on the next finer grid, or the next time step, while the
+intermediate data is converted to a graphics format file detached from the
+main process. The only thing which we must make sure is that the program only
+terminates after all detached output threads are finished. This can be done in
+the following way:
+<PRE>
+    // somewhere define a thread manager that keeps track of all
+    // detached (`global') threads
+    ACE_Thread_Manager global_thread_manager;
+
+    // This is the class which does the computations:
+    class MainClass {
+        ...
+
+        // now two functions, the first is called from the main program
+        // for output, the second will manage detached output
+        void write_solution ();
+        void write_detached (DataOut&lt;dim&gt; *data_out);
+    };
+
+
+    void MainClass::write_solution () {
+      DataOut&lt;dim&gt; *data_out = new DataOut&lt;dim&gt;();
+
+      // attach DoFHandler, add data vectors, ...
+     
+      data_out-&gt;build_patches ();
+
+      // now everything is in place, and we can write the data detached
+      // Note that we transfer ownership of `data_out' to the other thread
+      Threads::spawn (global_thread_manager,
+                      Threads::encapsulate(&amp;MainClass&lt;dim&gt;::write_detached)
+                          .collect_args(this, data_out));
+    };
+
+    
+    void MainClass::write_detached (DataOut&lt;dim&gt; *data_out) {
+      ofstream output_file ("abc");
+      data_out-&gt;write_gnuplot (output_file); 
+
+      // now delete the object which we got from the starting thread
+      delete data_out;
+    };
+
+
+    int main () {
+      ...  // do all the work
+   
+      // now wait for all detached threads to finish
+      global_thread_manager.wait ();
+    };
+</PRE>
+<P>
+Note that the functions <TT>spawn</TT> and <TT>encapsulate</TT> are prefixed
+by <TT>Threads::</TT> since in the actual implementation in <TT>deal.II</TT>
+they are declared within a namespace of that name.
+
+<P>
+It should be noted that if you want to write output detached from the main
+thread, and from the main thread at the same time, you need a version of the
+C++ standard library delivered with your compiler that supports parallel
+output. For the GCC compiler, this can be obtained by configuring it with the
+flag <TT>-enable-threads</TT> at build time.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html129"
+ HREF="node10.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html127"
+ HREF="node8.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html121"
+ HREF="node8.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html130"
+ HREF="node10.html">Assembling the matrix</A>
+<B> Up:</B> <A NAME="tex2html128"
+ HREF="node8.html">Applications</A>
+<B> Previous:</B> <A NAME="tex2html122"
+ HREF="node8.html">Applications</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>2000-04-20</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,7 +1,7 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
 
-This is the first example, where we actually use finite elements. We
+This is the first example where we actually use finite elements. We
 will solve a simple version of Laplace's equation witht zero boundary
 values, but a nonzero right hand side. This example is still quite
 simple, but it already shows the basic structure of most finite

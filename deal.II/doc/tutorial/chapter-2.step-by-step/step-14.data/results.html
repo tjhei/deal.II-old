@@ -56,15 +56,15 @@ grid, primal and dual numerical solutions look like this:
 <table align="center">
   <tr>
     <td width="50%">
-      <a href="step-14.data/point_value/solution-5.gif" target="_top">
-      <img alt="Primal solution" width="318"
+      <a href="step-14.data/point_value/solution-5.gif"
+      target="_top"><img alt="Primal solution" width="318"
       src="step-14.data/point_value/solution-5.gif">
       </img></a>
     </td>
 
     <td width="50%">
-      <a href="step-14.data/point_value/solution-5-dual.gif" target="_top">
-      <img alt="Dual solution" width="318"
+      <a href="step-14.data/point_value/solution-5-dual.gif"
+      target="_top"><img alt="Dual solution" width="318"
       src="step-14.data/point_value/solution-5-dual.gif">
       </img></a>
     </td>
@@ -131,7 +131,6 @@ refinement, these are some of them:
     </td>
   </tr>
 </table>
-
 Note the subtle interplay between resolving the corner singularities,
 and resolving around the point of evaluation. It will be rather
 difficult to generate such a mesh by hand, as this would involve to
@@ -256,7 +255,20 @@ Refinement cycle: 9
 </p>
 
 <p>
-We again look at the meshes first:
+The solution looks roughly the same as before (the exact solution of
+course <em>is</em> the same, only the grid changed a little), but the
+dual solution is now different. A close-up around the point of
+evaluation shows this:
+<table align="center">
+  <tr>
+    <td width="50%">
+      <a href="step-14.data/point_derivative/solution-5-dual.gif"
+       target="_top"><img alt="Dual solution" width="318"
+      src="step-14.data/point_derivative/solution-5-dual.gif">
+      </img></a>
+    </td>
+</table>
+
 TODO
 </p>
 

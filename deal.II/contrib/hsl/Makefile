@@ -27,22 +27,29 @@ $(LIBDIR)/contrib/hsl/%.o :
 
 # rules
 ifeq ($(enable-shared),yes)
-  lib: $(LIBDIR)/libhsl.so
+  lib: $(LIBDIR)/libhsl.so $(LIBDIR)/bin/detached_ma27
 else
-  lib: $(LIBDIR)/libhsl.a
+  lib: $(LIBDIR)/libhsl.a $(LIBDIR)/bin/detached_ma27
 endif
 
 
 $(LIBDIR)/libhsl.a: $(forward-declarations) $(o-files)
-	@echo =====hsl==============optimized==$(MT)== Linking library:   $@
+	@echo =====hsl==============optimized==$(MT)== Linking library:   $(@F)
 	@ar ruv $@ $(o-files)
 
 # link the object files to a shared library. since this is not C++,
 # simply use the C compiler, rather than $(SHLIBLD)
 $(LIBDIR)/libhsl.so: $(forward-declarations) $(o-files)
-	@echo =====hsl==============optimized==$(MT)== Linking library:   $@
+	@echo =====hsl==============optimized==$(MT)== Linking library:   $(@F)
 	@$(CC) $(LDFLAGS) -shared -o $@ $(o-files)
 
+
+
+# rule to make the program that runs an MA27 solver detached from the
+# main program, and communicates through a pipe
+$(LIBDIR)/bin/detached_ma27: source/detached_ma27.cc include/hsl/hsl.h 
+	@echo =====hsl=========================$(MT)== Making   $(@F)
+	@$(CXX) $(CXXFLAGS.g) $< -o $@ $(lib-contrib-hsl) $(F77LIBS)
 
 
 

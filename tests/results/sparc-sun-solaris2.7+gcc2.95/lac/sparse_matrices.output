@@ -20,33 +20,33 @@ DEAL::Final
 DEAL::cols:
 DEAL::Repeat row 2
 DEAL::Irregular matrix
-DEAL::0	0	0	0	1.0
-DEAL::	1	0
-DEAL::cols:	0,0	1,1	2,2	3,3
-DEAL::1	1	0	0	2.0
-DEAL::	2	0
-DEAL::cols:	0,0
-DEAL::2	2	0	0	3.0
-DEAL::	4	0
-DEAL::cols:	0,0
-DEAL::3	4	0	3	17.
-DEAL::	4	0
+DEAL::0	0	0	1.0
+DEAL::	1
+DEAL::cols:	,0	,1	,2	,3
+DEAL::1	1	0	2.0
+DEAL::	2
+DEAL::cols:	,0
+DEAL::2	2	0	3.0
+DEAL::	4
+DEAL::cols:	,0
+DEAL::3	4	3	17.
+DEAL::	4
 DEAL::cols:
-DEAL::4	4	0	3	17.
+DEAL::4	4	3	17.
 DEAL::Final
-DEAL::cols:	0,3
+DEAL::cols:	,3
 DEAL::Final
 DEAL::Final
 DEAL::cols:
-DEAL::	0	0	0	1.0
-DEAL::	0	1	1	1.0
-DEAL::	0	2	2	2.0
-DEAL::	0	3	3	3.0
-DEAL::	1	0	0	2.0
-DEAL::	2	0	0	3.0
-DEAL::	4	0	3	17.
+DEAL::	0	0	1.0
+DEAL::	0	1	1.0
+DEAL::	0	2	2.0
+DEAL::	0	3	3.0
+DEAL::	1	0	2.0
+DEAL::	2	0	3.0
+DEAL::	4	3	17.
 DEAL::Repeat row 2
-DEAL::	2	0	0	3.0
+DEAL::	2	0	3.0
 First conjugate
 0	0	4.0
 0	1	18.
@@ -95,75 +95,75 @@ DEAL:5-SparseMatrix<double>:RichardsonT::Starting value 0.0041
 DEAL:5-SparseMatrix<double>:RichardsonT::Failure step 10 value 3.0e-05
 DEAL::GrowingVectorMemory:Overall allocated vectors: 28
 DEAL::GrowingVectorMemory:Maximum allocated vectors: 2
-DEAL::	0	0	0	5.0
-DEAL::	0	1	1	-2.0
-DEAL::	0	2	4	-1.0
-DEAL::	1	0	1	5.0
-DEAL::	1	1	0	-1.0
-DEAL::	1	2	2	-2.0
-DEAL::	1	3	5	-1.0
-DEAL::	2	0	2	5.0
-DEAL::	2	1	1	-1.0
-DEAL::	2	2	3	-2.0
-DEAL::	2	3	6	-1.0
-DEAL::	3	0	3	5.0
-DEAL::	3	1	2	-1.0
-DEAL::	3	2	7	-1.0
-DEAL::	4	0	4	5.0
-DEAL::	4	1	0	-1.0
-DEAL::	4	2	5	-2.0
-DEAL::	4	3	8	-1.0
-DEAL::	5	0	5	5.0
-DEAL::	5	1	1	-1.0
-DEAL::	5	2	4	-1.0
-DEAL::	5	3	6	-2.0
-DEAL::	5	4	9	-1.0
-DEAL::	6	0	6	5.0
-DEAL::	6	1	2	-1.0
-DEAL::	6	2	5	-1.0
-DEAL::	6	3	7	-2.0
-DEAL::	6	4	10	-1.0
-DEAL::	7	0	7	5.0
-DEAL::	7	1	3	-1.0
-DEAL::	7	2	6	-1.0
-DEAL::	7	3	11	-1.0
-DEAL::	8	0	8	5.0
-DEAL::	8	1	4	-1.0
-DEAL::	8	2	9	-2.0
-DEAL::	8	3	12	-1.0
-DEAL::	9	0	9	5.0
-DEAL::	9	1	5	-1.0
-DEAL::	9	2	8	-1.0
-DEAL::	9	3	10	-2.0
-DEAL::	9	4	13	-1.0
-DEAL::	10	0	10	5.0
-DEAL::	10	1	6	-1.0
-DEAL::	10	2	9	-1.0
-DEAL::	10	3	11	-2.0
-DEAL::	10	4	14	-1.0
-DEAL::	11	0	11	5.0
-DEAL::	11	1	7	-1.0
-DEAL::	11	2	10	-1.0
-DEAL::	11	3	15	-1.0
-DEAL::	12	0	12	5.0
-DEAL::	12	1	8	-1.0
-DEAL::	12	2	13	-2.0
-DEAL::	13	0	13	5.0
-DEAL::	13	1	9	-1.0
-DEAL::	13	2	12	-1.0
-DEAL::	13	3	14	-2.0
-DEAL::	14	0	14	5.0
-DEAL::	14	1	10	-1.0
-DEAL::	14	2	13	-1.0
-DEAL::	14	3	15	-2.0
-DEAL::	15	0	15	5.0
-DEAL::	15	1	11	-1.0
-DEAL::	15	2	14	-1.0
+DEAL::	0	0	5.0
+DEAL::	0	1	-2.0
+DEAL::	0	4	-1.0
+DEAL::	1	1	5.0
+DEAL::	1	0	-1.0
+DEAL::	1	2	-2.0
+DEAL::	1	5	-1.0
+DEAL::	2	2	5.0
+DEAL::	2	1	-1.0
+DEAL::	2	3	-2.0
+DEAL::	2	6	-1.0
+DEAL::	3	3	5.0
+DEAL::	3	2	-1.0
+DEAL::	3	7	-1.0
+DEAL::	4	4	5.0
+DEAL::	4	0	-1.0
+DEAL::	4	5	-2.0
+DEAL::	4	8	-1.0
+DEAL::	5	5	5.0
+DEAL::	5	1	-1.0
+DEAL::	5	4	-1.0
+DEAL::	5	6	-2.0
+DEAL::	5	9	-1.0
+DEAL::	6	6	5.0
+DEAL::	6	2	-1.0
+DEAL::	6	5	-1.0
+DEAL::	6	7	-2.0
+DEAL::	6	10	-1.0
+DEAL::	7	7	5.0
+DEAL::	7	3	-1.0
+DEAL::	7	6	-1.0
+DEAL::	7	11	-1.0
+DEAL::	8	8	5.0
+DEAL::	8	4	-1.0
+DEAL::	8	9	-2.0
+DEAL::	8	12	-1.0
+DEAL::	9	9	5.0
+DEAL::	9	5	-1.0
+DEAL::	9	8	-1.0
+DEAL::	9	10	-2.0
+DEAL::	9	13	-1.0
+DEAL::	10	10	5.0
+DEAL::	10	6	-1.0
+DEAL::	10	9	-1.0
+DEAL::	10	11	-2.0
+DEAL::	10	14	-1.0
+DEAL::	11	11	5.0
+DEAL::	11	7	-1.0
+DEAL::	11	10	-1.0
+DEAL::	11	15	-1.0
+DEAL::	12	12	5.0
+DEAL::	12	8	-1.0
+DEAL::	12	13	-2.0
+DEAL::	13	13	5.0
+DEAL::	13	9	-1.0
+DEAL::	13	12	-1.0
+DEAL::	13	14	-2.0
+DEAL::	14	14	5.0
+DEAL::	14	10	-1.0
+DEAL::	14	13	-1.0
+DEAL::	14	15	-2.0
+DEAL::	15	15	5.0
+DEAL::	15	11	-1.0
+DEAL::	15	14	-1.0
 DEAL::Repeat row 2
-DEAL::	2	0	2	5.0
-DEAL::	2	1	1	-1.0
-DEAL::	2	2	3	-2.0
-DEAL::	2	3	6	-1.0
+DEAL::	2	2	5.0
+DEAL::	2	1	-1.0
+DEAL::	2	3	-2.0
+DEAL::	2	6	-1.0
 DEAL::Structure
 DEAL::Assemble
 DEAL:5-BlockSparseMatrix<double>:Richardson::Starting value 4.0
@@ -181,75 +181,75 @@ DEAL:5-BlockSparseMatrix<double>:RichardsonT::Starting value 4.0
 DEAL:5-BlockSparseMatrix<double>:RichardsonT::Failure step 10 value 0.0034
 DEAL::GrowingVectorMemory:Overall allocated vectors: 12
 DEAL::GrowingVectorMemory:Maximum allocated vectors: 2
-DEAL::	0	0	0	5.0
-DEAL::	0	1	1	-2.0
-DEAL::	0	2	4	-1.0
-DEAL::	1	0	1	5.0
-DEAL::	1	1	0	-1.0
-DEAL::	1	2	2	-2.0
-DEAL::	1	3	5	-1.0
-DEAL::	2	0	2	5.0
-DEAL::	2	1	1	-1.0
-DEAL::	2	2	3	-2.0
-DEAL::	2	3	6	-1.0
-DEAL::	3	0	3	5.0
-DEAL::	3	1	2	-1.0
-DEAL::	3	2	7	-1.0
-DEAL::	4	0	4	5.0
-DEAL::	4	1	0	-1.0
-DEAL::	4	2	5	-2.0
-DEAL::	4	3	8	-1.0
-DEAL::	5	0	5	5.0
-DEAL::	5	1	1	-1.0
-DEAL::	5	2	4	-1.0
-DEAL::	5	3	6	-2.0
-DEAL::	5	4	9	-1.0
-DEAL::	6	0	6	5.0
-DEAL::	6	1	2	-1.0
-DEAL::	6	2	5	-1.0
-DEAL::	6	3	7	-2.0
-DEAL::	6	4	10	-1.0
-DEAL::	7	0	7	5.0
-DEAL::	7	1	3	-1.0
-DEAL::	7	2	6	-1.0
-DEAL::	7	3	11	-1.0
-DEAL::	8	0	8	5.0
-DEAL::	8	1	4	-1.0
-DEAL::	8	2	9	-2.0
-DEAL::	8	3	12	-1.0
-DEAL::	9	0	9	5.0
-DEAL::	9	1	5	-1.0
-DEAL::	9	2	8	-1.0
-DEAL::	9	3	10	-2.0
-DEAL::	9	4	13	-1.0
-DEAL::	10	0	10	5.0
-DEAL::	10	1	6	-1.0
-DEAL::	10	2	9	-1.0
-DEAL::	10	3	11	-2.0
-DEAL::	10	4	14	-1.0
-DEAL::	11	0	11	5.0
-DEAL::	11	1	7	-1.0
-DEAL::	11	2	10	-1.0
-DEAL::	11	3	15	-1.0
-DEAL::	12	0	12	5.0
-DEAL::	12	1	8	-1.0
-DEAL::	12	2	13	-2.0
-DEAL::	13	0	13	5.0
-DEAL::	13	1	9	-1.0
-DEAL::	13	2	12	-1.0
-DEAL::	13	3	14	-2.0
-DEAL::	14	0	14	5.0
-DEAL::	14	1	10	-1.0
-DEAL::	14	2	13	-1.0
-DEAL::	14	3	15	-2.0
-DEAL::	15	0	15	5.0
-DEAL::	15	1	11	-1.0
-DEAL::	15	2	14	-1.0
+DEAL::	0	0	5.0
+DEAL::	0	1	-2.0
+DEAL::	0	4	-1.0
+DEAL::	1	1	5.0
+DEAL::	1	0	-1.0
+DEAL::	1	2	-2.0
+DEAL::	1	5	-1.0
+DEAL::	2	2	5.0
+DEAL::	2	1	-1.0
+DEAL::	2	3	-2.0
+DEAL::	2	6	-1.0
+DEAL::	3	3	5.0
+DEAL::	3	2	-1.0
+DEAL::	3	7	-1.0
+DEAL::	4	4	5.0
+DEAL::	4	0	-1.0
+DEAL::	4	5	-2.0
+DEAL::	4	8	-1.0
+DEAL::	5	5	5.0
+DEAL::	5	1	-1.0
+DEAL::	5	4	-1.0
+DEAL::	5	6	-2.0
+DEAL::	5	9	-1.0
+DEAL::	6	6	5.0
+DEAL::	6	2	-1.0
+DEAL::	6	5	-1.0
+DEAL::	6	7	-2.0
+DEAL::	6	10	-1.0
+DEAL::	7	7	5.0
+DEAL::	7	3	-1.0
+DEAL::	7	6	-1.0
+DEAL::	7	11	-1.0
+DEAL::	8	8	5.0
+DEAL::	8	4	-1.0
+DEAL::	8	9	-2.0
+DEAL::	8	12	-1.0
+DEAL::	9	9	5.0
+DEAL::	9	5	-1.0
+DEAL::	9	8	-1.0
+DEAL::	9	10	-2.0
+DEAL::	9	13	-1.0
+DEAL::	10	10	5.0
+DEAL::	10	6	-1.0
+DEAL::	10	9	-1.0
+DEAL::	10	11	-2.0
+DEAL::	10	14	-1.0
+DEAL::	11	11	5.0
+DEAL::	11	7	-1.0
+DEAL::	11	10	-1.0
+DEAL::	11	15	-1.0
+DEAL::	12	12	5.0
+DEAL::	12	8	-1.0
+DEAL::	12	13	-2.0
+DEAL::	13	13	5.0
+DEAL::	13	9	-1.0
+DEAL::	13	12	-1.0
+DEAL::	13	14	-2.0
+DEAL::	14	14	5.0
+DEAL::	14	10	-1.0
+DEAL::	14	13	-1.0
+DEAL::	14	15	-2.0
+DEAL::	15	15	5.0
+DEAL::	15	11	-1.0
+DEAL::	15	14	-1.0
 DEAL::Repeat row 2
-DEAL::	2	0	2	5.0
-DEAL::	2	1	1	-1.0
-DEAL::	2	2	3	-2.0
-DEAL::	2	3	6	-1.0
+DEAL::	2	2	5.0
+DEAL::	2	1	-1.0
+DEAL::	2	3	-2.0
+DEAL::	2	6	-1.0
 DEAL::Assemble
 DEAL:5-SparseMatrixEZ<double>:Richardson::Starting value 4.0
 DEAL:5-SparseMatrixEZ<double>:Richardson::Failure step 10 value 3.6
@@ -282,75 +282,75 @@ DEAL:5-SparseMatrixEZ<double>:RichardsonT::Starting value 0.0041
 DEAL:5-SparseMatrixEZ<double>:RichardsonT::Failure step 10 value 3.0e-05
 DEAL::GrowingVectorMemory:Overall allocated vectors: 28
 DEAL::GrowingVectorMemory:Maximum allocated vectors: 2
-DEAL::	0	0	0	5.0
-DEAL::	0	1	1	-2.0
-DEAL::	0	2	4	-1.0
-DEAL::	1	0	0	-1.0
-DEAL::	1	1	1	5.0
-DEAL::	1	2	2	-2.0
-DEAL::	1	3	5	-1.0
-DEAL::	2	0	1	-1.0
-DEAL::	2	1	2	5.0
-DEAL::	2	2	3	-2.0
-DEAL::	2	3	6	-1.0
-DEAL::	3	0	2	-1.0
-DEAL::	3	1	3	5.0
-DEAL::	3	2	7	-1.0
-DEAL::	4	0	0	-1.0
-DEAL::	4	1	4	5.0
-DEAL::	4	2	5	-2.0
-DEAL::	4	3	8	-1.0
-DEAL::	5	0	1	-1.0
-DEAL::	5	1	4	-1.0
-DEAL::	5	2	5	5.0
-DEAL::	5	3	6	-2.0
-DEAL::	5	4	9	-1.0
-DEAL::	6	0	2	-1.0
-DEAL::	6	1	5	-1.0
-DEAL::	6	2	6	5.0
-DEAL::	6	3	7	-2.0
-DEAL::	6	4	10	-1.0
-DEAL::	7	0	3	-1.0
-DEAL::	7	1	6	-1.0
-DEAL::	7	2	7	5.0
-DEAL::	7	3	11	-1.0
-DEAL::	8	0	4	-1.0
-DEAL::	8	1	8	5.0
-DEAL::	8	2	9	-2.0
-DEAL::	8	3	12	-1.0
-DEAL::	9	0	5	-1.0
-DEAL::	9	1	8	-1.0
-DEAL::	9	2	9	5.0
-DEAL::	9	3	10	-2.0
-DEAL::	9	4	13	-1.0
-DEAL::	10	0	6	-1.0
-DEAL::	10	1	9	-1.0
-DEAL::	10	2	10	5.0
-DEAL::	10	3	11	-2.0
-DEAL::	10	4	14	-1.0
-DEAL::	11	0	7	-1.0
-DEAL::	11	1	10	-1.0
-DEAL::	11	2	11	5.0
-DEAL::	11	3	15	-1.0
-DEAL::	12	0	8	-1.0
-DEAL::	12	1	12	5.0
-DEAL::	12	2	13	-2.0
-DEAL::	13	0	9	-1.0
-DEAL::	13	1	12	-1.0
-DEAL::	13	2	13	5.0
-DEAL::	13	3	14	-2.0
-DEAL::	14	0	10	-1.0
-DEAL::	14	1	13	-1.0
-DEAL::	14	2	14	5.0
-DEAL::	14	3	15	-2.0
-DEAL::	15	0	11	-1.0
-DEAL::	15	1	14	-1.0
-DEAL::	15	2	15	5.0
+DEAL::	0	0	5.0
+DEAL::	0	1	-2.0
+DEAL::	0	4	-1.0
+DEAL::	1	0	-1.0
+DEAL::	1	1	5.0
+DEAL::	1	2	-2.0
+DEAL::	1	5	-1.0
+DEAL::	2	1	-1.0
+DEAL::	2	2	5.0
+DEAL::	2	3	-2.0
+DEAL::	2	6	-1.0
+DEAL::	3	2	-1.0
+DEAL::	3	3	5.0
+DEAL::	3	7	-1.0
+DEAL::	4	0	-1.0
+DEAL::	4	4	5.0
+DEAL::	4	5	-2.0
+DEAL::	4	8	-1.0
+DEAL::	5	1	-1.0
+DEAL::	5	4	-1.0
+DEAL::	5	5	5.0
+DEAL::	5	6	-2.0
+DEAL::	5	9	-1.0
+DEAL::	6	2	-1.0
+DEAL::	6	5	-1.0
+DEAL::	6	6	5.0
+DEAL::	6	7	-2.0
+DEAL::	6	10	-1.0
+DEAL::	7	3	-1.0
+DEAL::	7	6	-1.0
+DEAL::	7	7	5.0
+DEAL::	7	11	-1.0
+DEAL::	8	4	-1.0
+DEAL::	8	8	5.0
+DEAL::	8	9	-2.0
+DEAL::	8	12	-1.0
+DEAL::	9	5	-1.0
+DEAL::	9	8	-1.0
+DEAL::	9	9	5.0
+DEAL::	9	10	-2.0
+DEAL::	9	13	-1.0
+DEAL::	10	6	-1.0
+DEAL::	10	9	-1.0
+DEAL::	10	10	5.0
+DEAL::	10	11	-2.0
+DEAL::	10	14	-1.0
+DEAL::	11	7	-1.0
+DEAL::	11	10	-1.0
+DEAL::	11	11	5.0
+DEAL::	11	15	-1.0
+DEAL::	12	8	-1.0
+DEAL::	12	12	5.0
+DEAL::	12	13	-2.0
+DEAL::	13	9	-1.0
+DEAL::	13	12	-1.0
+DEAL::	13	13	5.0
+DEAL::	13	14	-2.0
+DEAL::	14	10	-1.0
+DEAL::	14	13	-1.0
+DEAL::	14	14	5.0
+DEAL::	14	15	-2.0
+DEAL::	15	11	-1.0
+DEAL::	15	14	-1.0
+DEAL::	15	15	5.0
 DEAL::Repeat row 2
-DEAL::	2	0	1	-1.0
-DEAL::	2	1	2	5.0
-DEAL::	2	2	3	-2.0
-DEAL::	2	3	6	-1.0
+DEAL::	2	1	-1.0
+DEAL::	2	2	5.0
+DEAL::	2	3	-2.0
+DEAL::	2	6	-1.0
 DEAL::SparseMatrixEZ:used      entries:64
 DEAL::SparseMatrixEZ:allocated entries:72
 DEAL::SparseMatrixEZ:reserved  entries:96

@@ -20,6 +20,7 @@ The name and call sequence of the exception was:
 Additional Information: 
 Object of class 4Test is still used by 1 other objects.
 --------------------------------------------------------
+DEAL::Abort!!!
 DEAL::Destruct C
 DEAL::Destruct B
 DEAL::Destruct A

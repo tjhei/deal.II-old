@@ -85,7 +85,7 @@ GridGenerator::hyper_cube (triangulation,-1,1);
 ...
 
 // then associate a DoFHandler object with this triangulation...
-DoFHandler&lt;dim&gt; dof_handler (&tria);
+DoFHandler&lt;dim&gt; dof_handler (tria);
 
 // ...and distribute degrees of freedom for linear elements
 FEQ1&lt;dim&gt; fe;

@@ -1,11 +1,11 @@
-# Copyright (C) 1999, 2000 by Wolfgang Bangerth, Univerisity of Heidelberg.de
+# Copyright (C) 1999, 2000, 2001 by Wolfgang Bangerth, Univerisity of Heidelberg.de
 
 print "<a name=\"CommProg\"></a>\n";
 print "<h1> The commented program</h1>\n";
 
-# ignore the first few lines
+# ignore cvs tag
 $_ = <>;
-while ( m!^//\*\s*\$Id$!) {
+while ( m!^/[/\*]\s*.Id:!) {
     $_ = <>;
 }
 
@@ -19,7 +19,7 @@ print "<p>\n";
 
 while (<>) {
     # ignore cvs tag
-    next if m!^//\*\s*\$Id:!;
+    next if m!^/[/\*]\s*.Id:!;
 
     # substitute special characters
     s/&/&amp;/g;

@@ -52,7 +52,7 @@ matrix given by the <a href="hanging_nodes.html">hanging nodes</a>.
 </p>
 
 <p class="Example">
-<a name="smstruct"><span class="example">Example:</span></a> We show the include files you need, 
+<a name="sparsity_pattern"><span class="example">Example:</span></a> We show the include files you need, 
 the definitions and the function calls. Make sure to use them in their
 appropriate places. This example initializes a sparse square matrix structure.
 </p>
@@ -63,13 +63,13 @@ appropriate places. This example initializes a sparse square matrix structure.
 
 
 int dim=2; // For example
-SparseMatrixStruct&lt;double&gt; smstruct;
+SparseMatrixStruct&lt;double&gt; sparsity_pattern;
 DoFHandler&lt;dim&gt; dof;
 ConstraintMatrix hanging_nodes;  // Only necessary for locally refined grids
 
 // Your degrees of freedom must already be distributed
 
-smstruct.reinit(dof.n_dofs(),dof.n_dofs(),dof.max_couplings_between_dofs());
+sparsity_pattern.reinit(dof.n_dofs(),dof.n_dofs(),dof.max_couplings_between_dofs());
 
 // Condense the <a href="hanging_nodes.html">hanging nodes</a> into
 // the matrix, taking into account the constraints to the hanging nodes.
@@ -77,10 +77,10 @@ smstruct.reinit(dof.n_dofs(),dof.n_dofs(),dof.max_couplings_between_dofs());
 // on locally refined grids.
 // You can skip this part if your grid is not locally refined.
 
-dof.make_sparsity_pattern(smstruct); 
+dof.make_sparsity_pattern(sparsity_pattern); 
 hanging_nodes.clear();
 dof.make_constraint_matrix(hanging_nodes);
-hanging_nodes.condense(smstruct);
+hanging_nodes.condense(sparsity_pattern);
 
 </code>
 </pre>
@@ -112,12 +112,12 @@ The appropriate function is <code>void SparseMatrixStruct::compress()</code>.
 </p>
 
 <p class="Example">
-<span class="example">Example:</span> Starting from <a href="#smstruct">the example above</a>, we
-compress our matrix structure <code>smstruct</code>.
+<span class="example">Example:</span> Starting from <a href="#sparsity_pattern">the example above</a>, we
+compress our matrix structure <code>sparsity_pattern</code>.
 </p>
 <pre class="example">
 <code>
-smstruct.compress();
+sparsity_pattern.compress();
 </code>
 </pre>
 

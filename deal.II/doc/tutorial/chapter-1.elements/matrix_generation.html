@@ -27,10 +27,6 @@ There are several kinds of matrices we will deal with:
 cells have non-zero values.
 </li>
 <li>
-<a href="#block">Block sparse matrices</a> where the matrix is assumed to 
-consist of blocks on the diagonal.
-</li>
-<li>
 <a href="#sparse">Sparse matrices</a>, i.e. matrices where the majority of 
 cells has zero value.
 </li>
@@ -90,62 +86,20 @@ appropriate places. This example initializes a sparse square matrix structure.
 
 
 int dim=2; // For example
-SparseMatrixStruct&lt;double&gt; smstruct;
+SparseMatrixStruct&lt;double&gt; sparsity_pattern;
 SparseMatrix&lt;double&gt; sm;
 DoFHandler&lt;dim&gt; dof;
 
 // Your degrees of freedom must already be distributed
 
-smstruct.reinit(dof.n_dofs(),dof.n_dofs(),dof.max_couplings_between_dofs());
+sparsity_pattern.reinit(dof.n_dofs(),dof.n_dofs(),dof.max_couplings_between_dofs());
 
-// If your grid is locally refined, <a href="matrix_structure.html#smstruct">condense the hanging nodes</a> into the
+// If your grid is locally refined, <a href="matrix_structure.html#sparsity_pattern">condense the hanging nodes</a> into the
 // structure.
 
-smstruct.compress();
+sparsity_pattern.compress();
 
-sm.reinit(smstruct);
-</code>
-</pre>
-
-<h3><a name="block">The block sparse matrix</a></h3>
-
-<p>
-A block matrix is assumed to consist of blocks on the diagonal with all
-the blocks having the same size.
-It is initialized using 
-<code>BlockSparseMatrix::reinit(const SparseMatrixStruct &amp;sparsity)</code>
-Since this is a sparse matrix, i.e. a matrix that can be
-stored efficiently, we need to generate a matrix structure first, like for the 
-sparse matrix. In fact, the block sparse matrix is just a specialization of
-the sparse matrix.
-</p>
-
-<p class="Example">
-<span class="example">Example:</span> We show the include files you need, 
-the definitions and the function calls. Make sure to use them in their
-appropriate places. 
-</p>
-<pre class="example">
-<code>
-#include &lt;grid/dof.h&gt;
-#include &lt;lac/blocksparsematrix.h&gt;
-
-int dim=2; // 2 Dimensions, could also be three
-SparseMatrixStruct&lt;double&gt; smstruct;
-DoFHandler&lt;dim&gt; dof;
-BlockSparseMatrix&lt;double&gt; A;
-
-
-// Your degrees of freedom must already be distributed
-
-smstruct.reinit(dof.n_dofs(),dof.n_dofs(),dof.max_couplings_between_dofs());
-
-// If your grid is locally refined, <a href="matrix_structure.html#smstruct">condense the hanging nodes</a> into the
-// structure.
-
-smstruct.compress();
-
-A.reinit(smstruct);
+sm.reinit(sparsity_pattern);
 </code>
 </pre>
 

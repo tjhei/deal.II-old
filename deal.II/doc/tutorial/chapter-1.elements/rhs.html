@@ -120,16 +120,16 @@ for (DoFHandler&lt;2&gt;::active_cell_iterator c = dof.begin_active()
   fevalues.reinit(c, stb);
   elmat.clear();
   elvec.clear();
-  c->get_dof_indices(indices);
+  c-&gt;get_dof_indices(indices);
     
-  for (unsigned k=0;k<qc.n_quadrature_points;++k)
+  for (unsigned k=0;k&lt;qc.n_quadrature_points;++k)
   {
-    for (unsigned i=0;i<fe.total_dofs;++i)
+    for (unsigned i=0;i&lt;fe.total_dofs;++i)
     {
       const Point&lt;2&gt; dv = fevalues.shape_grad(i,k);
 
 	
-      for (unsigned j=0;j<fe.total_dofs;++j)
+      for (unsigned j=0;j&lt;fe.total_dofs;++j)
       {
 	const Point&lt;2&gt; du = fevalues.shape_grad(j,k);
 	  
@@ -141,11 +141,11 @@ for (DoFHandler&lt;2&gt;::active_cell_iterator c = dof.begin_active()
     }
   }
   // ...and insert the local matrix into the global one.
-  for (unsigned i=0;i<fe.total_dofs;++i)
+  for (unsigned i=0;i&lt;fe.total_dofs;++i)
   {
     f(indices[i]) += elvec(i);
             
-    for (unsigned j=0;j<fe.total_dofs;++j)
+    for (unsigned j=0;j&lt;fe.total_dofs;++j)
     {
       A.add(indices[i], indices[j], elmat(i,j));
     }

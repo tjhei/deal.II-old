@@ -1,7 +1,8 @@
 <a name="Results"></a>
 <h1>Results</h1>
 
-
+<p>
+This is what the program outputs:
 <pre>
 Using mapping with degree 1:
 ============================
@@ -33,3 +34,14 @@ cells  |u|_1    error
  1280 1.252495 0.000819 
  5120 1.253109 0.000205 
 </pre>
+As we expected, the convergence order for each of the different
+mappings is clearly quadratic in the mesh size. What <it>is</it>
+interesting, though, is that the error for a bilinear mapping
+(i.e. degree 1) is more that three times larger than that for the
+higher order mappings; it is therefore clearly advantageous in this
+case to use a higher order mapping, not because it improves the order
+of convergence but just to reduce the constant before the convergence
+order. On the other hand, using a cubic mapping only improves the
+result further insignicantly, except for the case of very coarse
+grids.
+</p>

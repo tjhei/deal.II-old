@@ -14,10 +14,16 @@ all: $(example-htmls)
 
 $(example-htmls):
 	@echo ================== Assembling $@
-	@cat head.html \
+	@TOC=`cat $D/examples/$(@:.html=)/$(@:.html=.cc) \
+	  | grep "@sect" \
+	  | perl -pi -e 's/.*\{(.*)\}.*/\1/; $$n=$$1; $$nn=$$1; \
+	    $$nn=~s/\s/_/g; $$_="<li><a href=\"#$$nn\">$$n</a></li>\n";' \
+	  | perl -pi -e 's/\"/\\\"/g;'` ; \
+	 cat head.html \
 	  | perl -pi -e '$$step="$@";                     \
                          $$step=~s/step-(\d+).html/$$1/g; \
                          s/step xxx/step $$step/g;'       \
+	  | perl -pi -e "s!TOC!$$TOC!g;" \
 	  > $@
 	@cat $(@:.html=.data/intro.html) >> $@
 	@cat $D/examples/$(@:.html=)/$(@:.html=.cc) \

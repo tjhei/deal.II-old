@@ -15,13 +15,13 @@ all: $(example-htmls)
 $(example-htmls):
 	@echo ================== Assembling $@
 	@TOC=`cat $D/examples/$(@:.html=)/$(@:.html=.cc) \
-	  | perl program2toc \
-	  | perl -pi -e 's/\"/\\\"/g;'` ; \
+	  | $(PERL) program2toc \
+	  | $(PERL) -pi -e 's/\"/\\\"/g;'` ; \
 	 cat head.html \
-	  | perl -pi -e '$$step="$@";                     \
+	  | $(PERL) -pi -e '$$step="$@";                     \
                          $$step=~s/step-(\d+).html/$$1/g; \
                          s/step xxx/step $$step/g;'       \
-	  | perl -pi -e "s!TOC!$$TOC!g;" \
+	  | $(PERL) -pi -e "s!TOC!$$TOC!g;" \
 	  > $@
 	@cat $(@:.html=.data/intro.html) >> $@
 	@cat $D/examples/$(@:.html=)/$(@:.html=.cc) \
@@ -65,7 +65,7 @@ $(example-sgmls):
 step-by-step.sgml: $(example-sgmls)
 	@echo ================== Concating $@
 	@cat step-by-step.header.sgml          \
-             | perl -pi -e 's/TODAY/$(shell date)/;'   \
+             | $(PERL) -pi -e 's/TODAY/$(shell date)/;'   \
              > $@
 	@for step in $(example-names) ; do      \
 	     echo "<sect1><title>$$step</title>" >> $@ ; \

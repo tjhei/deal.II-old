@@ -144,7 +144,7 @@ clean:
 #rather for libnumerics.a(tria.o)
 Makefile.dep: $(cc-files) $(h-files) $(lib-h-files)
 	@echo ============================ Remaking Makefile
-	@perl $(root)/deal.II/Make_dep.pl ./Obj $(INCLUDE) $(cc-files) \
+	@$(PERL) $(root)/deal.II/Make_dep.pl ./Obj $(INCLUDE) $(cc-files) \
 		> Makefile.dep
 
 

@@ -60,7 +60,7 @@ Makefile.dep: $(f-files) Makefile
 	@echo ============================ Remaking Makefile
 	@(if test "x$(f-files)" != "x" ; then \
            for i in source/*.f ; do \
-	     echo $$i | perl -pi -e 's#source/(.*)\.f#\$$(LIBDIR)/contrib/hsl/\1.o:source/\1.f#;' ;\
+	     echo $$i | $(PERL) -pi -e 's#source/(.*)\.f#\$$(LIBDIR)/contrib/hsl/\1.o:source/\1.f#;' ;\
 	    done ; \
           fi) \
 		> Makefile.dep

@@ -109,7 +109,18 @@ sub writeClassList
 		# TODO: Perhaps display C-specific index.
 	}
 	else {
-		writeTable( *CLIST{IO}, \@clist, 
+	    # write out the class list. suppress all classes that
+	    # have a internal:: in their name, i.e. basically all
+	    # classes that are either declared themselves in a 
+	    # namespace or outer class "internal"
+	    my @filtered_clist;
+	    my $class;
+	    foreach $class (@clist) {
+		if ( ! (refNameFull($class) =~ /internal::/ )) {
+		    @filtered_clist = (@filtered_clist, $class);
+		}
+	    }
+	    writeTable( *CLIST{IO}, \@filtered_clist, 
 			exists $opt->{"html-cols"} ? $opt->{"html-cols"} : 3 );
 	}
 

@@ -1,0 +1,30 @@
+
+DEAL::PathSearch[CC] 3 directories 3 suffixes
+DEAL::PathSearch[CC] trying DEAL_II_PATH/lac/include/lac/block_vector.cc
+DEAL::PathSearch[CC] trying block_vector.cc
+DEAL::PathSearch[CC] trying DEAL_II_PATH/lac/source/block_vector.cc
+DEAL::PathSearch[CC] opened DEAL_II_PATH/lac/source/block_vector.cc
+DEAL::PathSearch[CC] 3 directories 3 suffixes
+DEAL::PathSearch[CC] trying DEAL_II_PATH/lac/include/lac/block_vector
+DEAL::PathSearch[CC] trying block_vector
+DEAL::PathSearch[CC] trying DEAL_II_PATH/lac/source/block_vector
+DEAL::PathSearch[CC] trying DEAL_II_PATH/lac/include/lac/block_vector.c
+DEAL::PathSearch[CC] trying block_vector.c
+DEAL::PathSearch[CC] trying DEAL_II_PATH/lac/source/block_vector.c
+DEAL::PathSearch[CC] trying DEAL_II_PATH/lac/include/lac/block_vector.cc
+DEAL::PathSearch[CC] trying block_vector.cc
+DEAL::PathSearch[CC] trying DEAL_II_PATH/lac/source/block_vector.cc
+DEAL::PathSearch[CC] opened DEAL_II_PATH/lac/source/block_vector.cc
+DEAL::PathSearch[CC] 3 directories 4 suffixes
+DEAL::PathSearch[CC] trying DEAL_II_PATH/lac/include/lac/block_vector
+DEAL::PathSearch[CC] trying block_vector
+DEAL::PathSearch[CC] trying DEAL_II_PATH/lac/source/block_vector
+DEAL::PathSearch[CC] trying DEAL_II_PATH/lac/include/lac/block_vector.h
+DEAL::PathSearch[CC] opened DEAL_II_PATH/lac/include/lac/block_vector.h
+DEAL::PathSearch[MESH] 2 directories 4 suffixes
+DEAL::PathSearch[MESH] trying backstep
+DEAL::PathSearch[MESH] trying DEAL_II_PATH/lib/meshes/backstep
+DEAL::PathSearch[MESH] trying backstep.inp
+DEAL::PathSearch[MESH] trying DEAL_II_PATH/lib/meshes/backstep.inp
+DEAL::PathSearch[MESH] opened DEAL_II_PATH/lib/meshes/backstep.inp
+DEAL:: # Backward facing step

@@ -44,12 +44,15 @@
 Besides, there is a class named 
 <code><a href="#control">SolverControl</a></code> in order to 
 control the iterative solvers, i.e. to determine whether the iteration 
-should be continued.
+should be continued and a class named 
+<code><a href="#precondition">PreconditionSelector</a></code> that allows
+you to select a preconditioner.
 </p>
 
 <p>
 We will begin with the discussion of the <code>SolverControl</code>
-class and preconditioners, then discuss the solvers in more detail.
+and the <code>PreconditionSelector</code> classes, then discuss the solvers 
+in more detail.
 </p>
 
 <h2><a name="control">Solver Control</a></h2>
@@ -75,6 +78,61 @@ a maximum of 1000 iterations and a maximum residual of 1e-6.
 SolverControl control(1000,1e-6);
 </code>
 </pre>
+
+<h2><a name="precondition">Preconditioning</a></h2>
+
+<p>
+Before firing up the solver of your choice you will need some kind of 
+preconditioning. This is easiest selected by creating an instance of
+the <code>PreconditionSelect</code> class with an appropriate choice of 
+parameters. This can be done using <code>PreconditionSelector(const string
+preconditioning, const typename Vector::value_type &amp;omega=1.)</code>
+where <code>preconditioning</code> denotes the preconditioning method used 
+and <code>omega</code> is the damping parameter.
+</p>
+<p>
+The preconditioning methods currently available using this class are
+</p>
+<ul>
+<li>none</li>
+<li>jacobi</li>
+<li>sor</li>
+<li>ssor</li>
+</ul>
+<p>
+You can obtain a list of available methods by calling
+<code>string PreconditionSelector::get_precondition_names()</code>.
+</p>
+
+<p>
+After having selected a preconditioner you will need to select a 
+matrix used for preconditioning. Usually this will be the problem matrix 
+<code>A</code> of the problem <code>Au=f</code>.
+The method to be called is <code>void PreconditionSelector::use_matrix(const
+Matrix &amp;M)</code>.
+</p>
+
+<p class="Example">
+<span class="example">Example:</span>We initialize a Jacobi preconditioner
+with a damping parameter of 1. The matrix used for preconditioning 
+is the matrix <code>A</code>
+of the problem <code>Au=f</code>.
+</p>
+
+<pre class="example">
+<code>
+#include &lt;lac/precondition_selector.h&gt;
+#include &lt;grid/dof.h&gt;
+#include &lt;lac/fullmatrix.h&gt;
+
+FullMatrix&lt;double&gt; A(100,50);
+
+PreconditionSelector preconditioning("jacobi",1.);
+preconditioning.use_matrix(A);
+</code>
+</pre>
+
+
 
 <h2><a name="bicgstab">SolverBicgstab</a></h2>
 

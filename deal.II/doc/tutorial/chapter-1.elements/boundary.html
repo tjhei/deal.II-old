@@ -30,8 +30,10 @@ void VectorTools::interpolate_boundary_values(...)
 </code>
 </pre>
 <p>
-which does exactly what it says. This function accepts a list of pairs
-of boundary indicators and the according functions and returns a list of
+which does exactly what it says. This function accepts a number
+describing which part of the boundary we want to consider
+and the according function which shall be interpolated on that portion
+of the boundary. It returns a list of
 pairs of degrees of freedom numbers and values denoting the respective 
 Dirichlet boundary values.
 </p>
@@ -55,45 +57,44 @@ the handler for the degrees of freedom <code>dof</code> and the corresponding fi
 element <code>fe</code>.
 </p>
 <pre class="example"><code>
+                      // this will hold the boundary value for
+                      // the degrees of freedom on the boundary
+                      // part with number '0'
 map&lt;int,double&gt; boundary_values;
-DoFHandler&lt;2&gt;::FunctionMap dirichlet_bc;
-BoundaryFct bfct;
-dirichlet_bc[0]=&amp;bfct;
-VectorTools&lt;2&gt;::interpolate_boundary_values(dof,dirichlet_bc,fe,boundary,boundary_values);
-u.reinit(f.size());
-MatrixTools&lt;2&gt;::apply_boundary_values(boundary_values,A,u,f);  
+                      // and this is some user-defined function
+                      // describing the boundary values
+BoundaryFunction&lt;dim&gt; boundary_function;
+                      // interpolate the DoFs on boundary
+                      // portion '0':
+VectorTools&lt;dim&gt;::interpolate_boundary_values 
+               (dof_handler,
+                0, boundary_function, 
+                boundary_values);
+
+                      // set solution vector to the right size
+u.reinit(dof_handler.n_dofs());
+                      // we assume that the global matrix and
+                      // right hand side have already been
+                      // assembled.
+
+                      // now insert the boundary values into
+                      // the linear system of equations:
+MatrixTools&lt;dim&gt;::apply_boundary_values 
+               (boundary_values,
+                A, u, f);  
 </code></pre>
 <p>
-First, we need a few definitions: 
-</p>
-<ul>
-<li>
-<code>boundary_values</code> maps DoF indices at the boundary computed by <code>interpolate_boundary_values</code> to their respective values.
-</li>
-<li><code>dirichlet_bc</code> maps boundary indicators to boundary functions, supplied by us. All boundary indicators are zero by default, therefore the 
-above statement maps the same function to all the boundaries. The boundary functions compute the boundary values.
-</li>
-<li><code>bfct</code> is a function returning <code>cos(2*PI*x)*sin(2*PI*y)
-</code>, thereby supplying boundary values.
-</ul>
-<p>
-This may seem a bit confusing. What actually happens is the following:
-</p>
-<ol>
-<li><code>interpolate_boundary_values</code> takes the boundary functions
-<code>bfct</code>, its relation to boundaries <code>dirichlet_bc</code> and
-the triangulation <code>dof, fe</code> and returns a
-mapping <code>boundary_values</code> that maps values instead of functions
-to our boundaries. The function looks at all the boundaries the index
-of which is listed in <code>dirichlet_bc</code> (in this example, all
-the boundaries with indicator 0). All we
-ever need to do is specify the initial triangulation.
-</li>
-<li><code>apply_boundary_values</code> subsequently takes that mapping and
-our system of equations <tt>Au=f</tt> and inserts the boundary values into
-the system of equations which can then be solved.
-</li>
-</ol>
+You may have several different parts of the boundary which are
+identified by different boundary indicators. For example, this is
+commonly the case if you have inflow and outflow boundaries, or if
+your domain has inner boundaries, such as obstacles inside your
+domain. You may then want to associate different boundary functions
+with the different parts of the boundary, and you can do so by
+multiply calling <code>interpolate_boundary_values</code> with
+different boundary indicators (the <code>'0'</code> above) and
+respective functions. Since the function does not clear the contents
+of the map, you may use it for each of this successive calls and pass
+only the final object to <code>apply_boundary_values</code>.
 
 
 <!-- Page Foot -->

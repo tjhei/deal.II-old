@@ -21,12 +21,12 @@
 
 <h2>Different kinds of matrices</h2>
 <p>
-There are several kinds of matrices we will deal with: 
+There are several kinds of matrices which we will deal with: 
 </p>
 <ul>
 <li>
-<a href="#full">Full matrices</a>, i.e. matrices where the majority of 
-cells have non-zero values.
+<a href="#full">Full matrices</a>, i.e. matrices where we store all
+entries, which is useful if the majority of entries is non-zero.
 </li>
 <li>
 <a href="#sparse">Sparse matrices</a>, i.e. matrices where the majority of 
@@ -37,10 +37,11 @@ cells has zero value; these zeroes are not stored in order to save memory.
 <h3><a name="full">The full matrix</a></h3>
 
 <p>
-The full matrix is assumed to have mostly cells of non-zero value. 
-Therefore it consumes a lot of memory, much more than the other matrix types.
-It is initialized using <code>FullMatrix::reinit(const unsigned
-int rows, const unsigned int cols)</code>.
+The full matrix is useful is we can assume that the we have mostly
+entries of non-zero value.  Since we then store all entries, it
+consumes a lot of memory, much more than the other matrix types.  It
+is initialized using <code>FullMatrix::reinit(const unsigned int rows,
+const unsigned int cols)</code>.
 </p>
 
 <p class="Example">
@@ -93,20 +94,23 @@ appropriate places. This example initializes a sparse square matrix structure.
 
 
 const unsigned int dim=2; // For example
-SparseMatrixStruct&lt;double&gt; sparsity_pattern;
+SparseMatrixStruct sparsity_pattern;
 SparseMatrix&lt;double&gt; sparse_matrix;
-DoFHandler&lt;dim&gt; dof;
+DoFHandler&lt;dim&gt; dof_handler;
 
 // Your degrees of freedom must already be distributed
 
-sparsity_pattern.reinit(dof.n_dofs(),dof.n_dofs(),dof.max_couplings_between_dofs());
+sparsity_pattern.reinit (dof_handler.n_dofs(),
+                         dof_handler.n_dofs(),
+                         dof_handler.max_couplings_between_dofs());
 
 // If your grid is locally refined, <a href="matrix_structure.html#sparsity_pattern">condense the hanging nodes</a> into the
 // structure.
 
 sparsity_pattern.compress();
 
-sparse_matrix.reinit(sparsity_pattern);
+// initialize the actual matrix with the sparsity pattern
+sparse_matrix.reinit (sparsity_pattern);
 </code>
 </pre>
 
@@ -114,10 +118,18 @@ sparse_matrix.reinit(sparsity_pattern);
 <h2>Vector Generation</h2>
 
 <p>
-Vector operations are supplied by the class 
-<code><a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/lac/Vector.html">Vector</a></code>.
-The first and most important operation on a vector is its initialization
-using <code>void Vector::reinit(const usigned int N, const bool fast=false)</code>.
+Vector operations are supplied by the class <code><a
+href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/lac/Vector.html">Vector</a></code>.
+The first and most important operation on a vector is its
+initialization using <code>void Vector::reinit(const usigned int N,
+const bool fast=false)</code>, which resets the vector's size to
+<code>N</code> and sets all elements to zero.  If the second parameter
+<code>fast</code> is set true, this means that the entries will not be
+cleared; this is useful if the vector is being assigned to immediately
+after, in which case an initialization with zeroes would be
+redundant. Note that this mode of use is rather uncommon and mostly
+only useful inside linear solvers where it is important to save as
+much computing time as possible.
 </p>
 
 <p>
@@ -147,6 +159,75 @@ f.reinit(dof.n_dofs());
 </code>
 </pre>
 
+
+<h2>A word on memory allocation</h2>
+
+Since vectors and matrices are used <i>very</i> often, it is necessary
+to be rather conservative with operations that may use significant
+computing time. One of such operations is memory allocation and
+de-allocation. For this reason, the <code>reinit</code> functions of
+all vector and matrix classes are implemented in a way to only allow
+the allocated memory to grow, since this reduces the number of times
+allocation and de-allocation has to happen, and in addition reduces
+memory fragmentation.
+</p>
+<p>
+One immediate consequence is that if you write
+<pre class="example">
+<code>
+Vector&lt;double&gt; f;
+f.reinit(100);
+f.reinit(50);
+</code>
+</pre>
+then the second <code>reinit</code> will only have the effect of
+reducing the internal size of the vector, but the memory that is no
+more needed will not be released. Likewise, if you later write
+<pre class="example">
+<code>
+f.reinit(100);
+</code>
+</pre>
+this will again only set the size of the vector to a different value,
+but since enough memory is still allocated, no re-allocation has to
+happen. Only if the required number of entries exceeds the memory
+already allocated, will there be a re-allocation.
+</p>
+<p>
+All matrix and vector classes in <acronym>deal.II</acronym> work this
+way, and in fact this is also the way the standard C++ container
+classes like <code>vector</code> or <code>map</code> work.
+However, this is not very useful if you use vectors or matrices
+as member variables, since at times they may not be used at all if
+your program works on other objects or you are in other parts of the
+object. You would then like to let the vectors and matrices sleep with
+no memory presently lying around unused. For this purpose, all
+matrices and vectors support a mode of their <code>reinit</code>
+function which frees all memory that is presently allocated: just call
+it with parameters such that the new size is zero. For example, the
+following lines will release all memory from their objects:
+<pre class="example">
+<code>
+f.reinit(0);
+full_matrix.reinit(0,0);
+sparse_matrix_struct.reinit (0,0);
+sparse_matrix.reinit (sparse_matrix_struct);
+</code>
+</pre>
+Note that in the last line, you have to pass an empty sparsity pattern
+to the sparse matrix to tell it to release all of its memory.
+
+
+<h4>A word of caution</h4>
+
+It is noted that several vector and matrix classes have a
+<code>clear</code> function. These, however, work differently than
+might be expected from the analogous functions in the C++ standard
+library. There, <code>clear</code> removes all data from the objects
+and resets it into a virgin state. In <acronym>deal.II</acronym>,
+<code>clear</code> only resets the values of a metrix or vector to
+zero, but does not change the size and does no re-allocation
+either. This unfortunate name clash is due to historical reasons.
 
 <!-- Page Foot -->
 <hr>

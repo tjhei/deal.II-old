@@ -27,17 +27,17 @@ lib/o/%.o :
 
 # rules
 ifeq ($(enable-shared),yes)
-  lib: lib/libhsl.so
+  lib: $(LIBDIR)/libhsl.so
 else
-  lib: lib/libhsl.a
+  lib: $(LIBDIR)/libhsl.a
 endif
 
 
-lib/libhsl.a: $(o-files)
+$(LIBDIR)/libhsl.a: $(forward-declarations) $(o-files)
 	@echo =====base=============optimized==$(MT)== Linking library:   $@
 	@ar ruv $@ $(o-files)
 
-lib/libhsl.so: $(forward-declarations) $(o-files)
+$(LIBDIR)/libhsl.so: $(forward-declarations) $(o-files)
 	@echo =====base=============optimized==$(MT)== Linking library:   $@
 	@$(CC) $(LDFLAGS) -shared -o $@ $(o-files)
 

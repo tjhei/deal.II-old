@@ -11,7 +11,12 @@ patterns. We can visualize them using GNUPLOT:
 </pre>
 
 <p>
-The results then look like this:
+The results then look like this (every cross denotes an entry which
+might be nonzero; of course the fact whether the entry actually is
+zero or not depends on the equation under consideration, but the
+indicated positions in the matrix tell us which shape functions can
+and which can't couple, if the equation is a local, i.e. differential
+one): 
 <p>
 <TABLE WIDTH="60%">
 <tr>

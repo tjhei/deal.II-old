@@ -1,6 +1,303 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
 
-<p>
-Still to be written.
-</p>
+<P>
+In this example program, we will mainly consider two aspects:
+<UL>
+<LI>Verification of correctness of the program;
+<LI>Non-homogeneous Neumann boundary conditions for the Helmholtz equation.
+</UL>Besides these topics, again a variety of improvements and tricks will be
+shown. 
+
+<P>
+
+<H4><A NAME="SECTION00000010000000000000">
+Verification of correctness.</A>
+</H4> There has probably never been a
+non-trivial finite element program that worked right from the start. It is
+therefore necessary to find ways to verify whether a computed solution is
+correct or not. Usually, this is done by choosing the set-up of a simulation
+such that we know the exact continuous solution and evaluate the difference
+between continuous and computed discrete solution. If this difference
+converges to zero with the right order of convergence, this is already a good
+indication of correctness, although there may be other sources of error
+persisting which have only a small contribution to the total error or are of
+higher order.
+
+<P>
+In this example, we will not go into the theories of systematic software
+verification which is a very complicated problem. Rather we will demonstrate
+the tools which deal.II can offer in this respect. This is basically centered
+around the functionality of a single function, <TT>integrate_difference</TT>.
+This function computes the difference between a given continuous function and
+a finite element field in various norms on each cell. At present, the
+supported norms are the following, where <I>u</I> denotes the continuous function
+and <I>u</I><SUB><I>h</I></SUB> the finite element field, and <I>K</I> is an element of the
+triangulation:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="406" HEIGHT="211"
+ src="step-7.data/intro/img2.gif"
+ ALT="\begin{eqnarray*}{\Vert u-u_h \Vert}_{L_1(K)} &=& \int_K \vert u-u_h\vert \; dx,...
+...ert}^2_{L_2(K)}
++{\vert u-u_h \vert}^2_{H^1(K)} \right)^{1/2}.
+\end{eqnarray*}">
+</DIV><P></P>
+<BR CLEAR="ALL">All these norms and semi-norms can also be evaluated with weighting functions,
+for example in order to exclude singularities from the determination of the
+global error. The function also works for vector-valued functions.  It should
+be noted that all these quantities are evaluated using quadrature formulas;
+the choice of the right quadrature formula is therefore crucial to the
+accurate evaluation of the error. This holds in particular for the <IMG
+ WIDTH="28" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ src="step-7.data/intro/img3.gif"
+ ALT="$L_\infty$">norm, where we evaluate the maximal deviation of numerical and exact solution
+only at the quadrature points; one should then not try to use a quadrature
+rule with points only at points where super-convergence might occur.
+
+<P>
+The function <TT>integrate_difference</TT> evaluates the desired norm on each
+cell <I>K</I> of the triangulation and returns a vector which holds these
+values. From the local values, we can then obtain the global error. For
+example, if the vector (<I>e</I><SUB><I>i</I></SUB>) contains the local <I>L</I><SUB>2</SUB> norms, then
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+E = \| {\mathbf e} \| = \left( \sum_i e_i^2 \right)^{1/2}
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="164" HEIGHT="59"
+ src="step-7.data/intro/img4.gif"
+ ALT="\begin{displaymath}E = \Vert {\mathbf e} \Vert = \left( \sum_i e_i^2 \right)^{1/2}
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+is the global <I>L</I><SUB>2</SUB> error.
+
+<P>
+In the program, we will show how to evaluate and use these quantities, and we
+will monitor their values under mesh refinement. Of course, we have to choose
+the problem at hand such that we can explicitly state the solution and its
+derivatives, but since we want to evaluate the correctness of the program,
+this is only reasonable. If we know that the program produces the correct
+solution for one (or, if one wants to be really sure: many) specifically
+chosen right hand sides, we can be rather confident that it will also compute
+the correct solution for problems where we don't know the exact values.
+
+<P>
+
+<H4><A NAME="SECTION00000020000000000000">
+Non-homogeneous Neumann boundary conditions.</A>
+</H4> The second, totally
+unrelated, subject of this example program is the use of non-homogeneous
+boundary conditions. These are included into the variational form using
+boundary integrals which we have to evaluate numerically when assembling the
+right hand side vector.
+
+<P>
+Before we go into programming, let's have a brief look at the mathematical
+formulation. The equation which we want to solve is Helmholtz's equation
+``with the nice sign'':
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+-\Delta u + u = f,
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="96" HEIGHT="27"
+ src="step-7.data/intro/img5.gif"
+ ALT="\begin{displaymath}-\Delta u + u = f,
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+on the square [-1,1]<SUP>2</SUP>, augmented by boundary conditions
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+u = g_1
+\end{displaymath} -->
+
+
+<I>u</I> = <I>g</I><SUB>1</SUB>
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+on some part <IMG
+ WIDTH="20" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ src="step-7.data/intro/img6.gif"
+ ALT="$\Gamma_1$">
+of the boundary <IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ src="step-7.data/intro/img7.gif"
+ ALT="$\Gamma$">,
+and
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+{\mathbf n}\cdot \nabla u = g_2
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="78" HEIGHT="27"
+ src="step-7.data/intro/img8.gif"
+ ALT="\begin{displaymath}{\mathbf n}\cdot \nabla u = g_2
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+on the rest 
+<!-- MATH: $\Gamma_2 = \Gamma \backslash \Gamma_1$ -->
+<IMG
+ WIDTH="77" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ src="step-7.data/intro/img9.gif"
+ ALT="$\Gamma_2 = \Gamma \backslash \Gamma_1$">.
+
+<P>
+We choose the right hand side function <I>f</I> such that the exact solution is
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+u(x) = \sum_{i=1}^3 \exp\left(-\frac{|x-x_i|^2}{\sigma^2}\right)
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="200" HEIGHT="56"
+ src="step-7.data/intro/img10.gif"
+ ALT="\begin{displaymath}u(x) = \sum_{i=1}^3 \exp\left(-\frac{\vert x-x_i\vert^2}{\sigma^2}\right)
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+where the centers <I>x</I><SUB><I>i</I></SUB> of the exponentials are 
+  
+<!-- MATH: $x_1=(-\frac 12,\frac 12)$ -->
+<IMG
+ WIDTH="93" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ src="step-7.data/intro/img11.gif"
+ ALT="$x_1=(-\frac 12,\frac 12)$">,
+  
+<!-- MATH: $x_2=(-\frac 12,-\frac 12)$ -->
+<IMG
+ WIDTH="105" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ src="step-7.data/intro/img12.gif"
+ ALT="$x_2=(-\frac 12,-\frac 12)$">,
+and
+  
+<!-- MATH: $x_3=(\frac 12,-\frac 12)$ -->
+<IMG
+ WIDTH="93" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ src="step-7.data/intro/img13.gif"
+ ALT="$x_3=(\frac 12,-\frac 12)$">.
+The half width is set to 
+<!-- MATH: $\sigma=\frac 13$ -->
+<IMG
+ WIDTH="44" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ src="step-7.data/intro/img14.gif"
+ ALT="$\sigma=\frac 13$">.
+
+<P>
+We further choose 
+<!-- MATH: $\Gamma_1=\Gamma \cap\{\{x=1\} \cup \{y=1\}\}$ -->
+<IMG
+ WIDTH="210" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ src="step-7.data/intro/img15.gif"
+ ALT="$\Gamma_1=\Gamma \cap\{\{x=1\} \cup \{y=1\}\}$">,
+and there
+set <I>g</I><SUB>1</SUB> such that it resembles the exact values of <I>u</I>. Likewise, we choose
+<I>g</I><SUB>2</SUB> on the remaining portion of the boundary to be the exact normal
+derivatives of the continuous solution.
+
+<P>
+Using the above definitions, we can state the weak formulation of the
+equation, which reads: find 
+<!-- MATH: $u\in H^1_g=\{v\in H^1: v|_{\Gamma_1}=g_1\}$ -->
+<IMG
+ WIDTH="217" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ src="step-7.data/intro/img16.gif"
+ ALT="$u\in H^1_g=\{v\in H^1: v\vert _{\Gamma_1}=g_1\}$">
+such
+that
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+{(\nabla u, \nabla v)}_\Omega + {(u,v)}_\Omega
+=
+  {(f,v)}_\Omega + {(g_2,v)}_{\Gamma_2}
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="280" HEIGHT="30"
+ src="step-7.data/intro/img17.gif"
+ ALT="\begin{displaymath}{(\nabla u, \nabla v)}_\Omega + {(u,v)}_\Omega
+=
+{(f,v)}_\Omega + {(g_2,v)}_{\Gamma_2}
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+for all test functions 
+<!-- MATH: $v\in H^1_0=\{v\in H^1: v|_{\Gamma_1}=0\}$ -->
+<IMG
+ WIDTH="209" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ src="step-7.data/intro/img18.gif"
+ ALT="$v\in H^1_0=\{v\in H^1: v\vert _{\Gamma_1}=0\}$">.
+The
+boundary term 
+<!-- MATH: ${(g_2,v)}_{\Gamma_2}$ -->
+<IMG
+ WIDTH="61" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ src="step-7.data/intro/img19.gif"
+ ALT="${(g_2,v)}_{\Gamma_2}$">
+has appeared by partial integration and
+using 
+<!-- MATH: $\partial_n u=g$ -->
+<IMG
+ WIDTH="59" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ src="step-7.data/intro/img20.gif"
+ ALT="$\partial_n u=g$">
+on <IMG
+ WIDTH="20" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ src="step-7.data/intro/img21.gif"
+ ALT="$\Gamma_2$">
+and <I>v</I>=0 on <IMG
+ WIDTH="20" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ src="step-7.data/intro/img6.gif"
+ ALT="$\Gamma_1$">.
+The cell
+matrices and vectors which we use to build the global matrices and right hand
+side vectors in the discrete formulation therefore look like this:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="250" HEIGHT="57"
+ src="step-7.data/intro/img22.gif"
+ ALT="\begin{eqnarray*}A_{ij}^K &=& \left(\nabla \varphi_i, \nabla \varphi_j\right)_K
+...
+...ight)_K
++\left(g_2, \varphi_i\right)_{\partial K\cap \Gamma_2}.
+\end{eqnarray*}">
+</DIV><P></P>
+<BR CLEAR="ALL">Since the generation of the domain integrals has been shown in previous
+examples several times, only the generation of the contour integral is of
+interest here. It basically works along the following lines: for domain
+integrals we have the <TT>FEValues</TT> class that provides values and
+gradients of the shape values, as well as Jacobian determinants and other
+information and specified quadrature points in the cell; likewise, there is a
+class <TT>FEFaceValues</TT> that performs these tasks for integrations on
+faces of cells. One provides it with a quadrature formula for a manifold with
+dimension one less than the dimension of the domain is, and the cell and the
+number of its face on which we want to perform the integration. The class will
+then compute the values, gradients, normal vectors, weights, etc at the
+quadrature points on this face, which we can then use in the same way as for
+the domain integrals. The details of how this is done are shown in the
+following program.

@@ -13,7 +13,7 @@ srcdocdir= doc
 VERSION=@Version@
 
 all: kdoc.local qt2kdoc.local makekdedoc.local
-	(cd doc; make)
+	(cd doc; $(MAKE))
 
 kdoc.local: @srcdir@/kdoc
 	cp @srcdir@/kdoc kdoc.local
@@ -37,7 +37,7 @@ install: all
 	for file in ${pm} ${pmextra}; do \
 		${install} -m 644 @srcdir@/$$file $(DESTDIR)${pmdir}; \
 	done
-	(cd doc; make install)
+	(cd doc; $(MAKE) install)
 
 uninstall:
 	(cd $(DESTDIR)${bindir} && rm -f ${bin})
@@ -48,7 +48,7 @@ uninstall:
 	-rmdir $(DESTDIR)${mandir}
 
 clean:
-	(cd doc; make clean)
+	(cd doc; $(MAKE) clean)
 	rm -f kdoc.local qt2kdoc.local makekdedoc.local
 
 distclean: clean

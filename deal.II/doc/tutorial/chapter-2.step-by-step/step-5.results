@@ -35,11 +35,22 @@ Cycle 5:
    Total number of cells: 27300
    Number of degrees of freedom: 20609
    200 CG iterations needed to obtain convergence.
+--------------------------------------------------------
+An error occurred in line <206> of file <step-5.cc> in function
+    void Coefficient<2>::value_list<2>(const class vector<Point<2>,__default_alloc_template<false,0> > &, class vector<double,__default_alloc_template<false,0> > &, unsigned int = 0) const
+The violated condition was: 
+    values.size() == n_points
+The name and call sequence of the exception was:
+    ExcVectorHasWrongSize (values.size(), n_points)
+Additional Information: 
+The vector has size 1 but should have 2 elements.
+--------------------------------------------------------
 </code>
 </pre>
 
 In each cycle, the number of cells quadruples and the number of CG
-iterations roughly doubles.
+iterations roughly doubles. The exception is only raised if the
+respective lines at the end of the programs are un-commented.
 
 <p>
 

@@ -24,7 +24,7 @@ Laplace::solve_primal()
 
   SolverControl control(1000, 1.e-10);
 
-  SolverCG&lt;AdvMatrix, Vector&lt;double&rt; &rt; solver(control, mem);
+  SolverCG&lt;AdvMatrix, Vector&lt;double&gt; &gt; solver(control, mem);
   
   solver.solve(A,u,f);
   

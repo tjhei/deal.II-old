@@ -2,5 +2,5 @@
 *.testcase
 *.dat *.output
 Makefile.depend
-*.check
+*.check *.OK
 *.exe

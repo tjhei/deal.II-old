@@ -3,5 +3,5 @@ Make.depend Makefile.depend
 *.testcase
 *.output
 T
-*.check
+*.check *.OK
 *.exe

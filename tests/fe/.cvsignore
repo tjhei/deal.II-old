@@ -1,5 +1,5 @@
 Makefile.depend
 *.output *.testcase
 *.go
-*.check
+*.check *.OK
 *.exe

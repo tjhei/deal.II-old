@@ -20,7 +20,9 @@ Choosing the right kind of grid can be essential for solving your problem.
 A grid should be chosen to fit your problem space in the best way possible.
 This chapter describes coarse grids for the triangulation of your domain.
 </p>
-
+<p>Please remember throughout this chapter:
+<b>A triangulation must be void before it is initialized !</b>
+</p>
 <p>
 <acronym>deal.II</acronym> offers three fundamental grid types: 
 a <a href="#cube">hypercube</a>, a <a href="#ball">hyperball</a> 
@@ -32,7 +34,7 @@ and a <a href="#L">hyper_L</a>. Furthermore it is possible to
 
 <p>
 A hypercube can be created using the function<br>
-<code>void Triangulation::create_hypercube(const double left=0.,const double right=1.)</code><br>
+<code>void GridGenerator&lt;dim&gt;::hyper_cube(Triangulation&lt;dim&gt; &amp;tria,const double left=0.,const double right=1.)</code><br>
 The cube created is the tensor product of the left and right edges which
 default to 0 and 1, creating the unit hypercube. The hypercube will consist of
 exactly one cell. In two dimensions, this amounts to a unit square, in three, to a unit cube.  
@@ -53,11 +55,12 @@ function calls needed. Be sure to use them in their appropriate places.
 <pre class="example">
 <code>
 #include &lt;grid/tria.h&gt;
+#include &lt;grid/grid_generator.h&gt;
 
 const unsigned int dim=2;  // Two dimensions; to create a cube set to three
 Triangulation&lt;dim&gt; tr;
 
-tr.create_hypercube(-1,1);
+GridGenerator&lt;dim&gt;::hyper_cube(tr,-1,1);
 </code>
 </pre>
 
@@ -65,7 +68,7 @@ tr.create_hypercube(-1,1);
 <h3><a name="ball">Hyperball</a></h3>
 <p>
 A hyperball can be created using the function<br>
-<code>void Triangulation::create_hyper_ball(const Point&lt;dim&gt; center=0.,const double radius=1.)</code><br>
+<code>void GridGenerator&lt;dim&gt;::hyper_ball(Triangulation&lt;dim&gt; &amp;tria,const Point&lt;dim&gt; center=0.,const double radius=1.)</code><br>
 This will create a hyperball of given centre and radius where the location of the centre defaults to the origin and the radius to unity.
 </p>
 
@@ -85,13 +88,14 @@ This example will create a hyperball with unit radius centred on (1,0).
 <pre class="example">
 <code>
 #include &lt;grid/tria.h&gt;
+#include &lt;grid/grid_generator.h&gt;
 #include &lt;base/point.h&gt;
 
 const unsigned int dim=2;  // For example
 Triangulation&lt;dim&gt; tr;
 Point&lt;dim&gt; centre(1,0); // Taking (1,0) as the centre of the ball
 
-tr.create_hyperball(centre,1);
+GridGenerator&lt;dim&gt;::hyper_ball(tr,centre,1);
 
 </code>
 </pre>
@@ -100,7 +104,7 @@ tr.create_hyperball(centre,1);
 <h3><a name="L">Hyper-L</a></h3>
 <p>
 A hyper-L can be created using the function<br>
-<code>void Triangulation::create_hyper_L(const double left=-1.,const double right=1.)</code><br>
+<code>void GridGenerator::hyper_L(Triangulation&lt;dim&gt; &amp;tria,const double left=-1.,const double right=1.)</code><br>
 This will create a hyper-L consisting of 2<sup>dimension</sup>-1 cells. 
 The hyper-L is created from the hypercube [left,right]<sup>dimension</sup> by taking 
 away the hypercube [left+right/2,right]<sup>dimension</sup>. 
@@ -131,11 +135,12 @@ This example will create the default hyper-L.
 <pre class="example">
 <code>
 #include &lt;grid/tria.h&gt;
+#include &lt;grid/grid_generator.h&gt;
 
 const unsigned int dim=2;  // For example
 Triangulation&lt;dim&gt; tr;
 
-tr.create_hyper_L(-1,1);
+GridGenerator&lt;dim&gt;::hyper_L(tr,-1,1);
 </code>
 </pre>
 

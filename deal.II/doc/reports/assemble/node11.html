@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-1 (1.68)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Getting information about shape functions</TITLE>
+<META NAME="description" CONTENT="Getting information about shape functions">
+<META NAME="keywords" CONTENT="assemble">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="assemble.css">
+
+<LINK REL="next" HREF="node12.html">
+<LINK REL="previous" HREF="node10.html">
+<LINK REL="up" HREF="node10.html">
+<LINK REL="next" HREF="node12.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html132"
+  HREF="node12.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html130"
+  HREF="node10.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html124"
+  HREF="node10.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html133"
+  HREF="node12.html">Evaluating shape functions</A>
+<B> Up:</B> <A NAME="tex2html131"
+  HREF="node10.html">Assembling vector-valued problems: The</A>
+<B> Previous:</B> <A NAME="tex2html125"
+  HREF="node10.html">Assembling vector-valued problems: The</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00060100000000000000">
+Getting information about shape functions</A>
+</H3>
+
+<P>
+So how do you find out whether calling these functions is ok or not? In other
+words, how do you know whether shape function <IMG
+ WIDTH="21" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img76.gif"
+ ALT="$ \Phi_i$"> has only one non-zero
+component, or more? For this, there are two functions:
+<TT>FiniteElement::is_primitive(i)</TT> returns as a <TT>bool</TT> whether
+the shape function has only one non-zero component. For example, for a
+<!-- MATH
+ $Q^2/Q^2/Q^1$
+ -->
+<IMG
+ WIDTH="79" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ Q^2/Q^2/Q^1$"> element, this would be <TT>true</TT> for all 22 shape functions.
+For a finite element for which every shape function is non-zero in more than
+one component, it would be <TT>false</TT> for all indices <IMG
+ WIDTH="10" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img33.gif"
+ ALT="$ i$">. It might also
+be <TT>true</TT> for only some shape functions, for example if the velocity
+components of the Stokes discretization are done using some more complicated
+element, but the pressure component with a <IMG
+ WIDTH="24" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img96.gif"
+ ALT="$ Q^1$">, then it would be
+<TT>true</TT> for the pressure shape functions, but <TT>false</TT> otherwise.
+
+<P>
+Second, the <TT>FiniteElement::n_nonzero_components(i)</TT> function returns
+in how many components the <IMG
+ WIDTH="10" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img33.gif"
+ ALT="$ i$">th shape function is non-zero. Again, for the
+<!-- MATH
+ $Q^2/Q^2/Q^1$
+ -->
+<IMG
+ WIDTH="79" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ Q^2/Q^2/Q^1$"> combination, this would yield the value 1 for all allowed
+indices <IMG
+ WIDTH="10" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img33.gif"
+ ALT="$ i$">. For coupled elements, it would be greater than 1.
+
+<P>
+Third, you may sometimes want to know in which components a certain shape
+function is non-zero. For this, the
+<TT>FiniteElement::get_nonzero_components(i)</TT> function is the right thing: it
+returns a reference to a vector of boolean values, one for each component of
+the vector-valued finite element, and the values indicate whether the shape
+function is non-zero for each of them.
+
+<P>
+Note that if you have the result of
+<TT>FiniteElement::get_nonzero_components(i)</TT>, then the result of
+<TT>FiniteElement::n_nonzero_components(i)</TT> is simply the number of
+<TT>true</TT> values in the array returned by the first function. Likewise, 
+<TT>FiniteElement::is_primitive(i)</TT> is simply whether
+<TT>FiniteElement::n_nonzero_components(i)</TT> returned a value other than
+1. The functions are thus redundant in some way, but useful nevertheless. Of
+course, the values of the  <TT>FiniteElement::is_primitive(i)</TT>
+and  <TT>FiniteElement::n_nonzero_components(i)</TT> functions are not
+recomputed every time based on the result of some other function, but are
+cached once at the time of construction of a finite element object.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html132"
+  HREF="node12.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html130"
+  HREF="node10.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html124"
+  HREF="node10.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html133"
+  HREF="node12.html">Evaluating shape functions</A>
+<B> Up:</B> <A NAME="tex2html131"
+  HREF="node10.html">Assembling vector-valued problems: The</A>
+<B> Previous:</B> <A NAME="tex2html125"
+  HREF="node10.html">Assembling vector-valued problems: The</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Wolfgang Bangerth
+2002-06-14
+</ADDRESS>
+</BODY>
+</HTML>

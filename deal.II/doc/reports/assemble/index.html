@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-1 (1.68)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>assemble</TITLE>
+<META NAME="description" CONTENT="assemble">
+<META NAME="keywords" CONTENT="assemble">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="assemble.css">
+
+<LINK REL="next" HREF="node1.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html2"
+  HREF="node1.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif_gr.gif"> 
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif_gr.gif">   
+<BR>
+<B> Next:</B> <A NAME="tex2html3"
+  HREF="node1.html">Introduction</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<P>
+<DIV ALIGN="CENTER">
+</DIV>
+<DIV ALIGN="CENTER"><FONT SIZE="+3">Assembling matrices in <TT>deal.II</TT>
+  </FONT>
+</DIV>
+<P>
+<DIV ALIGN="CENTER">
+<BR>
+<BR>
+</DIV>
+<P>
+<DIV ALIGN="CENTER"></DIV>
+<DIV ALIGN="CENTER"><FONT SIZE="+1">Wolfgang Bangerth
+<BR>
+ETH Z&#252;rich, Switzerland
+<BR>
+<BR>
+May 2002
+  </FONT>
+</DIV>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"></A>
+
+<H2>Overview</H2>
+
+<P>
+Assembling the system matrix for finite element discretizations is standard,
+at least as far as scalar problems are concerned. However, things become a
+little more complicated in implementations once problems are vector-valued,
+and in particular if finite elements are used in which different components of
+vector-valued shape functions are coupled, such as for example for
+divergence-free elements. 
+
+<P>
+It is this case that we are interested in in this report, and we will discuss
+the implementational details user programs must follow if they want to use
+such elements with <TT>deal.II</TT>. In order to explain the problem in a
+simple way, we start by reviewing the algorithms that are used, first for the
+scalar case, then for the case of ``simple'' vector-valued finite elements,
+and finally for the most general case.  However, we do not intend to give an
+introduction into the derivation of finite element methods, or of posing a
+partial differential equation in weak form.
+
+<P>
+The interface for vector-valued finite element shape functions with more than
+one non-zero component that is described in this report is presently being
+implemented, and will be merged with the library after version 3.4 is
+released. Thus, it will be part of version 3.5 or 4.0 of the library,
+depending on which version number we will assign to the successor of 3.4. By
+then, the library will also contain an implementation of Nedelec elements, for
+which these techniques are necessary. The interface for primitive
+vector-valued shape functions, for which only one vector component is
+non-zero, has been part of the library since its publication with version 3.0.
+
+
+<H2>Table of contents</h2>
+
+
+
+<UL>
+<LI><A NAME="tex2html5"
+  HREF="node2.html">Linear systems for finite element methods</A>
+<LI><A NAME="tex2html6"
+  HREF="node3.html">Assembling scalar problems</A>
+<LI><A NAME="tex2html7"
+  HREF="node4.html">Vector-valued problems</A>
+<UL>
+<LI><A NAME="tex2html8"
+  HREF="node5.html">The elastic equations</A>
+<LI><A NAME="tex2html9"
+  HREF="node6.html">The Stokes equations</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10"
+  HREF="node7.html">Assembling vector-valued problems: The simple case</A>
+<UL>
+<LI><A NAME="tex2html11"
+  HREF="node8.html">The elastic equations</A>
+<LI><A NAME="tex2html12"
+  HREF="node9.html">The Stokes equations</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html13"
+  HREF="node10.html">Assembling vector-valued problems: The complicated case</A>
+<UL>
+<LI><A NAME="tex2html14"
+  HREF="node11.html">Getting information about shape functions</A>
+<LI><A NAME="tex2html15"
+  HREF="node12.html">Evaluating shape functions</A>
+<LI><A NAME="tex2html16"
+  HREF="node13.html">The elastic equations</A>
+<LI><A NAME="tex2html17"
+  HREF="node14.html">The Stokes equations</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html18"
+  HREF="node15.html">Conclusions</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
+<ADDRESS>
+Wolfgang Bangerth
+2002-06-14
+</ADDRESS>
+</BODY>
+</HTML>

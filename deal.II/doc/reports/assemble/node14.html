@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-1 (1.68)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>The Stokes equations</TITLE>
+<META NAME="description" CONTENT="The Stokes equations">
+<META NAME="keywords" CONTENT="assemble">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="assemble.css">
+
+<LINK REL="previous" HREF="node13.html">
+<LINK REL="up" HREF="node10.html">
+<LINK REL="next" HREF="node15.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html158"
+  HREF="node15.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html156"
+  HREF="node10.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html152"
+  HREF="node13.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html159"
+  HREF="node15.html">Conclusions</A>
+<B> Up:</B> <A NAME="tex2html157"
+  HREF="node10.html">Assembling vector-valued problems: The</A>
+<B> Previous:</B> <A NAME="tex2html153"
+  HREF="node13.html">The elastic equations</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00062000000000000000">
+The Stokes equations</A>
+</H2>
+
+<P>
+Likewise, this is now the code for the Stokes equations:
+<PRE>
+  for (unsigned int i=0; i&lt;fe.dofs_per_cell; ++i)
+    for (unsigned int comp_i=0; comp_i&lt;fe.n_components(); ++comp_i)
+      for (unsigned int j=0; j&lt;fe.dofs_per_cell; ++j)
+        for (unsigned int comp_j=0; comp_j&lt;fe.n_components(); ++comp_j)
+          for (unsigned int q=0; q&lt;n_q_points; ++q) 
+            {
+                           // velocity-velocity coupling?
+              if ((comp_i&lt;dim) &amp;&amp; (comp_j&lt;dim))
+                if (comp_i == comp_j)
+                  cell_matrix(i,j)
+                      += (nu *
+                          (fe_values.shape_grad_component(i,q,comp_i) * 
+                           fe_values.shape_grad_component(j,q,comp_j)  ) *
+                          fe_values.JxW(q)); 
+
+                           // velocity-pressure coupling
+              if ((comp_i&lt;dim) &amp;&amp; (comp_j==dim))
+                cell_matrix(i,j)
+                    += (-fe_values.shape_grad_component(i,q,comp_i)[comp_i] * 
+                        fe_values.shape_value_component(j,q,comp_j)        *
+                        fe_values.JxW(q)); 
+
+                           // pressure-velocity coupling
+              if ((comp_i==dim) &amp;&amp; (comp_j&lt;dim))
+                cell_matrix(i,j)
+                    += (fe_values.shape_value_component(i,q,comp_i) * 
+                        fe_values.shape_grad_component(j,q,comp_j)[comp_j] *
+                        fe_values.JxW(q)); 
+            };
+</PRE>
+Again, the same optimizations as above are possible. Here, they even seem
+worthwhile, since it is often the case that the velocity variables are
+discretized using a non-primitive finite element, while the pressure uses a
+primitive element. In that case, some shape functions are primitive (namely
+those discretizing the pressure), and of the non-primitive shape functions
+(those for the velocity variables) some vector components (the pressure
+components) are always zero. Thus, both optimizations described above would be
+useful. We leave the implementation of this to the reader.
+
+<P>
+<BR><HR>
+<ADDRESS>
+Wolfgang Bangerth
+2002-06-14
+</ADDRESS>
+</BODY>
+</HTML>

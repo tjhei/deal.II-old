@@ -1,0 +1,775 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-1 (1.68)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Linear systems for finite element methods</TITLE>
+<META NAME="description" CONTENT="Linear systems for finite element methods">
+<META NAME="keywords" CONTENT="assemble">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="assemble.css">
+
+<LINK REL="next" HREF="node3.html">
+<LINK REL="previous" HREF="node1.html">
+<LINK REL="up" HREF="assemble.html">
+<LINK REL="next" HREF="node3.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html38"
+  HREF="node3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html36"
+  HREF="assemble.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html30"
+  HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html39"
+  HREF="node3.html">Assembling scalar problems</A>
+<B> Up:</B> <A NAME="tex2html37"
+  HREF="assemble.html">assemble</A>
+<B> Previous:</B> <A NAME="tex2html31"
+  HREF="node1.html">Introduction</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00020000000000000000">
+Linear systems for finite element methods</A>
+</H1>
+
+<P>
+We start by briefly introducing the way finite element matrices are assembled
+``on paper''. As usual in finite elements, we take the weak form of the partial
+differential equation. In the most general case, it reads: <I>find <IMG
+ WIDTH="45" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ u\in
+V$"> such that</I>
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="200" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.gif"
+ ALT="$\displaystyle a(u, v) = (f,v)_\Omega \qquad \forall v\in V,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+where <!-- MATH
+ $a(\cdot,\cdot)$
+ -->
+<IMG
+ WIDTH="41" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$ a(\cdot,\cdot)$"> is the bilinear form associated with the partial
+differential equations, and <IMG
+ WIDTH="17" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img4.gif"
+ ALT="$ V$"> is the space of test functions. For
+simplicity, we have here assumed that the problem is linear and that then
+<!-- MATH
+ $a(\cdot,\cdot)$
+ -->
+<IMG
+ WIDTH="41" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$ a(\cdot,\cdot)$"> is a bilinear form; if the problem is nonlinear, it is
+usually solved using a sequence of linear problems, so this is no restriction.
+
+<P>
+In finite elements, we define an approximation of the solution <IMG
+ WIDTH="13" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="img5.gif"
+ ALT="$ u$"> by choosing
+a finite dimensional subspace <IMG
+ WIDTH="22" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img6.gif"
+ ALT="$ V_h$"> spanned by the basis functions
+<!-- MATH
+ $\{\varphi_i\}$
+ -->
+<IMG
+ WIDTH="36" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img7.gif"
+ ALT="$ \{\varphi_i\}$">, and searching <!-- MATH
+ $u_h\in V_h$
+ -->
+<IMG
+ WIDTH="58" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img8.gif"
+ ALT="$ u_h\in V_h$"> by testing the weak form by the
+test functions from <IMG
+ WIDTH="22" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img6.gif"
+ ALT="$ V_h$">. The problem then reads: <I>find <!-- MATH
+ $u_h\in V_h$
+ -->
+<IMG
+ WIDTH="58" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img8.gif"
+ ALT="$ u_h\in V_h$">
+such that</I>
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="238" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img9.gif"
+ ALT="$\displaystyle a(u_h, v_h) = (f,v_h)_\Omega \qquad \forall v_h\in V_h.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+
+<P>
+Now, <!-- MATH
+ $\{\varphi_i\}$
+ -->
+<IMG
+ WIDTH="36" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img7.gif"
+ ALT="$ \{\varphi_i\}$"> is a basis of <IMG
+ WIDTH="22" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img6.gif"
+ ALT="$ V_h$">. We denote the dimension of <IMG
+ WIDTH="22" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img6.gif"
+ ALT="$ V_h$"> by
+<IMG
+ WIDTH="19" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img10.gif"
+ ALT="$ N$">, and will henceforth let all sums be over the range <!-- MATH
+ $0\ldots N-1$
+ -->
+<IMG
+ WIDTH="78" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img11.gif"
+ ALT="$ 0\ldots N-1$">, to keep
+with the standard notation of the C/C++ programming languages. With this, we
+can expand the solution <!-- MATH
+ $u_h=\sum_{j=0}^{N-1} U_j \varphi_j$
+ -->
+<IMG
+ WIDTH="125" HEIGHT="39" ALIGN="MIDDLE" BORDER="0"
+ SRC="img12.gif"
+ ALT="$ u_h=\sum_{j=0}^{N-1} U_j \varphi_j$">, and by
+bilinearity of the form <!-- MATH
+ $a(\cdot,\cdot)$
+ -->
+<IMG
+ WIDTH="41" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$ a(\cdot,\cdot)$">, the problem above is equivalent to
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="323" HEIGHT="65" ALIGN="MIDDLE" BORDER="0"
+ SRC="img13.gif"
+ ALT="$\displaystyle \sum_{j=0}^{N-1} U_j a(\varphi_j,\varphi_i) = (f, \varphi_i) \qquad \forall i=0\ldots N-1.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+<A NAME="eq:lin-1">(1)</A></TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+Denoting
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="268" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img14.gif"
+ ALT="$\displaystyle A_{ij} = a(\varphi_j,\varphi_i), \qquad \qquad F_j = (f, \varphi_j),$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+the equations determining the expansion coefficients <IMG
+ WIDTH="20" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img15.gif"
+ ALT="$ U_i$"> are therefore:
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="65" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img16.gif"
+ ALT="$\displaystyle A U = F.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+<A NAME="eq:lin-2">(2)</A></TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+
+<P>
+Note that we have taken a reverted order of indices in the definition of <IMG
+ WIDTH="16" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img17.gif"
+ ALT="$ A$">,
+since we want the linear system (<A HREF="node2.html#eq:lin-2">2</A>) with the solution to the
+right of the matrix, to keep with standard notation, instead of to the left as
+in (<A HREF="node2.html#eq:lin-1">1</A>). For symmetric problems, there is no difference, but for
+non-symmetric ones this is a common source for problems and a rather common
+trap. 
+
+<P>
+For partial differential equations, the bilinear form used in (<A HREF="node2.html#eq:lin-1">1</A>)
+involves an integral over the domain <IMG
+ WIDTH="16" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img18.gif"
+ ALT="$ \Omega$"> on which the problem is
+posed. For example, for the Laplace equation we have
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="359" HEIGHT="51" ALIGN="MIDDLE" BORDER="0"
+ SRC="img19.gif"
+ ALT="$\displaystyle A_{ij} = a(\varphi_j, \varphi_i) = (\nabla \varphi_j, \nabla \varphi_i)_\Omega = \int_\Omega \nabla \varphi_j \cdot \nabla \varphi_i \; dx.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+For practical purposes, we split this equation into integrals over the
+individual cells <IMG
+ WIDTH="19" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img20.gif"
+ ALT="$ K$"> of the triangulation <!-- MATH
+ $\mathbb{T}$
+ -->
+<IMG
+ WIDTH="15" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img21.gif"
+ ALT="$ \mathbb{T}$"> we use for the
+discretization. In <TT>deal.II</TT>, these cells are always lines,
+quadrilaterals, or hexahedra. With this, we have that
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="429" HEIGHT="50" ALIGN="MIDDLE" BORDER="0"
+ SRC="img22.gif"
+ ALT="$\displaystyle A = \sum_{K \in {\mathbb{T}}} A^K, \qquad\qquad A^K_{ij} = a_K(\varphi_j, \varphi_i) \qquad 0\le i,j\le N-1,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+where the bilinear form <!-- MATH
+ $a_K(\cdot,\cdot)$
+ -->
+<IMG
+ WIDTH="53" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img23.gif"
+ ALT="$ a_K(\cdot,\cdot)$"> only involves an integral over the
+cell <IMG
+ WIDTH="19" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img20.gif"
+ ALT="$ K$">. The important point is that we do so since for the localized basis
+functions used in finite elements, <IMG
+ WIDTH="28" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img24.gif"
+ ALT="$ A^K$"> is a matrix with almost only zeros.
+The only elements which are not zero are those corresponding to indices <IMG
+ WIDTH="24" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img25.gif"
+ ALT="$ i,j$">
+indicating those shape functions that have support also on the element <IMG
+ WIDTH="19" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img20.gif"
+ ALT="$ K$">.
+For example, in 2d and using the usual bilinear shape functions for a scalar
+problem, only the four shape functions associated with the vertices of the
+cell <IMG
+ WIDTH="19" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img20.gif"
+ ALT="$ K$"> are nonzero on <IMG
+ WIDTH="19" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img20.gif"
+ ALT="$ K$">, and thus only the entries in <IMG
+ WIDTH="28" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img24.gif"
+ ALT="$ A^K$"> are nonzero
+where the four rows corresponding to these indices and the respective four
+columns intersect.
+
+<P>
+In general, assume that there are <IMG
+ WIDTH="29" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img26.gif"
+ ALT="$ N_K$"> shape functions with support on cell
+<IMG
+ WIDTH="19" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img20.gif"
+ ALT="$ K$">, and let the set of their indices be denoted by <IMG
+ WIDTH="23" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img27.gif"
+ ALT="$ I_K$">. Then we can define
+a matrix <IMG
+ WIDTH="28" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$ \hat A^K$"> of (small dimension) <!-- MATH
+ $N_K\times N_K$
+ -->
+<IMG
+ WIDTH="74" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img29.gif"
+ ALT="$ N_K\times N_K$"> holding these nonzero
+entries, and we can obtain back the original contribution <IMG
+ WIDTH="28" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img30.gif"
+ ALT="$ A_K$"> to <IMG
+ WIDTH="16" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img17.gif"
+ ALT="$ A$"> by the
+transformation
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="481" HEIGHT="57" ALIGN="MIDDLE" BORDER="0"
+ SRC="img31.gif"
+ ALT="$\displaystyle A^K_{ij} = \left\{ \begin{array}{ll} 0 &amp; \text{if $i\not\in I_K$\...
+...al(i),local(j)} &amp; \text{otherwise}, \end{array} \right. \qquad 0\le i,j\le N-1.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+Here, <IMG
+ WIDTH="55" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img32.gif"
+ ALT="$ local(i)$"> gives the number of the global degree of freedom <IMG
+ WIDTH="10" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img33.gif"
+ ALT="$ i$"> on the
+cell <IMG
+ WIDTH="19" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img20.gif"
+ ALT="$ K$">, i.e. the position of <IMG
+ WIDTH="10" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img33.gif"
+ ALT="$ i$"> in the index set <IMG
+ WIDTH="23" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img27.gif"
+ ALT="$ I_K$">. One could call
+<IMG
+ WIDTH="28" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$ \hat A^K$"> the <TT>reduced</TT> form of <IMG
+ WIDTH="28" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img24.gif"
+ ALT="$ A^K$">, since the many zero rows and
+column have been stripped.
+
+<P>
+In general, when assembling the global matrix, the reverse way is used: when
+adding up <IMG
+ WIDTH="28" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img24.gif"
+ ALT="$ A^K$"> to <IMG
+ WIDTH="16" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img17.gif"
+ ALT="$ A$">, we do so only with <IMG
+ WIDTH="28" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$ \hat A^K$"> by
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="361" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img34.gif"
+ ALT="$\displaystyle A_{global(i),global(j)} +\!\!= \hat A^K_{ij} \qquad \qquad 0\le i,j\le N_K-1.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+Thus, indices only run over the (small) range <!-- MATH
+ $0\ldots N_K-1$
+ -->
+<IMG
+ WIDTH="88" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img35.gif"
+ ALT="$ 0\ldots N_K-1$"> instead of
+<!-- MATH
+ $0\ldots N-1$
+ -->
+<IMG
+ WIDTH="78" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img11.gif"
+ ALT="$ 0\ldots N-1$">. Here, <IMG
+ WIDTH="63" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img36.gif"
+ ALT="$ global(i)$"> denotes the global number of the degree of
+freedom with number <IMG
+ WIDTH="10" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img33.gif"
+ ALT="$ i$"> on this cell <IMG
+ WIDTH="19" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img20.gif"
+ ALT="$ K$">, i.e. <!-- MATH
+ $global(i)=I_K[i]$
+ -->
+<IMG
+ WIDTH="118" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img37.gif"
+ ALT="$ global(i)=I_K[i]$">, where the
+bracket operator returns the <IMG
+ WIDTH="10" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img33.gif"
+ ALT="$ i$">th element of the set <IMG
+ WIDTH="23" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img27.gif"
+ ALT="$ I_K$">.
+
+<P>
+The main part of assembling finite element matrices is therefore to assemble
+the local matrix <IMG
+ WIDTH="28" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$ \hat A^K$">. Before we go on with discussing how this is done
+in <TT>deal.II</TT>, we would like to comment on the evaluation of the
+integrals involved. Since the integrals are usually too complex to be
+evaluated exactly (they may depend on coefficients appearing in the equation,
+or the solution of previous steps in nonlinear or time-dependent problems),
+they are approximated by quadrature. Assume we have a quadrature formula with
+<IMG
+ WIDTH="24" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img38.gif"
+ ALT="$ N_q$"> points <IMG
+ WIDTH="20" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img39.gif"
+ ALT="$ x_q$"> defined on cell in real space (as opposed to the unit cell)
+and weights <IMG
+ WIDTH="23" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img40.gif"
+ ALT="$ w_q$">. Then, for example for the Laplace equation, we approximate
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="379" HEIGHT="69" ALIGN="MIDDLE" BORDER="0"
+ SRC="img41.gif"
+ ALT="$\displaystyle \hat A^K_{ij} \equiv \int_K \nabla\varphi_i \cdot \nabla \varphi_...
+...\sum_{q=0}^{N_q-1} \nabla\varphi_i(x_q) \cdot \nabla \varphi_j(x_q) \ w_q \vert$">det<IMG
+ WIDTH="57" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img42.gif"
+ ALT="$\displaystyle \ J(\hat x_q)\vert.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(3)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+For other problems, the integrand is different, but the principle remains the
+same. <!-- MATH
+ $\text{det}\ J(\hat x_q)$
+ -->
+det<IMG
+ WIDTH="48" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img43.gif"
+ ALT="$ \ J(\hat x_q)$"> denotes the determinant of the Jacobian of the
+transformation between the unit cell on which the quadrature weights are
+defined, and the real cell, and <IMG
+ WIDTH="20" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img44.gif"
+ ALT="$ \hat x_q$"> is the point on the unit cell
+corresponding to the quadrature point <IMG
+ WIDTH="20" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img39.gif"
+ ALT="$ x_q$"> in real space.
+
+<P>
+Since all matrices and right hand side vectors only require knowledge of the
+values and gradients of shape functions at quadrature points, this is all that
+<TT>deal.II</TT> usually provides. One can see this as a kind of <I>view</I>
+on a finite element, as it only provides a certain perspective on the actual
+definition of a shape function. Nevertheless, this is entirely sufficient for
+all purposes of programming finite element programs. 
+
+<P>
+In <TT>deal.II</TT> the <TT>FEValues</TT> class does this: you give it a
+finite element definition, a quadrature formula object, and an object defining
+the transformation between unit and real cell, and it provides you with the
+values, gradient, and second derivatives of shape functions at the quadrature
+points. It also gives access to the determinant of the Jacobian, although only
+multiplied with <IMG
+ WIDTH="23" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img40.gif"
+ ALT="$ w_q$"> as these two are always used in conjunction. It also
+provides you with many other fields, such as normal vectors to the outer
+boundary. In practice you do not need them all computed on each cell; thus,
+you have to specify explicitly in which data you are interested when
+constructing <TT>FEValues</TT> objects.
+
+<P>
+In the following, we provide a list of connections between the symbols introduced
+above, and the respective functions and variable names used in typical
+<TT>deal.II</TT> programs. With this, we will subsequently show the basic
+structure of an assembly routine. If you have already taken a look at the
+example programs provided with <TT>deal.II</TT>, you will recognize all these
+names. If you haven't, this would be a good time to look at the first
+three of them.
+
+<P>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT"><IMG
+ WIDTH="16" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img17.gif"
+ ALT="$ A$"></TD>
+<TD ALIGN="LEFT"><TT>system_matrix</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT"><IMG
+ WIDTH="28" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$ \hat A^K$"></TD>
+<TD ALIGN="LEFT"><TT>cell_matrix</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT"><IMG
+ WIDTH="19" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img20.gif"
+ ALT="$ K$"></TD>
+<TD ALIGN="LEFT"><TT>cell</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT"><IMG
+ WIDTH="19" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img10.gif"
+ ALT="$ N$"></TD>
+<TD ALIGN="LEFT"><TT>dof_handler.n_dofs()</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT"><IMG
+ WIDTH="29" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img26.gif"
+ ALT="$ N_K$"></TD>
+<TD ALIGN="LEFT"><TT>fe.dofs_per_cell</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT"><IMG
+ WIDTH="23" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img27.gif"
+ ALT="$ I_K$"></TD>
+<TD ALIGN="LEFT"><TT>local_dof_indices</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT"><IMG
+ WIDTH="24" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img38.gif"
+ ALT="$ N_q$"></TD>
+<TD ALIGN="LEFT"><TT>quadrature_formula.n_quadrature_points</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT"><!-- MATH
+ $\varphi_i(x_q)$
+ -->
+<IMG
+ WIDTH="48" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img45.gif"
+ ALT="$ \varphi_i(x_q)$"></TD>
+<TD ALIGN="LEFT"><TT>fe_values.shape_value(i,q)</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT"><!-- MATH
+ $\nabla\varphi_i(x_q)$
+ -->
+<IMG
+ WIDTH="62" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img46.gif"
+ ALT="$ \nabla\varphi_i(x_q)$"></TD>
+<TD ALIGN="LEFT"><TT>fe_values.shape_grad(i,q)</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT"><IMG
+ WIDTH="20" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="img39.gif"
+ ALT="$ x_q$"></TD>
+<TD ALIGN="LEFT"><TT>fe_values.quadrature_point(q)</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT"><!-- MATH
+ $|\text{det} J(\hat x_q)| w_q$
+ -->
+<IMG
+ WIDTH="8" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img47.gif"
+ ALT="$ \vert$">det<IMG
+ WIDTH="66" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img48.gif"
+ ALT="$ J(\hat x_q)\vert w_q$"></TD>
+<TD ALIGN="LEFT"><TT>fe_values.JxW(q)</TT></TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+With this vocabulary, the typical matrix assembly loop in <TT>deal.II</TT> has
+the following form: first declare a quadrature object and use it for the
+initialization of a <TT>FEValues</TT> object as discussed above:
+<PRE>
+  QGauss2&lt;2&gt;  quadrature_formula;
+  FEValues&lt;2&gt; fe_values (fe, quadrature_formula, 
+                         UpdateFlags(update_values    |
+                                     update_gradients |
+                                     update_JxW_values));
+</PRE>
+In practice, you may want to use a different set of fields to be updated on
+each cell. For example if you do not need the values of shape functions on a
+cell, you may omit <TT>update_values</TT> from the list. Also note that by
+default a bi- or tri-linear (depending on space dimension) mapping between
+unit and real cell is used. Other mappings are possible, for example quadratic
+ones, or a mapping that makes use of the fact that in many cases cells are
+actually rectangular, rather than arbitrary quadrilaterals; in order to use
+them, another constructor of the <TT>FEValues</TT> class can be used, which
+takes a mapping object as first argument, before the other arguments listed
+above.
+
+<P>
+Next we define abbreviations for the values of <IMG
+ WIDTH="29" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img26.gif"
+ ALT="$ N_K$"> and <IMG
+ WIDTH="24" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img38.gif"
+ ALT="$ N_q$">:
+<PRE>
+  const unsigned int 
+      dofs_per_cell = fe.dofs_per_cell,
+      n_q_points    = quadrature_formula.n_quadrature_points;
+</PRE>
+Then have an object to store the matrix <IMG
+ WIDTH="28" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$ \hat A^K$">, which is of size
+<!-- MATH
+ $N_K\times N_K$
+ -->
+<IMG
+ WIDTH="74" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img29.gif"
+ ALT="$ N_K\times N_K$">:
+<PRE>
+  FullMatrix&lt;double&gt;   cell_matrix (dofs_per_cell, dofs_per_cell);
+</PRE>
+And an object representing the set of global indices of degrees of freedom,
+previously denoted by <IMG
+ WIDTH="23" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img27.gif"
+ ALT="$ I_K$">, that have support on the present cell, i.e. those
+degrees of freedom local to the present cell:
+<PRE>
+  std::vector&lt;unsigned int&gt; local_dof_indices (dofs_per_cell);
+</PRE>
+The next step is then to loop over all cells:
+<PRE>
+  typename DoFHandler&lt;dim&gt;::active_cell_iterator
+       cell = dof_handler.begin_active(),
+       endc = dof_handler.end();
+  for (; cell!=endc; ++cell)
+    {
+</PRE>
+On each cell, first tell the <TT>FEValues</TT> object to compute the values of
+the various fields for this particular cell, and do not forget to reset the
+local matrix <IMG
+ WIDTH="28" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$ \hat A^K$"> to zero before adding it up:
+<PRE>
+      fe_values.reinit (cell);
+      cell_matrix.clear ();
+</PRE>
+Now comes the main part, assembling the local matrix <IMG
+ WIDTH="28" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$ \hat A^K$">. It consists
+of a loop over all indices <!-- MATH
+ $0\le i,j \le N_K$
+ -->
+<IMG
+ WIDTH="99" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img49.gif"
+ ALT="$ 0\le i,j \le N_K$"> and all quadrature points <!-- MATH
+ $0\le
+q\le N_q$
+ -->
+<IMG
+ WIDTH="82" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img50.gif"
+ ALT="$ 0\le
+q\le N_q$">, and summing up the contributions. As this is what we will discuss
+in detail later on, we only denote it here by an ellipse:
+<PRE>
+      for (unsigned int i=0; i&lt;dofs_per_cell; ++i)
+        for (unsigned int j=0; j&lt;dofs_per_cell; ++j)
+          for (unsigned int q=0; q&lt;n_q_points; ++q)
+            cell_matrix(i,j) += ...;
+</PRE>
+After we have <IMG
+ WIDTH="28" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$ \hat A^K$">, we still have to sum it into the global matrix
+<IMG
+ WIDTH="16" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="img17.gif"
+ ALT="$ A$">. This is done by first getting the set <IMG
+ WIDTH="23" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img27.gif"
+ ALT="$ I_K$"> of the global indices of the
+shape functions that were active on this cell, and then distributing <IMG
+ WIDTH="28" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$ \hat A^K$">: 
+<PRE>
+      cell-&gt;get_dof_indices (local_dof_indices);
+
+      for (unsigned int i=0; i&lt;dofs_per_cell; ++i)
+        for (unsigned int j=0; j&lt;dofs_per_cell; ++j)
+          system_matrix.add (local_dof_indices[i],
+                             local_dof_indices[j],
+                             cell_matrix(i,j));
+    };
+</PRE>
+When this is done, we go on to the next cell.
+
+<P>
+Within this framework, the only open point is assembling <IMG
+ WIDTH="28" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$ \hat A^K$"> on one
+quadrature point. This will be subject of the rest of this report.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html38"
+  HREF="node3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html36"
+  HREF="assemble.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html30"
+  HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html39"
+  HREF="node3.html">Assembling scalar problems</A>
+<B> Up:</B> <A NAME="tex2html37"
+  HREF="assemble.html">assemble</A>
+<B> Previous:</B> <A NAME="tex2html31"
+  HREF="node1.html">Introduction</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Wolfgang Bangerth
+2002-06-14
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-1 (1.68)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>The elastic equations</TITLE>
+<META NAME="description" CONTENT="The elastic equations">
+<META NAME="keywords" CONTENT="assemble">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="assemble.css">
+
+<LINK REL="next" HREF="node9.html">
+<LINK REL="previous" HREF="node7.html">
+<LINK REL="up" HREF="node7.html">
+<LINK REL="next" HREF="node9.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html100"
+  HREF="node9.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="../deal.II-paper/next_motif.gif"></A> 
+<A NAME="tex2html98"
+  HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="../deal.II-paper/up_motif.gif"></A> 
+<A NAME="tex2html92"
+  HREF="node7.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="../deal.II-paper/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html101"
+  HREF="node9.html">The Stokes equations</A>
+<B> Up:</B> <A NAME="tex2html99"
+  HREF="node7.html">Assembling vector-valued problems: The</A>
+<B> Previous:</B> <A NAME="tex2html93"
+  HREF="node7.html">Assembling vector-valued problems: The</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00051000000000000000"></A>
+<A NAME="sec:elastic-simple"></A>
+<BR>
+The elastic equations
+</H2>
+
+<P>
+With this, and the definition of the ``bi-directional'' operator <IMG
+ WIDTH="17" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="img61.gif"
+ ALT="$ Q$"> in
+Section&nbsp;<A HREF="node5.html#sec:elastic">4.1</A>, the local matrix assembly function for the elastic
+equations would then read as follows:
+<PRE>
+  for (unsigned int i=0; i&lt;fe.dofs_per_cell; ++i)
+    for (unsigned int j=0; j&lt;fe.dofs_per_cell; ++j)
+      for (unsigned int q=0; q&lt;n_q_points; ++q) 
+        {
+          const unsigned int
+            comp_i = fe.system_to_component_index(i).first,
+            comp_j = fe.system_to_component_index(j).first;
+
+                           // first assemble part with lambda+mu
+          cell_matrix(i,j) += ((lambda+mu)                       *
+                               fe_values.shape_grad(i,q)[comp_i] * 
+                               fe_values.shape_grad(j,q)[comp_j] *
+                               fe_values.JxW(q)); 
+
+                           // then part with mu only
+          if (comp_i == comp_j)
+            cell_matrix(i,j) += (mu                           *
+                                 (fe_values.shape_grad(i,q) * 
+                                  fe_values.shape_grad(j,q)  )*
+                                 fe_values.JxW(q)); 
+        };
+</PRE>
+Note that this code works in any space dimension, not only for
+<TT>dim==2</TT>. Optimization of this is possible by hoisting the computation
+of <TT>comp_i</TT> and <TT>comp_j</TT>, denoting <IMG
+ WIDTH="29" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img79.gif"
+ ALT="$ c(i)$"> and <IMG
+ WIDTH="31" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img94.gif"
+ ALT="$ c(j)$">,
+respectively, out of the inner loops. Also, if the coefficients are
+non-constant, they need to be computed at each quadrature point; this may be
+done using this fragment in the innermost loop:
+<PRE>
+  const double
+    lambda_value = lambda.value(fe_values.quadrature_point(q)),
+    mu_value     = mu.value(fe_values.quadrature_point(q));
+</PRE>
+assuming that <TT>lambda,mu</TT> are variables of classes that are derived
+from the <TT>Function&lt;dim&gt;</TT> class.
+
+<P>
+<BR><HR>
+<ADDRESS>
+Wolfgang Bangerth
+2002-06-14
+</ADDRESS>
+</BODY>
+</HTML>

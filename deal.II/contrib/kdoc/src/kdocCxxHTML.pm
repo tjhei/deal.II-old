@@ -166,7 +166,7 @@ sub writeAnnotatedList
 		$col = $col ? 0 : 1;
 		$colour = $col ? "" : 'bgcolor="#eeeeee"';
 
-		print CLIST "<TR $colour><TD>", refNameFull( $node, $rootnode, 1 ), 
+		print CLIST "<TR $colour><TD>", refNameFull( $node ),
 			"</TD><TD>", $short, "</TD></TR>";
 	}
 
@@ -241,7 +241,7 @@ sub writeHier
 			my $src = defined $node->{ExtSource} ?
 				" ($node->{ExtSource})" : "";
 
-			print HIER "<LI>", refNameFull( $node, $rootnode, 1 )," $src\n";
+			print HIER "<LI>", refNameFull( $node )," $src\n";
 		},
 		sub {	# up
 			if ( $_[0] == $root ) {

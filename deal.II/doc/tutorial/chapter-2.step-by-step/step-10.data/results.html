@@ -72,10 +72,9 @@ with dashed lines the exact circle:
     </td>
   </tr>
 </table>
-The quadratic mapping obviously quite well approximates the
-boundary, while for the cubic mapping the difference between
-approximated domain and true one is hardly visible already for the
-coarse grid.
+Obviously the quadratic mapping approximates the boundary quite well,
+while for the cubic mapping the difference between approximated domain
+and true one is hardly visible already for the coarse grid.
 </p>
 
 <p>
@@ -164,25 +163,25 @@ cells         eval.pi         error
 <p>
 One of the immediate observations from the output is that in all cases
 the values converge quickly to the true value of
-pi=3.141592653589793238462643. Note that for for Q4 mapping, the last
+pi=3.141592653589793238462643. Note that for the Q<sub>4</sub> mapping, the last
 number is correct to 13 digits in both computations, which is already
-quite a lot. However, also note that for the Q1 mapping, even on the
+quite a lot. However, also note that for the Q<sub>1</sub> mapping, even on the
 finest grid the accuracy is significantly worse than on the coarse
-grid for a Q4 mapping!
+grid for a Q<sub>4</sub> mapping!
 </p>
 
 <p>
 The last column of the output shows the convergence order, in powers
 of the mesh width <it>h</it>. In the introduction, we had stated that
-the convergence order for a <it>Qp</it> mapping should be
-<it>h<sup>p+1</sup></it>. However, in the example shown, the Q2 and Q4
+the convergence order for a <it>Q<sub>p</sub></it> mapping should be
+<it>h<sup>p+1</sup></it>. However, in the example shown, the Q<sub>2</sub> and Q<sub>4</sub>
 mappings show a convergence order of <it>h<sup>p+2</sup></it>! This at
 first surprising fact is readily explained by the particular boundary
-we have here. In fact, the circle is described by the function
+we have chosen in this example. In fact, the circle is described by the function
 <it>sqrt(1-x<sup>2</sup>)</it>, which has the series expansion 
 <it>1-x<sup>2</sup>/2-x<sup>4</sup>/8-x<sup>6</sup>/16+...</it>
 around <it>x=0</it>. Thus, for the quadratic mapping where the
 truncation error of the quadratic approximation should be cubic, there
 is no such term but only a quartic one, which raises the convergence
-order to 4, instead of 3. The same happens for the Q4 mapping.
+order to 4, instead of 3. The same happens for the Q<sub>4</sub> mapping.
 </p>

@@ -15,9 +15,11 @@
 #include <hsl/hsl.h>
 
 #include <vector>
+#include <list>
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
+#include <typeinfo>
 
 #include <unistd.h>
 #include <pthread.h>
@@ -41,6 +43,53 @@
 pid_t master_pid;
 
 
+namespace CommunicationsLog
+{
+  enum Direction { put, get };
+  
+  struct Record 
+  {
+      Direction             direction;
+      const std::type_info* type;
+      unsigned int          count;
+      unsigned int          completed;
+      std::string           description;
+  };
+
+  std::list<Record> communication_log;
+
+  
+  template <typename T>
+  void record_communication (const Direction    direction,
+                             const unsigned int count,
+                             const unsigned int completed,
+                             const std::string &descr)
+  {
+    Record record = {direction, &typeid(T), count, completed, descr};
+    communication_log.push_back (record);
+  };
+
+
+  void list_communication () 
+  {
+    std::cerr << "------------------------------" << std::endl
+              << "Communiction log history:" << std::endl;
+    
+    for (std::list<Record>::const_iterator i=communication_log.begin();
+         i!=communication_log.end(); ++i)
+      std::cerr << (i->direction == put ? "put" : "get")
+                << " "
+                << i->count << " objects of type "
+                << i->type->name()
+                << ", " << i->completed << " completed, description="
+                << i->description
+                << std::endl;
+    std::cerr << "------------------------------" << std::endl;
+  };  
+};
+
+
+
 /**
  * Output an error message and terminate the program.
  */
@@ -48,6 +97,7 @@ void die (const std::string &text)
 {
   std::cerr << "----- detached_ma27: " << text
             << std::endl;
+  CommunicationsLog::list_communication ();
   abort ();
 };
 
@@ -112,7 +162,7 @@ void * monitor_thread (void *)
  * Put a certain number of objects to the output stream.
  */
 template <typename T>
-void put (const T *t, const size_t N, const char */*debug_info*/)
+void put (const T *t, const size_t N, const char *debug_info)
 {
                                    // repeat writing until syscall is
                                    // not interrupted
@@ -127,6 +177,8 @@ void put (const T *t, const size_t N, const char */*debug_info*/)
     die ("not everything was written", ret, sizeof(T)*N);
 
   fflush (NULL);
+  CommunicationsLog::
+    record_communication<T> (CommunicationsLog::put, N, ret, debug_info);
 };
 
 
@@ -135,7 +187,7 @@ void put (const T *t, const size_t N, const char */*debug_info*/)
  * Read a certain number of objects from the input stream.
  */
 template <typename T>
-void get (T *t, const size_t N, const char */*debug_info*/)
+void get (T *t, const size_t N, const char *debug_info)
 {
   unsigned int count = 0;
   while (count < sizeof(T)*N)
@@ -151,6 +203,9 @@ void get (T *t, const size_t N, const char */*debug_info*/)
       else
         count += ret;
     };
+  
+  CommunicationsLog::
+    record_communication<T> (CommunicationsLog::get, N, count, debug_info);
 };
 
 

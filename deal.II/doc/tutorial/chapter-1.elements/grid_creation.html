@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+<title>Creation of a Grid</title>
+    <link href="../dealtut.css" rel="StyleSheet" title="deal.II Tutorial">
+    <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+    <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
+</head>
+
+<body lang="en">
+
+<h1>Creation of a Grid</h1>
+
+<h2>Grid Types</h2>
+
+<p>
+Choosing the right type of grid can be essential for solving your problem.
+A grid should be chosen to fit your problem space in the best way possible.
+Otherwise you waste memory and computing time.
+</p>
+
+<p>
+<acronym>deal.II</acronym> offers three fundamental grid types: 
+a <a href="#cube">hypercube</a>, a <a href="#ball">hyperball</a> 
+and a <a href="#L">hyper_L</a>. Furthermore it is possible to 
+<a href="#file">read a triangulation from a <tt>ucd</tt>-file</a>. 
+</p>
+
+<h3><a name="cube">Hypercube</a></h3>
+
+<p>
+A hypercube can be created using the function<br>
+<code>void Triangulation::create_hypercube(const double left=0.,const double right=1.)</code><br>
+The cube created is the tensor product of the left and right edges which
+default to 0 and 1, creating the unit hypercube. The hypercube will consist of
+exactly one cell.
+</p>
+
+<h3><a name="ball">Hyperball</a></h3>
+<p>
+A hyperball can be created using the function<br>
+<code>void Triangulation::create_hyper_ball(const Point&lt;dim&rt; center=0.,const double radius=1.)</code><br>
+This will create a hyperball of given centre and radius where the location of the centre defaults to the origin and the radius to unity.
+</p>
+
+<h3><a name="L">Hyper-L</a></h3>
+<p>
+A hyper-L can be created using the function<br>
+<code>void Triangulation::create_hyper_L(const double left=-1.,const double right=1.)</code><br>
+This will create a hyper-L consisting of 2<sup>dimension</sup>-1 cells. 
+The hyper-L is created from the hypercube [left,right]<sup>dimension</sup> by taking 
+away the hypercube [left+right/2,right]<sup>dimension</sup>. 
+</p>
+<p>
+<span class="parhead">Use of the hyper-L:</span> 
+The hyper-L is mainly of use in testing grid refinement, error estimates etc.
+Boundary conditions of the form <code>u=g</code> on the faces of the original
+hypercube and <code>&part;<sub>n</sub>u=0</code> on the "inner" faces resulting
+from the smaller hypercube taken away.
+</p>
+
+<h3><a name="file">Reading a grid from a file</a></h3>
+
+<p>In many problems taken from real life you will find those grid types
+insufficient and you will need to create your own grid. Fortunately,
+this is possible. <acronym>deal.II</acronym> offers the possibility of
+reading a complete triangulation from a file in the <tt>ucd</tt>-format 
+used by avs. A <tt>ucd</tt>-file can be read with the function<br> 
+<code>void DataIn::read_ucd(istream&)</code><br>
+At present only lines in on dimension and lines and quads in two dimensions
+are accepted. All other data is rejected. 
+</p>
+
+<p><span class="parhead">Vertex numbering in input files:</span>
+The vertex numbering must start at the vertex with the lowest number for lines
+and be counterclockwise for quads. Also, faces between adjacent cells
+must face in the same direction. This must be ensured by you, or by the
+grid construction algorithm. Otherwise some of your matrix elements
+may have the wrong sign (plus instead of minus or vice versa).
+A more detailed description of the problems
+encountered in two dimensions can be found in the
+<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/basic/DataIn.html"> <code>DataIn</code> class description</a>.
+</p>
+
+<hr>
+
+<table class="navbar" >      
+<tr>
+  <td>
+    <a href="index.html">Back to this chapter's index</a>
+  </td>
+  <td>
+    <a href="../index.html">Back to the tutorial index</a>
+  </td>
+</tr>
+</table>
+<hr>
+<address>
+<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<p>
+Last modified: Wed Mar 24 1999 
+</p>
+</body>
+</html>

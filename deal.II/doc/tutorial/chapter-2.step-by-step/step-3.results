@@ -1,0 +1,57 @@
+<a name="Results"></a>
+<h1>Results</h1>
+
+The output of the program looks as follows:
+<pre>
+<code>
+Number of active cells: 1024
+Total number of cells: 1365
+Number of degrees of freedom: 1089
+DEAL:cg::Starting value 0.121094
+DEAL:cg::Starting value 0.323075
+DEAL:cg::Convergence step 47 value 5.33692e-13
+</code>
+</pre>
+
+The first three lines is what we wrote to <code>cout</code>. The last
+three lines were generated without our interaction by the CG
+solver. The first two lines state the residual at the start of the
+iteration, while the last line tells us that the solver needed 47
+iterations to bring the norm of the residual to 5.3e-13, i.e. below
+the threshold 1e-12 which we have set in the `solve' function. We will
+show in the next program how to suppress this output, which is
+sometimes useful for debugging purposes, but often clutters up the
+screen display.
+
+<p>
+
+Apart from the output shown above, the program generated the file
+<code>solution.gpl</code>, which is in GNUPLOT format. It can be
+viewed as follows: invoke GNUPLOT and enter the following sequence of
+commands at its prompt:
+<pre>
+<code>
+gnuplot> set data style lines
+gnuplot> splot "solution.gpl"
+</code>
+</pre>
+This produces the picture of the solution below left. Alternatively,
+you can order GNUPLOT to do some hidden line removal by the command
+<pre>
+<code>
+gnuplot> set hidden3d
+</code>
+</pre>
+to get the result at the right:
+<p>
+<TABLE WIDTH="100%">
+<tr>
+<td>
+<IMG SRC="step-3.data/solution-1.jpg" ALT="solution-1" WIDTH="400">
+</td>
+<td>
+<IMG SRC="step-3.data/solution-2.jpg" ALT="solution-2" WIDTH="400">
+</td>
+</tr>
+</table>
+<p>

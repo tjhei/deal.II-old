@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+<!-- deal.II tutorial template
+     Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de> 1999 
+-->
+
+<title>Matrix Structure</title>
+    <link href="../dealtut.css" rel="StyleSheet" title="deal.II Tutorial">
+    <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+    <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
+</head>
+
+<!-- Page Body -->
+<body lang="en">
+
+<h1>Matrix Structure</h1>
+
+<h2>Why thinking about matrix structures is important</h2>
+<p>
+Many of the matrices encountered when trying to solve systems of differential
+equations consist mostly of zeroes. At the same time those matrices are 
+very large, and therefore storage is expensive in terms of memory. 
+<acronym>deal.II</acronym> attempts to resolve this problem by 
+providing means of generating memory efficient structures for sparse
+matrices where only non-zero elements are stored.
+</p>
+
+<h2>Ways of dealing with matrix structures provided by <acronym>deal.II</acronym></h2>
+<p>
+Before you can build the appropriate matrices for your problem you
+need to ascertain where the components of your matrix are non-zero 
+and generate a structure for storing the matrix accordingly. 
+This structure
+is then used to actually initialize the matrix.
+</p>
+
+<h3>The Standard Sparse Matrix</h3>
+<p>
+The <acronym>deal.II</acronym> function initializing a standard sparse matrix
+structure is <code>void SparseMatrixStruct::reinit(const unsigned int m, const unsigned int n, const unsigned int max_per_row)</code>. It takes as its arguments
+the size of the matrix in question and the maximum number of non-zero elements.
+This number can be calculated with 
+<code>int DoFHandler::max_couplings_between_dofs()</code>.
+This matrix structure can then be used to generate a matrix using 
+<code>void SparseMatrix::reinit(const SparseMatrixStruct &sparsity)</code>.
+In most cases you will also need to take care of the constraints to your
+matrix given by the <a href="hanging_nodes.html">hanging nodes</a>.
+</p>
+
+<p class="Example">
+<a name="smstruct"><span class="example">Example:</span></a> We show the include files you need, 
+the definitions and the function calls. Make sure to use them in their
+appropriate places. This example initializes a sparse square matrix structure.
+</p>
+<pre class="example">
+<code>
+#include &lt;grid/dof.h&gt;
+#include &lt;lac/sparsematrix.h&gt;
+
+
+int dim=2; // For example
+SparseMatrixStruct&lt;double&gt; smstruct;
+DoFHandler&lt;dim&gt; dof;
+
+// Your degrees of freedom must already be distributed
+
+smstruct.reinit(dof.n_dofs(),dof.n_dofs(),dof.max_couplings_between_dofs());
+</code>
+</pre>
+
+<h3>Compression of Matrix Structures</h3>
+
+<p>
+Sparse matrix structure can (and indeed must) be compressed. They can be
+compressed because it saves memory and they must be compressed because
+the classes dealing with sparse matrices require it.
+The appropriate function is <code>void SparseMatrixStruct::compress()</code>.
+
+<p class="Example">
+<span class="example">Example:</span> Starting from <a href="#smstruct">the example above</a>, we
+compress our matrix structure <code>smstruct</code>.
+</p>
+<pre class="example">
+<code>
+smstruct.compress();
+</code>
+</pre>
+
+
+<!-- Page Foot -->
+<hr>
+<table class="navbar">      
+<tr>
+  <td>
+    <a href="toc.html">Back to this chapter's index</a>
+  </td>
+  <td>
+    <a href="../index.html" target="_top">Back to the tutorial index</a>
+  </td>
+</tr>
+</table>
+<hr>
+<address>
+<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<p>
+Last modified: $Date$ 
+</p>
+</body>
+</html>

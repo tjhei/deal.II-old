@@ -17,6 +17,7 @@
 #include <vector>
 #include <iostream>
 #include <errno.h>
+#include <sys/errno.h>
 
 
 template <typename T>

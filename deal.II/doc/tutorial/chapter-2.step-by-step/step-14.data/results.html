@@ -197,8 +197,33 @@ the dual problem, and for evaluating the error representation), it is
 worth while asking whether that effort was successful. To this end, we
 first compare the achieved error levels for different mesh refinement
 criteria. To generate this data, simply change the value of the mesh
-refinement criterion variable in the main program. The results are thus:
-TODO
+refinement criterion variable in the main program. The results are
+thus (for the weight in the Kelly indicator, we have chosen the
+function <em>1/(r<sup>2</sup>+0.1<sup>2</sup>)</em>, where <em>r</em>
+is the distance to the evaluation point):
+</p>
+<p align="center">
+ <a href="step-14.data/point_value/error-comparison.gif"
+  target="_top"><img alt="Error comparison"
+  src="step-14.data/point_value/error-comparison.gif">
+ </img></a>
+</p>
+
+<p>
+Checking these numbers, we see that for global refinement, the error
+is proportional to <em>O(1/(sqrt(N) log(N)))</em>, and for the dual
+estimator <em>O(1/N)</em>. Generally speaking, we see that the dual
+weighted error estimator is better than the other refinement
+indicators, at least when compared with those that have a similarly
+regular behavior. The Kelly indicator produces smaller errors, but
+jumps about the picture rather irregularly, with the error also
+changing signs sometimes. Therefore, its behavior does not allow to
+extrapolate the results to larger values of N. Furthermore, if we
+trust the error estimates of the dual weighted error estimator, the
+results can be improved by adding the estimated error to the computed
+values. In terms of reliability, the weighted estimator is thus better
+than the Kelly indicator, although the latter sometimes produces
+smaller errors.
 </p>
 
 

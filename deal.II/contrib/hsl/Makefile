@@ -47,7 +47,7 @@ $(LIBDIR)/libhsl.so: $(forward-declarations) $(o-files)
 $(LIBDIR)/bin/detached_ma27$(EXEEXT): source/detached_ma27.cc include/hsl/hsl.h \
 				$(LIBDIR)/libhsl$(lib-suffix)
 	@echo =====hsl=========================$(MT)== Making   $(@F)
-	@$(CXX) $(CXXFLAGS.g) $< -o $@ $(lib-contrib-hsl) $(lib-base.o) $(F77LIBS) -lpthread $(LIBS)
+	@$(CXX) $(CXXFLAGS.g) $< -o $@ $(LIBDIR)/libhsl$(lib-suffix) $(lib-base.o) $(F77LIBS) -lpthread $(LIBS)
 
 
 

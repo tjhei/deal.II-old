@@ -58,7 +58,7 @@ clean:
 #note that we take care if there are no f-files
 Makefile.dep: $(f-files) Makefile
 	@echo ============================ Remaking Makefile
-	(if test "x$(f-files)" != "x" ; then \
+	@(if test "x$(f-files)" != "x" ; then \
            for i in source/*.f ; do \
 	     echo $$i | perl -pi -e 's#source/(.*)\.f#\$$(LIBDIR)/contrib/hsl/\1.o:source/\1.f#;' ;\
 	    done ; \

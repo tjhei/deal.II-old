@@ -1,1 +1,1 @@
-config.status config.log Makefile
+config.status config.log Makefile Makefile.depend

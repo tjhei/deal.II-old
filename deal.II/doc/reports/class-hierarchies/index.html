@@ -39,6 +39,26 @@ obtain information from an iterator.
 </p>
 
 
+<strong>Index:</strong>
+<ul>
+  <li> <a href="#intro" target="body">What iterators and accessors
+       are</a> 
+  <li> <a href="#tria-accessors" target="body">The triangulation
+       accessor hierarchy</a> 
+  <li> <a href="#tria-typedefs" target="body">Typedefs of the
+       Triangulation class to iterators and accessors</a>
+  <li> <a href="#tria-functions" target="body">Functions offered by
+       triangulation accessors</a> 
+  <li> <a href="#dof-accessors" target="body">The degree of freedom
+       accessor hierarchy</a> 
+  <li> <a href="#dof-typedefs" target="body">Typedefs of the
+       DoFHandler class to iterators and accessors</a>
+  <li> <a href="#dof-functions" target="body">Functions offered by
+       degree of freedom accessors</a> 
+</ul>
+
+
+<a name="intro"></a>
 <H3>
 What iterators and accessors are
 </H3>
@@ -119,6 +139,7 @@ non-active cells, lines, etc when being incremented or decremented.
 
 
 
+<a name="tria-accessors"></a>
 <H3>
 The triangulation accessor hierarchy
 </H3>
@@ -180,6 +201,7 @@ i.e. from lines  in 1D, from quads  in 2D,  and  so on.
 
 
 
+<a name="tria-typedefs"></a>
 <H4>
 Typedefs of the Triangulation class to iterators and accessors
 </H4>
@@ -257,6 +279,7 @@ terms of the underlying accessor types.
 
 
 
+<a name="tria-functions"></a>
 <h4>Functions offered by triangulation accessors</h4>
 
 <p>
@@ -680,7 +703,7 @@ individual entries.
 
 
 
-
+<a name="dof-accessors"></a>
 <H3>
 The degree of freedom accessor hierarchy
 </H3>
@@ -744,6 +767,7 @@ this is complicated but not of interest here.
 </p>
 
 
+<a name="dof-typedefs"></a>
 <H4>
 Typedefs of the DoFHandler class to iterators and accessors
 </H4>
@@ -813,6 +837,125 @@ For three space dimensions:
     typedef active_quad_iterator active_face_iterator;    
 </PRE>
 </p>
+
+
+
+<a name="dof-functions"></a>
+<h4>Functions offered by degree of freedom accessors</h4>
+
+<p>
+Since degree of freedom accessors are derived from triangulation
+accessors, they inherit the functionality of these accessors, but add
+some of their own. We only list the additional functionality
+below. For a full reference, including data types of parameters and
+return values, please refer to the general
+<a href="../../auto/kdoc/dof/index.html" target="body">API
+documentation of the `DoF' classes</a>.
+</p>
+
+
+<dl>
+  <dt><em>
+  dof_index (dof_number)
+  </em></dt>
+
+  <dd>
+  Return the global index of one of the DoFs on this object.
+  </dd>
+
+
+  <dt><em>
+  set_dof_index (dof_number, index)
+  </em></dt>
+
+  <dd>
+  Set the index of a DoF. Only for internal use.
+  </dd>
+
+
+  <dt><em>
+  vertex_dof_index (vertex_number, dof_number)
+  </em></dt>
+
+  <dd>
+  Return the index of one of the DoFs on one of the vertices of this
+  object.
+  </dd>
+
+
+  <dt><em>
+  set_vertex_dof_index (...)
+  </em></dt>
+
+  <dd>
+  Set the vertex DoF index. Only for internal use.
+  </dd>
+
+
+  <dt><em>
+  get_dof_indices (vector_of_indices)
+  </em></dt>
+
+  <dd>
+  Return a vector of the indices of the DoFs on this object.
+  </dd>
+
+
+  <dt><em>
+  get_dof_values (global_values, local_values)
+  </em></dt>
+
+  <dd>
+  Extract and return the values of the DoFs on this object from a data
+  vector defined on all DoFs.
+  </dd>
+
+
+  <dt><em>
+  set_dof_values (local_values, global_values)
+  </em></dt>
+
+  <dd>
+  Reverse operation: take values of DoFs on this object, and set them
+  into a global data vector.
+  </dd>
+
+
+  <dt><em>
+  distribute_local_to_global (local_source, global_destination)  
+  </em></dt>
+
+  <dd>
+  Add the elements of local_source, defining values of the degrees of
+  freedom on this object, to the elements of the global data
+  vector. The two parameters may be either vectors or matrices.
+  </dd>
+
+
+  <dt><em>
+  get_interpolated_dof_values (global_values, local_interpolation)
+  </em></dt>
+
+  <dd>
+  Interpolate the global field to this cell. If this cell is active,
+  then this is the restriction of the global field to this cell,
+  but when this cell is not active then it is the interpolation of the
+  restriction of the field to the child cells and the interpolation to
+  the present one. (For cell iterators only.)
+  </dd>
+
+
+  <dt><em>
+  set_dof_values_by_interpolation (local_values, global_interpolation)
+  </em></dt>
+  
+  <dd>
+  Inverse operation: interpolate the local values to the children (if
+  this cell is not active) and set the respective values in the global
+  vector. 
+  </dd>
+</dl>
+
 
 <HR>
 

@@ -3,14 +3,14 @@
 <html>
 <head>
 <!-- deal.II tutorial template
-     Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de> 1999 
+     Jan Schrage <schrage@hermes.iwr.uni-heidelberg.de> 1999 
 -->
 
 <title>deal.II tutorial: Error Estimate and Adaptivity</title>
     <link href="../screen.css" rel="StyleSheet" title="deal.II Tutorial" media="screen">
     <link href="../print.css" rel="StyleSheet" title="deal.II Tutorial" media="print">
     <link href="../audio.css" rel="StyleSheet" title="deal.II Tutorial" media="aural">
-    <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+    <meta name="author" content="Jan Schrage <schrage@hermes.iwr.uni-heidelberg.de>">
     <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
 </head>
 
@@ -40,16 +40,40 @@
 <p>
 The basic principles of using error estimates for adaptive refinement 
 are rather simple. First, you get an error estimate for each cell.
-This error estimate can be interpreted as a 
-mesh function describing the desired local mesh width.
-Second, each and every cell is refined according to this estimate.
+Second, each cell is refined according to this estimate, i.e. the
+cells with largest error estimate are refined and those with the least
+one are coarsened.
 </p>
 <p>
 The implementation of <acronym>deal.II</acronym> handles this principle
 exactly the same way: First, you call an error estimator that returns
-a vector containing the error estimtates for each cell. Second,
+a vector containing the error estimates for each cell. Second,
 you pass this vector on to a function doing the refinement.
 </p>
+<p>
+What we have not told yet is that actually constructing an error
+estimator is nontrivial and in particular dependent on the equation
+you are presently solving. Since this is so, the library can not do it
+for you, but can only aid you in doing so.
+</p>
+<p>
+However, the library contains an error estimator for one equation, the
+Laplace equation, which is the standard equation in numerical
+analysis. Since it is so common, an error estimator for it was once
+implemented. It was later moved into the library, since besides being
+an estimator for Laplace's equation, it proved an almost universal
+tool if you want something to refine your grid based on local
+smoothness of your solution. This, in fact, is the principle from
+which the error estimator was constructed: it computes an
+approximation to the second derivative of the solution on each cell,
+and these values can then be used to control refinement of the grid
+for a wide class of equations. Almost all projects using
+<acronym>deal.II</acronym> have used this criterion in its early
+stages, to get a quick way to local mesh refinement, before
+problem-adapted error estimators were written for the particular
+equation later. Since the class has thus proven universal
+functionality, we will discuss it in this section and show how to use
+it to control mesh refinement.
 
 <h2><a name="types">Error Estimators in <acronym>deal.II</acronym></a></h2>
 
@@ -60,11 +84,11 @@ tries to approximate the error per cell by integration of the jump of the
 gradient of the solution along the faces of each cell.
 In theory this error estimator has quite a number of limitations. These 
 limitations as well as its implementation are described in 
-<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/numerics/KellyErrorEstimator.html">
+<a href="http://hermes.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/numerics/KellyErrorEstimator.html">
 the documentation for the class <code>KellyErrorEstimator</code></a>.
 In daily use, however, this error estimator has shown itself to behave
 rather like Hamlet: It is laden with theoretical woes and sorrows,
-but at the end of the day all practical problems are...<font size=-1>gone.</font>
+but at the end of the day all practical problems are... gone.
 </p>
 
 <p>
@@ -72,29 +96,29 @@ In order to use an error estimator you need the following information
 and objects respectively:
 </p>
 <ul>
-  <li>a <code>DoFHandler&lt;dim&gt; dof</code> giving access to the degrees of 
+  <li>a <code>DoFHandler&lt;dim&gt; dof_handler</code> giving access to the degrees of 
 	freedom
   </li> 
   
   <li>a <code>Quadrature&lt;dim-1&gt; quadrature</code> describing the
-	quadrature you use for integration
+	quadrature rule to be used for integration on the cell faces
   </li>
 
-  <li>a <code>FunctionMap neumann_bc</code> &quot;<Q>which denotes a mapping 
+  <li>a <code>FunctionMap neumann_bc</code> which denotes a mapping 
 	between a 
 	boundary indicator and the function denoting the boundary values on 
-	this part of the boundary</Q>&quot; (quoted from the 
-	<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/numerics/KellyErrorEstimator.html">
-	  class documentation for <code>KellyErrorEstimator</code></a>)
+	this part of the boundary, i.e. for each part of the boundary
+	where Neumann boundary conditions hold (and its respective
+	number) the function with the (inhomogeneous) Neumann values
+	are given; in case you have homogeneous Neumann boundary
+	values, the <code>ZeroFunction</code> is the right function to
+	be passed
   </li>
       
-  <li>a coefficient <code>coefficient</code> for tuning the error estimator;
-      refer to the <a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/numerics/KellyErrorEstimator.html">
-	  <code>KellyErrorEstimator</code> class documentation</a>
-  </li>
-
-  <li>the number of the selected component <code>selected_component</code>
-      for finite elements with more than one component
+  <li>in case your problem includes spatially varying coefficients,
+      you may give that as well (but we will not discuss this here,
+      refer to the <a href="http://hermes.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/numerics/KellyErrorEstimator.html">
+	  <code>KellyErrorEstimator</code> class documentation</a>).
   </li>
 </ul>
 <p>
@@ -109,14 +133,18 @@ The Kelly error estimator is then used the following way:
       <code>KellyErrorEstimator&lt;dim&gt; error_estimate;</code> 
   </li>
 
-  <li>Make your error estimator estimate each cell's error:<br>
-      <code>void error_estimate::estimate (const DoFHandler&lt;dim&gt; 
-	  &amp;dof, const Quadrature&lt;dim-1&gt;
-	  &amp;quadrature, const FunctionMap &amp;neumann_bc, 
-	  const Vector&lt;double&gt; &amp;solution,
-          Vector&lt;float&gt; &amp;error, const Function&lt;dim&gt; 
-	  *coefficient = 0, const unsigned int selected_component = 0); 
+  <li>Make the error estimator estimate each cell's error:<br>
+      <pre>
+      <code>
+ void error_estimate::estimate (const DoFHandler&lt;dim&gt; &amp;dof_handler,
+                                const Quadrature&lt;dim-1&gt; &amp;quadrature,
+                                const FunctionMap &amp;neumann_bc, 
+                                const Vector&lt;double&gt; &amp;solution,
+                                Vector&lt;float&gt; &amp;error_per_cell, 
+                                ... // coefficients, etc.
+                               ); 
       </code>
+      </pre>
   </li>
 </ol>
 
@@ -127,7 +155,7 @@ All the functions for refinement (and coarsening) are contained
 within the <code>Triangulation</code> class.
 Refinement and coarsening take place by first flagging the cells
 for coarsening or refinement using the functions described below
-and the executing it using 
+and then actually executing the refinement using 
 <code>void execute_coarsening_and_refinement()</code>. 
 There are several ways of refining or coarsening your grid using
 the output from an error estimator:
@@ -142,7 +170,7 @@ the output from an error estimator:
 	  threshold)</code>
   </li>
 
-  <li>Refine a certain fraction <code>top fraction_of_cells</code> with
+  <li>Refine a certain fraction <code>top_fraction_of_cells</code> with
 	the highest error, at the same time coarsen a certain fraction of
 	cells <code>bottom_fraction_of_cells</code> with the lowest error.<br>
 	<code>void refine_and_coarsen_fixed_number(const Vector&lt;number&gt; 
@@ -170,9 +198,24 @@ you have to call <code>void execute_coarsening_and_refinement()</code>.</b>
 
 <h2><a name="example">Example</a></h2>
 
-<p>
-To be provided...
-</p>
+The following is a code snippet taken from some example programs:
+<pre>
+<code>
+                     // use the Simpson rule for integration on the faces
+  QSimpson<dim-1> face_quadrature;
+                     // estimate error with no Neumann boundary conditions
+  KellyErrorEstimator<dim>::estimate (*dof, face_quadrature,
+			              KellyErrorEstimator<dim>::FunctionMap(),
+				      solution,
+				      estimated_error_per_cell);
+
+                     // flag some cells for refinement or coarsening
+  tria->refine_and_coarsen_fixed_number (estimated_error_per_cell,
+				         0.3,
+				         0.05);
+  tria->execute_coarsening_and_refinement ();
+</code>
+</pre>
 
 
 <!-- Page Foot -->
@@ -192,7 +235,7 @@ To be provided...
 </table>
 <hr>
 <address>
-<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<a href="mailto:schrage@hermes.iwr.uni-heidelberg.de">Jan Schrage</a></address>
 <p>
 Last modified: $Date$ 
 </p>

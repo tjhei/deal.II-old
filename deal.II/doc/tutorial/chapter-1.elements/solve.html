@@ -3,14 +3,14 @@
 <html>
 <head>
 <!-- deal.II tutorial template
-     Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de> 1999 
+     Jan Schrage <schrage@hermes.iwr.uni-heidelberg.de> 1999 
 -->
 
 <title>deal.II tutorial: Solving the Problem</title>
     <link href="../screen.css" rel="StyleSheet" title="deal.II Tutorial" media="screen">
     <link href="../print.css" rel="StyleSheet" title="deal.II Tutorial" media="print">
     <link href="../audio.css" rel="StyleSheet" title="deal.II Tutorial" media="aural">
-    <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+    <meta name="author" content="Jan Schrage <schrage@hermes.iwr.uni-heidelberg.de>">
     <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
 </head>
 
@@ -41,9 +41,12 @@
 	iteration method
 </li>
 </ul>
+Some more specialized solvers may be implemented in the meantime. In
+case you need some such solver, you should take a look at the
+up-to-date online documentation.
 
 <p>
-Besides, there are several utility classes:
+Besides the solver classes, there are several utility classes:
 <ul>
 <li> 
 <code><a href="#control">SolverControl</a></code> to 
@@ -75,15 +78,13 @@ Information on common solution methods can be found in any modern
 textbook on finite elements, for example in <cite>Braess, Dietrich, Finite
 Elements</cite>. The GMRES solver discussed below is rather
 special, and if you are going to use it you probably know what
-you ar edoing anyway.
+you are doing anyway.
 
 <p>
 We will now begin with the discussion of the <code>SolverControl</code>, the
 <code>SolverSelector</code>
 and the <code>PreconditionSelector</code> classes, then discuss the solvers 
-in more detail. <em>Although we do not demonstrate this method in the
-examples for the different solvers every last solver can be called
-using <code>SolverSelector</code>.</em>
+in more detail.
 </p>
 
 <h2><a name="control">Solver Control</a></h2>
@@ -109,6 +110,11 @@ a maximum of 1000 iterations and a maximum residual of 1e-6.
 SolverControl control(1000,1e-6);
 </code>
 </pre>
+
+Thus, the iterative solver which with it shall be used will stop after
+either 1000 iterations are performed or the norm of the residual is
+below the given threshold.
+
 
 <h2><a name="solvselect">SolverSelector</a></h2>
 
@@ -161,7 +167,8 @@ the <code>PreconditionSelect</code> class with an appropriate choice of
 parameters. This can be done using <code>PreconditionSelector(const string
 preconditioning, const typename Vector::value_type &amp;omega=1.)</code>
 where <code>preconditioning</code> denotes the preconditioning method used 
-and <code>omega</code> is the damping parameter.
+and <code>omega</code> is the damping parameter if the preconditioner
+you selected uses it.
 </p>
 <p>
 The preconditioning methods currently available using this class are
@@ -237,13 +244,11 @@ we solve the problem.
 
 SolverControl control(1000,1e-6);
 VectorMemory&lt;Vector&lt;double&gt; &gt; vectormem;
-SolverBicgstab&lt;SparseMatrix,Vector&lt;double&gt; &gt; solver(control,vectormem);
+SolverBicgstab&lt;SparseMatrix&lt;double&gt;,Vector&lt;double&gt; &gt; solver(control,vectormem);
 
 // Initialize the problem matrices. Well...they shouldn't only be
 // initialized but also contain the problem, so this is just an example
 // to get the definitions and types and everything right. 
-// <em>To make it clear: This code as it is will not do anything because</em>
-// <em>it does not contain any mathematical problem !</em> 
 
 SparseMatrix&lt;double&gt; A;
 Vector&lt;double&gt; u,f;
@@ -289,13 +294,11 @@ we solve the problem.
 
 SolverControl control(1000,1e-6);
 VectorMemory&lt;Vector&lt;double&gt; &gt; vectormem;
-SolverCG&lt;SparseMatrix,Vector&lt;double&gt; &gt; solver(control,vectormem);
+SolverCG&lt;SparseMatrix&lt;double&gt;,Vector&lt;double&gt; &gt; solver(control,vectormem);
 
 // Initialize the problem matrices. Well...they shouldn't only be
 // initialized but also contain the problem, so this is just an example
 // to get the definitions and types and everything right. 
-// <em>To make it clear: This code as it is will not do anything because</em>
-// <em>it does not contain any mathematical problem !</em> 
 
 SparseMatrix&lt;double&gt; A;
 Vector&lt;double&gt; u,f;
@@ -320,10 +323,11 @@ It is initialized using <br>
 const AdditionalData &amp;data=Additionaldata())
 </code>
 This constructor needs the maximum number of temporary vectors to be used. 
-A number too small can seriously affect its performance. This number is
+A number too small can seriously affect its performance, but a number
+too large will also increase the required computing time. This number is
 contained in the <code>AdditionalData</code> structure with a default of 30. 
 This solver is rather special, and for a detailed explanation you should
-<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/lac/SolverGMRES.html">take a look at the detailed description of the <code>SolverGMRES</code>
+<a href="http://hermes.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/lac/SolverGMRES.html">take a look at the detailed description of the <code>SolverGMRES</code>
 class</a>.
 </p>
 
@@ -351,13 +355,11 @@ vectors.
 
 SolverControl control(1000,1e-6);
 VectorMemory&lt;Vector&lt;double&gt; &gt; vectormem;
-SolverCG&lt;SparseMatrix,Vector&lt;double&gt; &gt; solver(control,vectormem);
+SolverGMRES&lt;SparseMatrix&lt;double&gt;,Vector&lt;double&gt; &gt; solver(control,vectormem);
 
 // Initialize the problem matrices. Well...they shouldn't only be
 // initialized but also contain the problem, so this is just an example
 // to get the definitions and types and everything right. 
-// <em>To make it clear: This code as it is will not do anything because</em>
-// <em>it does not contain any mathematical problem !</em> 
 
 SparseMatrix&lt;double&gt; A;
 Vector&lt;double&gt; u,f;
@@ -408,13 +410,11 @@ we solve the problem. We use the default damping parameter of 1.
 
 SolverControl control(1000,1e-6);
 VectorMemory&lt;Vector&lt;double&gt; &gt; vectormem;
-SolverCG&lt;SparseMatrix,Vector&lt;double&gt; &gt; solver(control,vectormem);
+SolverRichardson&lt;SparseMatrix&lt;double&gt;,Vector&lt;double&gt; &gt; solver(control,vectormem);
 
 // Initialize the problem matrices. Well...they shouldn't only be
 // initialized but also contain the problem, so this is just an example
 // to get the definitions and types and everything right. 
-// <em>To make it clear: This code as it is will not do anything because</em>
-// <em>it does not contain any mathematical problem !</em> 
 
 SparseMatrix&lt;double&gt; A;
 Vector&lt;double&gt; u,f;
@@ -447,7 +447,7 @@ solver.solve(A,u,f,preconditioning);
 </table>
 <hr>
 <address>
-<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<a href="mailto:schrage@hermes.iwr.uni-heidelberg.de">Jan Schrage</a></address>
 <p>
 Last modified: $Date$ 
 </p>

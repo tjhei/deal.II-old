@@ -3,14 +3,14 @@
 <html>
 <head>
 <!-- deal.II tutorial template
-     Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de> 1999 
+     Jan Schrage <schrage@hermes.iwr.uni-heidelberg.de> 1999 
 -->
 
 <title>deal.II tutorial: Grid and Data Output</title>
     <link href="../screen.css" rel="StyleSheet" title="deal.II Tutorial" media="screen">
     <link href="../print.css" rel="StyleSheet" title="deal.II Tutorial" media="print">
     <link href="../audio.css" rel="StyleSheet" title="deal.II Tutorial" media="aural">
-    <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+    <meta name="author" content="Jan Schrage <schrage@hermes.iwr.uni-heidelberg.de>">
     <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
 </head>
 
@@ -46,9 +46,6 @@ in depth:
   
   <li><a href="#parameters">Parameters</a> for the different formats
 	common to both <code>GridOut</code> and <code>DataOut</code>
-  </li>
-
-  <li><a href="#dataout_limits">Limitations of <code>DataOut</code></a>
   </li>
 
   <li><a href="#usage">Usage of <code>DataOut</code></a>
@@ -112,12 +109,14 @@ The graphics formats available in <code>GridOut</code> are:
 
 <h2><a name="parameters">Parameters for grid and data output</a></h2>
 
-<p>For each and every output format there is a class containing the
+<p>For each output format there is a class containing the
 parameters that determine how the output will look. All these classes
 have a sensible set of default parameters; you will only have
 to bother about setting parameters yourself if your desires are
 rather special. We shall commence with a brief description of 
-these classes and the most important parameters you can set.
+these classes and the most important parameters you can set. It is
+also worthwhile to look at the online documentation to see whether
+additional flags have been introduced in the meantime.
 </p>
 
 
@@ -205,8 +204,10 @@ denote the default values.
 
 <h3>PovrayFlags</h3>
 <p>
-This class provides the settings for PoVRay output. At present it 
-is empty.
+This class provides the settings for PoVRay output. There are several
+flags implemented presently, but we advise you to consult the online
+documentation since they are rather special and you will probably have
+to set them anyway, if you want high-quality output.
 </p>
 
 <h3>GmvFlags</h3>
@@ -215,19 +216,6 @@ This class provides the settings for General Mesh Viewer output. At present it
 is empty.
 </p>
 
-
-<hr>
-<hr>
-
-<h2><a name="dataout_limits">Limitations of the <code>DataOut</code> 
-class</a></h2>
-
-<p>
-Grouping of components to vectors is not implemented, i.e. each 
-component must be written independent of the others. It is 
-also not possible to write the results of calculations on grids
-with more or less than one degree of freedom per vertex.
-</p>
 
 <hr>
 <hr>
@@ -399,7 +387,7 @@ to be plotted.
 
 <p>The limitations of the gnuplot data format have been well described
 in the 
-<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/basic/DataOut.html">
+<a href="http://hermes.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/basic/DataOut.html">
 <code>DataOut</code> class description</a>:
 </p>
 <blockquote>
@@ -416,7 +404,7 @@ each cell being straight lines. You won't see the structure of the solution in t
 <p>The limitations mentioned above can to some extent be remedied,
 and that is why there is also an option for high quality output.
 For how this is done, we quote (again) the 
-<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/basic/DataOut.html">
+<a href="http://hermes.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/basic/DataOut.html">
 <code>DataOut</code> class description</a>:
 </p>
 
@@ -735,7 +723,7 @@ as explained in the part on the <a href="#grid_usage">usage of the
 </table>
 <hr>
 <address>
-<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<a href="mailto:schrage@hermes.iwr.uni-heidelberg.de">Jan Schrage</a></address>
 <p>
 Last modified: $Date$ 
 </p>

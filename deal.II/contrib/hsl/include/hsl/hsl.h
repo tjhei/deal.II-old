@@ -150,7 +150,7 @@ namespace HSL
 				      */
     extern "C"
     void ma27x3_ (const unsigned int *LP);
-  };
+  }
 
 
   
@@ -261,7 +261,7 @@ namespace HSL
 		  double             *RHS,
 		  unsigned int       *IW1,
 		  const unsigned int *ICNTL);
-  };
+  }
 };
 
 

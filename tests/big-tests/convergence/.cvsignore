@@ -2,3 +2,5 @@ convergence
 Makefile.dep
 *.go
 *.o
+*.ucd
+*.history

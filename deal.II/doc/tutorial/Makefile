@@ -1,5 +1,11 @@
+# $Id$
+
 step-by-step:
 	cd step-by-step ; $(MAKE)
 
 
-.PHONY: step-by-step
+clean:
+	cd step-by-step ; $(MAKE) clean
+
+
+.PHONY: step-by-step clean

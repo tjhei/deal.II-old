@@ -21,5 +21,9 @@ $(example-htmls):
 	@cat step-by-step.foot >> $@
 
 
+clean:
+	-rm $(example-htmls)
+
+
 # mark the output files as phony, i.e. generate them every time
-.PHONY: $(example-htmls)
+.PHONY: $(example-htmls) clean

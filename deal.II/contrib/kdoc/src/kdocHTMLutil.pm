@@ -602,9 +602,18 @@ sub deref
 	my $out = "";
 	my $text;
 
-	# escape @x commands
-	foreach $text ( split (/(\@\w+(?:\s+.+?(?=\s)|\{.*?\}))/, $str ) ) {
+	# first escape @x directives. these are @x commands that do
+	# not take parameters, i.e. they do not take an argument which
+	# would either be the next word or the string in braces after
+	# the command name
+	$str =~ s/\@item/<li>/g;
 
+	# escape @x commands. by using the `split' command, we get a
+	# list of strings that contain either the matched command or the
+	# string in between. if an element of this list matches a
+	# command, then we process it further, otherwise we simply
+	# copy it over to the output
+        foreach $text ( split (/(\@\w+(?:\s+.+?(?=\s)|\{.*?\}))/, $str ) ) {
 	        # check whether $text is an @command or the text between
 	        # @commands
 		if (  $text =~ /\@(\w+)(?:\s+(.+?)(?:\s|$)|\{(.*?)\})/ )   {
@@ -632,13 +641,47 @@ sub deref
 			    $out .= "<h$1>".esc($content)."</h$1>";
 			}
 
+			# @begin{...} -- start environment
+			elsif ( $command =~ /^begin$/ ) {
+			    if ( $content eq "itemize" ) {
+				$out .= "<ul>";
+			    }
+			    elsif ( $content eq "enumerate" ) {
+				$out .= "<ol>";
+			    }
+			    elsif ( $content eq "verbatim" ) {
+				$out .= "<pre><code>";
+			    }
+			    else {
+				print "Unknown command @", "$command($content)\n";
+				$out .= esc($text);
+			    }
+			}
+
+			# @end{...} -- close environment
+			elsif ( $command =~ /^end$/ ) {
+			    if ( $content eq "itemize") {
+				$out .= "</ul>";
+			    }
+			    elsif ( $content eq "enumerate") {
+				$out .= "</ol>";
+			    }
+			    elsif ( $content eq "verbatim") {
+				$out .= "</code></pre>";
+			    }
+			    else {
+				print "Unknown command @", "$command($content)\n";
+				$out .= esc($text);
+			    }
+			}
+
 			# unknown command. warn and copy command
 			else {
 			    print "Unknown command @", $command, "\n";
 			    $out .= esc($text);
 			}
 		}
-		# no @x command, thus regular text
+		# no @x command, thus regular text. simply forward it
 		else {
 			$out .= esc($text);
 		}

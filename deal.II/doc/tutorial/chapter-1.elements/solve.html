@@ -70,7 +70,7 @@ a maximum of 1000 iterations and a maximum residual of 1e-6.
 
 <pre class="example">
 <code>
-#include <lac/solver_control.h>
+#include &lt;lac/solver_control.h&gt;
 
 SolverControl control(1000,1e-6);
 </code>
@@ -85,11 +85,40 @@ It is initialized by<br>
 </p>
 <p class="Example">
 <span class="example">Example:</span>We initialize a Bicgstab-solver for
-the problem <code>Au=f</code>.
+the problem <code>Au=f</code>, using the <a href="#control">solver control</a>
+explained above. <code>A</code> shall be a spare matrix and the vectors
+<code>u</code> and <code>f</code> shall be vectors of doubles. Next,
+we solve the problem. 
 </p>
 
 <pre class="example">
 <code>
+// Include files for solver control, solver and preconditioner
+#include &lt;lac/solver_control.h&gt;
+#include &lt;lac/solver_bicgstab.h&gt;
+#include &lt;lac/precondition.h&gt;
+
+// Include files for matrices and vectors
+#include &lt;lac/sparsematrix.h&gt;
+#include &lt;lac/vector.h&gt;
+
+// Initialize the solver control and the solver
+
+SolverControl control(1000,1e-6);
+VectorMemory&lt;Vector&lt;double&gt; &gt; vectormem;
+SolverBicgstab&lt;SparseMatrix,Vector&lt;double&gt; &gt; solver(control,vectormem);
+
+// Initialize the problem matrices. Well...they shouldn't only be
+// initialized but also contain the problem, so this is just an example
+// to get the definitions and types and everything right. 
+// <em>To make it clear: This code as it is will not do anything because</em>
+// <em>it does not contain any mathematical problem !</em> 
+
+SparseMatrix&lt;double&gt; A;
+Vector&lt;double&gt; u,f;
+// NEED TO DEFINE A PRECONDITIONER
+
+solver.solve(A,u,f,precondition);
 </code>
 </pre>
 

@@ -74,7 +74,14 @@ with dashed lines the exact circle:
 </table>
 Obviously the quadratic mapping approximates the boundary quite well,
 while for the cubic mapping the difference between approximated domain
-and true one is hardly visible already for the coarse grid.
+and true one is hardly visible already for the coarse grid. You can
+also see that the mapping only changes something at the outer
+boundaries of the triangulation. In the interior, all lines are still
+represented by linear functions, resulting in additional computations
+only on cells at the boundary. Higher order mappings are therefore
+usually not noticably slower than lower order ones, because the
+additional computations are only performed on a small subset of all
+cells.
 </p>
 
 <p>

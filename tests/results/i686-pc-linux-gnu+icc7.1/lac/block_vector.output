@@ -1,4 +1,4 @@
-JobId Tue Apr 29 22:47:32 2003
+
 DEAL:BlockIndices:global->local::0	0	0	0	0	0	0
 DEAL:BlockIndices:global->local::1	0	1	0	1	0	1
 DEAL:BlockIndices:global->local::2	0	2	0	2	0	2
@@ -28,7 +28,7 @@ DEAL:BlockIndices:reinit::1	1	0
 DEAL:BlockIndices:reinit::2	1	1
 DEAL:BlockIndices::Range
 --------------------------------------------------------
-An error occurred in line <211> of file </ices/bangerth/p/deal.II/2/deal.II/lac/include/lac/block_indices.h> in function
+An error occurred in file <block_indices.h> in function
     std::pair<unsigned int, unsigned int> BlockIndices::global_to_local(unsigned int) const
 The violated condition was: 
     i<total_size()

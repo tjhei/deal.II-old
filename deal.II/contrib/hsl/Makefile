@@ -35,7 +35,7 @@ endif
 
 $(LIBDIR)/libhsl.a: $(forward-declarations) $(o-files)
 	@echo =====hsl==============optimized==$(MT)== Linking library:   $(@F)
-	@ar ruv $@ $(o-files)
+	@ar ru $@ $(o-files)
 
 # link the object files to a shared library. since this is not C++,
 # simply use the C compiler, rather than $(SHLIBLD)

@@ -27,12 +27,6 @@
 #include <signal.h>
 #include <sys/types.h>
 
-#ifdef HAVE_STD_STRINGSTREAM
-#  include <sstream>
-#else
-#  include <strstream>
-#endif
-
 #ifndef DEAL_II_USE_DIRECT_ERRNO_H
 #  include <errno.h>
 #else
@@ -135,19 +129,8 @@ void die (const std::string &text, const T1 t1, const T2 t2)
 extern "C"
 void monitor_parent_liveness (const pid_t master_pid) 
 {
-// #ifdef HAVE_STD_STRINGSTREAM
-//   std::ostringstream s;
-//   s << "ps -p " << master_pid;
-//   const char * const command = s.str().c_str();
-// #else
-//   std::ostrstream s;
-//   s << "ps -p " << master_pid << std::ends;
-//   const char * const command = s.str();
-// #endif
-  
   while (true)
     {
-//      int ret = std::system (command);
       int ret = kill (master_pid, 0);
       if (ret != 0)
         if ((ret == -1) && (errno == ESRCH))

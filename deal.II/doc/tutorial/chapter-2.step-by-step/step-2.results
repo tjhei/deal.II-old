@@ -1,18 +1,10 @@
 <h1>Results</h1>
 
-The program has, after having been run, produced two grids, which look
-like this:
-<p>
-<TABLE WIDTH="60%">
-<tr>
-<td>
-<IMG SRC="step-1.data/grid-1.jpg" ALT="grid-1" WIDTH="300">
-</td>
-<td>
-<IMG SRC="step-1.data/grid-2.jpg" ALT="grid-2" WIDTH="300">
-</td>
-</tr>
-</table>
-<p>
-The left one, well, is not very exciting. The right one is - at least
-- unconventional.
+The program has, after having been run, produced two sparsity
+patterns. We can visualize them using GNUPLOT:
+<pre>
+<code>
+  set data style points
+  plot "sparsity_pattern.1"
+</code>
+</pre>

@@ -494,7 +494,8 @@ sub writeClassDoc
 				$ref = kdocAstUtil::findOverride( $rootnode, 
 						$node, $kid->{astNodeName} );
 				if ( defined $ref ) {
-					print CLASS "<p>Reimplemented from ", refName( $ref );
+					print CLASS "<p>Overloaded function from base class ", 
+					            refName( $ref );
                                         if ( exists $kid->{DocNode}->{Reimplemented} ) {
                                                 print CLASS " for internal reasons; the API is not affected";
                                         }

@@ -388,7 +388,7 @@ sub printMemberDoc
 				$class, $mem->{astNodeName} );
 		if ( defined $ref ) {
 			print DOC tblk( "formalpara",
-				tblk( "title", "Reimplemented from" ),
+				tblk( "title", "Overloaded function from base class" ),
 				tblk( "para", fullName( $ref, "::" )) ), "\n";
 		}
 	}

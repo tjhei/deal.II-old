@@ -335,7 +335,7 @@ sub writeMember
 			my $ref = kdocAstUtil::findOverride( $rootnode, 
 					$classnode, $member->{astNodeName} );
 			if ( defined $ref ) {
-			        print TEX "Reimplemented from $ref\n";
+			        print TEX "Overloaded function from base class $ref\n";
 			}
 
 			writeMemberInfo( $member->{DocNode} );

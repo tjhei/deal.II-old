@@ -217,7 +217,7 @@ int main ()
   get (&master_pid, 1, "master_pid");
                                    // ...and start off a thread that
                                    // actually checks that
-  Threads::ThreadManager thread_manager;
+//   Threads::ThreadManager thread_manager;
 //   Threads::spawn (thread_manager,
 //                   Threads::encapsulate (&monitor_parent_liveness)
 //                   .collect_args(master_pid, getpid()));

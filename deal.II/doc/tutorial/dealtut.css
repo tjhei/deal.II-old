@@ -2,7 +2,19 @@
 body { bgcolor: white; background-color: white; }
 
 span.parhead { font-weight: bold;
-     	     }   	     }		
+
+
+     	     } 	
+
+span.example { font-weight: bold;
+	       font-style: italic;
+ 	     }
+pre.example { padding-left: 2 em;
+	   text-align: left;
+	   text-indent: 0;
+         }
+
+
 	
 table.navbar { }
 

@@ -1,3 +1,4 @@
 base lac deal.II
 *.tag
 options.dox
+LaTeX

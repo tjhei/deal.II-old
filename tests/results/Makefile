@@ -15,7 +15,7 @@ all: .links
 # unfortunately, -L is not available in test when plain sh is used, so work
 # around this by explicitely using bash
 linkfiles-%:
-	TARGET=`echo $@ | $(PERL) -pi -e 's/linkfiles-//; s/-to-.*//;'` ; \
+	@TARGET=`echo $@ | $(PERL) -pi -e 's/linkfiles-//; s/-to-.*//;'` ; \
 	SOURCE=`echo $@ | $(PERL) -pi -e 's/.*-to-//;'` ; \
 	echo "Creating links from $$SOURCE into $$TARGET" ; \
 	cd $$SOURCE ; \
@@ -31,11 +31,13 @@ linkfiles-%:
 
 # if called with linksdirs-TARGET-to-SOURCE, creates a link from the source
 # directory to the target directory
+#
+# use same hack for test -L as above
 linkdirs-%:
 	@TARGET=`echo $@ | $(PERL) -pi -e 's/linkdirs-//; s/-to-.*//;'` ; \
 	SOURCE=`echo $@ | $(PERL) -pi -e 's/.*-to-//;'` ; \
 	echo "Aliasing $$TARGET to $$SOURCE" ; \
-	if test -L $$TARGET ; then rm $$TARGET ; fi ; \
+	if bash test -L $$TARGET ; then rm $$TARGET ; fi ; \
 	ln -s $$SOURCE $$TARGET
 
 .links:   linkfiles-i686-pc-linux-gnu+icc7.1-to-i686-pc-linux-gnu+gcc3.2 \

@@ -1,5 +1,7 @@
-Makefile Make.depend
+Makefile Makefile.depend
 *.dat
-show_shapes
-show_transform
+fe_data_test
+mapping
+shapes
 *.go
+*.check

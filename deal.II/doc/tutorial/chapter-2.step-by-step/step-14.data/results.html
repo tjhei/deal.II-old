@@ -385,7 +385,9 @@ see a comparison of true and estimated error:
   </tr>
 </table>
 After an initial phase where the true error changes its sign, the
-estimated error matches it quite well, again.
+estimated error matches it quite well, again. Also note the dramatic
+improvement in the error when using the estimated error to correct the
+computed value of J(u<sub>h</sub>).
 </p>
 
 
@@ -493,7 +495,10 @@ stop computations when we are satisfied with the accuracy. Using more
 traditional approaches, it is very difficult to get accurate estimates
 for arbitrary quantities, except for, maybe, the error in the energy
 norm, and we will then have no guarantee that the result we computed
-satisfies any requirements on its accuracy.
+satisfies any requirements on its accuracy. Also, as was shown for the
+evaluation of point values and derivatives, the error estimate can be
+used to extrapolate the results, yielding much higher accuracy in the
+quantity we want to know.
 </p>
 
 <p>

@@ -15,9 +15,7 @@ all: $(example-htmls)
 $(example-htmls):
 	@echo ================== Assembling $@
 	@TOC=`cat $D/examples/$(@:.html=)/$(@:.html=.cc) \
-	  | grep "@sect" \
-	  | perl -pi -e 's/.*\{(.*)\}.*/\1/; $$n=$$1; $$nn=$$1; \
-	    $$nn=~s/\s/_/g; $$_="<li><a href=\"#$$nn\">$$n</a></li>\n";' \
+	  | perl program2toc \
 	  | perl -pi -e 's/\"/\\\"/g;'` ; \
 	 cat head.html \
 	  | perl -pi -e '$$step="$@";                     \

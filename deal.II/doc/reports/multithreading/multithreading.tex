@@ -1,0 +1,386 @@
+\documentclass[11pt]{article}
+\usepackage{a4wide}
+\begin{document}
+
+\begin{center}
+  \begin{huge}
+    Multithreading support in \texttt{deal.II}
+  \end{huge}
+
+  \vspace*{0.5cm}
+
+  \begin{large}
+    Wolfgang Bangerth\\
+    University of Heidelberg\\[12pt]
+    February 2000
+  \end{large}
+\end{center}
+
+
+\begin{abstract}
+  In this report, we describe the implementational techniques of
+  multithreading support in \texttt{deal.II}, which we use for the
+  parallelization of independent operations. Writing threaded programs in
+  \texttt{C++} is obstructed by two problems: operating system dependent
+  interfaces and that these interfaces are created for \texttt{C} programs
+  rather than for \texttt{C++}. We present our solutions to these problems and
+  describe first experiences using multithreading in \texttt{deal.II}.
+\end{abstract}
+
+
+\section{Background}
+
+Realistic finite element simulations tend to use enormous amounts of computing
+time and memory. Scientists and programmers have therefore long tried to use
+the combined power of several processors or computers to tackle these
+problems.
+
+The usual approach is to use physically separated computers (e.g. clusters) or
+computing units (e.g. processor nodes in a parallel computer), each of which
+is equipped with its own memory, and split the problem at hand into separate
+parts which are then solved on these computing units. Unfortunately, this
+approach tends to pose significant problems, both for the mathematical
+formulation as well as for the application programmer.
+
+\begin{itemize}
+\item \textit{Implementational problems.} On all available parallel computers,
+communicating data from one computing unit to other ones is extremely slow,
+compared to access to data which is local to a computing unit. It must
+therefore be restricted to the absolute minimum, if it is not to dominate
+the total computing time, in which case one would lose the advantages of
+parallel computing. However, avoiding communication is tedious and often
+makes parallelized programs rather complex. Furtermore. debugging programs
+on parallel computers is difficult.
+
+\item \textit{Mathematical problems.} Splitting the problem into subproblems
+is most often done by subdividing the domain into subdomains and let each
+computing unit solve the problem on its subdomain. However, the solution
+operators of partial differential equations are usually nonlocal; for
+example, a slight change in the right hand side function in a small region
+changes the solution function everywhere. It is therefore obvious that the
+subproblems can not be solved independently, but that some communication
+will be indispensable in any case. In order to reduce the amount of
+communication as much as possible, one usually uses the following iterative
+strategy: solve each subproblem independently; then exchange information
+with other units, such as boundary data of neighboring subdomains, and then
+solve again with the new boundary data. This procedure is repeated until a
+stopping criterion is reached.
+
+This iterative procedure poses mathematical questions: does the iteration
+converge? And if so, can one guarantee an upper bound on the number of
+iterations? While the first question can usually be answered with ``yes'', the
+second one is critical: since non-parallelized solvers do not need this outer
+subproblem iteration, parallelized programs become increasingly inefficient
+with the number of these outer iterations.
+\end{itemize}
+
+For the reasons stated above, parallelized implementations and their
+mathematical background are still subject to intense research. In recent
+years, however, multi-processor machines have been developed, which pose a
+reasonable alternative to small parallelized computers with the advantage of
+simple programming and the possibility to use the same mathematical
+formulation that can also be used for single-processor machines. These
+computers typically have between two and eight processors that can access the
+global memory at equal cost. 
+
+Due to this uniform memory access (UMA) architecture, communication can be
+performed in the global memory and is no more costly than access to any other
+memory location. Thus, there is also no more need to change the mathematical
+formulation to reduce communication, and programs using this architecture llok
+very much like programs written for single processor machines. The purpose of
+this report is to explain the techniques used in \texttt{deal.II} by which we
+try to program these computers.
+
+
+
+\section{Threads}
+
+The basic entity for programming multi-processor machines are threads. They
+represent parts of the program which are executed in parallel. On
+single-processor machines, they are simulated by letting each thread run for
+some time (usually a few milliseconds) before switching to the next thread. On
+multi-processor machines, threads can truly be executed in parallel. In order
+to let programs use more than one thread (which would be the regular
+sequential program), several aspects need to be covered:
+\begin{itemize}
+\item How do we assign operations to different threads? Of course, operations
+  which depend on each other must not be executed in reverse order. This can
+  be achieved by only letting independent operations run on different threads,
+  or by using synchronisation methods. this is mostly a question of program
+  design and thus problem dependent, which is why both aspects will only be
+  briefly touched below.
+\item How does the operating system and the whole programming environment
+  support this?
+\end{itemize}
+As mentioned, only the second aspect can be canonicalized, so we will treat it
+first.
+
+
+\section{Creating and managing threads}
+
+\subsection{Operating system dependence and ACE}
+
+While all relevant operating systems now support multi-threaded programs, they
+all have different notions on what threads actually are on an operating system
+level, how they shall be managed and created. Even on Unix systems, which are
+usually well-standardized, there are at least three different and mutually
+incompatible interfaces to threads: POSIX threads, Solaris threads, and Linux
+threads. Some operating systems support more than one interface, but there is
+no interface that is supported by all operating systems. Furthermore, other
+systems like Microsoft Windows have interfaces that are incompatible to all
+Unix systems.
+
+Writing multi-threaded programs based on the operating system interfaces is
+therefore something inherently incompatible unless much effort is spent to
+port it to a new system. To avoid this, we chose to use the ACE (Adaptive
+Communication Environment) library which encapsulates the operating system
+dependence and offers a uniform interface to the user. ACE runs on many
+platforms, including most Unix systems and Windows. 
+
+We chose ACE over other libraries, since it runs on almost all relevant
+platforms, and since it is the only library which is actively developed by a
+large group around Doug Schmidt at the University of Washington. Furthermore,
+it also is significantly larger than only thread management, offering
+interprocess communication and communication between different computers, as
+well as many other services. Contrary to most other libraries, it therefore
+offers both the ability to support a growing \texttt{deal.II} as well as the
+prospect to support independence also with respect to future platforms.
+
+
+\subsection{\texttt{C} interface to threads versus \texttt{C++}}
+
+While ACE encapsulates almost all of the synchronisation and interprocess
+interface into \texttt{C++} classes, it for some reason does not do so for
+tread creation. Rather it only offers the \texttt{C} interface which is that
+when creating a new thread, a function is called which has the following
+signature:
+\begin{verbatim}
+  void *  f (void * arg);
+\end{verbatim}
+Thus, only functions which take a single parameter of type \texttt{void*} and
+return a \texttt{void*} may be called. Further, these functions must be global
+or static member functions, as opposed to true member functions of
+classes. This is not in line with the \texttt{C++} philosophy and in fact does
+not fit well into \texttt{deal.II} as well: there is not a single function in
+the library that has this signature.
+
+The task of multi-threading support in \texttt{deal.II} is therefore to
+encapsulate member functions, arbitrary types and numbers of parameters, and
+return types of functions into mechanisms built atop of ACE. This has been
+done twice for \texttt{deal.II}, and we will explain both approaches. At
+present, only the first approach is distributed with \texttt{deal.II}, since
+the second is still experimental and also requires a newer compiler. The
+latter approach, however, has clear advantages over the first one, which is
+why we plan to switch to it in the next major version of \texttt{deal.II}.
+
+
+\subsubsection{First approach}
+
+The first idea is the following: assume that we have a class
+\texttt{TestClass}
+\begin{verbatim}
+    class TestClass {
+      public:
+        void test_function (int i, double d);
+    };
+\end{verbatim}
+and we would like to call
+\texttt{test\_object}.\texttt{test\_function(1,3.1415926)} on a newly created
+thread, where \texttt{test\_object} is 
+an object of type \texttt{TestClass}. We then need an object that encapsulates
+the address of the member function, a pointer to the object for which we want
+to call the function, and both parameters. This class would be suitable:
+\begin{verbatim}
+    struct MemFunData {
+        typedef void (TestClass::*MemFunPtr) (int, double);
+        MemFunPtr  mem_fun_ptr;
+        TestClass *test_object;
+        int        arg1;
+        double     arg2;
+    };
+\end{verbatim}
+
+We further need a function that satisfies the signature required by the
+operating systems (or ACE, respectively) and that can call the member function
+if we pass it an object of type \texttt{MemFunData}:
+\begin{verbatim}
+    void * start_thread (void *arg_ptr) {
+                        // first reinterpret the void* as a
+                        // pointer to the object which
+                        // encapsulates the arguments
+                        // and addresses:
+      MemFunData *mem_fun_data
+            = reinterpret_cast<MemFunData *>(arg_ptr);
+                        // then call the member function:
+      (mem_fun_data->test_object)
+            ->*(mem_fun_data->mem_fun_ptr) (mem_fun_data->arg1,
+                                            mem_fun_data->arg2);
+                        // since the function does not return
+                        // a value, we do so ourselves:
+      return 0;
+    };
+\end{verbatim}
+Such functions are called \textit{trampoline functions} since they only serve
+as jump-off point for other functions.
+
+
+We can then perform the desired call using the following sequence of commands:
+\begin{verbatim}
+    MemFunData mem_fun_data;
+    mem_fun_data.mem_fun_ptr = &TestClass::test_function;
+    mem_fun_data.test_object = &test_object;
+    mem_fun_data.arg1        = 1;
+    mem_fun_data.arg2        = 3.1415926;
+    
+    ACE_Thread_Manager::spawn (&start_thread,
+                               (void*)&mem_fun_data);
+\end{verbatim}
+\texttt{ACE\_Thread\_Manager::spawn} is the function from ACE that actually calls the
+operating system and tells it to call on a new thread the function which it is
+given as first parameter (here: \texttt{start\_thread}) with the parameter
+which is given as second parameter. \texttt{start\_thread}, when called, will
+then get the address of the function which we wanted to call from its
+parameter, and call it with the values we wanted as arguments.
+
+In practice, this would mean that we needed a structure like
+\texttt{MemFunData} and a function like \texttt{start\_thread} for each class
+\texttt{TestClass} and all functions \texttt{test\_function} with different
+signatures. This is clearly not feasible in practice and places an
+inappropriate burden on the programmer who wants to use multiple threads in
+his program. Fortunately, \texttt{C++} offers an elegant way for this problem,
+in the form of templates: we first define a data type which encapsulates
+address and arguments for all binary functions:
+\begin{verbatim}
+    template <typename Class, typename Arg1, typename Arg2>
+    struct MemFunData {
+        typedef void (Class::*MemFunPtr) (Arg1, Arg2);
+        MemFunPtr  mem_fun_ptr;
+        Class     *test_object;
+        Arg1       arg1;
+        Arg2       arg2;
+    };
+\end{verbatim}
+Next, we need a function that can process these arguments:
+\begin{verbatim}
+    template <typename Class, typename Arg1, typename Arg2>
+    void * start_thread (void *arg_ptr) {
+      MemFunData<Class,Arg1,Arg2> *mem_fun_data
+            = reinterpret_cast<MemFunData *>(arg_ptr);
+      (mem_fun_data->test_object)
+            ->*(mem_fun_data->mem_fun_ptr) (mem_fun_data->arg1,
+                                            mem_fun_data->arg2);
+      return 0;
+    };
+\end{verbatim}
+Then we can start the thread as follows:
+\begin{verbatim}
+    MemFunData<TestClass,int,double>  mem_fun_data;
+    mem_fun_data.mem_fun_ptr = &TestClass::test_function;
+    mem_fun_data.test_object = &test_object;
+    mem_fun_data.arg1        = 1;
+    mem_fun_data.arg2        = 3.1415926;
+    
+    ACE_Thread_Manager::spawn (&start_thread<TestClass,int,double>,
+                               (void*)&mem_fun_data);
+\end{verbatim}
+Here we first create an object which is suitable to encapsulate the parameters
+of a binary function that takes an integer and a double and is a member
+function of the \texttt{TestClass} class. Then we start the thread using the
+correct trampoline function. It is the user's responsibility to choose the
+correct trampoline function (i.e. to specify the correct template parameters)
+since the compiler only sees a \texttt{void*} and cannot do any type checking.
+
+We can further simplify the process and remove the user responsibility by
+defining the following class and function:
+\begin{verbatim}
+    class ThreadManager : public ACE_Thread_Manager {
+      public:
+        template <typename Class, typename Arg1, typename Arg2>
+        static void 
+        spawn (MemFunData<Class,Arg1,Arg2> &mem_fun_data) {
+          ACE_Thread_Manager::spawn (&start_thread<Class,Arg1,Arg2>,
+                                     (void*)&mem_fun_data);
+        };
+    };
+\end{verbatim}
+This way, we can call
+\begin{verbatim}
+    ThreadManager::spawn (mem_fun_data);
+\end{verbatim}
+and the compiler will figure out which the right trampoline function is.
+
+The way described above is basically the way which is presently used in
+\texttt{deal.II}. Some care has to be paid to details, however. In particular,
+\texttt{C++} functions often pass references as arguments, which however are
+not assignable after initialization. Therefore, the \texttt{MemFunData} class
+needs to have a constructor, and arguments must be set through it. Assume, for
+example, \texttt{TestClass} had a second member function
+\begin{verbatim}
+        void f (int &i, double &d);
+\end{verbatim}
+Then, we would have to use \texttt{MemFunData<TestClass,int\&,double\&>},
+which in a form without templates would look like this:
+\begin{verbatim}
+    struct MemFunData {
+        typedef void (TestClass::*MemFunPtr) (int &, double &);
+        MemFunPtr  mem_fun_ptr;
+        TestClass *test_object;
+        int       &arg1;
+        double    &arg2;
+    };
+\end{verbatim}
+The compiler would require us to initialize the references to the two
+parameters at construction time of the \texttt{mem\_fun\_data} object, since
+it is not possible in \texttt{C++} to change the object which a reference
+points to after initialization. Adding a constructor to the
+\texttt{MemFunData} class would then enable us to write
+\begin{verbatim}
+    MemFunData<TestClass,int&,double&>  
+           mem_fun_data (&TestClass::f,
+                         &test_object,
+                         1,
+                         3.1415926);
+\end{verbatim}
+Non-reference arguments could then still be changed after construction.
+
+The last point is that this interface is only usable for functions with two
+parameters. Basically, the whole process has to be reiterated for any number
+of parameters which we want to support. In \texttt{deal.II}, we therefore have
+classes \texttt{MemFunData0} through \texttt{MemFunData10}, corresponding to
+member function that do not take parameters through functions that take ten
+parameters. Equivalently, we need the respective number of trampoline
+functions. 
+
+Additional thoughts must be made on virtual member functions and constant
+functions. While the first is handled by the compiler (member function
+pointers can also be to virtual functions, without explicitly stating so), the
+latter can be achieved by writing 
+\texttt{MemFunData<const TestClass,int,double>}, which would be the correct
+object if \texttt{test\_function} were declated constant.
+
+Finally we note that it is often the case that one member function starts a
+new thread by calling another member function of the same object. Thus, the
+declaration most often used is the following:
+\begin{verbatim}
+    MemFunData<TestClass,int&,double&>  
+           mem_fun_data (&TestClass::f, this, 1, 3.1415926);
+\end{verbatim}
+Here, instead of an arbitrary \texttt{test\_object}, the present object is
+used, which is represented by the \texttt{this} pointer.
+
+
+
+\subsubsection{Second approach}
+
+While the approach outlined above works satisfactorily, it has one serious
+flaw: the programmer has to provide the data types of the arguments of the
+member function himself. While this seems to be a simple task, in practice it
+is often not, as will be explained in the sequel.
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

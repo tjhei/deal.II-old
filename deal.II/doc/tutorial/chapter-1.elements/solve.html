@@ -86,7 +86,7 @@ It is initialized by<br>
 <p class="Example">
 <span class="example">Example:</span>We initialize a Bicgstab-solver for
 the problem <code>Au=f</code>, using the <a href="#control">solver control</a>
-explained above. <code>A</code> shall be a spare matrix and the vectors
+explained above. <code>A</code> shall be a sparse matrix and the vectors
 <code>u</code> and <code>f</code> shall be vectors of doubles. Next,
 we solve the problem. 
 </p>
@@ -96,7 +96,7 @@ we solve the problem.
 // Include files for solver control, solver and preconditioner
 #include &lt;lac/solver_control.h&gt;
 #include &lt;lac/solver_bicgstab.h&gt;
-#include &lt;lac/precondition.h&gt;
+#include &lt;lac/precondition_selector.h&gt;
 
 // Include files for matrices and vectors
 #include &lt;lac/sparsematrix.h&gt;
@@ -116,12 +116,69 @@ SolverBicgstab&lt;SparseMatrix,Vector&lt;double&gt; &gt; solver(control,vectorme
 
 SparseMatrix&lt;double&gt; A;
 Vector&lt;double&gt; u,f;
-// NEED TO DEFINE A PRECONDITIONER
 
-solver.solve(A,u,f,precondition);
+// Generate a Jacobi preconditioner with the damping parameter 1
+PreconditionSelector&lt;SparseMatrix&lt;double&gt;, Vector&lt;double&gt; &gt; preconditioning("jacobi",1.);
+
+// Use the matrix of the linear equation system for preconditioning
+// (this is the usual case).
+preconditioning.use_matrix(A);
+
+solver.solve(A,u,f,preconditioning);
 </code>
 </pre>
 
+<h2><a name="cg">SolverCG</a></h2>
+
+<p>
+This class implements the preconditioned cg-method.
+It is initialized by<br>
+<code>SolverCG (SolverControl &cn, VectorMemory<Vector> &mem)</code>.
+</p>
+<p class="Example">
+<span class="example">Example:</span>We initialize a CG-solver for
+the problem <code>Au=f</code>, using the <a href="#control">solver control</a>
+explained above. <code>A</code> shall be a sparse matrix and the vectors
+<code>u</code> and <code>f</code> shall be vectors of doubles. Next,
+we solve the problem. 
+</p>
+
+<pre class="example">
+<code>
+// Include files for solver control, solver and preconditioner
+#include &lt;lac/solver_control.h&gt;
+#include &lt;lac/solver_bicgstab.h&gt;
+#include &lt;lac/precondition_selector.h&gt;
+
+// Include files for matrices and vectors
+#include &lt;lac/sparsematrix.h&gt;
+#include &lt;lac/vector.h&gt;
+
+// Initialize the solver control and the solver
+
+SolverControl control(1000,1e-6);
+VectorMemory&lt;Vector&lt;double&gt; &gt; vectormem;
+SolverCG&lt;SparseMatrix,Vector&lt;double&gt; &gt; solver(control,vectormem);
+
+// Initialize the problem matrices. Well...they shouldn't only be
+// initialized but also contain the problem, so this is just an example
+// to get the definitions and types and everything right. 
+// <em>To make it clear: This code as it is will not do anything because</em>
+// <em>it does not contain any mathematical problem !</em> 
+
+SparseMatrix&lt;double&gt; A;
+Vector&lt;double&gt; u,f;
+
+// Generate a Jacobi preconditioner with the damping parameter 1
+PreconditionSelector&lt;SparseMatrix&lt;double&gt;, Vector&lt;double&gt; &gt; preconditioning("jacobi",1.);
+
+// Use the matrix of the linear equation system for preconditioning
+// (this is the usual case).
+preconditioning.use_matrix(A);
+
+solver.solve(A,u,f,preconditioning);
+</code>
+</pre>
 
 
 <!-- Page Foot -->

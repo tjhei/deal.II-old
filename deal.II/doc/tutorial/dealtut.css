@@ -5,6 +5,8 @@ body { background-image: none;
 
 frameset { background-color: white;
 	   border-color: white;
+	   border: 0;
+	   frameborder: 0;
          }
 
 span.parhead { font-weight: bold;

@@ -52,7 +52,8 @@ namespace CommunicationsLog
       Direction             direction;
       const std::type_info* type;
       unsigned int          count;
-      unsigned int          completed;
+      unsigned int          scheduled_bytes;
+      unsigned int          completed_bytes;
       std::string           description;
   };
 
@@ -62,10 +63,11 @@ namespace CommunicationsLog
   template <typename T>
   void record_communication (const Direction    direction,
                              const unsigned int count,
-                             const unsigned int completed,
+                             const unsigned int completed_bytes,
                              const std::string &descr)
   {
-    Record record = {direction, &typeid(T), count, completed, descr};
+    Record record = {direction, &typeid(T), count,
+                     sizeof(T)*count, completed_bytes, descr};
     communication_log.push_back (record);
   };
 
@@ -77,11 +79,14 @@ namespace CommunicationsLog
     
     for (std::list<Record>::const_iterator i=communication_log.begin();
          i!=communication_log.end(); ++i)
-      std::cerr << (i->direction == put ? "put" : "get")
+      std::cerr << "-- "
+                << (i->direction == put ? "put" : "get")
                 << " "
                 << i->count << " objects of type "
                 << i->type->name()
-                << ", " << i->completed << " completed, description="
+                << ", " << i->completed_bytes
+                << " of " << i->scheduled_bytes
+                << " bytes completed, description="
                 << i->description
                 << std::endl;
     std::cerr << "------------------------------" << std::endl;

@@ -469,8 +469,22 @@ criterion with the old ones. These are the results:
   src="step-14.data/step-13/error-comparison.gif">
  </img></a>
 </p>
+
 <p>
-TODO
+The results are, well, somewhat mixed. First, the Kelly indicator
+disqualifies itself by its unsteady behavior, changing the sign of the
+error several times, and with increasing errors under mesh
+refinement. The dual weighted error estimator has a monotone decrease
+in the error, and is better than the weighted Kelly and global
+refinement, but the margin is not as large as expected. This is, here,
+due to the fact the global refinement can exploit the regular
+structure of the meshes around the point of evaluation, which leads to
+a better order of convergence for the point error. However, if we had
+a mesh that is not locally rectangular, for example because we had to
+approximate curved boundaries, or if the coefficients were not
+constant, then this advantage of globally refinement meshes would
+vanish, while the good performance of the duality based estimator
+would remain.
 </p>
 
 
@@ -481,7 +495,7 @@ TODO
 The results here are not too clearly indicating the superiority of the
 dual weighted error estimation approach for mesh refinement over other
 mesh refinement criteria, such as the Kelly indicator. This is due to
-the relative simplicity of the shown application. If you are not
+the relative simplicity of the shown applications. If you are not
 convinced yet that this approach is indeed superior, you are invited
 to browse through the literature indicated in the introduction, where
 plenty of examples are provided where the dual weighted approach can

@@ -2,11 +2,13 @@
 
 \begin{document}
 
-In this example program, we will consider two aspects:
+In this example program, we will mainly consider two aspects:
 \begin{itemize}
 \item Verification of correctness of the program;
-\item Nonhomogeneous Neumann boundary conditions for the Helmholtz equation.
+\item Non-homogeneous Neumann boundary conditions for the Helmholtz equation.
 \end{itemize}
+Besides these topics, again a variety of improvements and tricks will be
+shown. 
 
 \paragraph{Verification of correctness.} There has probably never been a
 non-trivial finite element program that worked right from the start. It is
@@ -40,15 +42,15 @@ triangulation:
   {\| u-u_h \|}_{H^1(K)} &=& \left( {\| u-u_h \|}^2_{L_2(K)} 
                                    +{| u-u_h |}^2_{H^1(K)}    \right)^{1/2}.
 \end{eqnarray*}
-All these norms and seminorms can also be evaluated with weighting functions,
+All these norms and semi-norms can also be evaluated with weighting functions,
 for example in order to exclude singularities from the determination of the
 global error. The function also works for vector-valued functions.  It should
 be noted that all these quantities are evaluated using quadrature formulas;
 the choice of the right quadrature formula is therefore crucial to the
-accurate evaluation of the error. This holds in particual for the $L_\infty$
+accurate evaluation of the error. This holds in particular for the $L_\infty$
 norm, where we evaluate the maximal deviation of numerical and exact solution
 only at the quadrature points; one should then not try to use a quadrature
-rule with points only at points where superconvergence might occur.
+rule with points only at points where super-convergence might occur.
 
 The function \texttt{integrate\_difference} evaluates the desired norm on each
 cell $K$ of the triangulation and returns a vector which holds these
@@ -61,7 +63,7 @@ is the global $L_2$ error.
 
 In the program, we will show how to evaluate and use these quantities, and we
 will monitor their values under mesh refinement. Of course, we have to choose
-the problem at hand such that we can explicitely state the solution and its
+the problem at hand such that we can explicitly state the solution and its
 derivatives, but since we want to evaluate the correctness of the program,
 this is only reasonable. If we know that the program produces the correct
 solution for one (or, if one wants to be really sure: many) specifically
@@ -133,7 +135,7 @@ integrals we have the \texttt{FEValues} class that provides values and
 gradients of the shape values, as well as Jacobian determinants and other
 information and specified quadrature points in the cell; likewise, there is a
 class \texttt{FEFaceValues} that performs these tasks for integrations on
-faces of cells. One provides it with a quadrature formula for a mannifold with
+faces of cells. One provides it with a quadrature formula for a manifold with
 dimension one less than the dimension of the domain is, and the cell and the
 number of its face on which we want to perform the integration. The class will
 then compute the values, gradients, normal vectors, weights, etc at the

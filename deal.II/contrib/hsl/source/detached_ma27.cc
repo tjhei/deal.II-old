@@ -162,8 +162,8 @@ void put (const T *t, const size_t N, const char *debug_info)
                                        // is not interrupted
       int ret;
       do
-        ret = write (1, reinterpret_cast<const char *> (t),
-                     sizeof(T) * N);
+        ret = write (1, reinterpret_cast<const char *> (t) + count,
+                     sizeof(T) * N - count);
       while ((ret<0) && (errno==EINTR));
       if (ret < 0)
         die ("error on client side in 'put'", ret, errno);

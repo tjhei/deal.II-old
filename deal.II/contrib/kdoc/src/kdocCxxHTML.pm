@@ -372,8 +372,9 @@ sub writeClassDoc
 	# template form
 	if ( exists $node->{Tmpl} ) {
 		$extra .= tabRow( "Template form",
+			"template "
+			."&lt;".textRef($node->{Tmpl}, $rootnode )."&gt; " .
 			esc($node->{astNodeName})
-			."&lt;".textRef($node->{Tmpl}, $rootnode )."&gt; "
 			."</code>" );
 	}
 

@@ -742,7 +742,7 @@ sub refHeritage
 		my @heritage;
 
 		while( 1 ) {
-				push @heritage, $node;
+				push @heritage, $node->{Ref};
 
 				last unless defined $node->{Parent};
 				$node = $node->{Parent};

@@ -166,7 +166,7 @@ sub writeAnnotatedList
 		$col = $col ? 0 : 1;
 		$colour = $col ? "" : 'bgcolor="#eeeeee"';
 
-		print CLIST "<TR $colour><TD>", refNameFull( $node ), 
+		print CLIST "<TR $colour><TD>", refNameFull( $node, $rootnode, 1 ), 
 			"</TD><TD>", $short, "</TD></TR>";
 	}
 
@@ -241,7 +241,7 @@ sub writeHier
 			my $src = defined $node->{ExtSource} ?
 				" ($node->{ExtSource})" : "";
 
-			print HIER "<LI>", refNameFull( $node )," $src\n";
+			print HIER "<LI>", refNameFull( $node, $rootnode, 1 )," $src\n";
 		},
 		sub {	# up
 			if ( $_[0] == $root ) {
@@ -313,7 +313,7 @@ sub writeClassDoc
 		return;
 	}
 
-	my $file = "$outputdir/".join("__", kdocAstUtil::heritage($node)).".html";
+	my $file = "$outputdir/".$node->{Ref};
 	my $docnode = $node->{DocNode};
 	my @list = ();
 	my $version = undef;
@@ -390,7 +390,7 @@ sub writeClassDoc
 				$out .= $comma.esc($name);
 			}
 			else {
-				$out .= $comma.refNameFull( $ances );
+				$out .= $comma.refNameFull( $ances, $rootnode, 1 );
 			}
 			
 			$out .= " &lt;".wordRef($template, $rootnode )."&gt;"
@@ -417,7 +417,7 @@ sub writeClassDoc
 		sub { $comma = $out = ""; },		# start
 		sub {					# print
 			my ( $in ) = @_;
-			$out .= $comma.refName( $in );
+			$out .= $comma.refName( $in, 1 );
 
 			if ( exists $in->{ExtSource} ) {
 				$short .= " <small>(".
@@ -433,7 +433,7 @@ sub writeClassDoc
 	);
 
 	$extra .= '<TR><TH>'.
-		hyper( encodeURL("full-list-".$node->{Ref}),
+		hyper( "full-list-".$node->{Ref},
 			"List of all Methods" )."</TH></TR>";
 
 

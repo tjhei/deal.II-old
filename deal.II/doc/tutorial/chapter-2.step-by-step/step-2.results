@@ -25,4 +25,7 @@ The results then look like this:
 <p>
 
 As can be seen, the sparsity pattern is much better clustered around
-the main diagonal of the matrix after renumbering.
+the main diagonal of the matrix after renumbering. Although this might
+not be apparent, the number of nonzero entries is the same in both
+pictures, of course.
+

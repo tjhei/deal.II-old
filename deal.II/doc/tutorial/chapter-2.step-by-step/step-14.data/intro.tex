@@ -5,7 +5,7 @@
 \section{The maths}
 
 The Heidelberg group of Professor Rolf Rannacher, to which the three main
-authors of the deal.II library belonged for the PhD time and partly also
+authors of the deal.II library belonged during their PhD time and partly also
 afterwards, has been involved with adaptivity and error estimation for finite
 element discretizations since the mid-90ies. The main achievement is the
 development of error estimates for arbitrary functionals of the solution, and
@@ -92,7 +92,7 @@ Thus, we have
 \begin{align*}
   J(e)
   &=
-  \sum_K (f+u_h), z-\varphi_h)_K
+  \sum_K (f+\Delta u_h, z-\varphi_h)_K
   - (\partial_n u_h, z-\varphi_h)_{\partial K\backslash \partial\Omega}.
 \end{align*}
 In a final step, note that when taking the normal derivative of $u_h$, we mean
@@ -103,7 +103,7 @@ with the neighbor cell $K'$, to obtain
 \begin{align*}
   J(e)
   &=
-  \sum_K (f+u_h), z-\varphi_h)_K
+  \sum_K (f+\Delta u_h, z-\varphi_h)_K
   - \frac 12 (\partial_n u_h|_K + \partial_{n'} u_h|_{K'},
               z-\varphi_h)_{\partial K\backslash \partial\Omega}.  
 \end{align*}
@@ -120,7 +120,7 @@ $\varphi_h=I_h z$:
 \begin{align*}
   J(e)
   &=
-  \sum_K (f+u_h), z-I_h z)_K
+  \sum_K (f+\Delta u_h, z-I_h z)_K
   - \frac 12 ([\partial_n u_h],
               z-I_h z)_{\partial K\backslash \partial\Omega}.  
 \end{align*}

@@ -22,4 +22,51 @@ In general, elastic deformation is described by the elastic wave equation
   \rho
 \end{gather*}
 
+
+\subsection*{Parallel graphical output}
+
+In the step-17 example program, the main bottleneck for parallel computations
+was that only the first processor generated output for the entire domain.
+Since generating graphical output is expensive, this did not scale well when
+large numbers of processors were involved. However, no viable ways around this
+problem were implemented in the library at the time, and the problem was
+deferred to a later version.
+
+This functionality has been implemented in the meantime, and this is the time
+to explain its use. Basically, what we need to do is let every process
+generate graphical output for that subset of cells that it owns, write them
+into separate files and have a way to merge them later on. At this point, it
+should be noted that none of the graphical output formats known to the author
+of this program allows for a simple way to later re-read it and merge it with
+other files corresponding to the same simulation. What deal.II therefore
+offers is the following: When you call the ``DataOut::build\_patches''
+function, an intermediate format is generated that contains all the
+information for the data on each cell. Usually, this intermediate format is
+then further processed and converted into one of the graphical formats that we
+can presently write, such as gmv, eps, ucd, gnuplor, or a number of other
+ones. Once written in these formats, there is no way to reconstruct the
+necessary information to merge multiple blocks of output. However, the base
+classes of ``DataOut'' also allows to simply dump the intermediate format to a
+file, from which it can later be recovered without loss of information.
+
+This has two advantages: first, simulations may just dump the intermediate
+format data during run-time, and the user may later decide which particular
+graphics format she wants to have. This way, she does not have to re-run the
+entire simulation if graphical output is requested in a different format. One
+typical case is that one would like to take a quick loook at the data with
+gnuplot, and then create high-quality pictures using GMV or OpenDX. Since both
+can be generated out of the intermediate format without problem, there is no
+need to re-run the simulation.
+
+In the present context, of more interest is the fact that in contrast to any
+of the other formats, it is simple to merge multiple files of intermediate
+format, if they belong to the same simulation. This is what we will do here:
+we will generate one output file in intermediate format for each processor
+that belongs to this computation (in the sequential case, this will simply be
+a single file). They may then later be read in and merged so that we can
+output a single file in whatever graphical format is requested.
+
+HOW??
+
+
 \end{document}

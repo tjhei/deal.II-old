@@ -80,7 +80,7 @@ ConstraintMatrix hanging_nodes;
 
 hanging_nodes.clear();
 DoFTools::make_sparsity_pattern(dof_handler, sparsity_pattern);
-dof_handler.make_hanging_nodes_constraints(hanging_nodes);
+DoFTools::make_hanging_nodes_constraints(dof_handler, hanging_nodes);
 hanging_nodes.close();
 hanging_nodes.condense(matrix_structure);
 </code>

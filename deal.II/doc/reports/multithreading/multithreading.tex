@@ -209,12 +209,12 @@ if we pass it an object of type \texttt{MemFunData}:
                         // pointer to the object which
                         // encapsulates the arguments
                         // and addresses:
-      MemFunData *mem_fun_data
+      MemFunData *MemFunData
             = reinterpret_cast<MemFunData *>(arg_ptr);
                         // then call the member function:
-      (mem_fun_data->test_object)
-            ->*(mem_fun_data->mem_fun_ptr) (mem_fun_data->arg1,
-                                            mem_fun_data->arg2);
+      (MemFunData->test_object)
+            ->*(MemFunData->mem_fun_ptr) (MemFunData->arg1,
+                                            MemFunData->arg2);
                         // since the function does not return
                         // a value, we do so ourselves:
       return 0;
@@ -264,11 +264,11 @@ Next, we need a function that can process these arguments:
 \begin{verbatim}
     template <typename Class, typename Arg1, typename Arg2>
     void * start_thread (void *arg_ptr) {
-      MemFunData<Class,Arg1,Arg2> *mem_fun_data
+      MemFunData<Class,Arg1,Arg2> *MemFunData
             = reinterpret_cast<MemFunData *>(arg_ptr);
-      (mem_fun_data->test_object)
-            ->*(mem_fun_data->mem_fun_ptr) (mem_fun_data->arg1,
-                                            mem_fun_data->arg2);
+      (MemFunData->test_object)
+            ->*(MemFunData->mem_fun_ptr) (MemFunData->arg1,
+                                            MemFunData->arg2);
       return 0;
     };
 \end{verbatim}
@@ -297,9 +297,9 @@ defining the following class and function:
       public:
         template <typename Class, typename Arg1, typename Arg2>
         static void 
-        spawn (MemFunData<Class,Arg1,Arg2> &mem_fun_data) {
+        spawn (MemFunData<Class,Arg1,Arg2> &MemFunData) {
           ACE_Thread_Manager::spawn (&start_thread<Class,Arg1,Arg2>,
-                                     (void*)&mem_fun_data);
+                                     (void*)&MemFunData);
         };
     };
 \end{verbatim}
@@ -330,18 +330,20 @@ which in a form without templates would look like this:
     };
 \end{verbatim}
 The compiler would require us to initialize the references to the two
-parameters at construction time of the \texttt{mem\_fun\_data} object, since
+parameters at construction time of the \texttt{MemFunData} object, since
 it is not possible in \texttt{C++} to change the object which a reference
 points to after initialization. Adding a constructor to the
 \texttt{MemFunData} class would then enable us to write
 \begin{verbatim}
     MemFunData<TestClass,int&,double&>  
-           mem_fun_data (&TestClass::f,
-                         &test_object,
+           mem_fun_data (&test_object,
                          1,
-                         3.1415926);
+                         3.1415926,
+                         &TestClass::f);
 \end{verbatim}
-Non-reference arguments could then still be changed after construction.
+Non-reference arguments could then still be changed after construction. For
+historical reasons, the pointer to the member function is passed as last
+parameter here.
 
 The last point is that this interface is only usable for functions with two
 parameters. Basically, the whole process has to be reiterated for any number
@@ -356,14 +358,14 @@ functions. While the first is handled by the compiler (member function
 pointers can also be to virtual functions, without explicitly stating so), the
 latter can be achieved by writing 
 \texttt{MemFunData<const TestClass,int,double>}, which would be the correct
-object if \texttt{test\_function} were declated constant.
+object if \texttt{test\_function} were declared constant.
 
 Finally we note that it is often the case that one member function starts a
 new thread by calling another member function of the same object. Thus, the
 declaration most often used is the following:
 \begin{verbatim}
     MemFunData<TestClass,int&,double&>  
-           mem_fun_data (&TestClass::f, this, 1, 3.1415926);
+           mem_fun_data (this, 1, 3.1415926, &TestClass::f);
 \end{verbatim}
 Here, instead of an arbitrary \texttt{test\_object}, the present object is
 used, which is represented by the \texttt{this} pointer.
@@ -377,6 +379,397 @@ flaw: the programmer has to provide the data types of the arguments of the
 member function himself. While this seems to be a simple task, in practice it
 is often not, as will be explained in the sequel.
 
+To expose the problem, we take an example from one of the application programs
+where we would like to call the function
+\begin{verbatim}
+    template <int dim>
+    void DoFHandler<dim>::distribute_dofs (const FiniteElement<dim> &,
+                                           const unsigned int);
+\end{verbatim}
+on a new thread. Correspondingly, we would need to use
+\begin{verbatim}
+    MemFunData2<DoFHandler<dim>, const FiniteElement<dim> &, unsigned int>
+        mem_fun_data (dof_handler, fe,
+                      0, &DoFHandler<dim>::distribute_dofs);)
+\end{verbatim}
+to encapsulate the parameters. However, if one forgets the \texttt{const}
+specifier on the second template parameter, one receives the following error
+message (using gcc 2.95.2):
+\begin{verbatim}
+  test.cc: In method `void InterstepData<2>::wake_up(unsigned int, Interst
+  epData<2>::PresentAction)':
+  test.cc:683:   instantiated from here
+  test.cc:186: no matching function for call to `ThreadManager::Mem_Fun_Da
+  ta2<DoFHandler<2>,FiniteElement<2> &,unsigned int>::MemFunData2 (DoFHa
+  ndler<2> *, const FiniteElement<2> &, int, void (DoFHandler<2>::*)(const
+   FiniteElement<2> &, unsigned int))'
+  /home/atlas1/wolf/program/newdeal/deal.II/base/include/base/thread_manag
+  er.h:470: candidates are: ThreadManager::MemFunData2<DoFHandler<2>,Fin
+  iteElement<2> &,unsigned int>::MemFunData2(DoFHandler<2> *, FiniteElem
+  ent<2> &, unsigned int, void * (DoFHandler<2>::*)(FiniteElement<2> &, un
+  signed int))
+  /home/atlas1/wolf/program/newdeal/deal.II/base/include/base/thread_manag
+  er.h:480:                 ThreadManager::MemFunData2<DoFHandler<2>,Fin
+  iteElement<2> &,unsigned int>::MemFunData2(DoFHandler<2> *, FiniteElem
+  ent<2> &, unsigned int, void (DoFHandler<2>::*)(FiniteElement<2> &, unsi
+  gned int))
+  /home/atlas1/wolf/program/newdeal/deal.II/base/include/base/thread_manag
+  er.h:486:                 ThreadManager::MemFunData2<DoFHandler<2>,Fin
+  iteElement<2> &,unsigned int>::MemFunData2(const ThreadManager::Mem_Fu
+  n_Data2<DoFHandler<2>,FiniteElement<2> &,unsigned int> &)
+  test.cc:683:   instantiated from here
+  test.cc:190: no matching function for call to `ThreadManager::Mem_Fun_Da
+  ta2<DoFHandler<2>,FiniteElement<2> &,unsigned int>::MemFunData2 (Smart
+  Pointer<DoFHandler<2> > &, const FiniteElement<2> &, int, void (DoFHandl
+  er<2>::*)(const FiniteElement<2> &, unsigned int))'
+  /home/atlas1/wolf/program/newdeal/deal.II/base/include/base/thread_manag
+  er.h:470: candidates are: ThreadManager::MemFunData2<DoFHandler<2>,Fin
+  iteElement<2> &,unsigned int>::MemFunData2(DoFHandler<2> *, FiniteElem
+  ent<2> &, unsigned int, void * (DoFHandler<2>::*)(FiniteElement<2> &, un
+  signed int))
+  /home/atlas1/wolf/program/newdeal/deal.II/base/include/base/thread_manag
+  er.h:480:                 ThreadManager::MemFunData2<DoFHandler<2>,Fin
+  iteElement<2> &,unsigned int>::MemFunData2(DoFHandler<2> *, FiniteElem
+  ent<2> &, unsigned int, void (DoFHandler<2>::*)(FiniteElement<2> &, unsi
+  gned int))
+  /home/atlas1/wolf/program/newdeal/deal.II/base/include/base/thread_manag
+  er.h:486:                 ThreadManager::MemFunData2<DoFHandler<2>,Fin
+  iteElement<2> &,unsigned int>::MemFunData2(const ThreadManager::Mem_Fu
+  n_Data2<DoFHandler<2>,FiniteElement<2> &,unsigned int> &)
+\end{verbatim}
+
+While the compiler is certainly right to complain, the message is not very
+helpful. Furthermore, since interfaces to functions sometimes change, for
+example by adding additional default parameters that do not show up in usual
+code, programs that used to compile do no more so with messages as shown
+above. 
+
+Due to the lengthy and complex error messages, even very experienced
+programmers usually need between five and ten minutes until they get an
+expression like this correct. In most cases, they don't get it right in the
+first attempt, so the time used for the right declaration dominates the whole
+setup of starting a new thread. To circumvent this bottleneck at least in most
+cases, we chose to implement a second strategy at encapsulating the parameters
+of member functions. This is done in several steps: first let the compiler
+find out about the right template parameters, then encapsulate the parameters,
+use the objects, and finally solve some technical problems with virtual
+constructors. We will treat these steps sequentially in the following.
+
+
+\paragraph{Finding the correct template parameters.}
+\texttt{C++} offers the possibility of templated functions that deduce their
+template arguments themselves. This can be used as follows: assume we have a
+function class
+\begin{verbatim}
+    template <typename Class, typename Arg1, typename Arg2>
+    class MemFunData { ... };
+\end{verbatim}
+as above, and a function
+\begin{verbatim}
+    template <typename Class, typename Arg1, typename Arg2>
+    MemFunData<Class,Arg1,Arg2>
+    deduce_args (void (Class::*mem_fun_ptr)(Arg1, Arg2)) {
+      return MemFunData<Class,Arg1,Arg2> (mem_fun_ptr);
+    };
+\end{verbatim}
+If we call this function like this:
+\begin{verbatim}
+    deduce_args (&TestClass::test_function);
+\end{verbatim}
+then it can unambiguously determine the template parameters to be
+\texttt{Class=TestClass}, \texttt{Arg1=int}, \texttt{Arg2=double}. 
+
+\paragraph{Encapsulating the parameters.}
+We should
+not try to include the arguments right away, for example by declaring
+\texttt{deduce\_args}
+\begin{verbatim}
+    template <typename Class, typename Arg1, typename Arg2>
+    MemFunData<Class,Arg1,Arg2>
+    deduce_args (void (Class::*mem_fun_ptr)(Arg1, Arg2),
+                 Arg1  arg1,
+                 Arg2  arg2,
+                 Class object) {
+      return MemFunData<Class,Arg1,Arg2> (mem_fun_ptr, object, arg1, arg2);
+    };
+\end{verbatim}
+The reason is that for template functions, no parameter promotion is
+performed. Thus, if we called this function as in
+\begin{verbatim}
+    deduce_args (&TestClass::test_function,
+                 1, 3,
+                 test_object);
+\end{verbatim}
+then the compiler would refuse this since from the function pointer it must
+deduce that \texttt{Arg2=double}, but from the parameter ``3'' it must assume
+that \texttt{Arg2=int}. The resulting error message would be similarly lengthy
+as the one shown above.
+
+One could instead write \texttt{MemFunData} like this:
+\begin{verbatim}
+    template <typename Class, typename Arg1, typename Arg2>
+    class MemFunData { 
+      public:
+        typedef void (Class::*MemFunPtr)(Arg1, Arg2);
+
+        MemFunData (MemFunPtr mem_fun_ptr_) {
+          mem_fun_ptr = mem_fun_ptr_;
+        };
+
+        void collect_args (Class *object_,
+                           Arg1   arg1_,
+                           Arg2   arg2_) {
+          object = object_;
+          arg1   = arg1_;
+          arg2   = arg2_;
+        };
+
+        MemFunPtr  mem_fun_ptr;
+        Class     *object;
+        Arg1       arg1;
+        Arg2       arg2;
+    };
+\end{verbatim}
+One would then create an object of this type including the parameters to be
+passed as follows:
+\begin{verbatim}
+    deduce_args (&TestClass::test_function).collect_args(1, 3,
+                                                         test_object);
+\end{verbatim}
+Here, the first function call creates an object with the right template
+parameters, and the second one, calling a member function, fills in the
+function arguments. 
+
+Unfortunately, this way does not work: if one or more of the parameter types
+is a reference, then the respective reference variable needs to be initialized
+by the constructor, not by \texttt{collect\_args}. It needs to be known which
+object the reference references at construction time, since later on only the
+referenced object can be assigned, not the reference itself anymore.
+
+Since we feel that we are close to a solution, we introduce one more
+indirection, which indeed will be the last one:
+\begin{verbatim}
+    template <typename Class, typename Arg1, typename Arg2>
+    class MemFunData { 
+      public:
+        typedef void (Class::*MemFunPtr)(Arg1, Arg2);
+
+        MemFunData (MemFunPtr mem_fun_ptr_,
+                      Class *object_,
+                      Arg1   arg1_,
+                      Arg2   arg2_) :
+             mem_fun_ptr (mem_fun_ptr_),
+             object      (object_),
+             arg1        (arg1_),
+             arg2        (arg2_)            {};
+
+        MemFunPtr  mem_fun_ptr;
+        Class     *object;
+        Arg1       arg1;
+        Arg2       arg2;
+    };
+
+
+    template <typename Class, typename Arg1, typename Arg2>
+    struct Intermediate { 
+        typedef void (Class::*MemFunPtr)(Arg1, Arg2);
+
+        Intermediate (MemFunPtr mem_fun_ptr_) {
+          mem_fun_ptr = mem_fun_ptr_;
+        };
+
+        
+        MemFunData<Class,Arg1,Arg2>
+        collect_args (Class *object_,
+                      Arg1   arg1_,
+                      Arg2   arg2_) {
+          return MemFunData<Class,Arg1,Arg2> (mem_fun_ptr, object,
+                                                arg1, arg2);
+        };
+
+        MemFunPtr  mem_fun_ptr;
+    };
+
+
+    template <typename Class, typename Arg1, typename Arg2>
+    Intermediate<Class,Arg1,Arg2>
+    deduce_args (void (Class::*mem_fun_ptr)(Arg1, Arg2)) {
+      return Intermediate<Class,Arg1,Arg2> (mem_fun_ptr);
+    };
+\end{verbatim}
+
+Now we can indeed write
+\begin{verbatim}
+    deduce_args (&TestClass::test_function).collect_args(1, 3,
+                                                         test_object);
+\end{verbatim}
+The first call creates an object of type \texttt{Intermediate<...>} with the
+right parameters, while the second call, a call to a member function of that
+intermediate class, generates the final object we are interested in, including
+the member function pointer and all necessary parameters. Since
+\texttt{collect\_args} already has its template parameters fixed from
+\texttt{deduce\_args}, it can convert between data types.
+
+
+\paragraph{Using these objects.} Now we have an object of the correct type
+automatically generated, without the need to type in any template parameters
+by hand. What can we do with that? First, we can't assign it to a variable of
+that type. Why? Since we would then have to write the data type of that
+variable by hand, which is exactly what we wanted to avoid. However, we can do
+some such thing if the variable to which we assign the result is of a type
+which is a base class of \texttt{MemFunData<...>}. Unfortunately, the
+parameters that \texttt{MemFunData<...>} encapsulates depend on the
+template parameters, so the respective variables in which we store can only be
+in the derived class and could not be copied when we assign the variable to a
+base class object, since that does not have these variables.
+
+What can we do here? Assume we have the following structure in the library:
+\begin{verbatim}
+    class MemFunBase {};
+
+    template <...> class MemFunData : public MemFunBase 
+    {  /* as above */ };
+
+    class MemFunEncapsulation {
+      public:
+        MemFunEncapsulation (MemFunBase *mem_fun_base)
+                   : mem_fun_base (mem_fun_base) {};
+        MemFunBase *mem_fun_base;
+    };
+
+
+    template <typename Class, typename Arg1, typename Arg2>
+    MemFunEncapsulation
+    Intermediate<Class,Arg1,Arg2>::collect_args (Class *object_,
+                                                 Arg1   arg1_,
+                                                 Arg2   arg2_) {
+      return new MemFunData<Class,Arg1,Arg2> (mem_fun_ptr, object,
+                                              arg1, arg2);
+    };
+\end{verbatim}
+
+Now, the call to \texttt{deduce\_args(...).collect\_args(...)} generates an
+object of type \texttt{MemFunEncapsulation}, which in turn stores a pointer to
+an object of type \texttt{MemFunBase}, here to \texttt{MemFunData<...>} with
+the correct template parameters. We can assigne the result to a variable the
+type of which does not contain any template parameters any more, as desired:
+\begin{verbatim}
+    MemFunEncapsulation 
+        mem_fun_encapsulation = deduce_args (&TestClass::test_function)
+                                          .collect_args(1, 3, test_object);
+\end{verbatim}
+
+But how can we start a thread with this object if we have lost the full
+information about the data types? This can be done as follows: add am abstract
+virtual function \texttt{get\_trampoline()} to \texttt{MemFunBase} which is
+implemented in the derived classes
+\begin{verbatim}
+    class MemFunBase {
+      public:
+        typedef void * (*ThreadEntryPoint) (void *);
+        virtual ThreadEntryPoint get_trampoline () = 0;
+    };
+
+    template <...>
+    class MemFunData : public MemFunBase {
+      public:
+        virtual ThreadEntryPoint get_trampoline () {
+          return &start_thread;
+        };
+
+        static void * start_thread (void *args) {
+          // do the same as in start_thread above
+        }
+    };
+
+
+    void spawn (MemFunEncapsulation &mem_fun_encapsulation) {
+      ACE_Thread_Manager::spawn (mem_fun_encapsulation.mem_fun_base
+                                      ->get_trampoline()),
+                                 (void*)&mem_fun_base);
+    };
+\end{verbatim}
+The call to \texttt{get\_trampoline} gets us the right thread starter function
+which knows that the parameter it gets has the right data type to which it can
+be casted. Thus, we can now write the whole sequence of function calls:
+\begin{verbatim}
+    MemFunEncapsulation 
+        mem_fun_encapsulation = deduce_args (&TestClass::test_function)
+                                          .collect_args(1, 3, test_object);
+    spawn (mem_fun_encapsulation);
+\end{verbatim}
+This solves our problem in that no template parameters need to be specified by
+hand any more. The only source for lengthy compiler error messages is if the
+parameters to \texttt{collect\_args} arg in the wrong order or can not be
+casted to the parameters of the member function which we want to call. These
+problems, however, are much more unlikely in our experience, and are also much
+quicker sorted out.
+
+
+\paragraph{Virtual constructors.} While the basic techniques have been fuly
+developed now, there are some aspects which we still have to take care of. The
+basic problem here is that the \texttt{MemFunEncapsulation} objects store a
+pointer to an object that was created using the \texttt{new} operator. To
+prevent a memory leak, we need to destroy this object at some time, preferably
+in the destructor of \texttt{MemFunEncapsulation}:
+\begin{verbatim}
+    MemFunEncapsulation::~MemFunEncapsulation () {
+      delete mem_fun_base;
+    };
+\end{verbatim}
+However, what happens if we have copied the object before? In particular,
+since this is always the case using the functions above: \texttt{collect\_args}
+generates a temporary object of type \texttt{MemFunEncapsulation}, but there
+could be other sources of copies as well. If we do not take special measures,
+only the pointer to the object is copied around, and we end up with stale
+pointers pointing to invalid locations in memory once the first object has
+been destroyed. What we obviously need to do when copying objects of type
+\texttt{MemFunEncapsulation} is to not copy the pointer but to copy the object
+which it points to. Unfortunately, the following copy constructor is not
+possible:
+\begin{verbatim}
+    MemFunEncapsulation::MemFunEncapsulation (const MemFunEncapsulation &m) {
+      mem_fun_base = new MemFunBase (*m.mem_fun_base);
+    };
+\end{verbatim}
+The reason, of course, is that we do not want to copy that part of the object
+belonging to the abstract base class (besides the fact that the compiler won't
+let us do so, since \texttt{MemFunEncapsulation} has abstract virtual
+functions). But we can emulate something like this in the following way (the
+programming idiom is called ``virtual constructors''):
+\begin{verbatim}
+    class MemFunBase {
+      public:
+        // as above
+
+        virtual MemFunBase * clone () const = 0;
+    };
+
+    template <...>
+    class MemFunData : public MemFunBase {
+      public:
+        // as above
+
+                          // copy constructor:
+        MemFunData (const MemFunData<...> &mem_fun_data) {...};
+
+                          // clone the present object, i.e.
+                          // create an exact copy:
+        virtual MemFunBase * clone () const {
+          return new MemFunData<...>(*this);
+        };
+    };
+
+
+    MemFunEncapsulation::MemFunEncapsulation (const MemFunEncapsulation &m) {
+      mem_fun_base = m.mem_fun_base->clone ();
+    };
+\end{verbatim}
+Thus, whenever the \texttt{MemFunEncapsulation} object is copied, it creates a
+copy of the object it harbours (the \texttt{MemFunData<...>} object) which it
+owns. When the destructor is called, it is free to delete its copy without
+affecting other objects (from which it may have been copied, or to which it
+was copied).
 
 \end{document}
 

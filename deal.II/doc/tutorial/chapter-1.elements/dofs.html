@@ -42,6 +42,8 @@ construct a sparse matrix structure and renumber your degrees of freedom
 afterwards the structure will be invalid.
 </p>
 
+
+
 <h2>How to Distribute and Renumber Degrees of Freedom</h2>
 <p>
 The degrees of freedom are distributed on a triangulation using the function<br>
@@ -53,6 +55,26 @@ cell, starting at the coarsest level, and numbers every degree of freedom that i
 For non-multigrid algorithms it considers only active cells, i.e. cells 
 without children.
 </p>
+<p class="Example">
+<span class="example"><a name="ex_distribute">Example:</a></span> We show the include files, definitions
+and function calls needed. Be sure to use them in their appropriate places.
+This example creates a hypercube and distributes the degrees of freedom.
+The finite elements used are bilinear.
+</p>
+<pre class="example">
+<code>
+#include &lt;grid/tria.h&gt;
+#include &lt;grid/dof.h&gt;
+#include &lt;fe/fe_lib.lagrange.h&gt;
+
+Triangulation&lt;dim&gt; tr;
+DoFHandler&lt;dim&gt; dof;
+FELinear&lt;dim&gt;
+
+tr.create_hypercube(-1,1);
+dof.distribute_dofs(fe);
+</code>
+</pre>
 
 <p>
 For a number of solution algorithms this way of numbering is way below optimal.
@@ -68,6 +90,18 @@ Both algorithms require a good index to start with to achieve good results.
 Whenever you know a good set of starting indices you might wish to use the 
 first way of calling <code>renumber_dofs</code>,
 in every other case the second way is more advisable.
+<p class="Example">
+<span class="example">Example:</span> We use the definitions from the
+<a href="#ex_distribute">first example</a> given above. We renumber our 
+degrees of freedom with the 
+<code>Cuthill_McKey</code> method.
+</p>
+<pre class="example">
+<code>
+dof.renumber_dofs(Cuthill_McKey);
+</code>
+</pre>
+
 
 <!-- Page Foot -->
 <hr>

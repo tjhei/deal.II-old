@@ -38,10 +38,23 @@
 
 
 
+/**
+ * Namespace implementing a number of functions that are used to
+ * record the communication between master and detached
+ * processes. This is mainly for debugging purposes.
+ */
 namespace CommunicationsLog
 {
+                                   /**
+                                    * Type denoting the direction of a
+                                    * recorder communication.
+                                    */
   enum Direction { put, get };
   
+                                   /**
+                                    * One record of a recorded
+                                    * communication.
+                                    */
   struct Record 
   {
       Direction             direction;
@@ -52,9 +65,17 @@ namespace CommunicationsLog
       std::string           description;
   };
 
+                                   /**
+                                    * The elements of a recorder
+                                    * communication
+                                    */
   std::list<Record> communication_log;
 
   
+                                   /**
+                                    * Record a sent or received
+                                    * message
+                                    */
   template <typename T>
   void record_communication (const Direction    direction,
                              const unsigned int count,
@@ -67,6 +88,10 @@ namespace CommunicationsLog
   };
 
 
+                                   /**
+                                    * List all the communication that
+                                    * has happened.
+                                    */
   void list_communication () 
   {
     std::cerr << "------------------------------" << std::endl
@@ -130,7 +155,8 @@ void die (const std::string &text, const T1 t1, const T2 t2, const pid_t pid)
  * about the parent process, so it is apparently gone
  */
 extern "C"
-void monitor_parent_liveness (const pid_t master_pid, const pid_t primary_pid) 
+void monitor_parent_liveness (const pid_t master_pid,
+                              const pid_t primary_pid) 
 {
   while (true)
     {
@@ -139,7 +165,8 @@ void monitor_parent_liveness (const pid_t master_pid, const pid_t primary_pid)
         if ((ret == -1) && (errno == ESRCH))
           die ("Master process seems to have died!", primary_pid);
         else
-          die ("Unspecified error while checking for other process!", ret, errno, primary_pid);
+          die ("Unspecified error while checking for other process!",
+               ret, errno, primary_pid);
 
                                        // ok, master still running,
                                        // take a little rest and then
@@ -217,10 +244,10 @@ int main ()
   get (&master_pid, 1, "master_pid");
                                    // ...and start off a thread that
                                    // actually checks that
-//   Threads::ThreadManager thread_manager;
-//   Threads::spawn (thread_manager,
-//                   Threads::encapsulate (&monitor_parent_liveness)
-//                   .collect_args(master_pid, getpid()));
+  Threads::ThreadManager thread_manager;
+  Threads::spawn (thread_manager,
+                  Threads::encapsulate (&monitor_parent_liveness)
+                  .collect_args(master_pid, getpid()));
   
                                    // then go into the action loop...
   unsigned int N, NZ, NSTEPS, LA, MAXFRT, LIW;

@@ -20,7 +20,7 @@
 <h2>Why thinking about matrix structures is important</h2>
 <p>
 Many of the matrices encountered when trying to solve systems of differential
-equations consist mostly of zeroes. At the same time those matrices are 
+equations consist mostly of zero entries. At the same time those matrices are 
 very large, and therefore storage is expensive in terms of memory. 
 <acronym>deal.II</acronym> attempts to resolve this problem by 
 providing means of generating memory efficient structures for sparse
@@ -41,12 +41,13 @@ tell the matrix for which elements to allocate memory.
 <p>
 The <acronym>deal.II</acronym> function initializing a standard sparse matrix
 structure is <code>void SparseMatrixStruct::reinit(const unsigned int m, const unsigned int n, const unsigned int max_per_row)</code>. It takes as its arguments
-the size of the matrix in question and the maximum number of non-zero elements.
+the size of the matrix in question and the maximum number of non-zero elements
+in one row.
 This number can be calculated with 
 <code>int DoFHandler::max_couplings_between_dofs()</code>.
 This matrix structure can then be used to generate a matrix using 
 <code>void SparseMatrix::reinit(const SparseMatrixStruct &sparsity)</code>.
-In most cases you will also need to take care of the constraints to your
+In cases of locally refined grids you will also need to take care of the constraints to your
 matrix given by the <a href="hanging_nodes.html">hanging nodes</a>.
 </p>
 
@@ -113,6 +114,9 @@ smstruct.compress();
 <table class="navbar">      
 <tr>
   <td>
+    <a href="matrix_generation.html">Next Chapter: MAtrix and Vector Generation</a>
+  </td>
+  <td>
     <a href="toc.html">Back to this chapter's index</a>
   </td>
   <td>
@@ -128,3 +132,4 @@ Last modified: $Date$
 </p>
 </body>
 </html>
+

@@ -74,7 +74,7 @@ The finite elements used are bilinear.
 
 Triangulation&lt;dim&gt; tr;
 DoFHandler&lt;dim&gt; dof;
-FELinear&lt;dim&gt;
+FELinear&lt;dim&gt; fe;
 
 tr.create_hypercube(-1,1);
 dof.distribute_dofs(fe);
@@ -107,11 +107,16 @@ dof.renumber_dofs(Cuthill_McKey);
 </code>
 </pre>
 
+<h2>Access to triangulation cells, faces and vertices</h2>
+
 
 <!-- Page Foot -->
 <hr>
 <table class="navbar">      
 <tr>
+  <td>
+    <a href="hanging_nodes.html">Next Chapter: Hanging Nodes</a>
+  </td>
   <td>
     <a href="toc.html">Back to this chapter's index</a>
   </td>

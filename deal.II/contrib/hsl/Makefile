@@ -39,7 +39,7 @@ lib/libhsl.a: $(o-files)
 
 lib/libhsl.so: $(forward-declarations) $(o-files)
 	@echo =====base=============optimized==$(MT)== Linking library:   $@
-	@$(CC) $(CXXFLAGS.o) -shared -o $@ $(o-files)
+	@$(CC) $(LDFLAGS) -shared -o $@ $(o-files)
 
 
 

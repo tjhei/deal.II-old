@@ -41,18 +41,47 @@
 </ul>
 
 <p>
-Besides, there is a class named 
-<code><a href="#control">SolverControl</a></code> in order to 
+Besides, there are several utility classes:
+<ul>
+<li> 
+<code><a href="#control">SolverControl</a></code> to 
 control the iterative solvers, i.e. to determine whether the iteration 
-should be continued and a class named 
+should be continued
+</li>
+<li>
+<code><a href="#solvselect">SolverSelector</a></code>, the use of which
+offers several advantages over solver selection by hand
+</li>
+<li>
 <code><a href="#precondition">PreconditionSelector</a></code> that allows
-you to select a preconditioner.
+you to select a preconditioner
+</li>
+</ul>
+</p>
+
+<h3>A note on <acronym>deal.II</acronym> solvers</h3>
+
+<p>
+All of the <acronym>deal.II</acronym> solvers have a structure
+<code>AdditionalData</code> that is used to pass additional 
+arguments to the solver. We discuss this structure only for those 
+solvers that need it.
 </p>
 
 <p>
-We will begin with the discussion of the <code>SolverControl</code>
+Information on common solution methods can be found in any modern
+textbook on finite elements, for example in <cite>Braess, Dietrich, Finite
+Elements</cite>. The GMRES solver discussed below is rather
+special, and if you are going to use it you probably know what
+you ar edoing anyway.
+
+<p>
+We will now begin with the discussion of the <code>SolverControl</code>, the
+<code>SolverSelector</code>
 and the <code>PreconditionSelector</code> classes, then discuss the solvers 
-in more detail.
+in more detail. <em>Although we do not demonstrate this method in the
+examples for the different solvers every last solver can be called
+using <code>SolverSelector</code>.</em>
 </p>
 
 <h2><a name="control">Solver Control</a></h2>
@@ -78,6 +107,48 @@ a maximum of 1000 iterations and a maximum residual of 1e-6.
 SolverControl control(1000,1e-6);
 </code>
 </pre>
+
+<h2><a name="solvselect">SolverSelector</a></h2>
+
+<p>
+The <code>SolverSelector</code> class is a wrapper for all the 
+<acronym>deal.II</acronym> solver classes. By calling it with the
+right constructor you select your solver, and by calling its <code>solve</code>
+method you call the <code>solve</code> method of the solver you selected.
+The advantage of this approach is that your solver is an argument
+to this class and - more important - an argument you can set in a 
+parameter file. That means that if you want to change your solver, e.g.
+because a new one has been added you do not have to rewrite your program.
+</p>
+<p>
+The <code>SolverSelector</code> is initialized using<br>
+<code>
+SolverSelector(const string solvername, SolverControl &amp;control,
+VectorMemory&lt;Vector&gt; &amp;mem)
+</code>
+</p>
+
+<p class="Example">
+<span class="example">Example:</span>We initialize a solver selector
+that will call the cg-solver. The problem matrix is a sparse matrix of
+doubles and the right hand side a vector of doubles. 
+</p>
+
+<pre class="example">
+<code>
+#include &lt;lac/solver_control.h&gt;
+#include &lt;lac/solver_selector.h&gt;
+#include &lt;lac/sparsematrix.h&gt;
+#include &lt;lac/vector.h&gt;
+
+SolverControl control;
+VectorMemory&lt;Vector&lt;double&gt; &gt; mem;
+
+SolverSelector&lt;SparseMatrix&lt;double&gt;, Vector&lt;double&gt; &gt;
+  solver_selector("cg", control, mem);
+</code>
+</pre>
+
 
 <h2><a name="precondition">Preconditioning</a></h2>
 
@@ -238,6 +309,124 @@ solver.solve(A,u,f,preconditioning);
 </code>
 </pre>
 
+<h2><a name="gmres">SolverGMRES</a></h2>
+
+<p>This class implements the Restarted Preconditioned Direct Generalized
+Minimal Residual Method. The stopping criterion is the norm of the residual.
+It is initialized using <br>
+<code>SolverGMRES(SolverControl &amp;cn, VectorMemory&lt;Vector&gt; &amp;mem,
+const AdditionalData &amp;data=Additionaldata())
+</code>
+This constructor needs the maximum number of temporary vectors to be used. 
+A number too small can seriously affect its performance. This number is
+contained in the <code>AdditionalData</code> structure with a default of 30. 
+This solver is rather special, and for a detailed explanation you should
+<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/lac/SolverGMRES.html">take a look at the detailed description of the <code>SolverGMRES</code>
+class</a>.
+</p>
+
+<p class="Example">
+<span class="example">Example:</span>We initialize a GMRES-solver for
+the problem <code>Au=f</code>, using the <a href="#control">solver control</a>
+explained above. <code>A</code> shall be a sparse matrix and the vectors
+<code>u</code> and <code>f</code> shall be vectors of doubles. 
+Next, we solve the problem. We use the default number of thirty temporary
+vectors.
+</p>
+
+<pre class="example">
+<code>
+// Include files for solver control, solver and preconditioner
+#include &lt;lac/solver_control.h&gt;
+#include &lt;lac/solver_gmres.h&gt;
+#include &lt;lac/precondition_selector.h&gt;
+
+// Include files for matrices and vectors
+#include &lt;lac/sparsematrix.h&gt;
+#include &lt;lac/vector.h&gt;
+
+// Initialize the solver control and the solver
+
+SolverControl control(1000,1e-6);
+VectorMemory&lt;Vector&lt;double&gt; &gt; vectormem;
+SolverCG&lt;SparseMatrix,Vector&lt;double&gt; &gt; solver(control,vectormem);
+
+// Initialize the problem matrices. Well...they shouldn't only be
+// initialized but also contain the problem, so this is just an example
+// to get the definitions and types and everything right. 
+// <em>To make it clear: This code as it is will not do anything because</em>
+// <em>it does not contain any mathematical problem !</em> 
+
+SparseMatrix&lt;double&gt; A;
+Vector&lt;double&gt; u,f;
+
+// Generate a Jacobi preconditioner with the damping parameter 1
+PreconditionSelector&lt;SparseMatrix&lt;double&gt;, Vector&lt;double&gt; &gt; preconditioning("jacobi",1.);
+
+// Use the matrix of the linear equation system for preconditioning
+// (this is the usual case).
+preconditioning.use_matrix(A);
+
+solver.solve(A,u,f,preconditioning);
+</code>
+</pre>
+
+
+<h2><a name="richardson">SolverRichardson</a></h2>
+
+<p>
+This class implements the Richardson iteration method. The stopping criterion
+is the norm of the residual. It is initialized using<br>
+<code>SolverRichardson(SolverControl &amp;cn, VectorMemory&lt;Vector&gt; 
+&amp;mem, const AdditionalData &amp;data=Additionaldata())
+</code>
+The additional data for this solver is the damping, with a default of 1.
+</p>
+
+<p class="Example">
+<span class="example">Example:</span>We initialize a Richardson-solver for
+the problem <code>Au=f</code>, using the <a href="#control">solver control</a>
+explained above. <code>A</code> shall be a sparse matrix and the vectors
+<code>u</code> and <code>f</code> shall be vectors of doubles. Next,
+we solve the problem. We use the default damping parameter of 1.
+</p>
+
+<pre class="example">
+<code>
+// Include files for solver control, solver and preconditioner
+#include &lt;lac/solver_control.h&gt;
+#include &lt;lac/solver_richardson.h&gt;
+#include &lt;lac/precondition_selector.h&gt;
+
+// Include files for matrices and vectors
+#include &lt;lac/sparsematrix.h&gt;
+#include &lt;lac/vector.h&gt;
+
+// Initialize the solver control and the solver
+
+SolverControl control(1000,1e-6);
+VectorMemory&lt;Vector&lt;double&gt; &gt; vectormem;
+SolverCG&lt;SparseMatrix,Vector&lt;double&gt; &gt; solver(control,vectormem);
+
+// Initialize the problem matrices. Well...they shouldn't only be
+// initialized but also contain the problem, so this is just an example
+// to get the definitions and types and everything right. 
+// <em>To make it clear: This code as it is will not do anything because</em>
+// <em>it does not contain any mathematical problem !</em> 
+
+SparseMatrix&lt;double&gt; A;
+Vector&lt;double&gt; u,f;
+
+// Generate a Jacobi preconditioner with the damping parameter 1
+PreconditionSelector&lt;SparseMatrix&lt;double&gt;, Vector&lt;double&gt; &gt; preconditioning("jacobi",1.);
+
+// Use the matrix of the linear equation system for preconditioning
+// (this is the usual case).
+preconditioning.use_matrix(A);
+
+solver.solve(A,u,f,preconditioning);
+</code>
+</pre>
 
 <!-- Page Foot -->
 <hr>

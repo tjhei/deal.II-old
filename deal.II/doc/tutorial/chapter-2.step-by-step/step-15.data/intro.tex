@@ -12,11 +12,26 @@ problems, in particular how to transfer the solution from one grid to the next
 finer one. Apart from this, however, the program does not attempt to do much
 more than to entertain those who sometimes like to play with maths.
 
-\section{Introduction}
+The application we chose is, as you will see, not even very well suited for
+anything, since it is rather impossible to solve. When I started to write the
+program, I was not aware of this, and it only turned out later that the
+optimization problem we are looking at here is severely plagued by many,
+likely even degenerate minima, and that we cannot really hope to find a global
+one. What we do instead is to rather start the optimization from many initial
+guesses (which is cheap since the problem is 1d), and hope that we can get a
+reasonable best solution for some of them. While the whole thing, as an
+application, is not very satisfactory, keep in mind that solving particular
+applications is not the goal of the tutorial programs; rather, we would like
+to demonstrate techniques of programming with deal.II, which is indeed the
+focus here.
 
-In the book by Dacorogna on the Calculus of Variations, I found the following
-statement, which confused me tremendously at first (see Section 3.4.3,
-``Lavrentiev Phenomenon'', very slightly edited):
+
+\section{The problem}
+
+Now for a description of the problem.  In the book by Dacorogna on the
+Calculus of Variations, I found the following statement, which confused me
+tremendously at first (see Section 3.4.3, ``Lavrentiev Phenomenon'', very
+slightly edited):
 
 \begin{quote}
   \textbf{Theorem 4.6:} Let 
@@ -100,9 +115,13 @@ choose some other finite element function that is closer on average to
 $x^{1/3}$ than the interpolant above, then we have to increase the slope of
 this function, since we have to obey the boundary condition at the left
 end. But then we are hit by the weight $(u')^6$. This weight is simply too
-strong! 
+strong!
 
-Of course, in practice the minimal value of $I$ cannot increase under mesh
+On the other hand, the interpolation of the linear function $\varphi(x)=x$
+connecting the boundary values has the finite energy $I(i_h\varphi)=1/10$,
+independent of the mesh size. Thus, $i_hx^{1/3}$ cannot be the minimizer of the
+energy as $h\rightarrow 0$. This is also easy to see by noting that 
+the minimal value of $I$ cannot increase under mesh
 refinement: if it is finite for some function on some mesh, then it must be
 smaller or equal to that value on a finer mesh, since the original function is
 still in the space spanned by the shape functions on the finer grid, as finite
@@ -133,27 +152,101 @@ for all test functions $\varphi$ from the same space as that from which we
 take $u$, but with zero boundary conditions. If this space allows us to
 integrate by parts, then we could associate this with a two point boundary
 value problem
-\begin{equation*}
+\begin{equation}
+  \label{eq:equation}
   -(x-u^3) u^2(u')^6
   - \frac{d}{dx} \left\{(x-u^3)^2 (u')^5\right\} = 0,
   \qquad\qquad u(0)=0,
-  \quad u(1)=1,
-\end{equation*}
-but for finite elements, we will want to have it in weak form anyway. Since
-the equation is still nonlinear, we want to use a Newton method. For this, we
-compute iterates $u_{k+1}=u_k+\delta u_k$, and the updates are solutions of
+  \quad u(1)=1.
+\end{equation}
+Note that this equation degenerates whereever $u^3=x$, which is at least the
+case at $x\in\{0,1\}$ due to the prescribed boundary values for $u$, but
+possibly at other places as well.  However, for finite elements, we will want
+to have the equation in weak form anyway.  Since the equation is still
+nonlinear, one may be tempted to we compute iterates
+$u_{k+1}=u_k+\alpha_k\delta u_k$ using a Newton method for updates $\delta
+u_k$, like in
 \begin{equation*}
   I''(u_k,\delta u_k,\varphi) 
   = 
   -I'(u_k, \varphi).
 \end{equation*}
-$I''$ is actually a lengthy expression, so we will not write it down here
-(you'll find it in the code where we build up the matrix). The basic idea that
-you should get here is that we formulate a Newton method in a function space,
-and will only discretize each step separately.
+However, since $I''(u_k,\cdot,\cdot)$ may be an indefinite operator (and, as
+numerical experiments indicate, is in fact during typical computations), we
+don't want to use this. Instead, we use a gradient method, for which we
+compute updates according to the following scheme:
+\begin{equation}
+  \left<\delta u_k,\varphi\right>
+  = 
+  -I'(u_k, \varphi).
+\end{equation}
+For the scalar product on the left hand side, there are multiple valid ways;
+we choose the mesh dependent definition $\left<u,v\right> = \int_\Omega (uv +
+h(x)^2 \nabla u\cdot \nabla v)\; dx$, where the weight $h(x)^2$, i.e. using
+the local mesh width, is chosen so that the definition is dimensionally
+consistent. It also yields a matrix on the left hand side that is simple to
+invert, as it is the sum of the well-conditioned mass matrix, and a Laplace
+matrix times a factor that counters the growth of condition number of the
+Laplace matrix.
+
+The step length $\alpha_k$ is then computed using a one-dimensional line search
+finding
+\begin{equation}
+  \label{eq:linesearch}
+  \alpha_k = \arg\min_\alpha I(u_k+\alpha\delta u_k),
+\end{equation}
+or at least an approximation to this using a one-dimensional Newton method
+which itself has a line search. The details of this can be found in the code.
+We iterate the updates and line searches until the change in energy $I(u_k)$
+becomes too small to warrant any further iterations.
+
+The basic idea that you should get in all this is that we formulate the
+optimization method in a function space, and will only discretize each step
+separately. A number of subsequent steps will be done on the same mesh, before
+we refine it and go on to do the same on the next finer mesh.
+
+As for mesh refinement, it is instructional to recall how residual based error
+estimates like the one used in the Kelly et al.~error estimator are usually
+derived (the Kelly estimator is the one that we have used in most of the
+previous example programs). In a similar way, by looking at the residual of
+the strong form of the nonlinear equation we attempt here to solve, see
+equation \eqref{eq:equation}, we may be tempted to consider the following
+expression for refinement of cell $K$:
+\begin{eqnarray}
+  \label{eq:error-estimate}
+  \eta_K^2 =&
+  h^2 \left\|
+    (x-u_h^3) (u_h')^4 \left\{ u_h^2 (u_h')^2 + 5(x-u_h^3)u_h'' + 2u_h'(1-3u_h^2u_h') \right\}
+  \right\|^2_K
+  \notag \\
+  & +
+  \frac 12 h \left| (x-u_h^3)^2 [(u_h')^5] \right|^2_{\partial K},
+\end{eqnarray}
+where $[\cdot]$ is the jump of a quantity across an intercell boundary, and 
+$|\cdot|_{\partial K}$ is the sum of the quantity evaluated at the two end
+points of a cell. Note that in the evaluation of the jump, we have made use of
+the fact that $x-u_h^3$ is a continuous quantity, and can therefore be taken
+out of the jump operator.
+
+All these details actually matter -- while writing the program I have played
+around with many settings and different versions of the code, and the result
+is that if you don't have a good line search, good stopping criteria, the
+right metric (scalar product) for the gradient method, and a good refinement
+criterion, then the nonlinear solver gets stuck quite readily for this highly
+nonlinear problem. Initially, I was hardly able to find solutions for which
+the energy dropped below 0.01, while the energy after the final iteration of
+the program as it is is usually around 0.0003, and down to 3.5e-5.
+
+However, this is not enough. In the program, we start the solver on the coarse
+mesh many times, with randomly perturbed starting values, and while it
+converges it yields a different solution, with a different energy every
+time. One can therefore not say that the solver converges to a certain energy,
+and we can't answer the question what the smallest value of $I(u)$ might be in
+$W^{1,\infty}$. This is unsatisfactory, but maybe to be expected for such a
+contrived and pathological problem.
 
 
-\section{The program}
+\section{Implementation}
 
 The program does exactly this: it discretizes each Newton step, and forms the
 update. That is, it computes the matrix and right hand side vector

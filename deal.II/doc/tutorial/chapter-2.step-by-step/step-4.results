@@ -7,17 +7,79 @@ The output of the program looks as follows:
 ...
 </code>
 </pre>
+It is obvious that in three spatial dimensions the number of cells and
+therefore also the number of degrees of freedom is
+much higher. What cannot be seen here, is that besides this higher
+number of rows and columns in the matrix, there are also significantly
+more entries per row of the matrix in three space
+dimensions. Together, this leads to a much higher numerical effort for
+solving the system of equation, which you can feel when you actually
+run the program.
 
+<p>
+
+The program produces two files: <code>solution-2d.gmv</code> and
+<code>solution-3d.gmv</code>, which can be viewed using the program
+GMV (in case you do not have that program, you can easily change the
+output format in the program to something which you can view more
+easily). From the two-dimensional output, we have produced the
+following two pictures:
 
 <p>
 <TABLE WIDTH="100%">
 <tr>
 <td>
-<IMG SRC="step-4.data/solution-3d.jpg" ALT="solution-3d" HEIGHT="300">
+<IMG SRC="step-4.data/solution-3d.jpg" ALT="solution-3d" HEIGHT="400">
 </td>
 <td>
-<IMG SRC="step-4.data/grid-3d.jpg" ALT="grid-3d" HEIGHT="300">
+<IMG SRC="step-4.data/grid-3d.jpg" ALT="grid-3d" HEIGHT="400">
 </td>
 </tr>
 </table>
 <p>
+
+The left one shows the solution of the problem under consideration as
+a 3D plot. As can be seen, the solution is almost flat in the interior
+of the domain and has a higher curvature near the boundary. This, of
+course, is due to the fact that for Laplace's equation the curvature
+of the solution is equal to the right hand side and that was chosen as
+a quartic polynomial which is nearly zero in the interior and is only
+rising sharply when approaching the boundaries of the domain; the
+maximal values of the right hand side function are at the corners of
+the domain, where also the solution is moving most rapidly.
+
+It is also nice to see that the solution follows the desired quadratic
+boundary values along the boundaries of the domain.
+
+<p>
+
+The right picture shows the two dimensional grid, colorized by the
+values of the solution function. This is not very exciting, but the
+colors are nice.
+
+<p>
+
+
+In three spatial dimensions, visualization is a bit more difficult. To
+the left, you can see the solution at three of the six outer faces of
+the cube in which we solved the equation, and on a plane through the
+origin. On some of the planes, the cut through the grid is also shown.
+
+<p>
+<TABLE WIDTH="100%">
+<tr>
+<td>
+<IMG SRC="step-4.data/solution-3d.jpg" ALT="solution-3d" HEIGHT="400">
+</td>
+<td>
+<IMG SRC="step-4.data/grid-3d.jpg" ALT="grid-3d" HEIGHT="400">
+</td>
+</tr>
+</table>
+<p>
+
+The right picture shows the three dimensional grid, colorized by the
+solutions values. 3D grids are difficult to visualize, which can be
+seen here already, even though the grid is not locally refined.
+
+

@@ -9,7 +9,7 @@ print "<h1> The plain program</h1>\n";
 
 print "(The program can be found at <i>PROGRAMPATH</i>.)\n <p>\n";
 
-print "<pre><code>";
+print "<pre><code>\n";
 
 
 while (<>) {

@@ -205,7 +205,7 @@ Subsections may be nested, i.e. you are at liberty to declare
 subsections within subsections within subsections... 
 </p>
 
-<h3>Parameter types and pattern matching</h3>
+<h3>Parameter types</h3>
 
 <p>
 The parameter handler allows you to specify that any parameter
@@ -213,7 +213,7 @@ be of a distinct type.
 Upon reading a file the value of this
 parameter is checked against the type and an exception is thrown
 if they do not match. An exception is also thrown if the default
-parameter if the default parameter does not match the specified type.
+parameter does not match the specified type.
 Below we show a list of the types available. The first column
 gives an explanation, the second lists the corresponding C++ type
 and the third column shows how to use this type in <acronym>deal.II</acronym>.
@@ -281,20 +281,79 @@ multiple lines.
 <p>
 Leading and trailing whitespace is ignored and multiple whitespace is
 condensed into one. Entry or subsection
-declarations in your code should therefore 
+declarations within your code should therefore 
 not contain multiple whitespace, which will not be recognized.
 </p>
 
 <h3>Different input sources</h3>
 
 <p>
+You can obtain data from three different kinds of source:
 </p>
+<ul>
+  <li>an <code>istream</code></li>
+  <li>a file</li>
+  <li>a string</li>
+</ul>
+
+<p>
+It is possible to use different sources successively. Parameters
+that are entered more than once will be overwritten, i.e. the
+value encountered last of the parameter in question is used. 
+</p>
+
+<p class="Example">
+<span class="example">Example:</span>
+We read parameters successively
+from three different sources. This example was taken from
+the <a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/base/ParameterHandler.html"><code>ParameterHandler</code> class documentation</a>.
+</p>
+
+<pre class="example">
+<code>
+ParameterHandler prm;
+...
+// declaration of entries
+...
+prm.read_input (cin);         // read input from standard in,
+// or
+prm.read_input (&quot;simulation.in&quot;);
+// or
+char *in = &quot;set Time step size = 0.3 \n ...&quot;;
+prm.read_input (in);
+...
+</code>
+</pre>
 
 <h3>Parameter output</h3>
 
 <p>
+You can, for example for logging purposes, write all the parameters
+your code knows about to an <code>ostream</code> in a given format.
+The formats supported at present are text and LaTeX.
+The method handling this is called: <br>
+<code>
+ostream &amp; ParameterHandler::print_parameters(ostream &amp;out, const OutputStyle style) 
+</code><br>
 </p>
 
+<p>
+You can also write the parameters of a single subsection to an
+<code>ostream</code> using<br>
+<code>
+void ParameterHandler::print_parameters_section (ostream &amp;out,
+                                   const OutputStyle style,
+                                   const unsigned int indent_level);
+</code>
+</p>
+
+<p>
+In both cases <code>out</code> is the <code>ostream</code> 
+the parameters are written to, <code>style</code> is 
+the output format, either 
+<tt>text</tt> or <tt>LaTeX</tt>. In the case of subsections 
+the <code>indent_level</code> is the level of indentation.
+</p>
 
 <!-- Page Foot -->
 <hr>

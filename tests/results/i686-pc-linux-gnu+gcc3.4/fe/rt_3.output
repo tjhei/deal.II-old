@@ -1,0 +1,20 @@
+JobId Wed Apr 23 19:05:26 2003
+DEAL::FE_RaviartThomas<2> (0)
+DEAL::0.50 
+DEAL::0.50 
+DEAL::
+DEAL::FE_RaviartThomas<2> (1)
+DEAL::0.50 0.00 
+DEAL::0.25 0.25 
+DEAL::0.25 0.25 
+DEAL::0.00 0.50 
+DEAL::
+DEAL::FE_RaviartThomas<2> (2)
+DEAL::0.50 0.00 0.00 
+DEAL::0.25 0.25 -0.50 
+DEAL::0.00 0.00 0.12 
+DEAL::0.25 0.25 -0.50 
+DEAL::0.00 0.50 0.00 
+DEAL::0.00 0.00 0.12 
+DEAL::
+DEAL::FE_RaviartThomas<2> (3)

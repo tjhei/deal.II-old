@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% intro.h was generated from this file 
+%% intro.html was generated from this file 
 %% with latex2html and some handwork
 %% (copying out the relevant parts from the 
 %% generated html file, replacing IMG=
@@ -15,7 +15,7 @@
 
 In real life, most partial differential equations are really systems
 of equations. Accordingly, the solutions are usually
-vector-valued. The deal.II library supports such problems we will show
+vector-valued. The deal.II library supports such problems, and we will show
 that that is mostly rather simple. The only more complicated problems
 are in assembling matrix and right hand side, but these are easily
 understood as well. 
@@ -30,7 +30,7 @@ $$
   -
   \partial_j (c_{ijkl} \partial_k u_l)
   =
-  0,
+  f_i,
   \qquad
   i=1\ldots d,
 $$
@@ -53,7 +53,7 @@ $$
    -
    (\nabla \cdot \mu \nabla) \vec u
    =
-   0,
+   \vec f,
 $$
 and the respective bilinear form is then
 $$

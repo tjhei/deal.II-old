@@ -18,32 +18,37 @@
 <h1>Hanging Nodes</h1>
 
 This chapter discusses locally refined grids, which are the only ones with
-hanging nodes. A node is called hanging if its value is not fixed.
- In particular, nodes on the boundary of your domain
+hanging nodes. A node is called hanging if its value is subject to a 
+constraint.
+In particular, nodes on the boundary of your domain
 are not hanging.
 
 <h2>When do you get hanging nodes ?</h2>
 
 <p>
-You get hanging nodes after each refinement. The value of these nodes is
-not fixed, but they are subject to constraints. Hanging nodes 
+You get hanging nodes after each refinement. Hanging nodes are those that 
+are situated on the boundary of a larger active cell. The global function 
+is assumed
+to be linear on the boundary of each active cell, therefore the value
+of the hanging node must be adjusted accordingly. Newly created nodes that
+are not situated on boundaries of larger active cells are not subject to this 
+constraint because there is no reason to assume that the global function
+is linear on the boundary of a parent cell.
+Hanging nodes 
 and the constraints they are subject to need to be
 taken into account when generating your matrix structure.
+This is further discussed in the chapters on
+<a href="matrix_structure.html">matrix structure</a> and 
+<a href="condense.html">condensing the hanging nodes</a>.
 </p>
 
-<h2>How to condense hanging nodes into a matrix structure</h2>
-
-There are three <acronym>deal.II</acronym> methods you will need for
-dealing with hanging nodes:
-<ul>
-<li></li>
-<li</li>
-<li></li>
-</ul>
-
-
-NOT FINISHED
-
+<table class="image">
+<caption class="image" align=bottom>Hanging nodes on a locally refined grid</caption>
+<td>
+<img src="../images/hanging_nodes.gif" width=398 height=254
+      alt="Hanging Nodes">
+</td>
+</table>
 <!-- Page Foot -->
 <hr>
 <table class="navbar">      

@@ -19,9 +19,11 @@
  * here provide services for the direct solution of sparse systems of
  * linear equations. For a thorough discussion of these functions, as
  * well as for a way to download them, please see
- * @url{http://www.cse.clrc.ac.uk/Activity/HSL}.
+ * @url{http://www.cse.clrc.ac.uk/Activity/HSL}. For a description of
+ * the steps necessary for the installation of HSL subroutines, read
+ * the section on external libraries in the deal.II ReadMe file.
  *
- * @author Wolfgang Bangerth, 2000
+ * @author Wolfgang Bangerth, 2000, 2001
  */
 namespace HSL 
 {

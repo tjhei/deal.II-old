@@ -69,9 +69,16 @@ step-by-step.sgml: $(example-sgmls)
 	@rm $(example-sgmls)
 
 
+validate-xrefs:
+	$(PERL) $D/doc/auto/scripts/validate-xrefs.pl \
+                $(filter-out head.html foot.html, \
+                             $(shell echo *.html))
+
+
 clean:
 	-rm -f $(example-htmls)
 
 
 # mark the output files as phony, i.e. generate them every time
-.PHONY: $(example-htmls) clean
+.PHONY: $(example-htmls) validate-xrefs clean
+

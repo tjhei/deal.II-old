@@ -70,13 +70,14 @@ The finite elements used are bilinear.
 <code>
 #include &lt;grid/tria.h&gt;
 #include &lt;grid/dof.h&gt;
+#include &lt;grid/grid_generator.h&gt;
 #include &lt;fe/fe_lib.lagrange.h&gt;
 
 Triangulation&lt;dim&gt; tr;
 DoFHandler&lt;dim&gt; dof;
-FELinear&lt;dim&gt; fe;
+FEQ1&lt;dim&gt; fe;
 
-tr.create_hypercube(-1,1);
+GridGenerator&lt;dim&gt;::hyper_cube(tr,-1,1);
 dof.distribute_dofs(fe);
 </code>
 </pre>

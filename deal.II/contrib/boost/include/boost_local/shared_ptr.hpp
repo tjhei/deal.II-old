@@ -162,6 +162,13 @@ public:
 
 #if !defined(BOOST_MSVC) || (BOOST_MSVC > 1200)
 
+    shared_ptr & operator=(shared_ptr const & r) // never throws
+    {
+        px = r.px;
+        pn = r.pn; // shared_count::op= doesn't throw
+        return *this;
+    }
+
     template<typename Y>
     shared_ptr & operator=(shared_ptr<Y> const & r) // never throws
     {

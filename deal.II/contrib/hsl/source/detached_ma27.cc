@@ -21,6 +21,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <typeinfo>
+#include <string>
 
 #include <unistd.h>
 #include <pthread.h>
@@ -154,21 +155,25 @@ void monitor_parent_liveness (const pid_t master_pid)
 template <typename T>
 void put (const T *t, const size_t N, const char *debug_info)
 {
-                                   // repeat writing until syscall is
-                                   // not interrupted
-  int ret;
-  do
-    ret = write (1, reinterpret_cast<const char *> (t),
-                 sizeof(T) * N);
-  while ((ret<0) && (errno==EINTR));
-  if (ret < 0)
-    die ("error on client side in 'put'", ret, errno);
-  if (ret < static_cast<signed int>(sizeof(T)*N))
-    die ("not everything was written", ret, sizeof(T)*N);
+  unsigned int count = 0;
+  while (count < sizeof(T)*N)
+    {
+                                       // repeat writing until syscall
+                                       // is not interrupted
+      int ret;
+      do
+        ret = write (1, reinterpret_cast<const char *> (t),
+                     sizeof(T) * N);
+      while ((ret<0) && (errno==EINTR));
+      if (ret < 0)
+        die ("error on client side in 'put'", ret, errno);
 
+      count += ret;
+    };
+  
   fflush (NULL);
   CommunicationsLog::
-    record_communication<T> (CommunicationsLog::put, N, ret, debug_info);
+    record_communication<T> (CommunicationsLog::put, N, count, debug_info);
 };
 
 

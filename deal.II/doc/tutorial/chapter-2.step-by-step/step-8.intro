@@ -1,0 +1,58 @@
+<a name="Intro"></a>
+<h1>Introduction</h1>
+
+<p>
+In real life, most partial differential equations are really systems
+of equations. Accordingly, the solutions are usually
+vector-valued. The deal.II library supports such problems we will show
+that that is mostly rather simple. The only more complicated problems
+are in assembling matrix and right hand side, but these are easily
+understood as well. 
+</p>
+
+<p>
+In the example, we will want to solve the elastic equations. They are
+an extension to Laplace's equation with a vector-valued solution that
+describes the displacement in each space direction of a rigid body
+which is subject to a force. Of course, the force is also
+vector-valued, meaning that in each point it has a direction and an
+absolute value. The elastic equations are the following:
+</p>
+<P ALIGN=CENTER><MATH CLASS=EQUATION>
+  -
+  &pd;<SUB>j</SUB> (c<SUB>ijkl</SUB> &pd;<SUB>k</SUB> u<SUB>l</SUB>)
+  =
+  0,
+  &quad;
+  i=1&ldots;d,
+</MATH></P>     
+<p>
+where the values c<SUB>ijkl</SUB> are the stiffness coefficients and
+will usually depend on the space coordinates. In
+many cases, one knows that the material under consideration is
+isotropic, in which case by introduction of the two coefficients
+lambda and mu the coefficient tensor reduces to
+</p>
+<P ALIGN=CENTER><MATH CLASS=EQUATION>
+  c<SUB>ijkl</SUB>
+  =
+  &lambda;&delta;<SUB>ij</SUB> &delta;<SUB>kl</SUB> +
+  &mu;(&delta;<SUB>ik</SUB> &delta;<SUB>jl</SUB> + 
+  &delta;<SUB>il</SUB> &delta;<SUB>jk</SUB>).
+</MATH></P>      
+
+<p>
+The elastic equations can then be rewritten in much simpler a form:
+</p>
+<P ALIGN=CENTER><MATH CLASS=EQUATION>
+   -
+   &nabla;(&lambda;+&mu;) (&nabla;u)
+   -
+   (&nabla;&mu;&nabla;) u
+   =
+   0
+</MATH></P>
+<p>
+This is the form that we will try to solve. The program that does so
+is based on the step-6 program.
+</p>

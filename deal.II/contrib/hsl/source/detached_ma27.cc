@@ -12,6 +12,7 @@
 //----------------------------  detached_ma27.cc  ---------------------------
 
 #include <base/config.h>
+#include <base/thread_management.h>
 #include <hsl/hsl.h>
 
 #include <vector>
@@ -133,7 +134,7 @@ void die (const std::string &text, const T1 t1, const T2 t2)
  * about the parent process, so it is apparently gone
  */
 extern "C"
-void * monitor_thread (void *) 
+void monitor_parent_liveness () 
 {
 #ifdef HAVE_STD_STRINGSTREAM
   std::ostringstream s;
@@ -225,8 +226,10 @@ int main ()
   get (&master_pid, 1, "master_pid");
                                    // ...and start off a thread that
                                    // actually checks that
-  pthread_t monitor_thread_id;
-  pthread_create (&monitor_thread_id, 0, &monitor_thread, 0);
+  Threads::ThreadManager thread_manager;
+  Threads::spawn (thread_manager,
+                  Threads::encapsulate (&monitor_parent_liveness)
+                  .collect_args());
   
                                    // then go into the action loop...
   unsigned int N, NZ, NSTEPS, LA, MAXFRT, LIW;
@@ -341,10 +344,7 @@ int main ()
           case '7':
           {
                                              // ok, this is the stop
-                                             // signal. for this, kill
-                                             // the monitor thread,
-                                             // and exit gracefully
-            pthread_kill (monitor_thread_id, SIGKILL);
+                                             // signal. exit gracefully
             exit (0);
             break;
           };
@@ -354,6 +354,14 @@ int main ()
                      static_cast<unsigned short int>(action));
         };
     };
+                                   // exit here explicitly, without
+                                   // giving the thread manager a
+                                   // chance to wait for the child
+                                   // thread, since that will loop
+                                   // forever. however, we should
+                                   // never be able to get to this
+                                   // point anyway...
+  exit (1);
 };
 
                 

@@ -596,7 +596,7 @@ sub identifyDecl
 	elsif ( $decl =~ /^\s*((?:template\s*<.*>)?)      # 1 template
 					\s*(class|struct|union|namespace) # 2 struct type
 					\s+([\w_]+                        # 3 name
-							(?:<[\w_ :,]+?>)?		  # maybe explicit template
+							(?:<[\w_ :,&\*]+?>)?  # maybe explicit template
 									#    (eat chars between <> non-hungry)
 							(?:::[\w_]+)*                 #   maybe nested
 					   )

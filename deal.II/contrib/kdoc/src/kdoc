@@ -1135,7 +1135,7 @@ sub newFriendClass
 {
 	my ( $className, $templates ) = @_;
 
-	my ( $node ) = Ast::New( $name );
+	my ( $node ) = Ast::New( $className );
 
 	$node->AddProp( "NodeType", "friend class" );
 	$node->AddProp( "Name", $className );

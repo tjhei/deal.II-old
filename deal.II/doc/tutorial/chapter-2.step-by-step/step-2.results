@@ -8,3 +8,21 @@ patterns. We can visualize them using GNUPLOT:
   plot "sparsity_pattern.1"
 </code>
 </pre>
+
+<p>
+The results then look like this:
+<p>
+<TABLE WIDTH="60%">
+<tr>
+<td>
+<IMG SRC="step-2.data/sparsity_pattern_1.jpg" ALT="sparsity-pattern-1" WIDTH="300">
+</td>
+<td>
+<IMG SRC="step-2.data/sparsity_pattern_2.jpg" ALT="sparsity-pattern-2" WIDTH="300">
+</td>
+</tr>
+</table>
+<p>
+
+As can be seen, the sparsity pattern is much better clustered around
+the main diagonal of the matrix after renumbering.

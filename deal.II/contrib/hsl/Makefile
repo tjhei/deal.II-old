@@ -29,13 +29,13 @@ $(LIBDIR)/contrib/hsl/%.$(OBJEXT) :
 lib: $(LIBDIR)/libhsl$(lib-suffix) $(LIBDIR)/bin/detached_ma27$(EXEEXT)
 
 
-$(LIBDIR)/libhsl.a: $(forward-declarations) $(o-files)
+$(LIBDIR)/libhsl$(static-lib-suffix): $(forward-declarations) $(o-files)
 	@echo =====hsl==============optimized==$(MT)== Linking library:   $(@F)
 	@$(AR) ru $@ $(o-files)
 
 # link the object files to a shared library. since this is not C++,
 # simply use the C compiler, rather than $(SHLIBLD)
-$(LIBDIR)/libhsl.so: $(forward-declarations) $(o-files)
+$(LIBDIR)/libhsl$(shared-lib-suffix): $(forward-declarations) $(o-files)
 	@echo =====hsl==============optimized==$(MT)== Linking library:   $(@F)
 	@$(SHLIBLD) $(LDFLAGS) -shared -o $@ $(o-files) $(F77LIBS)
 
@@ -83,4 +83,4 @@ include Makefile.dep
 
 
 .PHONY: clean
-.PHONY: lib lib.a lib.g.a
+.PHONY: lib lib$(static-lib-suffix) lib.g$(static-lib-suffix)

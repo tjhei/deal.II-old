@@ -1,5 +1,5 @@
 # $Id$
-# Copyright (C) 2001, 2002 by Wolfgang Bangerth
+# Copyright (C) 2001, 2002, 2003 by Wolfgang Bangerth
 
 
 D = ../..
@@ -41,7 +41,7 @@ $(LIBDIR)/libhsl.a: $(forward-declarations) $(o-files)
 # simply use the C compiler, rather than $(SHLIBLD)
 $(LIBDIR)/libhsl.so: $(forward-declarations) $(o-files)
 	@echo =====hsl==============optimized==$(MT)== Linking library:   $(@F)
-	@$(CC) $(LDFLAGS) -shared -o $@ $(o-files)
+	@$(CC) $(LDFLAGS) -shared -o $@ $(o-files) $(F77LIBS)
 
 
 

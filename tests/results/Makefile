@@ -13,6 +13,7 @@ all: .links
 linkfiles-%:
 	@TARGET=`echo $@ | $(PERL) -pi -e 's/linkfiles-//; s/-to-.*//;'` ; \
 	SOURCE=`echo $@ | $(PERL) -pi -e 's/.*-to-//;'` ; \
+	echo "Creating links from $$SOURCE into $$TARGET" ; \
 	cd $$SOURCE ; \
 	for i in */*output ; do \
 		if test ! -f ../$$TARGET/$$i ; then \
@@ -29,19 +30,19 @@ linkfiles-%:
 linkdirs-%:
 	@TARGET=`echo $@ | $(PERL) -pi -e 's/linkfiles-//; s/-to-.*//;'` ; \
 	SOURCE=`echo $@ | $(PERL) -pi -e 's/.*-to-//;'` ; \
+	echo "Aliasing $$TARGET to $$SOURCE" ; \
 	if test -L $$TARGET ; then rm $$TARGET ; fi ; \
 	ln -s $$SOURCE $$TARGET
 
 .links:   linkfiles-i686-pc-linux-gnu+icc7.1-to-i686-pc-linux-gnu+gcc3.2 \
 	  linkfiles-i686-pc-linux-gnu+gcc3.4-to-i686-pc-linux-gnu+gcc3.2 \
+	  linkfiles-i686-pc-linux-gnu+gcc2.95-to-sparc-sun-solaris2.7+gcc2.95 \
 	  linkdirs-sparc-sun-solaris2.8+gcc2.95-to-sparc-sun-solaris2.7+gcc2.95 \
 	  linkdirs-sparc-sun-solaris2.9+gcc2.95-to-sparc-sun-solaris2.7+gcc2.95 \
 	  linkdirs-i686-pc-linux-gnu+icc7-to-i686-pc-linux-gnu+icc7.1
-	(cd i686-pc-linux-gnu+gcc2.95; sh .link)
-	touch .links
+	@touch .links
 
 clean:
-	(cd i686-pc-linux-gnu+gcc2.95; sh .unlink)
 	rm .links
 
 

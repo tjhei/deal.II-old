@@ -78,7 +78,7 @@ step-by-step.sgml: $(example-sgmls)
 
 
 validate-xrefs:
-	$(PERL) $D/doc/auto/scripts/validate-xrefs.pl \
+	@$(PERL) $D/common/scripts/validate-xrefs.pl \
                 $(filter-out head.html foot.html, \
                              $(shell echo *.html))
 

@@ -9,7 +9,7 @@ validate-xrefs:
 	  if test -d $$dir -a ! $$dir = CVS ; then \
 	    cd $$dir ; \
 	    echo "Checking `pwd`" ; \
-	    $(PERL) $D/doc/auto/scripts/validate-xrefs.pl *html ; \
+	    $(PERL) $D/common/scripts/validate-xrefs.pl *html ; \
 	    cd .. ; \
 	  fi ; \
 	done

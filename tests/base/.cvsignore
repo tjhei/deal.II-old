@@ -1,5 +1,5 @@
 *.go reference logtest tensor
 *.testcase
-*.dat
-Make.depend Makefile
+*.dat *.output
+Makefile.depend Makefile
 *.check

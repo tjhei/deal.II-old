@@ -15,11 +15,11 @@
 #include <unistd.h>
 #include <hsl/hsl.h>
 #include <vector>
-
+#include <iostream>
 
 
 template <typename T>
-void put (const T *t, const size_t N, const char *info)
+void put (const T *t, const size_t N, const char */*debug_info*/)
 {
   write (1,
          reinterpret_cast<const char *> (t),
@@ -29,7 +29,7 @@ void put (const T *t, const size_t N, const char *info)
 
 
 template <typename T>
-void get (T *t, const size_t N, const char *info)
+void get (T *t, const size_t N, const char */*debug_info*/)
 {
   unsigned int count = 0;
   while (count < sizeof(T)*N)

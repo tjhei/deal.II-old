@@ -11,6 +11,7 @@
 //
 //----------------------------  detached_ma27.cc  ---------------------------
 
+#include <base/config.h>
 #include <hsl/hsl.h>
 
 #include <vector>

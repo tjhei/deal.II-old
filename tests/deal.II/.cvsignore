@@ -3,3 +3,4 @@ Makefile Makefile.depend
 *.testcase
 *.output
 *.check
+*.exe

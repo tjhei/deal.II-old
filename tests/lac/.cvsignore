@@ -4,3 +4,4 @@ Makefile Make.depend Makefile.depend
 *.output
 T
 *.check
+*.exe

@@ -3,3 +3,4 @@
 *.dat *.output
 Makefile.depend Makefile
 *.check
+*.exe

@@ -52,6 +52,19 @@ single machine if so desired, without any changes.
 </p>
 
 <p>
+Note, however, that the only data structures we parallelize are matrices and
+vectors. We do, in particular, not split up the <code>Triangulation</code> and
+<code>DoFHandler</code> classes: each process still has a complete copy of
+these objects, and all processes have exact copies of what the other processes
+have. Parallelizing the data structures used in hierarchic and unstructured
+triangulations is a very hard problem, and we do not attempt to do so at
+present. It also requires that many more aspects of the application program
+have to be changed, since for example loops over all cells can only include
+locally available cells. We thus went for the path of least resistance and
+only parallelized the linear algebra part.
+</p>
+
+<p>
 The techniques this program demonstrates are: how to use the PETSc wrapper
 classes; how to parallelize operations for jobs running on an MPI network; and
 how to partition the domain into subdomains to parallelize up the work. Since

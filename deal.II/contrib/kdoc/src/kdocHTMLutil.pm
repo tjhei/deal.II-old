@@ -553,7 +553,15 @@ sub wordRef
 
 	warn fullName( $ref ). " hasn't a reference." unless defined $ref->{Ref};
 
-	return hyper( $ref->{Ref}, $str ) unless !defined $ref->{Ref};
+	# return a hyperlinked reference to $str if that has a node with some 
+        # source. if it has no source, then it is most probably a forward
+	# declaration, and in any case we don't have a file to which we can link
+	if (defined $ref->{Ref} && defined $ref->{Source} ) {
+	    return hyper( $ref->{Ref}, $str );
+	}
+	else {
+	    return esc($str);
+	}
 }
 
 =head2 textRef

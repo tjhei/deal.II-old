@@ -831,7 +831,7 @@ Hence for a given degree <I>p</I> the
 <I>laplace_on_quad_vector</I> can be filled by the constructor of
 the <I>MappingQ</I> class. This is done by calling the
 <I>MappingQ::set_laplace_on_quad_vector</I> function that
-includes the coefficients hardcoded for <I>p</I>=2 and <I>p</I>=3 in <I>d</I>=2dimensions, and a routine for computing the coefficients according to
+includes the coefficients hardcoded for <I>p</I>=2 and <I>p</I>=3 in <I>d</I>=2 dimensions, and a routine for computing the coefficients according to
 (<A HREF="index.html#eq:coefficients">9</A>) for all other cases.  The mapping support
 points <IMG
  WIDTH="56" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
@@ -848,9 +848,9 @@ MappingQ object by the
 <I>MappingQ::compute_support_points_laplace</I> that is invoked
 by the virtual <I>compute_mapping_support_points</I> function of
 the base <I>Mapping</I> class. In
-<I>MappingQ::compute_support_points_laplace</I>, first the 4<I>p</I>points on the boundary of the cell are computed (by calling
+<I>MappingQ::compute_support_points_laplace</I>, first the 4<I>p</I> points on the boundary of the cell are computed (by calling
 <I>MappingQ::add_line_support_points</I>), then by calling
-<I>MappingQ::apply_laplace_vector</I> the remaining (<I>p</I>-1)<SUP>2</SUP>inner mapping supports points are computed, where
+<I>MappingQ::apply_laplace_vector</I> the remaining (<I>p</I>-1)<SUP>2</SUP> inner mapping supports points are computed, where
 <I>MappingQ::apply_laplace_vector</I> just performes the linear
 combination given in (<A HREF="index.html#eq:linear-combination-laplace">8</A>).
 <BR><HR>

@@ -40,6 +40,7 @@ void get (T *t, const size_t N, const char */*debug_info*/)
       if (ret < 0)
         {
           std::cerr << "------ error " << ret << " on client side!"
+                    << " errno=" << errno
                     << std::endl;
           abort ();
         }

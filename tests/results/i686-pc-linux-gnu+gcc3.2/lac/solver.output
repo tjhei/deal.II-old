@@ -49,18 +49,18 @@ DEAL:sor:GMRES::Convergence step 5 value 1.278e-18
 DEAL:sor:GMRES::Starting value 1.462
 DEAL:sor:GMRES::Convergence step 5 value 1.278e-18
 DEAL:psor:RichardsonT::Starting value 3.000
-DEAL:psor:RichardsonT::Convergence step 7 value 0.0004339
+DEAL:psor:RichardsonT::Convergence step 8 value 0.0004237
 DEAL:psor:Richardson::Starting value 3.000
-DEAL:psor:Richardson::Convergence step 7 value 0.0004339
+DEAL:psor:Richardson::Convergence step 8 value 0.0004237
 DEAL:psor:cg::Starting value 3.000
-DEAL:psor:cg::Failure step 100 value 0.2585
-DEAL:psor::Iterative method reported convergence failure in step 100 with residual 0.258509
+DEAL:psor:cg::Failure step 100 value 0.1024
+DEAL:psor::Iterative method reported convergence failure in step 100 with residual 0.102391
 DEAL:psor:Bicgstab::Starting value 3.000
-DEAL:psor:Bicgstab::Convergence step 5 value 1.797e-15
-DEAL:psor:GMRES::Starting value 1.462
-DEAL:psor:GMRES::Convergence step 5 value 1.208e-18
-DEAL:psor:GMRES::Starting value 1.462
-DEAL:psor:GMRES::Convergence step 5 value 1.208e-18
+DEAL:psor:Bicgstab::Convergence step 4 value 0.0001279
+DEAL:psor:GMRES::Starting value 1.467
+DEAL:psor:GMRES::Convergence step 5 value 0.0006649
+DEAL:psor:GMRES::Starting value 1.467
+DEAL:psor:GMRES::Convergence step 5 value 0.0006649
 DEAL::Size 12 Unknowns 121
 DEAL::SOR-diff:0.000
 DEAL:no-fail:cg::Starting value 11.00
@@ -116,17 +116,17 @@ DEAL:sor:GMRES::Convergence step 23 value 0.0006981
 DEAL:sor:GMRES::Starting value 7.322
 DEAL:sor:GMRES::Convergence step 23 value 0.0006981
 DEAL:psor:RichardsonT::Starting value 11.00
-DEAL:psor:RichardsonT::Convergence step 88 value 0.0009636
+DEAL:psor:RichardsonT::Convergence step 89 value 0.0009736
 DEAL:psor:Richardson::Starting value 11.00
-DEAL:psor:Richardson::Convergence step 88 value 0.0009636
+DEAL:psor:Richardson::Convergence step 89 value 0.0009736
 DEAL:psor:cg::Starting value 11.00
-DEAL:psor:cg::Failure step 100 value 5.643
-DEAL:psor::Iterative method reported convergence failure in step 100 with residual 5.64329
+DEAL:psor:cg::Failure step 100 value 2.935
+DEAL:psor::Iterative method reported convergence failure in step 100 with residual 2.93488
 DEAL:psor:Bicgstab::Starting value 11.00
-DEAL:psor:Bicgstab::Convergence step 14 value 0.0009987
-DEAL:psor:GMRES::Starting value 7.322
-DEAL:psor:GMRES::Convergence step 23 value 0.0006981
-DEAL:psor:GMRES::Starting value 7.322
-DEAL:psor:GMRES::Convergence step 23 value 0.0006981
+DEAL:psor:Bicgstab::Convergence step 11 value 0.0001588
+DEAL:psor:GMRES::Starting value 7.345
+DEAL:psor:GMRES::Convergence step 20 value 0.0008491
+DEAL:psor:GMRES::Starting value 7.345
+DEAL:psor:GMRES::Convergence step 20 value 0.0008491
 DEAL::GrowingVectorMemory:Overall allocated vectors: 312
 DEAL::GrowingVectorMemory:Maximum allocated vectors: 8

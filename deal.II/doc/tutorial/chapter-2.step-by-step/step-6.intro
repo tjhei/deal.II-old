@@ -2,4 +2,43 @@
 <h1>Introduction</h1>
 
 <p>
+The main emphasis in this example is the handling of locally refined
+grids. In our approach to adaptivity, we use grids of which
+neighboring cells may be refined a different number of times, and then
+there result nodes on the interfaces of cells which belong to one
+side, but are unbalanced on the other. We call these ``hanging nodes''.
+</p>
+
+<p>
+To guarantee that the global solution is continuous at these nodes as
+well, we have to state some additional constraints on the values of
+the solution at these nodes, and we will show how to obtain these
+constraints and how to use them in the solution of the linear system
+of equations.
+</p>
+
+<p>
+The locally refined grids are produced using an error estimator class
+which estimates the energy error with respect to the Laplace
+operator. This error estimator, although developed for Laplace's
+equation has proven to be a suitable tool to generate locally refined
+meshes for a wide range of equations, not restricted to elliptic
+problems. Although it will create non-optimal meshes for other
+equations, it is often a good way to quickly produce meshes that are
+well adapted to the features of solutions, such as regions of great
+variation or discontinuities. Although the error estimator (and its
+implementation in the deal.II library) is capable of handling variable
+coefficients in the equation, we will not use this feature since we
+are only interested in a quick and simple way to generate locally
+refined grids.
+</p>
+
+<p>
+Since the concepts used for locally refined grids are so important,
+we do not show much additional new stuff in this example. There will
+be large regions in the code that are unaltered from the previous
+example and which we will not comment on further. The only other new
+thing is a method to catch exceptions in the ``main'' function in
+order to output some information in case the program crashes for some
+reason.
 </p>

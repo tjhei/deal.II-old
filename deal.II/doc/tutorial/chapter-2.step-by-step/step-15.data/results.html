@@ -1,2 +1,84 @@
 <a name="Results"></a>
 <h1>Results</h1>
+
+<p>
+If run, the program generates output like this:
+</p>
+
+<code><pre>
+Realization 0:
+   Energy: 0.00267545
+   Energy: 0.000774987
+   Energy: 0.000369921
+   Energy: 0.000196206
+   Energy: 0.000141912
+   Energy: 0.000128605
+   Energy: 0.000124399
+   Energy: 0.000123254
+   Energy: 0.000122788
+   Energy: 0.00012256
+   Energy: 0.000122465
+   Energy: 0.000122434
+   Energy: 0.000122427
+   Energy: 0.000119443
+   Energy: 0.000119442
+
+Realization 1:
+   Energy: 0.00283288
+   Energy: 0.000830749
+   Energy: 0.000346346
+   Energy: 0.000183367
+   Energy: 0.000139092
+   Energy: 0.000125745
+   Energy: 0.000121538
+   Energy: 0.000120382
+   Energy: 0.000119934
+   Energy: 0.000119677
+   Energy: 0.000119534
+   Energy: 0.000119473
+   Energy: 0.000119462
+   Energy: 0.000119643
+
+....
+
+Realization 9:
+   Energy: 0.0103424
+   Energy: 0.00820572
+   Energy: 0.00771209
+   Energy: 0.00759366
+   Energy: 0.00755131
+   Energy: 0.00753996
+   Energy: 0.00753659
+   Energy: 0.0075344
+   Energy: 0.00753374
+   Energy: 0.00753362
+   Energy: 0.0071671
+   Energy: 0.00716708
+</pre></code>
+
+<p>
+The lowest energy yet seen is in this run (you only get this by increasing the
+number of runs):
+</p>
+<code><pre>
+Realization 18:
+   Energy: 0.00200645
+   Energy: 0.000638519
+   Energy: 0.00022749
+   Energy: 9.18962e-05
+   Energy: 5.42442e-05
+   Energy: 3.94415e-05
+   Energy: 3.42307e-05
+   Energy: 3.30727e-05
+   Energy: 3.19998e-05
+   Energy: 3.18104e-05
+   Energy: 2.97091e-05
+   Energy: 3.5011e-05
+</pre></code>
+
+<p>
+Apparently something went wrong in the last step (the energy increased, which
+it shouldn't - but then this is a strongly nonlinear problem), which is also
+why the program aborted after this iteration.
+</p>
+

@@ -17,11 +17,55 @@
 
 <h1>Hanging Nodes</h1>
 
+This chapter discusses locally refined grids, which are the only ones with
+hanging nodes. A node is called hanging if its value is not fixed.
+ In particular, nodes on the boundary of your domain
+are not hanging.
+
+<h2>When do you get hanging nodes ?</h2>
+
+<p>
+You get hanging nodes after each refinement. The value of these nodes is
+not fixed, but they are subject to constraints. Hanging nodes 
+and the constraints they are subject to need to be
+taken into account when generating your matrix structure.
+</p>
+
+<h2>How to condense hanging nodes into a matrix structure</h2>
+
+There are three <acronym>deal.II</acronym> methods you will need for
+dealing with hanging nodes:
+<ul>
+<li></li>
+<li</li>
+<li></li>
+</ul>
+
+<p class="Example">
+<span class="example">Example:</span> We will create a
+constraint matrix for hanging nodes and condense the hanging nodes into our matrix structure. Below we show the includes,
+definitions and
+function calls needed. Be sure to use them in their appropriate places.
+</p>
+<pre class="example">
+<code>
+NOT FINISHED
+
+hanging_nodes.clear();
+dof.make_constraint_matrix(hanging_nodes);
+hanging_nodes.condense(matrix_structure);
+</code>
+</pre>
+
+NOT FINISHED
 
 <!-- Page Foot -->
 <hr>
 <table class="navbar">      
 <tr>
+  <td>
+    <a href="matrix_structure.html">Next Chapter: Matrix Structure</a>
+  </td>
   <td>
     <a href="toc.html">Back to this chapter's index</a>
   </td>

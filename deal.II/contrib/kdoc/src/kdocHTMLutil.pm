@@ -602,23 +602,20 @@ sub deref
 	my $out = "";
 	my $text;
 
-	# first escape @x directives. these are @x commands that do
-	# not take parameters, i.e. they do not take an argument which
-	# would either be the next word or the string in braces after
-	# the command name
-	$str =~ s/\@item/<li>/g;
-
 	# escape @x commands. by using the `split' command, we get a
 	# list of strings that contain either the matched command or the
 	# string in between. if an element of this list matches a
 	# command, then we process it further, otherwise we simply
 	# copy it over to the output
-        foreach $text ( split (/(\@\w+(?:\s+.+?(?=\s)|\{.*?\}))/, $str ) ) {
+	#
+	# note the special treatment of the @item command as that does not
+	# take a parameter
+        foreach $text ( split (/(\@item|\@\w+(?:\s+.+?(?=\s)|\{.*?\}))/, $str ) ) {
 	        # check whether $text is an @command or the text between
 	        # @commands
-		if (  $text =~ /\@(\w+)(?:\s+(.+?)(?:\s|$)|\{(.*?)\})/ )   {
-                        my $command = $1;
-			my $content = $2 . $3;
+		if (  $text =~ /\@(item)|\@(\w+)(?:\s+(.+?)(?:\s|$)|\{(.*?)\})/ )   {
+                        my $command = $1 . $2;
+			my $content = $3 . $4;
 
 			# @ref -- cross reference
 			if ( $command eq "ref" ) {
@@ -673,6 +670,15 @@ sub deref
 				print "Unknown command @", "$command($content)\n";
 				$out .= esc($text);
 			    }
+			}
+
+			# @item -- start an item in an itemized or
+			# enumerated list. note that this is special
+			# as @item does not take an argument, which is
+			# the reason why we have treated it specially
+			# above 
+			elsif ( $command =~ /^item$/ ) { 
+			    $out .= "<li>"; 
 			}
 
 			# unknown command. warn and copy command

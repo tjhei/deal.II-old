@@ -26,40 +26,6 @@ DEAL:BlockIndices:reinit::---
 DEAL:BlockIndices:reinit::0	0	0
 DEAL:BlockIndices:reinit::1	1	0
 DEAL:BlockIndices:reinit::2	1	1
-DEAL:BlockIndices::Range
---------------------------------------------------------
-An error occurred in file <block_indices.h> in function
-    std::pair<unsigned int, unsigned int> BlockIndices::global_to_local(unsigned int) const
-The violated condition was: 
-    i<total_size()
-The name and call sequence of the exception was:
-    ExcIndexRange(i, 0, total_size())
-Additional Information: 
-Index 3 is not in [0,3[
---------------------------------------------------------
-DEAL:BlockIndices::Abort!!!
---------------------------------------------------------
-An error occurred in file <block_indices.h> in function
-    unsigned int BlockIndices::local_to_global(unsigned int, unsigned int) const
-The violated condition was: 
-    index < start_indices[block+1]-start_indices[block]
-The name and call sequence of the exception was:
-    ExcIndexRange (index, 0, start_indices[block+1]-start_indices[block])
-Additional Information: 
-Index 2 is not in [0,2[
---------------------------------------------------------
-DEAL:BlockIndices::Abort!!!
---------------------------------------------------------
-An error occurred in file <block_indices.h> in function
-    unsigned int BlockIndices::local_to_global(unsigned int, unsigned int) const
-The violated condition was: 
-    block < n_blocks
-The name and call sequence of the exception was:
-    ExcIndexRange(block, 0, n_blocks)
-Additional Information: 
-Index 2 is not in [0,2[
---------------------------------------------------------
-DEAL:BlockIndices::Abort!!!
 DEAL:BlockVector:Constructor with iterators::0.000 1.000 2.000 3.000 4.000 5.000 
 DEAL:BlockVector:Constructor with iterators::0	0	0.000
 DEAL:BlockVector:Constructor with iterators::0	1	1.000

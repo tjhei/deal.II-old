@@ -66,7 +66,7 @@ function calls needed. Be sure to use them in their appropriate places.
 #include &lt;lac/sparsematrix.h&gt;
 #include &lt;grid/dof_constraints.h&gt;
 
-int dim=2; // Work in two dimensions, could also be three
+const unsigned int dim=2; // Work in two dimensions, could also be three
 SparseMatrixStruct&lt;double&gt; sparsity_pattern;
 DoFHandler&lt;dim&gt; dof;
 ConstraintMatrix&lt;dim&gt; hanging_nodes; 
@@ -75,7 +75,7 @@ ConstraintMatrix&lt;dim&gt; hanging_nodes;
 hanging_nodes.clear();
 dof.make_sparsity_pattern(sparsity_pattern);
 dof.make_hanging_nodes_constraints(hanging_nodes);
-dof.constraints.close();
+hanging_nodes.close();
 hanging_nodes.condense(matrix_structure);
 
 </code>

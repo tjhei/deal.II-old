@@ -58,7 +58,7 @@ DoFHandler&lt;2&gt;::FunctionMap dirichlet_bc;
 BoundaryFct bfct;
 dirichlet_bc[0]=&amp;bfct;
 VectorTools&lt;2&gt;::interpolate_boundary_values(dof,dirichlet_bc,fe,boundary,boundary_values);
-u.reinit(f);
+u.reinit(f.size());
 MatrixTools&lt;2&gt;::apply_boundary_values(boundary_values,A,u,f);  
 </code></pre>
 <p>
@@ -82,7 +82,9 @@ This may seem a bit confusing. What actually happens is the following:
 <code>bfct</code>, its relation to boundaries <code>dirichlet_bc</code> and
 the triangulation <code>dof, fe</code> and returns a
 mapping <code>boundary_values</code> that maps values instead of functions
-to our boundaries. The function looks at <em>all</em> the boundaries. All we
+to our boundaries. The function looks at all the boundaries the index
+of which is listed in <code>dirichlet_bc</code> (in this example, all
+the boundaries with indicator 0). All we
 ever need to do is specify the initial triangulation.
 </li>
 <li><code>apply_boundary_values</code> subsequently takes that mapping and

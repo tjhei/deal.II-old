@@ -88,7 +88,7 @@ offers the function<br>
 <code>void DoFHandler::renumber_dofs(const RenumberingMethod method,const bool use_constraints=false, const vector&lt;int&gt; &amp;starting_points=vector&lt;int&gt;())</code><br>
 or alternatively, the easier to use<br>
 <code>void DoFHandler::renumber_dofs(const RenumberingMethod method)</code><br>
-The methods available are <code>Cuthill_McKey</code> and <code>reverse_Cuthill_McKey</code>. Both algorithms are usually better than the one used
+The methods available are <code>Cuthill_McKee</code> and <code>reverse_Cuthill_McKee</code>. Both algorithms are usually better than the one used
 by <code>distribute_dofs</code> and neither is optimal (there is no algorithm
 that accomplishes optimal results within a reasonable amount of time).
 Both algorithms require a good index to start with to achieve good results.
@@ -99,11 +99,11 @@ in every other case the second way is more advisable.
 <span class="example">Example:</span> We use the definitions from the
 <a href="#ex_distribute">first example</a> given above. We renumber our 
 degrees of freedom with the 
-<code>Cuthill_McKey</code> method.
+<code>Cuthill_McKee</code> method.
 </p>
 <pre class="example">
 <code>
-dof.renumber_dofs(Cuthill_McKey);
+dof.renumber_dofs(Cuthill_McKee);
 </code>
 </pre>
 

@@ -38,16 +38,20 @@ we shall now discuss how to fill them. You have to:
 <p class="Example">
 <span class="example">Example:</span>
 The two lines below calculate trial functions for the two-dimensional finite element <code>fe</code> and
-for its faces using Gaussian quadrature. The first line calculates the trial
-function for the finite element associated with the degree of freedom <code>dof</code>,
-updating the values of the gradients and of the Jacobi determinant multiplied by a
-weight function given by the quadrature <code>qc</code>. The second line 
-does the same for the faces of the finite element, updating the <code>JxW</code>
-values and the quadrature points.
+for its faces using Gaussian quadrature. The first line initializes
+an object for the trial function of
+function for the finite element associated with the degree of freedom
+handler <code>dof</code>, telling it to 
+update the values of the gradients and of the Jacobi determinant
+multiplied by a
+weight function given by the quadrature <code>qc</code>
+whenever <code>fe_values.reinit(fe)</code> is called. The second line 
+does the same for the faces of the finite element, telling it to update the 
+<code>JxW</code> values and the quadrature points.
 </p>
 <pre class="example">
 <code>
-// Calculate the trial functions on the cell faces.
+// Initialize the trial functions on the cell faces.
 FEValues&lt;2&gt; fevalues(fe, qc, UpdateFlags(update_gradients |
 					   update_JxW_values));
 FEFaceValues&lt;2&gt; ffvalues(fe, qf,

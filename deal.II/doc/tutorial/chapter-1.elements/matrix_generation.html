@@ -28,7 +28,7 @@ cells have non-zero values.
 </li>
 <li>
 <a href="#sparse">Sparse matrices</a>, i.e. matrices where the majority of 
-cells has zero value.
+cells has zero value; these zeroes are not stored in order to save memory.
 </li>
 </ul>
 
@@ -44,8 +44,8 @@ int rows, const unsigned int cols)</code>.
 <p class="Example">
 <span class="example">Example:</span> We show the include files you need, 
 the definitions and the function calls. Make sure to use them in their
-appropriate places. This example initializes a full matrix of doubles
-with 100 rows and 50 columns.
+appropriate places. This example initializes two full matrices of doubles
+with 100 rows and 50 columns in two different ways.
 </p>
 <pre class="example">
 <code>
@@ -55,6 +55,11 @@ with 100 rows and 50 columns.
 FullMatrix&lt;double&gt; A;
 
 A.reinit(100,50);
+
+// or, alternatively (important for const objects):
+
+FullMatrix&lt;double&gt; B(100,50);
+
 </code>
 </pre>
 
@@ -85,9 +90,9 @@ appropriate places. This example initializes a sparse square matrix structure.
 #include &lt;lac/sparsematrix.h&gt;
 
 
-int dim=2; // For example
+const unsigned int dim=2; // For example
 SparseMatrixStruct&lt;double&gt; sparsity_pattern;
-SparseMatrix&lt;double&gt; sm;
+SparseMatrix&lt;double&gt; sparse_matrix;
 DoFHandler&lt;dim&gt; dof;
 
 // Your degrees of freedom must already be distributed
@@ -99,7 +104,7 @@ sparsity_pattern.reinit(dof.n_dofs(),dof.n_dofs(),dof.max_couplings_between_dofs
 
 sparsity_pattern.compress();
 
-sm.reinit(sparsity_pattern);
+sparse_matrix.reinit(sparsity_pattern);
 </code>
 </pre>
 

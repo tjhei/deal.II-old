@@ -45,6 +45,9 @@ the size of the matrix in question and the maximum number of non-zero elements
 in one row.
 This number can be calculated with 
 <code>int DoFHandler::max_couplings_between_dofs()</code>.
+<em>Beware: This function was written to cope with refined grids only !
+If your grid consists exclusively of cells next to boundaries its 
+return value will be wrong.</em>
 This matrix structure can then be used to generate a matrix using 
 <code>void SparseMatrix::reinit(const SparseMatrixStruct &sparsity)</code>.
 In cases of locally refined grids you will also need to take care of the constraints to your
@@ -62,7 +65,7 @@ appropriate places. This example initializes a sparse square matrix structure.
 #include &lt;lac/sparsematrix.h&gt;
 
 
-int dim=2; // For example
+const unsigned int dim=2; // For example
 SparseMatrixStruct&lt;double&gt; sparsity_pattern;
 DoFHandler&lt;dim&gt; dof;
 ConstraintMatrix hanging_nodes;  // Only necessary for locally refined grids

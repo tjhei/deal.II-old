@@ -54,7 +54,7 @@ function calls needed. Be sure to use them in their appropriate places.
 <code>
 #include &lt;grid/tria.h&gt;
 
-int dim=2;  // Two dimensions; to create a cube set to three
+const unsigned int dim=2;  // Two dimensions; to create a cube set to three
 Triangulation&lt;dim&gt; tr;
 
 tr.create_hypercube(-1,1);
@@ -87,7 +87,7 @@ This example will create a hyperball with unit radius centred on (1,0).
 #include &lt;grid/tria.h&gt;
 #include &lt;base/point.h&gt;
 
-int dim=2;  // For example
+const unsigned int dim=2;  // For example
 Triangulation&lt;dim&gt; tr;
 Point&lt;dim&gt; centre(1,0); // Taking (1,0) as the centre of the ball
 
@@ -132,7 +132,7 @@ This example will create the default hyper-L.
 <code>
 #include &lt;grid/tria.h&gt;
 
-int dim=2;  // For example
+const unsigned int dim=2;  // For example
 Triangulation&lt;dim&gt; tr;
 
 tr.create_hyper_L(-1,1);

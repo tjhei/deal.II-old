@@ -1,3 +1,127 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
 
+<acronym>deal.II</acronym> has a unique feature which we call
+``dimension independent programming''. You may have noticed in the
+previous examples that many classes had a number in angle brackets
+suffixed to them. This is to indicate that for example the
+triangulation in two and three space dimensions are different, but
+related data types. We could as well have called them 
+<code>Triangulation2d</code> and <code>Triangulation3d</code> instead
+of <code>Triangulation&lt;2&gt;</code> and
+<code>Triangulation&lt;3&gt;</code> to name the two classes, but this
+has an important drawback: assume you have a function which does
+exactly the same functionality, but on 2d or 3d triangulations,
+depending on which dimension we would like to solve the equation in
+presently (if you don't believe that it is the common case that a
+function does something that is the same in all dimensions, just take
+a look at the code below - there are almost no distinctions between 2d
+and 3d!). We would have to write the same function twice, once
+working on <code>Triangulation2d</code> and once working with a
+<code>Triangulation3d</code>. This is an unnecessary obstacle in
+programming and leads to a nuisance to keep the two function in synch
+(at best) or difficult to find errors if the two versions get out of
+synch (at worst; this would probably the more common case).
+
+<p>
+
+Such obstacles can be circumvented by using some template magic as
+provided by the C++ language: templatized classes and functions are
+not really classes or functions but only a pattern depending on an
+as-yet undefined data type parameter or on a numerical value which is
+also unknown at the point of definition. However, the compiler can
+build proper classes or functions from these templates if you provide
+it with the information that is needed for that. Of course, parts of
+the template can depend on the template parameters, and they will be
+resolved at the time of compilation for a specific template
+parameter. For example, consider the following piece of code:
+<pre><code>
+  template &lt;int dim&gt;
+  void make_grid (Triangulation&lt;dim&gt; &amp;triangulation)
+  {
+    GridGenerator::hyper_cube (triangulation, -1, 1);
+  };
+</code></pre>
+
+At the point where the compiler sees this function, it does not know
+anything about the value of ``dim'', by now there is a whole zoo of
+functions make_grid, one for every possible valueof ``dim''. But since
+the compiler can't know which might be used, it can not compile the
+function. 
+
+<p>
+
+However, if later down a function would use the following sequence,
+<pre><code>
+  Triangulation&lt;2&gt; triangulation;
+  make_grid (triangulation);
+</code></pre>
+the compiler will deduce that the function make_grid for dim==2 was
+requested and will compile that function with dim replaced by 2
+everywhere, i.e. it will compiler the function as if it were defined
+as
+<pre><code>
+  void make_grid (Triangulation&lt;2&gt; &amp;triangulation)
+  {
+    GridGenerator::hyper_cube (triangulation, -1, 1);
+  };
+</code></pre>
+
+<p>
+
+However, it is worth to note that the function
+<code>GridGenerator::hyper_cube</code> depends on the dimension as
+well, so in this case, the compiler will call the function
+<code>GridGenerator::hyper_cube&lt;2&gt;</code> while if dim were 3,
+it would call <code>GridGenerator::hyper_cube&lt;3&gt;</code> which
+might be (and actually is) a totally unrelated  function.
+
+
+<p>
+
+The same can be made with member variables. Consider the following
+function, which might in turn call the above one:
+<pre><code>
+  template &lt;int dim&gt;
+  void make_grid_and_dofs (Triangulation&lt;dim&gt; &amp;triangulation)
+  {
+    make_grid (triangulation);
+
+    DoFHandler&lt;dim&gt; dof_handler;
+    ...
+  };
+</code></pre>
+
+This function has a member variable of type
+<code>DoFHandler&lt;dim&gt;</code> the size of which may (and does)
+depend on the dimension we are working in. Again, the compiler can't
+compile this function until it knows for which dimension and therefore
+how many space shall be reserved for the member variable. If you call
+this function for a specific dimension as above, the compiler will
+take the template, replace all occurences of dim by the dimension for
+which it was called, and compile it. If you call the function several
+times for different dimensions, it will compile it several times, each
+time calling the right ``make_grid'' function and reserving the right
+amount of memory for the member variable.
+
+<p>
+
+The <acronym>deal.II</acronym> library is build around this concept
+and that allows you to program in way that will not need to
+distinguish between the space dimensions. It should be noted that in
+only a very few places is it necessary to actually compare the
+dimension using ``if''s or ``switch''es. However, since the compiler
+has to compile each function for each dimension separately, even there
+it knows the value of ``dim'' at the time of compilation and will
+therefore be able to optimize the ``if'' statement along with the
+unused branch.
+
+<p>
+
+In this example program, we will show how to program dimension
+independently (which in fact is even simpler than if you had to take
+care about the dimension) and we will extend the Laplace problem of
+the last example to a program that runs in two and three space
+dimensions at the same time. Other extensions are the use of a
+non-constant right hand side function and of non-zero boundary values.
+

@@ -1,58 +1,526 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
 
-<p>
+
+<P>
 In real life, most partial differential equations are really systems
 of equations. Accordingly, the solutions are usually
 vector-valued. The deal.II library supports such problems we will show
 that that is mostly rather simple. The only more complicated problems
 are in assembling matrix and right hand side, but these are easily
 understood as well. 
-</p>
 
-<p>
+<P>
 In the example, we will want to solve the elastic equations. They are
 an extension to Laplace's equation with a vector-valued solution that
 describes the displacement in each space direction of a rigid body
 which is subject to a force. Of course, the force is also
 vector-valued, meaning that in each point it has a direction and an
 absolute value. The elastic equations are the following:
-</p>
-<P ALIGN=CENTER><MATH CLASS=EQUATION>
-  -
-  &pd;<SUB>j</SUB> (c<SUB>ijkl</SUB> &pd;<SUB>k</SUB> u<SUB>l</SUB>)
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+-
+\partial_j (c_{ijkl} \partial_k u_l)
   =
   0,
-  &quad;
-  i=1&ldots;d,
-</MATH></P>     
-<p>
-where the values c<SUB>ijkl</SUB> are the stiffness coefficients and
+  \qquad
+  i=1\ldots d,
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="237" HEIGHT="29"
+ SRC="step-8.data/intro/img1.gif"
+ ALT="\begin{displaymath}-
+\partial_j (c_{ijkl} \partial_k u_l)
+=
+0,
+\qquad
+i=1\ldots d,
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+where the values <I>c</I><SUB><I>ijkl</I></SUB> are the stiffness coefficients and
 will usually depend on the space coordinates. In
 many cases, one knows that the material under consideration is
 isotropic, in which case by introduction of the two coefficients
-lambda and mu the coefficient tensor reduces to
-</p>
-<P ALIGN=CENTER><MATH CLASS=EQUATION>
-  c<SUB>ijkl</SUB>
-  =
-  &lambda;&delta;<SUB>ij</SUB> &delta;<SUB>kl</SUB> +
-  &mu;(&delta;<SUB>ik</SUB> &delta;<SUB>jl</SUB> + 
-  &delta;<SUB>il</SUB> &delta;<SUB>jk</SUB>).
-</MATH></P>      
+<IMG
+ WIDTH="13" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-8.data/intro/img2.gif"
+ ALT="$\lambda$">
+and <IMG
+ WIDTH="13" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-8.data/intro/img3.gif"
+ ALT="$\mu$">
+the coefficient tensor reduces to
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+c_{ijkl}
+=
+  \lambda \delta_{ij} \delta_{kl} + 
+  \mu (\delta_{ik} \delta_{jl} + \delta_{il} \delta_{jk}).
 
-<p>
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="236" HEIGHT="29"
+ SRC="step-8.data/intro/img4.gif"
+ ALT="\begin{displaymath}c_{ijkl}
+=
+\lambda \delta_{ij} \delta_{kl} +
+\mu (\delta_{ik} \delta_{jl} + \delta_{il} \delta_{jk}).
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+<P>
 The elastic equations can then be rewritten in much simpler a form:
-</p>
-<P ALIGN=CENTER><MATH CLASS=EQUATION>
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+-
+\nabla (\lambda+\mu) (\div \vec u)
    -
-   &nabla;(&lambda;+&mu;) (&nabla;u)
-   -
-   (&nabla;&mu;&nabla;) u
+   (\nabla \cdot \mu \nabla) \vec u
    =
-   0
-</MATH></P>
-<p>
-This is the form that we will try to solve. The program that does so
-is based on the step-6 program.
-</p>
+   0,
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="246" HEIGHT="28"
+ SRC="step-8.data/intro/img5.gif"
+ ALT="\begin{displaymath}-
+\nabla (\lambda+\mu) (\div \vec u)
+-
+(\nabla \cdot \mu \nabla) \vec u
+=
+0,
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+and the respective bilinear form is then
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+a(\vec u, \vec v) =
+\left(
+    (\lambda+\mu) \div \vec u, \div \vec v
+  \right)_\Omega
+  +
+  \sum_k
+  \left(
+    \mu \nabla u_k, \nabla v_k
+  \right)_\Omega,
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="369" HEIGHT="45"
+ SRC="step-8.data/intro/img6.gif"
+ ALT="\begin{displaymath}a(\vec u, \vec v) =
+\left(
+(\lambda+\mu) \div \vec u, \div ...
+...+
+\sum_k
+\left(
+\mu \nabla u_k, \nabla v_k
+\right)_\Omega,
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+or as a sum over components:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+a(\vec u, \vec v) =
+\sum_{k,l}
+  \left(
+    (\lambda+\mu) \partial_l u_l, \partial_k v_k
+  \right)_\Omega
+  +
+  \sum_{k,l}
+  \left(
+    \mu \partial_l u_k, \partial_l v_k
+  \right)_\Omega.
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="383" HEIGHT="47"
+ SRC="step-8.data/intro/img7.gif"
+ ALT="\begin{displaymath}a(\vec u, \vec v) =
+\sum_{k,l}
+\left(
+(\lambda+\mu) \parti...
+...}
+\left(
+\mu \partial_l u_k, \partial_l v_k
+\right)_\Omega.
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+<P>
+How do we now assemble the matrix for such an equation? The first thing we
+need is some knowledge about how the shape functions work in the case of
+vector-valued finite elements. Basically, this comes down to the following:
+let <I>n</I> be the number of shape functions for the scalar finite element of
+which we build the vector element (for example, we will use bilinear functions
+for each component of the vector-valued finite element, so the scalar finite
+element is the <TT>FEQ1</TT> element which we have used in previous examples
+already, and <I>n</I>=4 in two space dimensions). Further, let <I>N</I> be the number of
+shape functions for the vector element; in two space dimensions, we need <I>n</I>shape functions for each component of the vector, so <I>N</I>=2<I>n</I>. Then, the <I>i</I>th
+shape function of the vector element has the form
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+\Phi_i(\vec x) = \varphi_{base(i)}(\vec x)\ \vec e_{comp(i)},
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="194" HEIGHT="30"
+ SRC="step-8.data/intro/img8.gif"
+ ALT="\begin{displaymath}\Phi_i(\vec x) = \varphi_{base(i)}(\vec x)\ \vec e_{comp(i)},
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+where <I>e</I><SUB><I>l</I></SUB> is the <I>l</I>th unit vector, <I>comp</I>(<I>i</I>) is the function that tells
+us which component of <IMG
+ WIDTH="20" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-8.data/intro/img9.gif"
+ ALT="$\Phi_i$">
+is the one that is nonzero (for
+each vector shape function, only one component is nonzero, and all others are
+zero). 
+<!-- MATH: $\varphi_{base(i)}(x)$ -->
+<IMG
+ WIDTH="75" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-8.data/intro/img10.gif"
+ ALT="$\varphi_{base(i)}(x)$">
+describes the space dependence of the shape
+function, which is taken to be the <I>base</I>(<I>i</I>)-th shape function of the scalar
+element. Of course, while <I>i</I> is in the range 
+<!-- MATH: $0,\ldots,N-1$ -->
+<IMG
+ WIDTH="91" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-8.data/intro/img11.gif"
+ ALT="$0,\ldots,N-1$">,
+the functions
+<I>comp</I>(<I>i</I>) and <I>base</I>(<I>i</I>) have the ranges 0,1 (in 2D) and 
+<!-- MATH: $0,\ldots,n-1$ -->
+<IMG
+ WIDTH="86" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-8.data/intro/img12.gif"
+ ALT="$0,\ldots,n-1$">,
+respectively. 
+
+<P>
+For example (but this layout is not mandatory, and you should not rely on it),
+the following layout could be used by the library:
+<DIV ALIGN="CENTER">
+<BR>
+<IMG
+ WIDTH="519" HEIGHT="84" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-8.data/intro/img13.gif"
+ ALT="\begin{multline*}\Phi_0(\vec x) =
+\begin{pmatrix}
+\varphi_0(\vec x) \\ 0
+\en...
+... \begin{pmatrix}
+0 \\ \varphi_1(\vec x)
+\end{pmatrix},
+\ldots
+\end{multline*}">
+<BR></DIV>
+where here
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+comp(0)=0, \quad  comp(1)=1, \quad  comp(2)=0, \quad  comp(3)=1, \quad  \ldots
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="455" HEIGHT="28"
+ SRC="step-8.data/intro/img14.gif"
+ ALT="\begin{displaymath}comp(0)=0, \quad comp(1)=1, \quad comp(2)=0, \quad comp(3)=1, \quad \ldots
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+base(0)=0, \quad  base(1)=0, \quad  base(2)=1, \quad  base(3)=1, \quad  \ldots
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="429" HEIGHT="28"
+ SRC="step-8.data/intro/img15.gif"
+ ALT="\begin{displaymath}base(0)=0, \quad base(1)=0, \quad base(2)=1, \quad base(3)=1, \quad \ldots
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+<P>
+In all but very rare cases, you will not need to know which shape function
+
+<!-- MATH: $\varphi_{base(i)}$ -->
+<IMG
+ WIDTH="53" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-8.data/intro/img16.gif"
+ ALT="$\varphi_{base(i)}$">
+of the scalar element belongs to a shape function <IMG
+ WIDTH="20" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-8.data/intro/img9.gif"
+ ALT="$\Phi_i$">of the vector element. Let us therefore define
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+\phi_i = \varphi_{base(i)}
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="84" HEIGHT="30"
+ SRC="step-8.data/intro/img17.gif"
+ ALT="\begin{displaymath}\phi_i = \varphi_{base(i)}
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+by which we can write the vector shape function as
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+\Phi_i(\vec x) = \phi_{i}(\vec x)\ \vec e_{comp(i)}.
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="158" HEIGHT="30"
+ SRC="step-8.data/intro/img18.gif"
+ ALT="\begin{displaymath}\Phi_i(\vec x) = \phi_{i}(\vec x)\ \vec e_{comp(i)}.
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+You can now safely forget about the function <I>base</I>(<I>i</I>), at least for the rest
+of this example program.
+
+<P>
+Now using this vector shape functions, we can write the discrete finite
+element solution as
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+\vec u_h(\vec x) =
+\sum_i \Phi_i(\vec x)\ u_i
+
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="144" HEIGHT="44"
+ SRC="step-8.data/intro/img19.gif"
+ ALT="\begin{displaymath}\vec u_h(\vec x) =
+\sum_i \Phi_i(\vec x)\ u_i
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+with scalar coefficients <I>u</I><SUB><I>i</I></SUB>. If we define an analog function <IMG
+ WIDTH="21" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-8.data/intro/img20.gif"
+ ALT="$\vec v_h$">
+as
+test function, we can write the discrete problem as follows: Find coefficients
+<I>u</I><SUB><I>i</I></SUB> such that
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+a(\vec u_h, \vec v_h) = (\vec f, \vec v_h)
+\qquad
+  \forall \vec v_h.
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="193" HEIGHT="28"
+ SRC="step-8.data/intro/img21.gif"
+ ALT="\begin{displaymath}a(\vec u_h, \vec v_h) = (\vec f, \vec v_h)
+\qquad
+\forall \vec v_h.
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+<P>
+If we insert the definition of the bilinear form and the representation of
+<IMG
+ WIDTH="22" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-8.data/intro/img22.gif"
+ ALT="$\vec u_h$">
+and <IMG
+ WIDTH="21" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-8.data/intro/img20.gif"
+ ALT="$\vec v_h$">
+into this formula:
+<DIV ALIGN="CENTER">
+<BR>
+<IMG
+ WIDTH="520" HEIGHT="83" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-8.data/intro/img23.gif"
+ ALT="\begin{multline*}\sum_{i,j}
+u_i v_j
+\sum_{k,l}
+\left\{
+\left(
+(\lambda+\mu)...
+...=
+\sum_j v_j
+\sum_l
+\left(
+f_l,
+(\Phi_j)_l
+\right)_\Omega.
+\end{multline*}">
+<BR></DIV>
+We note that here and in the following, the indices <I>k</I>,<I>l</I> run over spatial
+directions, i.e. 
+<!-- MATH: $0\le k,l \le d-1$ -->
+<IMG
+ WIDTH="110" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-8.data/intro/img24.gif"
+ ALT="$0\le k,l \le d-1$">,
+and that indices <I>i</I>,<I>j</I> run over degrees
+of freedoms.
+
+<P>
+The local stiffness matrix on cell <I>K</I> therefore has the following entries:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+A^K_{ij}
+=
+  \sum_{k,l}
+  \left\{
+  \left(
+    (\lambda+\mu) \partial_l (\Phi_i)_l, \partial_k (\Phi_j)_k
+  \right)_K
+  +
+  \left(
+    \mu \partial_l (\Phi_i)_k, \partial_l (\Phi_j)_k
+  \right)_K
+  \right\},
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="443" HEIGHT="47"
+ SRC="step-8.data/intro/img25.gif"
+ ALT="\begin{displaymath}A^K_{ij}
+=
+\sum_{k,l}
+\left\{
+\left(
+(\lambda+\mu) \part...
+...tial_l (\Phi_i)_k, \partial_l (\Phi_j)_k
+\right)_K
+\right\},
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+where <I>i</I>,<I>j</I> now are local degrees of freedom and therefore 
+<!-- MATH: $0\le i,j \le N-1$ -->
+<IMG
+ WIDTH="116" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-8.data/intro/img26.gif"
+ ALT="$0\le i,j \le N-1$">.
+In these formulas, we always take some component of the vector shape functions
+<IMG
+ WIDTH="20" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-8.data/intro/img9.gif"
+ ALT="$\Phi_i$">,
+which are of course given as follows (see their definition):
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{displaymath}
+(\Phi_i)_l = \phi_i \delta_{l,comp(i)},
+\end{displaymath} -->
+
+
+<IMG
+ WIDTH="134" HEIGHT="30"
+ SRC="step-8.data/intro/img27.gif"
+ ALT="\begin{displaymath}(\Phi_i)_l = \phi_i \delta_{l,comp(i)},
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+with the Kronecker symbol 
+<!-- MATH: $\delta_{nm}$ -->
+<IMG
+ WIDTH="30" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-8.data/intro/img28.gif"
+ ALT="$\delta_{nm}$">.
+Due to this, we can delete some of
+the sums over <I>k</I> and <I>l</I>:
+<DIV ALIGN="CENTER">
+<BR>
+<IMG
+ WIDTH="521" HEIGHT="147" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-8.data/intro/img29.gif"
+ ALT="\begin{align*}A^K_{ij}
+&=
+\sum_{k,l}
+\Bigl\{
+\left(
+(\lambda+\mu) \partial_...
+...abla \phi_i,
+\nabla \phi_j
+\right)_K
+\ \delta_{comp(i),comp(j)}.
+\end{align*}">
+<BR></DIV>
+<P>
+Likewise, the contribution of cell <I>K</I> to the right hand side vector is
+<DIV ALIGN="CENTER">
+<BR>
+<IMG
+ WIDTH="191" HEIGHT="106" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-8.data/intro/img30.gif"
+ ALT="\begin{align*}f^K_j
+&=
+\sum_l
+\left(
+f_l,
+(\Phi_j)_l
+\right)_K
+\\
+&=
+\s...
+...mp(j)}
+\right)_K
+\\
+&=
+\left(
+f_{comp(j)},
+\phi_j
+\right)_K.
+\end{align*}">
+<BR></DIV>
+<P>
+This is the form in which we will implement the local stiffness matrix and
+right hand side vectors.

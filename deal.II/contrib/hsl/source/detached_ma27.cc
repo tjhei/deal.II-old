@@ -123,8 +123,8 @@ void die (const std::string &text, const T1 t1, const T2 t2)
  * still existing or has died without giving us due notice. if the
  * latter is the case, then also exit this process
  *
- * check by calling "ps -p PID", where PID is the pid of the
- * parent. if the return value is non-null, then ps couldn't find out
+ * check by calling "kill(PID,0)", where PID is the pid of the
+ * parent. if the return value is non-null, then kill couldn't find out
  * about the parent process, so it is apparently gone
  */
 extern "C"

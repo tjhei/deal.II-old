@@ -28,7 +28,7 @@ linkfiles-%:
 # if called with linksdirs-TARGET-to-SOURCE, creates a link from the source
 # directory to the target directory
 linkdirs-%:
-	@TARGET=`echo $@ | $(PERL) -pi -e 's/linkfiles-//; s/-to-.*//;'` ; \
+	@TARGET=`echo $@ | $(PERL) -pi -e 's/linkdirs-//; s/-to-.*//;'` ; \
 	SOURCE=`echo $@ | $(PERL) -pi -e 's/.*-to-//;'` ; \
 	echo "Aliasing $$TARGET to $$SOURCE" ; \
 	if test -L $$TARGET ; then rm $$TARGET ; fi ; \

@@ -11,11 +11,13 @@
 //
 //----------------------------  detached_ma27.cc  ---------------------------
 
-#include <cstdio>
-#include <unistd.h>
 #include <hsl/hsl.h>
+
 #include <vector>
 #include <iostream>
+#include <cstdio>
+
+#include <unistd.h>
 #include <errno.h>
 #include <sys/errno.h>
 
@@ -69,6 +71,14 @@ void get (T *t, const size_t N, const char */*debug_info*/)
 
 int main () 
 {
+                                   // first action is to get the pid
+                                   // of the master process, so that
+                                   // we can check whether it is still
+                                   // alive or not...
+  pid_t master_pid;
+  get (&master_pid, 1, "master_pid");
+  
+                                   // then go into the action loop...
   unsigned int N, NZ, NSTEPS, LA, MAXFRT, LIW;
   int IFLAG;
   std::vector<unsigned int> IRN, ICN, IW, IKEEP, IW1;

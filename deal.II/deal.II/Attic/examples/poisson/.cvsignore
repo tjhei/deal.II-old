@@ -1,2 +1,4 @@
 poisson
 Makefile.dep
+*.go
+Makefile.dep

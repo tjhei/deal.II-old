@@ -51,9 +51,86 @@ Refinement cycle: 8
 </p>
 
 <p>
-First let's look what the program actually computed, by looking at
-some of the grids and solutions that were printed:
-TODO
+First let's look what the program actually computed. On the fifth
+grid, primal and dual numerical solutions look like this:
+<table align="center">
+  <tr>
+    <td width="50%">
+      <a href="step-14.data/point_value/solution-5.gif" target="_top">
+      <img alt="Primal solution" width="318"
+      src="step-14.data/point_value/solution-5.gif">
+      </img></a>
+    </td>
+
+    <td width="50%">
+      <a href="step-14.data/point_value/solution-5-dual.gif" target="_top">
+      <img alt="Dual solution" width="318"
+      src="step-14.data/point_value/solution-5-dual.gif">
+      </img></a>
+    </td>
+  </tr>
+</table>
+Obviously, the region at the bottom left is so unimportant for the
+point value evaluation at the top right that the grid is left entirely
+unrefined there, even though the solution has singularities there! Due
+to the symmetry in right hand side and domain, the solution should
+actually look like at the top right in all four corners, but the mesh
+refinement criterion involving the dual solution chose to refine them
+differently.
+</p>
+
+<p>
+Looking at the grids that are produced in the course of subsequent
+refinement, these are some of them:
+<table align="center">
+  <tr>
+    <td width="50%">
+      <a href="step-14.data/point_value/grid-0.gif" target="_top">
+      <img alt="Grid 0"
+      src="step-14.data/point_value/grid-0.gif">
+      </img></a>
+    </td>
+
+    <td width="50%">
+      <a href="step-14.data/point_value/grid-2.gif" target="_top">
+      <img alt="Grid 2"
+      src="step-14.data/point_value/grid-2.gif">
+      </img></a>
+    </td>
+  </tr>
+
+  <tr>
+    <td width="50%">
+      <a href="step-14.data/point_value/grid-4.gif" target="_top">
+      <img alt="Grid 4"
+      src="step-14.data/point_value/grid-4.gif">
+      </img></a>
+    </td>
+
+    <td width="50%">
+      <a href="step-14.data/point_value/grid-5.gif" target="_top">
+      <img alt="Grid 5"
+      src="step-14.data/point_value/grid-5.gif">
+      </img></a>
+    </td>
+  </tr>
+
+  <tr>
+    <td width="50%">
+      <a href="step-14.data/point_value/grid-7.gif" target="_top">
+      <img alt="Grid 7"
+      src="step-14.data/point_value/grid-7.gif">
+      </img></a>
+    </td>
+
+    <td width="50%">
+      <a href="step-14.data/point_value/grid-8.gif" target="_top">
+      <img alt="Grid 8"
+      src="step-14.data/point_value/grid-8.gif">
+      </img></a>
+    </td>
+  </tr>
+</table>
 
 Note the subtle interplay between resolving the corner singularities,
 and resolving around the point of evaluation. It will be rather

@@ -1,0 +1,9 @@
+
+DEAL::cell_no=0, face_no=2
+DEAL::  cell->face_orientation(face_no)=0
+DEAL::  neighbor2=5
+DEAL::  neighbor->face_orientation(neighbor2)=1
+DEAL::subface_no=0
+DEAL::subface_no=1
+DEAL::subface_no=2
+DEAL::subface_no=3

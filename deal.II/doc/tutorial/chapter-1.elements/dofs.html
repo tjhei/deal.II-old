@@ -17,10 +17,57 @@
 
 <h1>Degrees of Freedom</h1>
 
-Degrees of freedom are virtually the most important entities you will 
+<p>
+Degrees of freedom - short DoFs -are virtually the most important entities you will 
 encounter in <acronym>deal.II</acronym>. Most of the task of setting up
 your problem is accomplished by manipulating them.
+</p>
+<p>
+For now we will only discuss how and when to number and renumber the
+degrees of freedom. this needs to be done so <acronym>deal.II</acronym>
+has a consistent numbering.
+</p>
 
+<h2>When to Distribute and Renumber Degrees of Freedom</h2>
+<p>
+Degrees of freedom <em>must always</em> be renumbered after the triangulation
+has changed in any way, i.e. has been created or refined. 
+<b>In particular the degrees of freedom must be distributed after the
+triangulation has been created !</b>
+Degrees of freedom 
+can but should not be renumbered at any other time. The reason is that
+sparse matrix structures and constraint matrices - to name two examples -
+rely on the numbering. If you
+construct a sparse matrix structure and renumber your degrees of freedom
+afterwards the structure will be invalid.
+</p>
+
+<h2>How to Distribute and Renumber Degrees of Freedom</h2>
+<p>
+The degrees of freedom are distributed on a triangulation using the function<br>
+<code>void DoFHandler::distribute_dofs(const FiniteElement&lt;dim&gt; &amp;)</code><br>
+The argument to <code>distribute_dofs</code> is a finite element that describes
+how many degrees of freedom are located on vertices, lines etc. 
+<code>distribute_dofs</code> works its way through the triangulation cell by
+cell, starting at the coarsest level, and numbers every degree of freedom that is not yet numbered.
+For non-multigrid algorithms it considers only active cells, i.e. cells 
+without children.
+</p>
+
+<p>
+For a number of solution algorithms this way of numbering is way below optimal.
+To achieve a kind of numbering better suited to your problem the <acronym>deal.II</acronym> 
+offers the function<br>
+<code>void DoFHandler::renumber_dofs(const RenumberingMethod method,const bool use_constraints=false, const vector&lt;int&gt; &amp;starting_points=vector&lt;int&gt;())</code><br>
+or alternatively, the easier to use<br>
+<code>void DoFHandler::renumber_dofs(const RenumberingMethod method)</code><br>
+The methods available are <code>Cuthill_McKey</code> and <code>reverse_Cuthill_McKey</code>. Both algorithms are usually better than the one used
+by <code>distribute_dofs</code> and neither is optimal (there is no algorithm
+that accomplishes optimal results within a reasonable amount of time).
+Both algorithms require a good index to start with to achieve good results.
+Whenever you know a good set of starting indices you might wish to use the 
+first way of calling <code>renumber_dofs</code>,
+in every other case the second way is more advisable.
 
 <!-- Page Foot -->
 <hr>

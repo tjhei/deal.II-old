@@ -3,11 +3,19 @@
 
 <p>
 After we have created a grid in the previous example, we now show how
-we can associate a degree of freedom with each vertex of the
-triangulation. This is a rather simple task, since the library does
-all the work. However, for some algorithms, especially for some linear
-solvers, it is advantageous to have the degrees of freedom numbered
-in a certain sense, and we will use the algorithm of Cuthill and McKee
-to do so. The results are written to a file and visualized using
-GNUPLOT. 
+we can define degree of freedom on this mesh. For this example, we
+will use the lowest order (Q1) finite elements, for which the degrees
+of freedom are associated with the vertices of the mesh. Later
+examples will show higher order elements where degrees of freedom are
+not necessarily associated with nodes any more, but can be associated
+with edges, faces, or cells.
+</p>
+
+<p>
+Defining degrees of freedom ("DoF"s in short) on a mesh is a rather
+simple task, since the library does all the work for you. However, for
+some algorithms, especially for some linear solvers, it is
+advantageous to have the degrees of freedom numbered in a certain
+sense, and we will use the algorithm of Cuthill and McKee to do
+so. The results are written to a file and visualized using GNUPLOT.
 </p>

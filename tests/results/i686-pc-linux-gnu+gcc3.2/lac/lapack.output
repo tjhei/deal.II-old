@@ -1,4 +1,5 @@
 
+DEAL:Rect::operator= (const FullMatrix<number>&) ok
 DEAL:Rect::vmult ok
 DEAL:Rect::vmult_add ok
 DEAL:Rect::Tvmult ok

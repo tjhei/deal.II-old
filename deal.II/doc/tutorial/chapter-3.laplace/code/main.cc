@@ -32,8 +32,6 @@ main(int argc, char** argv)
   deallog << "Firstgrid " << firstgrid << endl;
 
   // JS.Benötigte Funktionen zur Lösung des Problems   
-  WeightFunction weight;
-  BoundaryFct boundary;
   Laplace lap;
   
   // JS.Logstream ist ein stack, ab hier wird "Adaptive:" vor jede Zeile 
@@ -50,22 +48,20 @@ main(int argc, char** argv)
       lap.remesh(firstgrid);
     else
     {
-//JS.      lap.adapt();
       lap.remesh(1);
     }
 
     deallog.push("Primal");
 
     // JS.exakte Lösung mit 0 auf der rechten Seite
-    lap.assemble_primal(boundary,zero);
+    lap.assemble_primal();
     lap.solve_primal();
     
     // JS.ab hier kein "Adaptive:" mehr
     deallog.pop();
     
     sprintf(fname,"T%02d",step);
-    // JS.Daten zurückschreiben. Aber welche ?
-    lap.result(weight,boundary);
+    // JS.Daten zurückschreiben. 
     lap.write_data(fname);
   }
   // JS.Logfile sauber abschließen und Schluß

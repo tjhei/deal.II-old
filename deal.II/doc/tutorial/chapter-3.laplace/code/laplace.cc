@@ -86,7 +86,7 @@ Laplace::remesh(unsigned int steps)
 
 // JS.Primales Problem zusammenstellen.
 void
-Laplace::assemble_primal(const Function<2>&,const Function<2>&)
+Laplace::assemble_primal()
 {
   deallog << "Assembling primal problem" << endl;
   // JS. Platz für neue Matrix mit (?) (2x = quadratisch) Anzahl der Zellen, 
@@ -220,64 +220,6 @@ void Laplace::write_data(const char* name)
      
 }
 
-
-// JS. Ergebnis zurückgeben. Wie funktioniert das ?
-double
-Laplace::result(const Function<2>& interior, const Function<2>& boundary)
-{
-  double erg = 0., ergex = 0.;
-  FEValues<2> fevalues(fe_primal, qc_integrate,
-		       UpdateFlags(update_q_points | update_JxW_values));
-  FEFaceValues<2> ffvalues(fe_primal, qf_integrate,
-			   UpdateFlags(update_q_points | update_JxW_values));
-  vector<double> uh(qc_integrate.n_quadrature_points);
-  vector<double> uf(qf_integrate.n_quadrature_points);
-
-  // JS.Alle Zellen durch.
-  for (DoFHandler<2>::active_cell_iterator c = dof_primal.begin_active()
-					; c != dof_primal.end() ; ++c)
-  {
-    double s = 0.;
-    fevalues.reinit(c, stb);
-    
-    fevalues.get_function_values(u, uh);
-    
-    for (unsigned int k=0;k<qc_integrate.n_quadrature_points;++k)
-    {
-      s += fevalues.JxW(k)
-	   * uh[k] * interior(fevalues.get_quadrature_points()[k]);
-      ergex += fevalues.JxW(k)
-	//  * exact(fevalues.get_quadrature_points()[k])
-	       * interior(fevalues.get_quadrature_points()[k]);
-    }
-    // JS.Alle Zellränder.
-    for (unsigned fi=0;fi<GeometryInfo<2>::faces_per_cell;++fi)
-    {
-      DoFHandler<2>::face_iterator f = c->face(fi);
-      unsigned char bi = f->boundary_indicator();
-      if (bi == 0xFF) continue;
-      ffvalues.reinit(c, fi, stb);
-      ffvalues.get_function_values(u, uf);	
-      
-      // JS.??? Integrationspunkte ???
-      for (unsigned k=0;k<qf_primal.n_quadrature_points;++k)
-      {
-	s += ffvalues.JxW(k)
-	     * uf[k] * boundary(ffvalues.get_quadrature_points()[k]);
-      }
-    }
-    erg += s;
-  }
-  deallog << "Results " << setw(18) << setprecision(15) << erg << " " << ergex << endl;
-  return erg;
-}
-
-// JS. Gitter anpassen
-void
-Laplace::adapt()
-{
-  tr.refine_and_coarsen_fixed_fraction(f, .5, 0);
-}
 
 
 

@@ -27,7 +27,7 @@ Hartmann \cite{HH01,HH01a,HH01b}.
 The basic idea is the following: in applications, one is not usually
 interested in the solution per se, but rather in certain aspects of it. For
 example, in simulations of flow problems, one may want to know the lift or
-drag of a body emersed in the fluid; it is this quantity that we want to know
+drag of a body immersed in the fluid; it is this quantity that we want to know
 to best accuracy, and whether the rest of the solution of the describing
 equations is well resolved is not of primary interest. Likewise, in elasticity
 one might want to know about values of the stress at certain points to guess
@@ -84,7 +84,7 @@ Next we use that $-\Delta u=f$, and that $\partial_n u$ is a quantity that is
 continuous almost everywhere, so the terms involving $\partial_n u$ on one
 cell cancels with that on its neighbor, where the normal vector has the
 opposite sign. At the boundary of the domain, where there is no neighbor cell
-with wich this term could cancel, the weight $z-\varphi_h$ can be chosen as
+with which this term could cancel, the weight $z-\varphi_h$ can be chosen as
 zero, since $z$ has zero boundary values, and $\varphi_h$ can be chosen to
 have the same.
 
@@ -167,6 +167,61 @@ turn to the actual implementation.
 
 \section{The software}
 
+The step-14 example program builds heavily on the techniques already used in
+the step-13 program. Its implementation of the dual weighted residual error
+estimator explained above is done by deriving a second class, properly called
+\texttt{DualSolver}, from the \texttt{Solver} base class, and having a class
+(\texttt{WeightedResidual}) that joins the two again and controls the solution
+of the primal and dual problem, and then uses both to compute the error
+indicator for mesh refinement.
+
+The program continues the modular concept of the previous example, by
+implementing the dual functional, describing quantity of interest, by an
+abstract base class, and providing two different functionals which implement
+this interface. Adding a different quantity of interest is thus simple.
+
+One of the more fundamental differences is the handling of data. A common case
+is that you develop a program that solves a certain equation, and test it with
+different right hand sides, different domains, different coefficients and
+boundary values, etc. Usually, these have to match, so that exact solutions
+are known, or that their combination makes sense at all.
+
+We demonstrate a way how this can be achieved in a simple, yet very flexible
+way. We will put everything that belongs to a certain setup into one class,
+and provide a little C++ mortar around it, so that entire setups (domains,
+coefficients, right hand sides, etc.) can be exchanged by only changing
+something in \textit{one} place.
+
+Going this way a little further, we have also centralized all the other
+parameters that describe how the program is to work in one place, such as the
+order of the finite element, the maximal number of degrees of freedom, the
+evaluation objects that shall be executed on the computed solutions, and so
+on. This allows for simpler configuration of the program, and we will show in
+a later program how to use a library class that can handle setting these
+parameters by reading an input file. The general aim is to reduce the places
+within a program where one may have to look when wanting to change some
+parameter, as it has turned out in practice that one forgets where they are as
+programs grow. Furthermore, putting all options describing what the program
+does in a certain run into a file (that can be stored with the results) helps
+repeatability of results more than if the various flags were set somewhere in
+the program, where their exact values are forgotten after the next change to
+this place.
+
+Unfortunately, the program has become rather long. While this admittedly
+reduces its usefulness as an example program, we think that it is a very good
+starting point for development of a program for other kinds of problems,
+involving different equations than the Laplace equation treated here.
+Furthermore, it shows everything that we can show you about our way of a
+posteriori error estimation, and its structure should make it simple for you
+to adjust this method to other problems, other functionals, other geometries,
+coefficients, etc.
+
+The author believes that the present program is his masterpiece among the
+example programs, regarding the mathematical complexity, as well as the
+simplicity to add extensions. If you use this program as a basis for your own
+programs, we would kindly like to ask you to state this fact and the name of
+the author of the example program, Wolfgang Bangerth, in publications that
+arise from that.
 
 \bibliographystyle{plain}
 \bibliography{own}

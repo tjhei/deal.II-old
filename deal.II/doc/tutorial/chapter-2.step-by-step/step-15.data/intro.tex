@@ -1,0 +1,191 @@
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section{Foreword}
+
+This program demonstrates a number of techniques that have not been shown in
+previous example programs. In particular, it shows how to program for
+one-dimensional problems, and some aspects of what to do with nonlinear
+problems, in particular how to transfer the solution from one grid to the next
+finer one. Apart from this, however, the program does not attempt to do much
+more than to entertain those who sometimes like to play with maths.
+
+\section{Introduction}
+
+In the book by Dacorogna on the Calculus of Variations, I found the following
+statement, which confused me tremendously at first (see Section 3.4.3,
+``Lavrentiev Phenomenon'', very slightly edited):
+
+\begin{quote}
+  \textbf{Theorem 4.6:} Let 
+  $$I(u)=\int_0^1 (x-u^3)^2 (u')^6\; dx.$$
+  Let
+  $$
+    {\cal W}_1 = \{ u\in W^{1,\infty}(0,1) : u(0)=0, u(1)=1 \}
+    $$ $$
+    {\cal W}_2 = \{ u\in W^{1,1}(0,1) : u(0)=0, u(1)=1 \}
+  $$
+
+  Then
+  $$
+  \inf_{u\in {\cal W}_1} I(u) \ge c_0 > 0 = \inf_{u\in {\cal W}_2} I(u).
+  $$
+  Moreover the minimum of $I(u)$ over ${\cal W}_2$ is attained by
+  $u(x)=x^{1/3}$. 
+
+  \textsc{Remarks.}
+
+  [\ldots]
+
+  ii) it is interesting to note that if one uses the usual finite element
+  methods (by taking piecewise affine functions, which are in $W^{1,\infty}$)
+  one will not be able to detect the minimum of some integrals such as the one
+  in the theorem.
+\end{quote}
+In other words: minimizing the energy functional over one space
+($W^{1,\infty}$) does not give the same value as when minimizing over a larger
+space ($W^{1,1}$). Furthermore, they give a rough estimate of the value of the
+constant $c_0$, which is $c_0=\tfrac{7^23^5}{2^{18}5^5}\approx 1.61\cdot
+10^{-6}$ (although by their calculation it is obvious that this estimate is
+far too small, but the point of course is just to show that it is strictly
+larger than zero).
+
+While the theorem was not surprising, the remark stunned me at first. After
+all, we know that we can approximate functions in $W^{1,1}$ to arbitrary
+accuracy.  Also, although it is true that finite element functions are in
+$W^{1,\infty}$, this statement is not really accurate: if the function itself
+is bounded pointwise by, say, a constant $C$, then its gradient is bounded by
+$2C/h$, and thus $\|u_h\|_{1,\infty} \le 2C/h$. That means that we should be
+able to lift this limit just by mesh refinement. Finite element functions are
+therefore only in $W^{1,\infty}$ if one considers them on a fixed grid, not on
+a sequence of successively finer grids. (Note, we can only lift the
+boundedness in $W^{1,1}$ in the same way by considering functions that
+oscillate at cell frequency; these, however, do not converge in any reasonable
+measure.)
+
+So it took me a while to see where the problem lies. Here it is: While we are
+able to approximate functions to arbitrary accuracies in \textit{Sobolev
+  norms}, this does not necessarily also hold with respect to the functional
+$I(u)$!  After all, this functional was made to show exactly these
+pathologies.
+
+What happens in this case is actually not so difficult to understand. Let us
+look at what happens if we plug the lowest-order (piecewise linear)
+interpolant $i_hu$ of the optimal solution $u=x^{1/3}$ into the functional
+$I(u)$: on the leftmost cell, the left end of $i_hu$ is tagged to zero by the
+boundary condition, and the right end has the value $i_hu(h)=u(h)=h^{1/3}$. So
+let us only consider the contribution of this single cell to $I(u)$:
+\begin{eqnarray*}
+  \int_0^h (x-(i_hu)^3)^2 ((i_hu)')^6 dx
+  &=&
+  \int_0^h (x-(h^{1/3}x)^3)^2 ((h^{1/3}/h)')^6 dx
+  \\
+  &=&
+  h^{-4} \int_0^h (x^2-2hx^4+h^2x^6) dx
+  \\
+  &=&
+  h^{-4} (h^3/3-2h^5/5+h^9/7)
+  \\
+  &=& {\cal O}(h^{-1}).
+\end{eqnarray*}
+Ups, even the contribution of the first cell blows up under mesh refinement,
+and we have not even summed up the contributions of the other cells!
+
+It turns out, that the other cells are not really problematic (since the
+gradient is bounded there by a constant independent of $h$), but we cannot
+really avoid the trouble with the first cell: if instead of the interpolant we
+choose some other finite element function that is closer on average to
+$x^{1/3}$ than the interpolant above, then we have to increase the slope of
+this function, since we have to obey the boundary condition at the left
+end. But then we are hit by the weight $(u')^6$. This weight is simply too
+strong! 
+
+Of course, in practice the minimal value of $I$ cannot increase under mesh
+refinement: if it is finite for some function on some mesh, then it must be
+smaller or equal to that value on a finer mesh, since the original function is
+still in the space spanned by the shape functions on the finer grid, as finite
+element spaces are nested. However, the computation above shows that we should
+not be surprised if the value of the functional does not converge to zero, but
+rather some finite value.
+
+There is one more conclusion to be drawn from the blow-up lesson above: we
+cannot expect the finite dimensional approximation to be close to the root
+function at the left end of the domain, for any mesh we choose! Because, if it
+would, then its energy would have to blow up. And we will see exactly this
+in the results section below.
+
+
+\section{What to do?}
+
+After this somewhat theoretical introduction, let us just once in our life
+have fun with pure mathematics, and actually see what happens in this problem
+when we run the finite element method on it. So here it goes: to find the
+minimum of $I(u)$, we have to find its stationary point. The condition for
+this reads
+\begin{equation*}
+  I'(u,\varphi) 
+  = 
+  \int_0^1 6 (x-u^3) (u')^5 \{ (x-u^3)\varphi' - u^2 u' \varphi\}\ dx,
+\end{equation*}
+for all test functions $\varphi$ from the same space as that from which we
+take $u$, but with zero boundary conditions. If this space allows us to
+integrate by parts, then we could associate this with a two point boundary
+value problem
+\begin{equation*}
+  -(x-u^3) u^2(u')^6
+  - \frac{d}{dx} \left\{(x-u^3)^2 (u')^5\right\} = 0,
+  \qquad\qquad u(0)=0,
+  \quad u(1)=1,
+\end{equation*}
+but for finite elements, we will want to have it in weak form anyway. Since
+the equation is still nonlinear, we want to use a Newton method. For this, we
+compute iterates $u_{k+1}=u_k+\delta u_k$, and the updates are solutions of
+\begin{equation*}
+  I''(u_k,\delta u_k,\varphi) 
+  = 
+  -I'(u_k, \varphi).
+\end{equation*}
+$I''$ is actually a lengthy expression, so we will not write it down here
+(you'll find it in the code where we build up the matrix). The basic idea that
+you should get here is that we formulate a Newton method in a function space,
+and will only discretize each step separately.
+
+
+\section{The program}
+
+The program does exactly this: it discretizes each Newton step, and forms the
+update. That is, it computes the matrix and right hand side vector
+\begin{equation*}
+  A_{ij} = I''(u_k, \varphi_i, \varphi_j),
+  \qquad\qquad 
+  f_i = -I'(u_k, \varphi_i),
+\end{equation*}
+and solves $Ax=f$ for the update $\delta u_k=\sum_i x_i \varphi_i$. Note that
+emerging from the second derivatives of a functional, the matrix is of course
+symmetric, but it is not necessarily positive definite. In fact, it is not in
+general, but should of course be at the solution (otherwise this would be a
+saddle point instead of a minimum, or it would be an unstable minimum).
+
+Formulating the Newton method in function spaces, and only discretizing
+afterwards has consequences: we have to linearize around $u_k$ when we want to
+compute $\delta u_k$, and we have to sum up these two functions afterwards.
+However, they may be living on different grids, if we have refined the grid
+before this step, so we will have to present a way to actually get a function
+from one grid to another. The \textrm{SolutionTransfer} class will help us
+here. On the other hand, discretizing every Newton step separately has the
+advantage that we can do the initial steps, when we are still far away from
+the solution, on a coarse mesh, and only go on to more expensive computations
+when we home in on the solution.
+
+Apart from this, the program does not contain much new stuff. We will use a
+very simplistic strategy for step length control in the Newton method (always
+take full steps) and for when we refine the mesh (every third step). Realistic
+programs solving nonlinear problems will have to be more clever in this
+respect, but it suffices for the purposes of this program, and, after all,
+this is a tutorial on programming with \textrm{deal.II}, not one on writing
+clever nonlinear solvers.
+
+
+\end{document}

@@ -5,9 +5,9 @@ docdir=@docdir@
 install=@INSTALL@
 
 MANPAGES = kdoc.1 makekdedoc.1 qt2kdoc.1
-MAINDOC = @srcdir@/kdoc.docbook @top_srcdir@/README
+MAINDOC = @srcdir@/index.docbook @top_srcdir@/README
 
-all: ${MANPAGES}
+all: ${MANPAGES} htmldoc
 
 install:
 	${install} -d $(DESTDIR)${mandir}
@@ -39,8 +39,9 @@ qt2kdoc.1: @top_srcdir@/qt2kdoc @top_srcdir@/Version
 clean:
 	rm -rf kdoc.1 makekdedoc.1 qt2kdoc.1
 
-
-html: kdoc.docbook
-	mkdir html; (cd html && jade -d \
+# This needs to be improved, obviously
+htmldoc: @srcdir@/index.docbook
+	-rm -rf html; mkdir html; (cd html && jade -d \
         /usr/lib/sgml/stylesheet/dsssl/docbook/nwalsh/html/docbook.dsl -t sgml \
 	../$< )
+

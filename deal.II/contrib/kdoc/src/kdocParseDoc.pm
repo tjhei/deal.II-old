@@ -83,6 +83,9 @@ PARSELOOP:
 		elsif ( $text =~ /^\s*\@deprecated\s*/ ) {
 			codeProp( "Deprecated", 1 );
 		}
+		elsif ( $text =~ /^\s*\@reimplemented\s*/ ) {
+			codeProp( "Reimplemented", 1 );
+		}
 		elsif ( $text =~ /^\s*\@group\s*/ ) {
 			# logical group tag in which this node belongs
 			# multiples allowed
@@ -136,7 +139,7 @@ PARSELOOP:
 		elsif( $text =~ /^\s*\@(?:throws|exception|raises)\s*/ ) {
 			docListProp( "Throws" );
 		}
-		elsif( $text =~ /^\s*\@image\s+(\w+)\s*/ ) {
+		elsif( $text =~ /^\s*\@image\s+([^\s]+)\s*/ ) {
 			textProp( "Image" );
 			$extraprops{ "Path" } = $1;
 		}

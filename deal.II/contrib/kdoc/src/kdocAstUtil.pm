@@ -593,7 +593,10 @@ sub makeClassList
 				my $her = join ( "::", heritage( $node ) );
 				$node->AddProp( "FullName", $her );
 
-				push @$list, $node;
+				if ( !exists $node->{DocNode}->{Internal} ||
+				     !$main::skipInternal ) {
+					push @$list, $node;
+				}
 	} );
 
 	@$list = sort { $a->{FullName} cmp $b->{FullName} } @$list;

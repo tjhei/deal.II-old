@@ -21,12 +21,12 @@ use kdocAstUtil;
 use kdocParseDoc;
 
 use vars qw/ %rootNodes $declNodeType %options @formats_wanted
-        @includeclasses $includeclasses
+        @includeclasses $includeclasses $skipInternal
 	$libdir $libname $outputdir @libs $striphpath $doPrivate $readstdin
 	$Version $quiet $debug $parseonly $currentfile $cSourceNode $exe
 	%formats %flagnames $rootNode @classStack $cNode 
-	$lastLine $docNode @includes $cpp $defcppcmd $cppcmd $inExtern
-	%stats /;
+	$lastLine $docNode @includes $cpp $defcppcmd $cppcmd $docincluded
+	$inExtern %stats /;
      
 ## globals
 
@@ -84,7 +84,7 @@ Getopt::Long::config qw( no_ignore_case permute bundling auto_abbrev );
 GetOptions( \%options,
 	"format|f=s", \@formats_wanted,
 	"url|u=s",
-	 "skip-internal|i",
+	"skip-internal", \$skipInternal,
 	"skip-deprecated|e", 
 	"document-all|a",
 	"compress|z",
@@ -105,7 +105,8 @@ GetOptions( \%options,
 	"classes|c=s",    \@includeclasses,
 	
 	"cpp|P",	\$cpp,
-	"cppcmd|C",	\$cppcmd,
+	"docincluded",  \$docincluded,
+	"cppcmd|C=s",	\$cppcmd,
 	"includedir|I=s", \@includes,
 
 	"quiet|q",	\$quiet,
@@ -212,18 +213,19 @@ sub parseFiles
 		if ( $currentfile =~ /\.idl\s*$/ ) {
 			# IDL file
 			$lang = "IDL";
-
-			open( INPUT, "$currentfile" ) 
-				|| croak "Can't read from $currentfile";
 		}
+
 		# assume cxx file
-		elsif( $cpp ) {
+		if( $cpp ) {
 			# pass through preprocessor
 			my $cmd = $cppcmd;
 			foreach my $dir ( @includes ) {
 				$cmd .= " -I $dir ";
 			}
-			open( INPUT, $cmd." -DQOBJECTDEFS_H $currentfile|" )
+
+			$cmd .= " -DQOBJECTDEFS_H $currentfile";
+
+			open( INPUT, "$cmd |" )
 				|| croak "Can't preprocess $currentfile";
 		}
 		else {
@@ -351,9 +353,16 @@ LOOP:
 			|| $p =~ /^\s*Q_OBJECT/		# QObject macro
 			);
 
+		next if ( $p =~ /^\s*Q_ENUMS/           # ignore Q_ENUMS
+                        || $p =~ /^\s*Q_PROPERTY/       # and Q_PROPERTY
+                        || $p =~ /^\s*K_SYCOCATYPE/     # and K_SYCOCA stuff
+                        || $p =~ /^\s*K_SYCOCAFACTORY/  # 
+                        || $p =~ /^\s*K_DCOP/           # and DCOP stuff
+			);
+
 		# remove all preprocessor macros
 		if( $p =~ /^\s*#\s*(\w+)/ ) {
-			if ($p =~ /^\s*#\s*[0-9]+\s*\".*$/ 
+			if (!$docincluded && $p =~ /^\s*#\s*[0-9]+\s*\".*$/ 
 					&& not($p =~ /\"$currentfile\"/)) {
 				# include file markers
 				while( <INPUT> ) {

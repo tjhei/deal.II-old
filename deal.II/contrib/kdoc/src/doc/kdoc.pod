@@ -104,6 +104,11 @@ is required for this, but this requirement will change before
 2.0. Directories for inclusion in the preprocessor header search path
 can be specified via the B<-I> option.
 
+=item B<--docincluded>
+
+Parse files that are included by the preprocessor #include macro.
+This is off by default.
+
 =item B<-cppcmd> <command>, B<-C> <command>
 
 Specify the preprocessor command that will be used. The default is:

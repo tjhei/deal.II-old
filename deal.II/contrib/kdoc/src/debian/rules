@@ -8,7 +8,7 @@
 
 build:
 	dh_testdir
-	./configure --prefix=/usr
+	./configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info
 	$(MAKE) 
 	touch build
 

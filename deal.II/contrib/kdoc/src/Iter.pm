@@ -331,8 +331,9 @@ sub MembersByType
 			return;
 	}
 
-	foreach my $access ( qw/public protected private/ ) {
-		next if $access eq "private" && !$main::doPrivate;
+	foreach my $acc ( qw/public protected private/ ) {
+		next if $acc eq "private" && !$main::doPrivate;
+		$access = $acc;
 
 		my @types = ();
 		my @data = ();
@@ -386,23 +387,23 @@ sub MembersByType
 		}
 
 		# apply
-		$access = ucfirst( $access );
+		$uc_access = ucfirst( $access );
 		
-		doGroup( "$access Types", $node, \@types, $startgrpsub,
+		doGroup( "$uc_access Types", $node, \@types, $startgrpsub,
 			$methodsub, $endgrpsub);
 		doGroup( "Modules", $node, \@modules, $startgrpsub,
 			$methodsub, $endgrpsub);
 		doGroup( "Interfaces", $node, \@interfaces, $startgrpsub,
 			$methodsub, $endgrpsub);
-		doGroup( "$access Methods", $node, \@methods, $startgrpsub,
+		doGroup( "$uc_access Methods", $node, \@methods, $startgrpsub,
 			$methodsub, $endgrpsub);
-		doGroup( "$access Slots", $node, \@slots, $startgrpsub,
+		doGroup( "$uc_access Slots", $node, \@slots, $startgrpsub,
 			$methodsub, $endgrpsub);
 		doGroup( "Signals", $node, \@signals, $startgrpsub,
 			$methodsub, $endgrpsub);
-		doGroup( "$access Static Methods", $node, \@static, 
+		doGroup( "$uc_access Static Methods", $node, \@static, 
 			$startgrpsub, $methodsub, $endgrpsub);
-		doGroup( "$access Members", $node, \@data, $startgrpsub,
+		doGroup( "$uc_access Members", $node, \@data, $startgrpsub,
 			$methodsub, $endgrpsub);
 	}
 }
@@ -411,13 +412,22 @@ sub doGroup
 {
 	my ( $name, $node, $list, $startgrpsub, $methodsub, $endgrpsub ) = @_;
 
-	return if $#$list < 0;
+        my ( $hasMembers ) = 0;
+        foreach my $kid ( @$list ) {
+                if ( !exists $kid->{DocNode}->{Reimplemented} ) {
+                        $hasMembers = 1;
+                        break;
+                }
+        }
+	return if !$hasMembers;
 
 	$startgrpsub->( $name ) if defined $startgrpsub;
 	
 	if ( defined $methodsub ) {
 		foreach my $kid ( @$list ) {
-			$methodsub->( $node, $kid );
+                        if ( !exists $kid->{DocNode}->{Reimplemented} ) {
+         		        $methodsub->( $node, $kid );
+                        }
 		}
 	}
 

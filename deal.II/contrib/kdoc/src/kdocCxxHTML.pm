@@ -450,8 +450,9 @@ sub writeClassDoc
 	else {
 		Iter::MembersByType ( $node, 
 			sub { print CLASS "<h4>", $_[0], "</h4><ul>"; },
-			sub {	my ($node, $kid ) = @_; 
-				listMember( $node, $kid ); },
+			sub {	my ($node, $kid ) = @_;
+                                listMember( $node, $kid ); 
+                            },
 			sub { print CLASS "</ul>"; }
 		);
 	}
@@ -493,8 +494,11 @@ sub writeClassDoc
 				$ref = kdocAstUtil::findOverride( $rootnode, 
 						$node, $kid->{astNodeName} );
 				if ( defined $ref ) {
-					print CLASS "<p>Reimplemented from ",
-						refName( $ref ), "</p>\n";
+					print CLASS "<p>Reimplemented from ", refName( $ref );
+                                        if ( exists $kid->{DocNode}->{Reimplemented} ) {
+                                                print CLASS " for internal reasons; the API is not affected";
+                                        }
+                                        print CLASS ".</p>\n";
 				}
 			}
 

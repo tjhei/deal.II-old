@@ -618,6 +618,8 @@ sub identifyDecl
 
 		my @inherits = ();
 
+		# remove `template' keyword, as well as angle brackets
+		$tmpl =~ s/^\s*template\s*// if $tmpl ne "";
 		$tmpl =~ s/<(.*)>/$1/ if $tmpl ne "";
 
 		if(  $rest =~ /^\s*:\s*/ ) {

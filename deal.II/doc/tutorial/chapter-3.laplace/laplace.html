@@ -23,15 +23,15 @@ Let's have a look at the class definition:
 class Laplace
 {
 
-  Triangulation<2> tr;
-  DoFHandler<2> dof;
+  Triangulation&lt;2&rt; tr;
+  DoFHandler&lt;2&rt; dof;
 
-  dSMatrixStruct matrix_structure;
+  SparseMatrixStruct matrix_structure;
   LapMatrix A;
 
   ConstraintMatrix hanging_nodes;
 
-<code>
+</code>
 </pre>
 <p>
 These few lines define several important elements: The triangulation <code>tr</code>, i.e. the grid, and a handler for the degrees
@@ -66,17 +66,26 @@ call the appropriate solver.
 </pre>
 
 <hr>
-<p>
-<a href="../index.html">Back to the tutorial index</a>
-</p>
+
+<table>      
+<tr>
+  <td>
+    <a href="index.html">Back to this chapter's index</a>
+  </td>
+  <td>
+    <a href="../index.html">Back to the tutorial index</a>
+  </td>
+</tr>
+</table>
+
   
 <hr>
-<p>
+
 <address><a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
-</p>
+
 
 <p>
-Last modified: Fri Feb 12, 1999
+Last modified: Tue Mar 23 1999
 </p>
 </body>
 </html>

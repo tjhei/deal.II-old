@@ -1,3 +1,11 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
 
+After we have created a grid in the previous example, we now show how
+we can associate a degree of freedom with each vertex of the
+triangulation. This is a rather simple task, since the library does
+all the work. However, for some algorithms, especially for some linear
+solvers, it is advantageous to have the degrees of freedom numbered
+in a certain sense, and we will use the algorithm of Cuthill and McKee
+to do so. The results are written to a file and visualized using
+GNUPLOT. 

@@ -211,9 +211,9 @@ DEAL::	2	1	0	-1.0
 DEAL::	2	2	1	5.0
 DEAL::	2	3	2	-2.0
 DEAL::	2	6	3	-1.0
-DEAL::SparseMatrixEZ:used     entries:64
-DEAL::SparseMatrixEZ:alloc    entries:72
-DEAL::SparseMatrixEZ:reserved entries:80
+DEAL::SparseMatrixEZ:used      entries:64
+DEAL::SparseMatrixEZ:allocated entries:72
+DEAL::SparseMatrixEZ:reserved  entries:96
 DEAL::SparseMatrixEZ:entries	3	rows	4
 DEAL::SparseMatrixEZ:entries	4	rows	8
 DEAL::SparseMatrixEZ:entries	5	rows	4
@@ -283,9 +283,9 @@ DEAL:9-SparseMatrixEZ<double>:RichardsonT::Starting value 0.0021
 DEAL:9-SparseMatrixEZ<double>:RichardsonT::Failure step 10 value 4.3e-11
 DEAL::GrowingVectorMemory:Overall allocated vectors: 28
 DEAL::GrowingVectorMemory:Maximum allocated vectors: 2
-DEAL::SparseMatrixEZ:used     entries:100
-DEAL::SparseMatrixEZ:alloc    entries:111
-DEAL::SparseMatrixEZ:reserved entries:160
+DEAL::SparseMatrixEZ:used      entries:100
+DEAL::SparseMatrixEZ:allocated entries:111
+DEAL::SparseMatrixEZ:reserved  entries:192
 DEAL::SparseMatrixEZ:entries	4	rows	4
 DEAL::SparseMatrixEZ:entries	6	rows	8
 DEAL::SparseMatrixEZ:entries	9	rows	4

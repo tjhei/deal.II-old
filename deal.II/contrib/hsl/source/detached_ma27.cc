@@ -218,9 +218,9 @@ int main ()
                                    // ...and start off a thread that
                                    // actually checks that
   Threads::ThreadManager thread_manager;
-  Threads::spawn (thread_manager,
-                  Threads::encapsulate (&monitor_parent_liveness)
-                  .collect_args(master_pid, getpid()));
+//   Threads::spawn (thread_manager,
+//                   Threads::encapsulate (&monitor_parent_liveness)
+//                   .collect_args(master_pid, getpid()));
   
                                    // then go into the action loop...
   unsigned int N, NZ, NSTEPS, LA, MAXFRT, LIW;

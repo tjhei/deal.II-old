@@ -1,0 +1,6 @@
+kdoc.local
+config.*
+perlbin
+qt2kdoc.local
+Makefile
+makekdedoc.local

@@ -15,19 +15,24 @@
 <!-- Page Body -->
 <body lang="en">
 
-<h1>Data Output</h1>
+<h1>Grid and Data Output</h1>
 
 <h2>Graphics Formats</h2>
 <p>
 <acronym>deal.II</acronym> provides a class called <code>DataOut</code>
-dealing with the output of grid and simulation data. It is fairly versatile 
-and handles a 
-number of different data formats. There are, however, some limitations
-with regard to grouping of components and the degrees of freedom.
+dealing with the output of simulation data and a class called
+<code>GridOut</code> handling the output of grid (triangulation) data. 
+Both are 
+fairly versatile 
+and can handle a 
+number of different data formats.
+<b>As of this writing (26/6/99) <code>DataOut</code> is being revised.
+When this revision is finished the descriptions below will be updated.</b>
 </p>
 
+<h3><code>DataOut</code> graphics formats</h3>
 <p>
-The graphics formats available are:
+The graphics formats available in <code>DataOut</code> are:
 </p>
 <ul>
   <li><a href="#ucd">Unstructured Cell Data (ucd)</a>
@@ -43,6 +48,19 @@ The graphics formats available are:
   </li>
 
   <li><a href="#gmv">General Mesh Viewer</a>
+  </li>
+</ul>
+
+
+<h3><code>GridOut</code> graphics formats</h3>
+<p>
+The graphics formats available in <code>GridOut</code> are:
+</p>
+<ul>
+  <li><a href="#grid_gnuplot">Gnuplot</a>
+  </li>
+
+  <li><a href="#grid_eps">Encapsulated Postscript (eps)</a>
   </li>
 </ul>
 
@@ -79,6 +97,13 @@ to a file if you want to use the data later on.
 </tr>
 <tr>
   <td>1.</td>
+  <td>Use the correct include-file.
+  </td>
+  <td><code>#include &lt;basic/data_out.h&gt;</code>
+  </td>
+</tr>
+<tr>
+  <td>2.</td>
   <td>Create an object of this class with the right dimension. 
       It takes no initialization parameters.
   </td>
@@ -86,7 +111,7 @@ to a file if you want to use the data later on.
   </td>
 </tr>
 <tr>
-  <td>2.
+  <td>3.
   </td>
   <td>Attach a <a href="dofs.html"><code>DoFHandler</code></a> 
       object to your <code>DataOut</code>
@@ -100,7 +125,7 @@ to a file if you want to use the data later on.
   </td>
 </tr>
 <tr>
-  <td>3.
+  <td>4.
   </td>
   <td>Add data vectors to be written to a file. The second and third argument
       are the name of the vector and its physical units.
@@ -113,7 +138,7 @@ to a file if you want to use the data later on.
   </td>
 </tr>
 <tr>
-  <td>4.
+  <td>5.
   </td>
   <td>Generate an <code>ostream</code> (and, normally, attach it to a file).
   </td>
@@ -123,7 +148,7 @@ to a file if you want to use the data later on.
   </td>
 </tr>
 <tr>
-  <td>5.
+  <td>6.
   </td>
   <td>Write your data to this ostream. The second parameter denotes the 
       output format to be used. It must be one of <code>ucd, gnuplot, 
@@ -136,8 +161,9 @@ to a file if you want to use the data later on.
 </table>
 
 
+<h2><a name="dataout_formats"><code>DataOut</code> data formats</a></h2>
 
-<h2><a name="ucd">Unstructured Cell Data (ucd)</a></h2>
+<h3><a name="ucd">Unstructured Cell Data (ucd)</a></h3>
 
 <p>
 The ucd data format is described in the AVS developer's guide. There
@@ -145,7 +171,7 @@ are a binary and a ASCII version of this format. <acronym>deal.II</acronym>
 uses the ASCII ucd format.
 </p>
 
-<h3>Limitations of the ucd format</h3>
+<h4>Limitations of the ucd format</h4>
 <p>
 Only node based data can be written, higher order elements are written
 with their node values, not with interior or line values. This is
@@ -154,7 +180,7 @@ it is not possible to give model data since this is not widely supported.
 It is possible to give cell data.
 </p>
 
-<h3>Usage of the ucd format</h3>
+<h4>Usage of the ucd format</h4>
 
 <p>
 In order to write your data in ucd format you need to follow the
@@ -163,9 +189,9 @@ The data is written using <code>void write(ostream &amp;out,"ucd")</code>.
 </p>
 
 
-<h2><a name="gnuplot">Gnuplot data format</a></h2>
+<h3><a name="gnuplot">Gnuplot data format</a></h3>
 
-<h3>Understanding gnuplot data</h3>
+<h4>Understanding gnuplot data</h4>
 
 <p>
 The gnuplot data format is a pure ASCII format where each line is 
@@ -183,7 +209,7 @@ A somewhat more elaborate description can be found in the
 <a href="http://www.cs.dartmouth.edu/gnuplot/gptug.ps">Gnuplot User's Guide (Postscript)</a>
 </p>
 
-<h3>Viewing gnuplot data</h3>
+<h4>Viewing gnuplot data</h4>
 
 <p>
 In order to view a one-dimensional plot you use<br>
@@ -208,7 +234,7 @@ to be plotted.
 </p>
 
 
-<h3>Limitations of the gnuplot data format</h3>
+<h4>Limitations of the gnuplot data format</h4>
 
 <p>The limitations of the gnuplot data format have been well described
 in the 
@@ -224,7 +250,7 @@ each cell being straight lines. You won't see the structure of the solution in t
 </p>
 </blockquote>
 
-<h3>The two different qualities of gnuplot output</h3>
+<h4>The two different qualities of gnuplot output</h4>
 
 <p>The limitations mentioned above can to some extent be remedied,
 and that is why there is also an option for high quality output.
@@ -258,7 +284,7 @@ if there are any.
 </blockquote>
 
 
-<h3>Usage of the gnuplot data format</h3>
+<h4>Usage of the gnuplot data format</h4>
 
 <p>
 In order to write your data in gnuplot format you need to follow the
@@ -275,6 +301,65 @@ The data is written using
   output. 
 </li>
 </ul>
+
+<h2><a name="grid_usage">General description of the usage of 
+<code>GridOut</code></a></h2>
+
+<p>
+What exactly it is you need to do in order to make use of the 
+<code>GridOut</code> 
+class is described in the table below. Note that data is written to an 
+<code>ostream</code>. That means you have to attach your <code>ostream</code>
+to a file if you want to use the data later on. Note also that all the
+methods are static. There is no need to create a
+<code>GridOut</code> object.
+</p>
+
+<table>
+<caption><b>Usage of the <code>GridOut</code> class</b></caption>
+<tr>
+  <td><b>Step</b>
+  </td>
+  <td><b>Function</b>
+  </td>
+  <td><b>Call</b>
+  </td>
+</tr>
+<tr>
+  <td>1.</td>
+  <td>Use the correct include-file.
+  </td>
+  <td><code>#include &lt;basic/grid_out.h&gt;</code>
+  </td>
+</tr>
+<tr>
+  <td>2.
+  </td>
+  <td>Generate an <code>ostream</code> (and, normally, attach it to a file).
+  </td>
+  <td><code>
+      ostream out;
+      </code>
+  </td>
+</tr>
+<tr>
+  <td>3.
+  </td>
+  <td>Write your data to this ostream by calling the appropriate 
+      <code>write</code> method giving your triangulation object and
+      the output file type as parameters. <code>output_format</code>
+      is one of {gnuplot, eps}.
+  </td>
+  <td><code>void GridOut&lt;dim&gt;::write(const Triangulation&lt;dim&gt; &amp; tria,ostream &amp;out, cont OutputFormat output_format)</code><br>	  
+  </td>
+</tr>
+</table>
+
+<h2><a name="gridout_formats"><code>GridOut</code> data formats</a></h2>
+
+<h3><a name="grid_gnuplot">Gnuplot data format</a></h3>
+
+<h3><a name="grid_eps">Encapsulated Postscript</a></h3>
 
 <!-- Page Foot -->
 <hr>

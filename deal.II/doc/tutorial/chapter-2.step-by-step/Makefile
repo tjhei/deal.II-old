@@ -4,7 +4,7 @@
 # include paths and global variables
 include ../../../common/Make.global_options
 
-example-directories = $(shell echo $D/examples/step-*)
+example-directories = $(shell echo $D/examples/step-? $D/examples/step-??)
 example-names       = $(notdir $(example-directories))
 example-htmls       = $(addsuffix .html,$(example-names))
 example-sgmls       = $(addsuffix .sgml,$(example-names))

@@ -576,17 +576,18 @@ In the implementation above, some tool classes have been used. These
 are briefly described here.
 </p>
 
-<h4>a) The return_value&lt;T&gt; class template</h4>
+<h4>a) The <code>return_value&lt;T&gt;</code> class template</h4>
 
 <p>
-This class stores a value of type T if T is not a reference or
-"void". It offers get() and set() functions that get and set the
-value. If T is a reference type, then set() is obviously not possible
-since references cannot be rebound after construction time. The class
-therefore stores a pointer, and set() sets the pointer to the object
-the reference references. get() returns the reference again. If T is
-"void", then the class is empty and there is only a get() function
-that returns void.
+This class stores a value of type <code>T</code> if <code>T</code> is not a
+reference or <code>void</code>. It offers <code>get()</code> and
+<code>set()</code> functions that get and set the value. If <code>T</code> is a
+reference type, then <code>set()</code> is obviously not possible since
+references cannot be rebound after construction time. The class therefore
+stores a pointer, and <code>set()</code> sets the pointer to the object the
+reference references. <code>get()</code> then returns the reference again. If
+<code>T</code> is <code>void</code>, then the class is empty and there is only
+a <code>get()<code> function that returns <code>void</code>.
 </p>
 
 <code><pre>
@@ -614,10 +615,10 @@ that returns void.
 </pre></code>
 
 
-<h4>b) The "call" function templates</h4>
+<h4>b) The <code>call</code> function templates</h4>
 
 <p>
-The call function templates take a function pointer, an argument list
+The <code>call</code> function templates take a function pointer, an argument list
 tuple, and the address of the return value object, and call the
 function with these arguments. Since we have to unpack the argument
 list, we have to dispatch to different functions, depending on the
@@ -638,7 +639,7 @@ number of arguments, in the usual way:
 </pre></code>
 
 <p>
-The Caller class has the following member functions:
+The <code>Caller</code> class has the following member functions:
 
 <code><pre>
     template &lt;typename RT&gt; struct Caller 
@@ -657,18 +658,18 @@ The Caller class has the following member functions:
 
 
 <p>
-There is a specialization Caller&lt;void&gt; that does not set a return
-value, and for each call and do_call function there is a second
+There is a specialization <code>Caller&lt;void&gt;</code> that does not set a return
+value, and for each call and <code>do_call</code> function there is a second
 function for member function pointers that takes an object as
 additional argument.
 </p>
 
 
-<h4>c) mem_fun_ptr</h4>
+<h4>c) <code>mem_fun_ptr</code></h4>
 
 <p>
-In order to form a pointer to member function for both cases of const
-and non-const member functions, we need a simple tool:
+In order to form a pointer to member function for both cases of <code>const</code>
+and non-<code>const</code> member functions, we need a simple tool:
 <code><pre>
     template &lt;typename RT, class C, typename ArgList,
               int length = boost::tuples::length&lt;ArgList&gt;::value&gt;
@@ -695,21 +696,21 @@ and non-const member functions, we need a simple tool:
 </p>
 
 <p>
-Note that if the second template argument is a "const C", then we mark
-the member function "const". The two templates for mem_fun_ptr_helper
+Note that if the second template argument is a <code>const C</code>, then we mark
+the member function <code>const</code>. The two templates for <code>mem_fun_ptr_helper</code>
 have to be repeated for every number of arguments that we have in
 mind. Note also that the specification of the default argument in the
-declaration of the general template of mem_fun_ptr_helper saves us
-from recomputing it in mem_fun_ptr.
+declaration of the general template of <code>mem_fun_ptr_helper</code> saves us
+from recomputing it in <code>mem_fun_ptr</code>.
 </p>
 
 
 
-<h4>d) add_reference for tuples</h4>
+<h4>d) <code>add_reference</code> for tuples</h4>
 
 <p>
 The following classes add references to the elements of a tuple, thus
-providing the type equivalent of the return value of the boost::tie
+providing the type equivalent of the return value of the <code>boost::tie</code>
 functions. There are probably ways inside boost's tuples library to do
 this, but I couldn't locate this.
 <code><pre>
@@ -739,7 +740,7 @@ this, but I couldn't locate this.
 </pre></code>
 </p>
 <p>
-The tie_args_helper class is repeated for every number of elements we
+The <code>tie_args_helper</code> class is repeated for every number of elements we
 want to use.
 </p>
 
@@ -748,26 +749,26 @@ want to use.
 <h3>6. Open Problems</h3>
 
 
+<h4>a) A variable lifetime problem</h4>
 <p>
-a) A variable lifetime problem
-The only unsolved semantic problem the author is aware of is the
+The only unsolved semantic problem I am aware of at present is the
 following: if we have a function
 <code><pre>
-    void f(const int &i);
+    void f(const int &amp;i);
 </pre></code>
 then this function can be called as
 <code><pre>
     f(1);
 </pre></code>
 i.e. the compiler creates a temporary and passes its address to
-f(). When invoking f() on a new thread, however, as in
+<code>f()</code>. When invoking <code>f()</code> on a new thread, however, as in
 <code><pre>
     spawn (f)(1);
 </pre></code>
-then it is only guaranteed that the call to spawn() does not return
+then it is only guaranteed that the call to <code>spawn()</code> does not return
 before the new thread is started and has copied the arguments to
-f(). However, the argument is only the reference to the temporary, not
-its value. f() will thus likely observe corrupted values for its
+<code>f()</code>. However, the argument is only the reference to the temporary, not
+its value. <code>f()</code> will thus likely observe corrupted values for its
 argument. On the other hand, copying the value is no option either, of
 course.  Since to the author's best knowledge the language does not
 provide means to avoid taking the address of a temporary, there is
@@ -775,9 +776,11 @@ presently no way to avoid this problem. Suggestions for healing it are
 very welcome.
 </p>
 
+
+<h4>b) Forwarding of <code>operator()</code></h4>
 <p>
-b) Forwarding of operator()
-Above, we have defined an overload of spawn for functor-like objects:
+Above, we have not defined an overload of <code>spawn</code> for functor-like
+objects, even though that would be desirable. One way to do so would be
 <code><pre>
     template &lt;typename C&gt;
     mem_fun_encapsulator&lt;void,C,boost::tuple&lt;&gt; &gt;
@@ -785,20 +788,21 @@ Above, we have defined an overload of spawn for functor-like objects:
       return spawn (c, &C::operator());
     }
 </pre></code>
-This only works if operator() satisfies the signature
+This only works if <code>operator()</code> satisfies the signature
 <code><pre>
     struct C {    void operator() ();  };
 </pre></code>
 </p>
 <p>
-We could add another overload if operator() is const. However, what one
+We could add another overload if <code>operator()</code> is
+<code>const</code>. However, what one 
 would like is an overload for more general signatures. Unfortunately,
 this requires that we can infer type and number of arguments and
-return type of operator() at the time we declare the return type of
-above overload of spawn(). I have not found a way to infer this
-information just by using the template parameter C -- it just seems
+return type of <code>operator()</code> at the time we declare the return type of
+above overload of <code>spawn()</code>. I have not found a way to infer this
+information just by using the template parameter <code>C</code> -- it just seems
 not possible. What would work if it were supported by compilers is a
-kind of typeof-operator:
+kind of <code>typeof</code>-operator:
 <code><pre>
     template &lt;typename C&gt;
     typeof(spawn(c,&C::operator()))          // **
@@ -809,14 +813,14 @@ kind of typeof-operator:
 </p>
 <p>
 When seeing the declaration, the compiler would automatically check
-which version of the overloaded spawn() function it would call, and
-correspondingly take the return type. gcc does support the typeof
+which version of the overloaded <code>spawn()</code> function it would call, and
+correspondingly take the return type. gcc does support the <code>typeof</code>
 keyword, but even present CVS snapshots generate an internal compiler
 error on this construct.
 </p>
 
+<h4>c) Using a memory based scheme rather than condition variables</h4>
 <p>
-c) Using a memory based scheme rather than condition variables
 The scheme using mutices and condition variables to synchronise
 calling and called thread seems expensive. A simpler approach would be
 to replace it by letting the creating thread generate an object on the
@@ -829,9 +833,10 @@ synchronisation.
 The calling thread would then not have to copy the arguments onto its
 local stack and signal to the calling thread. It would only have to
 delete the memory after the call to the user-supplied function
-returns. Apart from replacing ArgReferences by ArgList in some places,
-the scheme would basically just replace *_encapsulator::operator(),
-fire_up, and thread_entry_point:
+returns. Apart from replacing <code>ArgReferences</code> by
+<code>ArgList</code> in some places, 
+the scheme would basically just replace <code>*_encapsulator::operator()</code>,
+<code>fire_up</code>, and <code>thread_entry_point</code>:
 </p>
 
 <code><pre>
@@ -889,18 +894,19 @@ later on.
 Here are some additional suggestions for discussion:
 </p>
 
-<h4>a) Conversions between return values<h4>
+<h4>a) Conversions between return values</h4>
 
 <p>
-If f() is a function returning an integer, then the following is
+If <code>f()</code> is a function returning an integer, then the following is
 legal:
 <code><pre>
     double d = f(arg1, arg2);
 </pre></code>
 The question, then, would be: do we want to allow conversions between
-thread&lt;double&gt; and thread&lt;int&gt; objects? And do we want to allow a
-conversion from thread&lt;T&gt; to thread&lt;void&gt; (i.e.: casting away the
-return value)?
+<code>Thread&lt;double&gt;</code> and <code>Thread&lt;int&gt;</code> objects?
+And do we want to allow a 
+conversion from <code>Thread&lt;T&gt;</code> to <code>Thread&lt;void&gt;</code>
+(i.e.: casting away the return value)?
 </p>
 
 <p>
@@ -909,22 +915,22 @@ Since one can still assign the return value of the thread to a double,
     double d = thread.return_value();
 </pre></code>
 the only real merit in allowing conversions is in putting threads with
-different return value types into a thread_group:
+different return value types into a <code>ThreadGroup</code>:
 <code><pre>
     double f1 ();
     int    f2 ();
  
-    thread_group&lt;double&gt; tg;
+    ThreadTroup&lt;double&gt; tg;
     tg += spawn(f1)();
-    tg += spawn(f2)();    // convert thread&lt;int&gt; to thread&lt;double&gt;
+    tg += spawn(f2)();    // convert Thread&lt;int&gt; to Thread&lt;double&gt;
     tg.join_all ();
 </pre></code>
 </p>
 <p>
 Being able to do this is probably only syntactic sugar, except for the
 case where we are not interested in the return values of all threads,
-i.e. the conversion thread&lt;T&gt; -&gt; thread&lt;void&gt; seems like the only one
-that is really worth it.
+i.e. the conversion <code>Thread&lt;T&gt; -&gt; Thread&lt;void&gt;</code> seems
+like the only one that is really worth it.
 </p>
 
 <p>
@@ -938,9 +944,9 @@ chains:
 </pre></code>
 </p>
 <p>
-If f() returns 1.5, then t3.return_value() needs to return 1.0. I
-believe that such conversions could be implemented, by adding the
-types in the chain into a boost::tuple of growing length, and writing
+If <code>f()</code> returns 1.5, then <code>t3.return_value()</code> needs to
+return 1.0. I believe that such conversions could be implemented, by adding the
+types in the chain into a <code>boost::tuple</code> of growing length, and writing
 a function that converts a value of the first type of this tuple to
 the second, to the third, ..., to the last type in the tuple. However,
 a plethora of internal compiler errors has scared me off doing more
@@ -961,10 +967,10 @@ then calling
     spawn (D(), &B::f);
 </pre></code>
 fails for gcc (but succeeds with Intel's icc). Presumably, gcc is
-right: template arguments must match exactly, and D() is of type D,
-while &B::f leads to a class type of B. There is no function template
-for spawn for which this call can match without a derived-to-base
-conversion. We could now change the template
+right: template arguments must match exactly, and <code>D()</code> is of type
+<code>D</code>, while <code>&B::f</code> leads to a class type of
+<code>B</code>. There is no function template for spawn for which this call can
+match without a derived-to-base conversion. We could now change the template
 <code><pre>
     template &lt;typename RT, typename C, typename Arg1&gt;
     mem_fun_encapsulator&lt;RT,C,boost::tuple&lt;Arg1&gt; &gt;
@@ -980,13 +986,13 @@ into
       return mem_fun_encapsulator&lt;RT, C, boost::tuple&lt;Arg1&gt; &gt; (a,fun_ptr);
     }
 </pre></code>
-i.e. introduce another class template A for the type of the
+i.e. introduce another class template <code>A</code> for the type of the
 object. Since the arguments of the constructor to the
-mem_fun_encapsulator object are known, the compiler would perform a
-derived-to-base conversion for object "a" if necessary. I don't know
+<code>mem_fun_encapsulator</code> object are known, the compiler would perform a
+derived-to-base conversion for object <code>a</code> if necessary. I don't know
 whether this is desirable, in particular since also other conversions
 could happen here that one would not want (in the extreme case
-generating a temporary). It is something that should be discussed.
+generating a temporary)..
 </p>
 
 
@@ -998,8 +1004,8 @@ When one writes
     spawn (this, &X::f)
 </pre></code>
 one gets an error that "'this' is not convertible to type X&". One has
-to write "*this" instead. It would be simple to have another set of
-overloads of spawn() that accepts a pointer instead of a reference,
+to write <code>*this<code> instead. It would be simple to have another set of
+overloads of <code>spawn()</code> that accepts a pointer instead of a reference,
 and simply forwards to the existing function. This is just for the
 lazy people, probably, but it is a common case.
 </p>
@@ -1009,16 +1015,16 @@ lazy people, probably, but it is a common case.
 
 <p>
 When a function on a new thread throws an exception, it only
-propagates up to one of the two entry_point() functions, then vanishes
+propagates up to one of the two <code>entry_point()</code> functions, then vanishes
 into the run-time system and kills the program. Ideally, we would have
 a way to pass it over to the main thread. This, however, would need
 some support from the language. Basically, we would need two
 operations:
 <ul>
 <li>clone an exception without knowing its type; we could then in the
-  entry_point function catch it and stack it somewhere, just like we
+  <code>entry_point</code> function catch it and stack it somewhere, just like we
   do for the return value</li>
-<li>back on the main thread, the thread::join() function must raise this
+<li>back on the main thread, the <code>Thread::join()</code> function must raise this
   stored exception if there was one, again without knowing its type.</li>
 </ul>
 Given how exceptions are implemented usually, the machinery for these

@@ -30,6 +30,36 @@ parse a parameter file and extract the values of the parameters.
 The names and allowed values of the parameters can be defined by you.
 </p>
 
+<p>
+The way to using runtime parameters in your program is the following:
+</p>
+
+<table>
+<caption><b>Using runtime parameters</b></caption>
+<tr>
+  <td><b>Step</b>
+  </td>
+  <td><b>What to do</b>
+  </td>
+  <td><b>Function call</b>
+  </td>
+</tr>
+<tr>
+  <td>1.</td>
+  <td>Use the correct include-file.
+  </td>
+  <td><code>#include &lt;base/parameter_handler.h&gt;</code>
+  </td>
+</tr>
+<tr>
+  <td>2.</td>
+  <td>Declare a parameter handler object.
+  </td>
+  <td><code>ParameterHandler prm;</code>
+  </td>
+</tr>
+</table>
+
 <p class=example>
 <span class=example>Example:</span>
 We enable a program, that is, the class TestCases that really handles

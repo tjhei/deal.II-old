@@ -2,3 +2,4 @@
 *.testcase
 *.dat
 Make.depend Makefile
+*.check

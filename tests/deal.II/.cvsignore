@@ -2,3 +2,4 @@ Makefile Make.depend
 *.go
 *.testcase
 *.output
+*.check

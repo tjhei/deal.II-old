@@ -39,9 +39,9 @@ void get (T *t, const size_t N, const char */*debug_info*/)
                       sizeof(T) * N - count);
       if (ret < 0)
         {
-          abort ();
           std::cerr << "------ error " << ret << " on client side!"
                     << std::endl;
+          abort ();
         }
       else
         count += ret;

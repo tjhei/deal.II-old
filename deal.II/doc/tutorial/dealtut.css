@@ -26,5 +26,6 @@ pre.example { padding-left: 2 em;
 	
 table.navbar { }
 
-
 td { vertical-align: top; }
+
+dt { font-weight: bold; }

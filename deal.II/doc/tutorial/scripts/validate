@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# For HTML validation. Use as validate <filename>. 
+# nsgmls can at the time of this writing not handle URLS. Therefore we have
+# to filter out the references to the DTDs. Unfortunately this means not
+# all valid entities will be recognized. Errors regarding undefined 
+# entities can therefore most likely be ignored.
+#
+# Oh...and you might have to set the path to the DTD. This is just a 
+# quick hack anyway.
+#
+# Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de> 1999
+# $Id$
+
+
+echo Validating $1
+cat $1 | sed  -e 's/http:\/\/www.w3.org\/TR\/REC-html40\/strict.dtd//' -e 's/\"\"//' | nsgmls -s -m /home/people/schrage/lib/sgml/pubtext/HTML4.soc 

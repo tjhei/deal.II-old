@@ -642,7 +642,7 @@ EOF
 
 		if( $type eq "var" ) {
 			print CLASS esc( $m->{Type}), 
-				" \\textbf{", $name,"}\n";
+				" \\textbf{", $name,"}", esc( $m->{Array}), "\n";
 		}
 		elsif( $type eq "method" ) {
 			$flags = $m->{Flags};
@@ -669,7 +669,7 @@ EOF
 		elsif( $type eq "typedef" ) {
 			print CLASS "typedef ", 
 				esc($m->{Type}), " \\textbf{",
-				$name,"}";
+				$name,"}", esc($m->{Array});
 		}
 		else { 
 			# unknown type
@@ -729,7 +729,7 @@ sub printMemberName
 
 	if( $type eq "var" ) {
 		print CLASS textRef($m->{Type}, $rootnode ), 
-		" \\texttt{", $name,"} ";
+		" \\texttt{", $name,"} ", textRef($m->{Array}, $rootnode );
 	}
 	elsif( $type eq "method" ) {
 		$flags = $m->{Flags};
@@ -746,7 +746,7 @@ sub printMemberName
 	elsif( $type eq "typedef" ) {
 		print CLASS "typedef ", 
 		textRef($m->{Type}, $rootnode ), " \\texttt{",
-		$name,"} ";
+		$name,"} ", textRef($m->{Array}, $rootnode );
 	}
 	else {
 		print CLASS $name, " {\\small (", 

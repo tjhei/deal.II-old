@@ -373,7 +373,8 @@ sub writeMember
 		
 		if ( /^var/ ) {
 			my $type = $member->{Type};
-			print TEX "\@deftypevar ", escape($type), " $escName\n";
+			my $escArray= escape( $member->{Array} );
+			print TEX "\@deftypevar ", escape($type), " $escName$escArray\n";
 			writeMemberInfo( $member->{DocNode} );
 			print TEX "\@end deftypevar\n";
 			last SWITCH;
@@ -381,7 +382,8 @@ sub writeMember
 		
 		if( /^typedef/ ) {
 			my $escType = escape( $member->{Type} );
-			print TEX "\@deftp {typedef} {$escType} $escName\n";
+			my $escArray= escape( $member->{Array} );
+			print TEX "\@deftp {typedef} {$escType} $escName$escArray\n";
 			writeMemberInfo( $member->{DocNode} );
 			print TEX "\@end deftp\n";
 			last SWITCH;

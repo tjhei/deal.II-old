@@ -620,7 +620,7 @@ sub listMember
 	print CLASS "<LI>";
 
 	if( $type eq "var" ) {
-		print CLASS esc( $m->{Type}), B( "b", $name );
+		print CLASS esc( $m->{Type}), B( "b", $name ), esc( $m->{Array});
 	}
 	elsif( $type eq "method" ) {
 		my $flags = $m->{Flags};
@@ -644,7 +644,7 @@ sub listMember
 		print CLASS "enum $name {", esc($m->{Params}),"}\n";
 	}
 	elsif( $type eq "typedef" ) {
-		print CLASS "typedef ", esc($m->{Type}), " $name\n";
+		print CLASS "typedef ", esc($m->{Type}), " $name", esc($m->{Array}), "\n";
 	}
 	else { 
 		# unknown type
@@ -696,7 +696,7 @@ EOF
 		print CLASS "<LI>\n";
 
 		if( $type eq "var" ) {
-			print CLASS esc( $m->{Type}), " $name\n";
+			print CLASS esc( $m->{Type}), " $name", esc( $m->{Array}), "\n";
 		}
 		elsif( $type eq "method" ) {
 			$flags = $m->{Flags};
@@ -719,7 +719,7 @@ EOF
 			print CLASS "enum $name {", esc($m->{Params}),"}\n";
 		}
 		elsif( $type eq "typedef" ) {
-			print CLASS "typedef ", esc($m->{Type}), " $name";
+			print CLASS "typedef ", esc($m->{Type}), " $name", esc($m->{Array});
 		}
 		else { 
 			# unknown type
@@ -775,7 +775,7 @@ sub printMemberName
 	print CLASS '<table width="100%"><tr bgcolor="#eeeeee"><td><strong>';
 
 	if( $type eq "var" ) {
-		print CLASS textRef($m->{Type}, $rootnode ), " $name\n";
+		print CLASS textRef($m->{Type}, $rootnode ), " $name", textRef( $m->{Array}, $rootnode), "\n";
 	}
 	elsif( $type eq "method" ) {
 		$flags = $m->{Flags};
@@ -789,7 +789,7 @@ sub printMemberName
 	}
 	elsif( $type eq "typedef" ) {
 		print CLASS "typedef ", 
-		textRef($m->{Type}, $rootnode ), " $name";
+		textRef($m->{Type}, $rootnode ), " $name", textRef( $m->{Array}, $rootnode);
 	}
 	else {
 		print CLASS $name, " ", B( "small", "(", esc($type), ")" );
@@ -797,7 +797,7 @@ sub printMemberName
 
 	print CLASS "</strong></td></tr></table><p>";
 
-# extra attributes
+	# extra attributes
 	my @extra = ();
 
 	if( !exists $m->{Access} ) {

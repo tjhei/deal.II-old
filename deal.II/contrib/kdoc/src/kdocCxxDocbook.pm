@@ -270,7 +270,8 @@ sub sumListMember
 	my $pname = tblk( "Emphasis", $name );
 
 	if( $type eq "var" ) {
-		print DOC tblk( "Literal", esc($m->{Type}) ), " $pname\n";
+		print DOC tblk( "Literal", esc($m->{Type}) ), " $pname", 
+                          tblk( "Literal", esc($m->{Array}) ), "\n";
 	}
 	elsif( $type eq "method" ) {
 		my $flags = $m->{Flags};
@@ -302,7 +303,8 @@ sub sumListMember
 	}
 	elsif( $type eq "typedef" ) { 
 		print DOC tblk( "Literal", "typedef " ), esc($m->{Type}), 
-				tblk( "Emphasis", $name );
+				tblk( "Emphasis", $name ),
+		                esc($m->{Array});
 	}
 	else { 
 		# unknown type
@@ -339,7 +341,8 @@ sub printMemberDoc
 	my $pname = tblk( "Emphasis", $name );
 
 	if( $type eq "var" ) {
-		print DOC tblk( "Literal", esc($mem->{Type}) ), " $pname\n";
+		print DOC tblk( "Literal", esc($mem->{Type}) ), " $pname",
+		          tblk( "Literal", esc($mem->{Array}) ), "\n";
 	}
 	elsif( $type eq "method" ) {
 		my $flags = $mem->{Flags};
@@ -370,7 +373,7 @@ sub printMemberDoc
 			" $n\{ ",tblk("Literal",esc($mem->{Params}))," }";
 	}
 	elsif( $type eq "typedef" ) { 
-		print DOC tblk( "Literal", "typedef" ), " ", esc($mem->{Type}), $pname;
+		print DOC tblk( "Literal", "typedef" ), " ", esc($mem->{Type}), $pname, esc($mem->{Array});
 	}
 		# TODO nested compounds
 	else { 

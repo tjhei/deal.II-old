@@ -7,7 +7,7 @@ install=@INSTALL@
 MANPAGES = kdoc.1 makekdedoc.1 qt2kdoc.1
 MAINDOC = @srcdir@/index.docbook @top_srcdir@/README
 
-all: ${MANPAGES} htmldoc
+all: ${MANPAGES}
 
 install:
 	${install} -d $(DESTDIR)${mandir}

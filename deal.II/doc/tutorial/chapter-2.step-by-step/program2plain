@@ -1,8 +1,9 @@
-# Copyright (C) 1999, 2000 by Wolfgang Bangerth, Univerisity of Heidelberg.de
+# Copyright (C) 1999, 2000, 2001 by Wolfgang Bangerth, Univerisity of Heidelberg.de
 
-# ignore the first few lines
+# ignore comments at the start of the program. this includes CVS
+# tags and copyright notices.
 $_ = <>;
-while ( m!^//\*\s*\$Id$!) {
+while ( m!^/[/\*]!) {
     $_ = <>;
 }
 
@@ -20,9 +21,6 @@ END
 
 
 while (<>) {
-    # ignore cvs tag
-    next if m!^//\*\s*\$Id:!;
-
     # ignore comment lines
     next if m!^\s*//!;  
 

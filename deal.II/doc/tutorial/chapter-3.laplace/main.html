@@ -72,8 +72,7 @@ Laplace problem:
 
 <pre>
 <code>
-PureTransportSolution exact;
-Laplace lap(exact);
+Laplace lap;
 </code>
 </pre>
 
@@ -100,7 +99,7 @@ and the right hand side of the equation is zero (as defined above). If the right
 hand side were not zero we would solve the Poisson equation instead.
 </p>
 <pre><code>
-  lap.assemble_primal(exact, zero); 
+  lap.assemble_primal(boundary, zero); 
   lap.solve_primal();          
 </code></pre>
 

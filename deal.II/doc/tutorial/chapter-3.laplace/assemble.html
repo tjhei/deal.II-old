@@ -12,10 +12,11 @@
 <h1>Assembling the problem</h1>
 
 <h2>What's to be done</h2>
+<p>
 In order to assemble the matrices we basically need to:
+</p>
 <ol>
-<li><a href=#matrix">Generate the matrices</a>, i.e. call the <em>DEAL</em> functions that reserve 
-storage space for us.
+<li><a href="#matrix">Generate the matrices</a>, i.e. call the <em>DEAL</em> functions that reserve storage space for us.
 </li>
 <li>
 <a href="#calcfe">Calculate the finite element trial functions</a>
@@ -39,12 +40,12 @@ appropriate <em>DEAL</em> functions
 <pre>
 <code>
 void
-Laplace::assemble_primal(const Function<2>& exact, const Function<2>&)
+Laplace::assemble_primal(const Function&lt;2&gt;&amp;exact, const Function&lt;2&gt;&amp;)
 {
 </code>
 </pre>
 
-<h3><a name="matrix">Generating the matrix structures<a></h3>
+<h3><a name="matrix">Generating the matrix structures</a></h3>
 
 <p>
 First we generate an n times n square matrix where n is the number
@@ -78,16 +79,16 @@ The problem is of the form <tt>Au=f</tt>:
 </code>
 </pre>
 
-<h3><a name+"calcfe">Calculatinginite element trial functions</a></h3>
+<h3><a name="calcfe">Calculatinginite element trial functions</a></h3>
 <p>
 The two lines below calculate trial functions for the finite elements and
 for their faces using Gaussian quadrature.
 </p>
 <pre>
 <code>
-  FEValues<2> fevalues(fe_primal, qc_primal, UpdateFlags(update_gradients |
+  FEValues&lt;2&gt; fevalues(fe_primal, qc_primal, UpdateFlags(update_gradients |
 						   update_JxW_values));
-  FEFaceValues<2> ffvalues(fe_primal, qf_primal,
+  FEFaceValues&lt;2&gt; ffvalues(fe_primal, qf_primal,
 			   UpdateFlags(update_JxW_values | update_q_points));
 </code>
 </pre>
@@ -95,6 +96,7 @@ for their faces using Gaussian quadrature.
 <h3><a name="integrate">Integrating the problem</a></h3>
 <p>
 Integration is done locally. Therefore we need appropriate definitions for
+</p>
 <ul>
 <li>
 an index vector that will allow us to reassemble the global matrix later on
@@ -102,10 +104,10 @@ an index vector that will allow us to reassemble the global matrix later on
 <li>a vector of doubles with the dimension of the total number of degrees of freedom</li>
 <li>and a square matrix of doubles with the same dimension</li>
 </ul>
-</p>
+
 <pre>
 <code>
-  vector<int> indices(fe_primal.total_dofs);
+  vector&lt;int&gt; indices(fe_primal.total_dofs);
   dVector elvec(fe_primal.total_dofs);
   
   dFMatrix elmat(fe_primal.total_dofs);
@@ -117,7 +119,7 @@ discretized Laplace operator. <tt>qc_primal</tt> is a Gaussian quadrature.
 </p>
 <pre>
 <code>
-  for (DoFHandler<2>::active_cell_iterator c = dof_primal.begin_active()
+  for (DoFHandler&lt;2&gt;::active_cell_iterator c = dof_primal.begin_active()
 					; c != dof_primal.end() ; ++c)
   {
     fevalues.reinit(c, stb);
@@ -125,15 +127,15 @@ discretized Laplace operator. <tt>qc_primal</tt> is a Gaussian quadrature.
     elvec.clear();
     c->get_dof_indices(indices);
     
-    for (unsigned k=0;k<qc_primal.n_quadrature_points;++k)
+    for (unsigned k=0;k&lt;qc_primal.n_quadrature_points;++k)
     {
-      for (unsigned i=0;i<fe_primal.total_dofs;++i)
+      for (unsigned i=0;i&lt;fe_primal.total_dofs;++i)
       {
-	const Point<2> dv = fevalues.shape_grad(i,k);
+	const Point&lt;2&gt; dv = fevalues.shape_grad(i,k);
 	
-	for (unsigned j=0;j<fe_primal.total_dofs;++j)
+	for (unsigned j=0;j&lt;fe_primal.total_dofs;++j)
 	{
-	  const Point<2> du = fevalues.shape_grad(j,k);
+	  const Point&lt;2&gt; du = fevalues.shape_grad(j,k);
 	  
 	  elmat(i,j) += fevalues.JxW(k)
 			* du * dv
@@ -149,45 +151,53 @@ discretized Laplace operator. <tt>qc_primal</tt> is a Gaussian quadrature.
 
 <p>
 There are two <em>DEAL</em> functions relevant for us at the moment:
+</p>
 <pre>
 <code>
 static_void interpolate_boundary_values(...)
 </code>
 </pre>
+<p>
 which does exactly what it says. This function returns a list of pairs
 of boundary indicators and the according functions denoting the respective 
 Dirichlet boundary values.
 </p>
 <p>
 This output is used by
+</p>
 <pre>
 <code>
 static void apply_boundary_values(...)
 </code>
 </pre>
+<p>
 that inserts the proper boundary conditions into the equation system:
 </p>
 <P>
 <pre><code>
-  map<int,double> boundary_values;
-  DoFHandler<2>::FunctionMap dirichlet_bc;
+  map&lt;int,double&gt; boundary_values;
+  DoFHandler&lt;2&gt;::FunctionMap dirichlet_bc;
   BoundaryFct bfkt;
-  dirichlet_bc[0]=&bfkt;
-  VectorTools<2>::interpolate_boundary_values(dof_primal,dirichlet_bc,fe_primal,boundary,boundary_values);
+  dirichlet_bc[0]=&amp;bfkt;
+  VectorTools&lt;2&gt;::interpolate_boundary_values(dof_primal,dirichlet_bc,fe_primal,boundary,boundary_values);
   u.reinit(f);
-  MatrixTools<2>::apply_boundary_values(boundary_values,A,u,f);  
+  MatrixTools&lt;2&gt;::apply_boundary_values(boundary_values,A,u,f);  
 </code></pre>
+<p>
 First, we need a few definitions: 
+</p>
 <ul>
 <li>
 <code>boundary_values</code> maps boundary values computed by <code>interpolate_boundary_values</code> to boundary indicators,i.e. to boundaries.
 </li>
 <li><code>dirichlet_bc</code> maps boundary functions, supplied by us, to boundary indicators. The boundary functions compute the boundary values.
 </li>
-<li><code>bfkt</bfkt> is a function returning <code>sin(x)*sin(y)
+<li><code>bfkt</code> is a function returning <code>sin(x)*sin(y)
 </code>, thereby supplying boundary values.
 </ul>
+<p>
 This may seem a bit confusing. What actually happens is the following:
+</p>
 <ol>
 <li><code>interpolate_boundary_values</code> takes the boundary functions
 <code>bfkt</code>, its relation to boundaries <code>dirichlet_bc</code> and
@@ -197,11 +207,11 @@ to our boundaries. The function looks at <em>all</em> the boundaries. All we
 ever need to do is specify the initial triangulation.
 </li>
 <li><code>apply_boundary_values</code> subsequently takes that mapping and
-our equation system <code>Au=f</code> and inserts the boundary values into
+our equation system <tt>Au=f</tt> and inserts the boundary values into
 the equation system which can then be solved.
 </li>
 </ol>
-</p>
+
 
 <hr>
 <p>

@@ -1,4 +1,5 @@
-print "<h1> The commented program</h1>";
+print "<a name=\"CommProg\"></a>\n";
+print "<h1> The commented program</h1>\n";
 
 # ignore the first few lines
 $_ = <>;

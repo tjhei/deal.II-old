@@ -4,6 +4,7 @@ while ( m!/\*\s*\$Id$!) {
     $_ = <>;
 }
 
+print "<a name=\"PlainProg\"></a>\n";
 print "<h1> The plain program</h1>";
 print "<pre><code>";
 

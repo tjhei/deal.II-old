@@ -19,7 +19,7 @@ linkfiles-%:
 			if test -L ../$$TARGET/$$i ; then \
 				rm ../$$TARGET/$$i ; \
 			fi ; \
-			ln -s ../$$SOURCE/$$i ../$$TARGET/$$i ; \
+			ln -s `pwd`/$$i ../$$TARGET/$$i ; \
 		fi ; \
 	done
 

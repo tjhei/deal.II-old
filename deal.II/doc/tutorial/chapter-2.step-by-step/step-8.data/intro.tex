@@ -49,9 +49,11 @@ $$
 The elastic equations can then be rewritten in much simpler a form:
 $$
    -
-   \nabla (\lambda+\mu) (\div \vec u)
+   \nabla \lambda (\div \vec u)
    -
    (\nabla \cdot \mu \nabla) \vec u
+   -
+   \div \mu (\nabla \vec u)^T
    =
    \vec f,
 $$
@@ -59,25 +61,35 @@ and the respective bilinear form is then
 $$
   a(\vec u, \vec v) =
   \left(
-    (\lambda+\mu) \div \vec u, \div \vec v
+    \lambda \div \vec u, \div \vec v
   \right)_\Omega
   +
-  \sum_k
+  \sum_{i,j}
   \left(
-    \mu \nabla u_k, \nabla v_k
+    \mu \partial_i u_j, \partial_i v_j
+  \right)_\Omega,
+  +
+  \sum_{i,j}
+  \left(
+    \mu \partial_i u_j, \partial_j v_i
   \right)_\Omega,
 $$
-or as a sum over components:
+or also writing the first term a sum over components:
 $$
   a(\vec u, \vec v) =
-  \sum_{k,l}
+  \sum_{i,j}
   \left(
-    (\lambda+\mu) \partial_l u_l, \partial_k v_k
+    \lambda \partial_l u_l, \partial_k v_k
   \right)_\Omega
   +
   \sum_{k,l}
   \left(
-    \mu \partial_l u_k, \partial_l v_k
+    \mu \partial_i u_j, \partial_i v_j
+  \right)_\Omega,
+  +
+  \sum_{i,j}
+  \left(
+    \mu \partial_i u_j, \partial_j v_i
   \right)_\Omega.
 $$
 
@@ -176,11 +188,15 @@ $\vec u_h$ and $\vec v_h$ into this formula:
   \sum_{k,l}
   \left\{
   \left(
-    (\lambda+\mu) \partial_l (\Phi_i)_l, \partial_k (\Phi_j)_k
+    \lambda \partial_l (\Phi_i)_l, \partial_k (\Phi_j)_k
   \right)_\Omega
   +
   \left(
     \mu \partial_l (\Phi_i)_k, \partial_l (\Phi_j)_k
+  \right)_\Omega  
+  +
+  \left(
+    \mu \partial_l (\Phi_i)_k, \partial_k (\Phi_j)_l
   \right)_\Omega  
   \right\}
 \\
@@ -194,7 +210,7 @@ $\vec u_h$ and $\vec v_h$ into this formula:
 \end{multline*}
 \end{center}
 We note that here and in the following, the indices $k,l$ run over spatial
-directions, i.e. $0\le k,l \le d-1$, and that indices $i,j$ run over degrees
+directions, i.e. $0\le k,l < d$, and that indices $i,j$ run over degrees
 of freedoms.
 
 The local stiffness matrix on cell $K$ therefore has the following entries:
@@ -204,15 +220,19 @@ $$
   \sum_{k,l}
   \left\{
   \left(
-    (\lambda+\mu) \partial_l (\Phi_i)_l, \partial_k (\Phi_j)_k
+    \lambda \partial_l (\Phi_i)_l, \partial_k (\Phi_j)_k
   \right)_K
   +
   \left(
     \mu \partial_l (\Phi_i)_k, \partial_l (\Phi_j)_k
   \right)_K
+  +
+  \left(
+    \mu \partial_l (\Phi_i)_k, \partial_k (\Phi_j)_l
+  \right)_K
   \right\},
 $$
-where $i,j$ now are local degrees of freedom and therefore $0\le i,j \le N-1$. 
+where $i,j$ now are local degrees of freedom and therefore $0\le i,j < N$. 
 In these formulas, we always take some component of the vector shape functions
 $\Phi_i$, which are of course given as follows (see their definition):
 $$
@@ -227,8 +247,8 @@ the sums over $k$ and $l$:
   \sum_{k,l}
   \Bigl\{
   \left(
-    (\lambda+\mu) \partial_l \phi_i\ \delta_{l,comp(i)}, 
-                  \partial_k \phi_j\ \delta_{k,comp(j)}
+    \lambda \partial_l \phi_i\ \delta_{l,comp(i)}, 
+            \partial_k \phi_j\ \delta_{k,comp(j)}
   \right)_K
 \\
   &\qquad\qquad +
@@ -236,12 +256,17 @@ the sums over $k$ and $l$:
     \mu \partial_l \phi_i\ \delta_{k,comp(i)},
         \partial_l \phi_j\ \delta_{k,comp(j)}
   \right)_K
+  +
+  \left(
+    \mu \partial_l \phi_i\ \delta_{k,comp(i)},
+        \partial_k \phi_j\ \delta_{l,comp(j)}
+  \right)_K
   \Bigr\}
 \\
   &=
   \left(
-    (\lambda+\mu) \partial_{comp(i)} \phi_i,
-                  \partial_{comp(j)} \phi_j
+    \lambda \partial_{comp(i)} \phi_i,
+            \partial_{comp(j)} \phi_j
   \right)_K
   +
   \sum_l
@@ -250,16 +275,26 @@ the sums over $k$ and $l$:
         \partial_l \phi_j
   \right)_K
   \ \delta_{comp(i),comp(j)}
+  +
+  \left(
+    \mu \partial_{comp(j)} \phi_i,
+        \partial_{comp(i)} \phi_j
+  \right)_K
 \\
   &=
   \left(
-    (\lambda+\mu) \partial_{comp(i)} \phi_i,
-                  \partial_{comp(j)} \phi_j
+    \lambda \partial_{comp(i)} \phi_i,
+            \partial_{comp(j)} \phi_j
   \right)_K
   +
   \left(
     \mu \nabla \phi_i,
         \nabla \phi_j
+  \right)_K
+  +
+  \left(
+    \mu \partial_{comp(j)} \phi_i,
+        \partial_{comp(i)} \phi_j
   \right)_K
   \ \delta_{comp(i),comp(j)}.
 \end{align*}

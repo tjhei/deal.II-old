@@ -1,4 +1,4 @@
-Makefile Make.depend Makefile.depend
+Make.depend Makefile.depend
 *.go
 *.testcase
 *.output

@@ -1,25 +1,28 @@
 %% $Id$
 
-\documentclass[a4paper]{report}
+\documentclass[a4paper]{article}
 \usepackage[latin1]{inputenc}
-\usepackage{vref}
 
 \newcommand{\dealii}{{\em deal.II\/}}
 
-\title{Report on the \dealii tutorial}
+\title{Report on the \dealii{} tutorial}
 \author{Jan Schrage\footnote{Universität Heidelberg, Institut für theoretische Astrophysik \& SFB 359}}
 
+
+\begin{document}
+\maketitle
+
 \begin{abstract}
-We will describe the \dealii tutorial, its purpose
+We will describe the \dealii{} tutorial, its purpose
 its state at the time of this writing, the standards employed
 in writing it and the means to extend it.
 \end{abstract}
 
-\begin{document}
-
-\maketitle
+\clearpage
 
 \tableofcontents
+
+\clearpage
 
 \section{\dealii}
 \label{sec:dealii}
@@ -80,11 +83,12 @@ and Cascading Style Sheets (CSS) Level 1.
 \footnote{c.f. \cite{css1,htmlhelpcss,niederst:webdesign}}
 Not all web browsers currently support CSS, we expect this technology
 to gain more widespread support in the near future. The browsers
-currently at use in the IWR support CSS and HTML 4.
+currently at use in the IWR support a large part of the 
+specifications of CSS1 and HTML 4.
 
 All the web pages has been validated against the HTML4 Document Type
-Definition (DTD)\footnote{c.f. \cite{html4dtd}} and is guaranteed to be
-correct. 
+Definition (DTD)\footnote{c.f. \cite{html4dtd}} and are guaranteed to be
+syntactically correct. 
 
 
 \subsection{Practical implications}
@@ -115,7 +119,11 @@ The browsers in use at the IWR render all the web pages correctly.
 The use of CSS makes it possible to use different style sheets
 for different media types, i.e. paper or audio for the 
 blind. In the long and even medium run the usability of the tutorial
-is therefore very much increased. 
+is thereby very much increased. Currently the tutorial uses
+style sheets for screen, print and audio. The screen and print style
+sheets are identical at the moment, the audio style sheet merely 
+offers access to all the classes in use, as we are not aware of any
+audio applications with the ability to parse style sheets.
 
 \subsubsection{Writers}
 
@@ -126,9 +134,6 @@ appropriate CSSs in order to produce a web page with the same
 design as the rest of the tutorial suitable for use with 
 different media. 
 
-At the time of this writing there is one style sheet in use, suitable
-for both screen and print media. The \dealii{} tutorial does not yet 
-use audio style sheets.
 
 \section{Use of templates}
 \label{sec:templates}
@@ -137,10 +142,10 @@ In order to facilitate the extension of the tutorial there
 are a number of template files for recurring elements.
 Anybody who wishes to use such an element only need to include
 and adapt the appropriate template. Where replacements
-are needed in a template they are prefixed with ``INSERT_''
+are needed in a template they are prefixed with ``INSERT\_''
 to ease the adaption to any specific case.
 
-A more detailed explanation is provided in \vref{steps}.
+A more detailed explanation is provided in~\ref{steps}.
 
 
 \section{A question of style}
@@ -155,9 +160,11 @@ element types. The visual markup of each class for different media
 is defined in the style sheets. 
 
 We have taken care to ensure easy and consistent means of navigation
-throughout the tutorial; we have also tried to suit the needs of 
-users and not those of programmers of \dealii{}.
+throughout the tutorial; we have also tried to suit the needs of the
+users and not those of the programmers of \dealii{}.
 
+In the bibliography we list a few references on good HTML style, like
+\cite{galactus:style,fleming:webnavigation}.
 
 \section{Feedback so far}
 \label{sec:feedback}
@@ -169,9 +176,11 @@ The methods of navigation and the general look and feel of the
 The most eminent wish by students was that more examples in the 
 way of working programs should be provided to complement the
 tutorial. At the time of this writing the examples provided
-are stripped of program code that is not strictly necessary 
+are stripped of all the program code that is not strictly necessary 
 to develop an understanding of the principles. In particular,
 there are usually no compilable and runnable programs provided. 
+
+\clearpage
 
 \appendix
 
@@ -187,16 +196,40 @@ level:
 Name & Revision number & Description \\
 \hline
 index.html & & tutorial entry page \\
-dealtut.css & & CSS1 style sheet, media: screen \\
+screen.css & & CSS1 style sheet, media: screen \\
+print.css & & CSS1 style sheet, media: print media \\
+audio.css & & CSS1 style sheet, media: aural media \\
 templates/ & --- & template directory \\
 figures/ & --- & figures in {\tt eps} or {\tt fig} format\\
 images/ & --- & figures in {\tt gif} format for the web pages\\
 glossary/ & --- & glossary explaining the terms used \\
 scripts/ & --- & scripts for maintenance and validation\\
 tex/ & --- & reports \\
-00.fe_structure/ & --- & Chapter 0: Structure of a finite element program \\
+00.fe\_structure/ & --- & Chapter 0: Structure of a finite element program \\
 01.laplace/ & --- & Chapter 1: The Laplace problem\\
 \end{tabular}
+
+\section{CSS1--classes in use}
+\label{sec:css-classes}
+
+Below we show the CSS1--classes currently in use and the 
+structural elements to which they should be applied, i.e.
+which elements should have the attribute ``class=...'' set.
+
+\begin{tabular}[H]{l|p{6cm}}
+Class & Corresponding Elements \\
+\hline
+figure & figures, subtitles to figures \\
+pagetoc & small table of contents for only one (long) page \\
+chapter\_title & title of a chapter, used in the appropriate templates\\
+parhead & paragraph heading \\
+example & examples, used in the appropriate template \\
+navbar & navigation bar at the page bottom\\
+\end{tabular}
+
+In addition to this we have defined some properties common to 
+all elements of a particular type, like background colour for the
+page body etc.
 
 
 \section{Extending the tutorial -- step by step}
@@ -220,16 +253,20 @@ tex/ & --- & reports \\
   the long table of contents with explanations, {\tt navbar.html} the 
   brief table of contents that can be seen on the left, {\tt index.html}
   puts the layout of the frameset together and {\tt title.html} contains
-  the large chapter title on top.
+  the large chapter title on top. Take care to replace all the ``INSERT\_''
+  tags with sensible content.
 \item Create your web pages using {\tt body.html} from the template
-  directory. 
-\item For code examples use {\tt example.html} from the template
+  directory. Again replace all ``INSERT\_'' tags with sensible content.
+\item For code examples within a web page 
+  use {\tt example.html} from the template
   directory. This particular template can be inserted into any
   web page.
 \item Create a link to your {\tt index.html} from the tutorial's 
   entry page.
 \end{enumerate}
 
+\clearpage
+\bibliographystyle{alpha}
 \bibliography{tutorial}
 
 \end{document}

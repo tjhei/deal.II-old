@@ -20,8 +20,6 @@
 #include <cstdlib>
 
 #include <unistd.h>
-#include <errno.h>
-#include <sys/errno.h>
 #include <pthread.h>
 #include <signal.h>
 
@@ -30,6 +28,14 @@
 #else
 #  include <strstream>
 #endif
+
+#ifndef DEAL_II_USE_DIRECT_ERRNO_H
+#  include <errno.h>
+#else
+#  include </usr/include/errno.h>
+#endif
+
+#include <sys/errno.h>
 
 
 pid_t master_pid;

@@ -69,7 +69,7 @@ Laplace::remesh(unsigned int steps)
   {
     tr.refine_global(1); //JS.Lokal ist execute_coarsening_etc...
   }
-  
+
   if (steps)
     tr.refine_global(steps);
   else
@@ -166,10 +166,8 @@ Laplace::assemble_primal(const Function<2>&,const Function<2>&)
 					      fe_primal,boundary,
 					      boundary_values);
   u.reinit(f);
-  MatrixTools<2>::apply_boundary_values(boundary_values,A,u,f);  
+  MatrixTools<2>::apply_boundary_values(boundary_values,A,u,f);
     
-  cout << "u: " << u.l2_norm() << endl;
-  cout << "f: " << f.l2_norm() << endl;
   
   // JS.Hängende Noden einbauen.
   //  hanging_nodes.condense(A);
@@ -188,12 +186,10 @@ Laplace::solve_primal()
   SolverCG<AdvMatrix, dVector> solver(control, mem);
   
   // JS.???
-  cout << "f:L2-norm=" << f.l2_norm() << endl;
   //  u.reinit(f);
   
   // JS.lösen.
   solver.solve(A,u,f);
-  cout << "u:L2-norm=" << u.l2_norm() << endl;
   
   // JS.???
   hanging_nodes.distribute(u);

@@ -1,2 +1,3 @@
 *.go reference logtest tensor
 *.testcase
+*.dat

@@ -37,7 +37,7 @@ GLOBAL Int UMFPACK_report_symbolic
 	*Front_leftmostdesc, *Front_parent, done, status1, status2 ;
     SymbolicType *Symbolic ;
 
-    prl = GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
+    prl = (Int) GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
 
     if (prl <= 2)
     {

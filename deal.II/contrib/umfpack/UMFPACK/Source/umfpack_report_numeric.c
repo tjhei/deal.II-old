@@ -56,7 +56,7 @@ GLOBAL Int UMFPACK_report_numeric
 	npiv ;
     NumericType *Numeric ;
 
-    prl = GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
+    prl = (Int) GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
 
     if (prl <= 2)
     {

@@ -118,7 +118,7 @@ PRIVATE void do_amd
 	AMD_1 (n, Ap, Ai, Q, Qinv, Sdeg, Clen, Ci, amd_Control, amd_Info) ;
 
 	/* return estimates computed from AMD on PA+PA' */
-	Symbolic->amd_dmax = amd_Info [AMD_DMAX] ;
+	Symbolic->amd_dmax = (Int) amd_Info [AMD_DMAX] ;
 	Symbolic->amd_lunz = 2 * amd_Info [AMD_LNZ] + n ;
 	Info [UMFPACK_SYMMETRIC_LUNZ] = Symbolic->amd_lunz ;
 	Info [UMFPACK_SYMMETRIC_FLOPS] = DIV_FLOPS * amd_Info [AMD_NDIV] +
@@ -345,8 +345,8 @@ GLOBAL Int UMFPACK_qsymbolic
 
     drow = GET_CONTROL (UMFPACK_DENSE_ROW, UMFPACK_DEFAULT_DENSE_ROW) ;
     dcol = GET_CONTROL (UMFPACK_DENSE_COL, UMFPACK_DEFAULT_DENSE_COL) ;
-    nb = GET_CONTROL (UMFPACK_BLOCK_SIZE, UMFPACK_DEFAULT_BLOCK_SIZE) ;
-    strategy = GET_CONTROL (UMFPACK_STRATEGY, UMFPACK_DEFAULT_STRATEGY) ;
+    nb = (Int) GET_CONTROL (UMFPACK_BLOCK_SIZE, UMFPACK_DEFAULT_BLOCK_SIZE) ;
+    strategy = (Int) GET_CONTROL (UMFPACK_STRATEGY, UMFPACK_DEFAULT_STRATEGY) ;
     tol = GET_CONTROL (UMFPACK_2BY2_TOLERANCE, UMFPACK_DEFAULT_2BY2_TOLERANCE) ;
     scale = GET_CONTROL (UMFPACK_SCALE, UMFPACK_DEFAULT_SCALE) ;
     force_fixQ = GET_CONTROL (UMFPACK_FIXQ, UMFPACK_DEFAULT_FIXQ) ;
@@ -490,7 +490,7 @@ GLOBAL Int UMFPACK_qsymbolic
     Clen = UMF_COLAMD_RECOMMENDED (nz, n_row, n_col) ;
     Clen_analyze = UMF_ANALYZE_CLEN (nz, n_row, n_col, nn) ;
     Clen = MAX (Clen, Clen_analyze) ;
-    Clen_amd = 2.4 * nz + 8 * n_inner ;
+    Clen_amd = (Int) (2.4 * nz + 8 * n_inner) ;
     Clen_amd += MAX (nn, nz) ;			/* for Ri, in UMF_2by2 */
     Clen = MAX (Clen, Clen_amd) ;
 
@@ -870,7 +870,7 @@ GLOBAL Int UMFPACK_qsymbolic
 #ifdef COMPLEX
 		Az,
 #endif
-		tol, scale, Cperm1,
+		tol, (Int) scale, Cperm1,
 #ifndef NDEBUG
 		Rperm1,
 #endif
@@ -904,7 +904,7 @@ GLOBAL Int UMFPACK_qsymbolic
 	}
 	nz_papat = AMD_aat (n2, Rp, Ri, Sdeg, Wq, amd_Info) ;
 	sym2 = amd_Info [AMD_SYMMETRY] ;
-	nzd2 = amd_Info [AMD_NZDIAG] ;
+	nzd2 = (Int) amd_Info [AMD_NZDIAG] ;
 
 	Info [UMFPACK_2BY2_PATTERN_SYMMETRY] = sym2 ;
 	Info [UMFPACK_2BY2_NZ_PA_PLUS_PAT] = nz_papat ;

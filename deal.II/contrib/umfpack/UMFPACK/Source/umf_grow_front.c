@@ -115,8 +115,8 @@ GLOBAL Int UMF_grow_front
 	/* the desired front size is bigger than the integer maximum */
 	/* compute a such that a*a*s < Int_MAX / sizeof (Entry) */
 	double a = 0.9 * sqrt ((Int_MAX / sizeof (Entry)) / s) ;
-	fnr2 = MAX (fnr_min, a * fnr2) ;
-	fnc2 = MAX (fnc_min, a * fnc2) ;
+	fnr2 = (Int) MAX (fnr_min, a * fnr2) ;
+	fnc2 = (Int) MAX (fnc_min, a * fnc2) ;
 	/* the new frontal size is a*r*a*c = a*a*s */
 	newsize = fnr2 * fnc2 ;
 	ASSERT (fnr2 >= 0) ;
@@ -188,8 +188,8 @@ GLOBAL Int UMF_grow_front
     /* try again with something smaller */
     while ((fnr2 != fnr_min || fnc2 != fnc_min) && !eloc)
     {
-	fnr2 = MIN (fnr2 - 2, fnr2 * UMF_REALLOC_REDUCTION) ;
-	fnc2 = MIN (fnc2 - 2, fnc2 * UMF_REALLOC_REDUCTION) ;
+	fnr2 = (Int) MIN (fnr2 - 2, fnr2 * UMF_REALLOC_REDUCTION) ;
+	fnc2 = (Int) MIN (fnc2 - 2, fnc2 * UMF_REALLOC_REDUCTION) ;
 	ASSERT (fnr_min >= 0) ;
 	ASSERT (fnr_min % 2 == 1) ;
 	fnr2 = MAX (fnr_min, fnr2) ;

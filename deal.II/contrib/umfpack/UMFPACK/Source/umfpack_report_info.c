@@ -89,7 +89,7 @@ GLOBAL void UMFPACK_report_info
     /* get control settings and status to determine what to print */
     /* ---------------------------------------------------------------------- */
 
-    prl = GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
+    prl = (Int) GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
 
     if (!Info || prl < 2)
     {
@@ -264,7 +264,7 @@ GLOBAL void UMFPACK_report_info
 	Info [UMFPACK_NEMPTY_ROW]) ;
     PRINT_INFO ("        number of empty columns                    %.0f\n",
 	Info [UMFPACK_NEMPTY_COL]) ;
-    is_sym = Info [UMFPACK_S_SYMMETRIC] ;
+    is_sym = (Int) Info [UMFPACK_S_SYMMETRIC] ;
     if (is_sym > 0)
     {
 	PRINTF (("        submatrix S square and diagonal preserved\n")) ;

@@ -31,7 +31,7 @@ GLOBAL Int UMFPACK_report_perm
 {
     Int prl, *W, status ;
 
-    prl = GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
+    prl = (Int) GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
 
     if (prl <= 2)
     {

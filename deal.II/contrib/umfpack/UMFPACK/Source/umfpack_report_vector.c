@@ -33,7 +33,7 @@ GLOBAL Int UMFPACK_report_vector
     double *Xz = (double *) NULL ;
 #endif
 
-    prl = GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
+    prl = (Int) GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
 
     if (prl <= 2)
     {

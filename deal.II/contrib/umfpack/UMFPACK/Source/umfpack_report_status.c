@@ -28,7 +28,7 @@ GLOBAL void UMFPACK_report_status
     /* get control settings and status to determine what to print */
     /* ---------------------------------------------------------------------- */
 
-    prl = GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
+    prl = (Int) GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
 
     if (prl < 1)
     {

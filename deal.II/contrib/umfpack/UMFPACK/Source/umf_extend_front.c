@@ -127,8 +127,8 @@ GLOBAL Int UMF_extend_front
 
     if (Work->do_grow)
     {
-	fnr2 = UMF_FRONTAL_GROWTH * Work->fnrows_new + 2 ;
-	fnc2 = UMF_FRONTAL_GROWTH * Work->fncols_new + 2 ;
+	fnr2 = (Int) (UMF_FRONTAL_GROWTH * Work->fnrows_new + 2) ;
+	fnc2 = (Int) (UMF_FRONTAL_GROWTH * Work->fncols_new + 2) ;
 	if (!UMF_grow_front (Numeric, fnr2, fnc2, Work, 1))
 	{
 	    DEBUGm4 (("out of memory: extend front\n")) ;

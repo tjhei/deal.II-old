@@ -159,7 +159,7 @@ GLOBAL Int UMF_start_front    /* returns TRUE if successful, FALSE otherwise */
     if (Numeric->front_alloc_init < 0)
     {
 	/* allocate a front of -Numeric->front_alloc_init entries */
-	fsize = -Numeric->front_alloc_init ;
+	fsize = (Int) -Numeric->front_alloc_init ;
 	fsize = MAX (1, fsize) ;
     }
     else
@@ -171,7 +171,7 @@ GLOBAL Int UMF_start_front    /* returns TRUE if successful, FALSE otherwise */
 	}
 	else
 	{
-	    fsize = Numeric->front_alloc_init * maxfrsize ;
+	    fsize = (Int) (Numeric->front_alloc_init * maxfrsize) ;
 	}
 
 	if (cdeg > 0)

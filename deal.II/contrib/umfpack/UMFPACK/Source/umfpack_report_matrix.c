@@ -40,7 +40,7 @@ GLOBAL Int UMFPACK_report_matrix
     /* determine the form, and check if inputs exist */
     /* ---------------------------------------------------------------------- */
 
-    prl = GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
+    prl = (Int) GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
 
     if (prl <= 2)
     {

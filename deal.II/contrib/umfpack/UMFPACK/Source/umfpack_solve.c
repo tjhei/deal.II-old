@@ -100,7 +100,7 @@ UMFPACK_solve
     /* get parameters */
     /* ---------------------------------------------------------------------- */
 
-    irstep = GET_CONTROL (UMFPACK_IRSTEP, UMFPACK_DEFAULT_IRSTEP) ;
+    irstep = (Int) GET_CONTROL (UMFPACK_IRSTEP, UMFPACK_DEFAULT_IRSTEP) ;
 
     if (User_Info != (double *) NULL)
     {

@@ -134,24 +134,25 @@ void die (const std::string &text, const T1 t1, const T2 t2)
 extern "C"
 void monitor_parent_liveness (const pid_t master_pid) 
 {
-#ifdef HAVE_STD_STRINGSTREAM
-  std::ostringstream s;
-  s << "ps -p " << master_pid;
-  const char * const command = s.str().c_str();
-#else
-  std::ostrstream s;
-  s << "ps -p " << master_pid << std::ends;
-  const char * const command = s.str();
-#endif
+// #ifdef HAVE_STD_STRINGSTREAM
+//   std::ostringstream s;
+//   s << "ps -p " << master_pid;
+//   const char * const command = s.str().c_str();
+// #else
+//   std::ostrstream s;
+//   s << "ps -p " << master_pid << std::ends;
+//   const char * const command = s.str();
+// #endif
   
   while (true)
     {
-      int ret = std::system (command);
-      if (ret < 0)
-        die ("Monitor process couldn't start 'ps'!");
-      else
-        if (ret != 0)
+//      int ret = std::system (command);
+      int ret = kill (master_pid, 0);
+      if (ret != 0)
+        if (ret == ESRCH)
           die ("Master process seems to have died!");
+        else
+          die ("Unspecified error while checking for other process!");
 
                                        // ok, master still running,
                                        // take a little rest and then

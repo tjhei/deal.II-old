@@ -81,7 +81,7 @@ void * monitor_thread (void *)
                                        // ok, master still running,
                                        // take a little rest and then
                                        // ask again
-      sleep (10);
+      sleep (20);
     };
 };
 

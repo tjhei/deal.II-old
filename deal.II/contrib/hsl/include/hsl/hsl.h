@@ -262,7 +262,7 @@ namespace HSL
 		  unsigned int       *IW1,
 		  const unsigned int *ICNTL);
   }
-};
+}
 
 
 //----------------------------   hsl.h     ---------------------------

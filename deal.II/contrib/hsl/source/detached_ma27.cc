@@ -85,7 +85,7 @@ namespace CommunicationsLog
     Record record = {direction, &typeid(T), count,
                      sizeof(T)*count, completed_bytes, descr};
     communication_log.push_back (record);
-  };
+  }
 
 
                                    /**
@@ -110,8 +110,8 @@ namespace CommunicationsLog
                 << i->description
                 << std::endl;
     std::cerr << "------------------------------" << std::endl;
-  };  
-};
+  }
+}
 
 
 
@@ -125,7 +125,7 @@ void die (const std::string &text, const pid_t pid)
             << std::endl;
   CommunicationsLog::list_communication ();
   abort ();
-};
+}
 
 
 /**
@@ -141,7 +141,7 @@ void die (const std::string &text, const T1 t1, const T2 t2, const pid_t pid)
             << std::endl;
   CommunicationsLog::list_communication ();
   abort ();
-};
+}
 
 
 
@@ -173,7 +173,7 @@ void monitor_parent_liveness (const pid_t master_pid,
                                        // ask again
       sleep (10);
     };
-};
+}
 
 
 
@@ -203,7 +203,7 @@ void put (const T *t, const size_t N, const char *debug_info)
   fflush (NULL);
   CommunicationsLog::
     record_communication<T> (CommunicationsLog::put, N, count, debug_info);
-};
+}
 
 
 
@@ -230,7 +230,7 @@ void get (T *t, const size_t N, const char *debug_info)
   
   CommunicationsLog::
     record_communication<T> (CommunicationsLog::get, N, count, debug_info);
-};
+}
 
 
 
@@ -381,6 +381,6 @@ int main ()
                                    // never be able to get to this
                                    // point anyway...
   exit (1);
-};
+}
 
                 

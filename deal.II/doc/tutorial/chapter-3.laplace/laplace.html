@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" 
+    "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+  <title>DEAL tutorial: the Laplace problem</title>
+  <meta name="keyword" content="DEAL,DEAL tutorial">
+  <link href="../dealtut.css" rel="StyleSheet" media="screen" type="text/css" title="DEAL tutorial">
+  <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+  <meta name="keywords" content="DEAL,DEAL tutorial">
+</head>
+<body>
+<h1>The class Laplace</h1>
+<p>
+The class <em>Laplace</em> contains most of the code we need to actually solve the problem at
+hand. The purpose of this chapter is to establish the elements that are needed for this class
+or any one like it.
+</p>
+
+<p>
+Let's have a look at the class definition:
+<pre>
+<code>
+class Laplace
+{
+  Function<2>& exact;
+protected:
+  Triangulation<2> tr;
+  DoFHandler<2> dof_primal;
+
+  dSMatrixStruct matrix_structure;
+  LapMatrix A;
+
+  ConstraintMatrix hanging_nodes;
+
+<code>
+</pre>
+<p>
+These few lines define several important elements: The right hand side of the equation 
+<em>exact</em>, the triangulation <em>tr</em>, i.e. the grid, and a handler for the degrees
+of freedom for the finite elements <em>dof_primal</em>, all for the two-dimensional case. 
+In addition three matrices are defined (the matrix <em>A</em> defining our problem). Note that 
+in order to solve any problem at all with DEAL the definitions above are paramount.
+</p>
+
+<p>
+The next bit are the functions actually called by our program, the working part, so to say.
+The constructor has the task of generating a triangulation, too.
+</p>  
+<pre>
+<code>
+public:
+  Laplace(Function<2>& solution);
+  ~Laplace();
+</code>
+</pre>
+<p>
+The next few functions refine the grid - non-adaptively - assemble the primal problem and
+call the appropriate solver.
+</p>
+<pre>
+<code>
+  void remesh(unsigned int global_refine = 0);
+  void assemble_primal(const Function<2>& boundary, const Function<2>& rhs);
+  void solve_primal();
+</code>
+</pre>
+<!--
+  double result(const Function<2>& interior, const Function<2>& boundary);
+  double estimate(const Function<2>& boundary, const Function<2>& rhs);
+  
+  void adapt();
+
+  void write_data(const char* name);
+
+  void fill_vector(dVector& v, const Function<2>& f) const;
+-->
+};
+</code>
+</pre>
+
+<hr>
+<p>
+<a href="../index.html">Back to the tutorial index</a>
+</p>
+  
+<hr>
+<p>
+<address><a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+</p>
+
+<p>
+Last modified: Fri Feb 12, 1999
+</p>
+</body>
+</html>

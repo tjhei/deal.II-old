@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" 
+    "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+  <title>DEAL tutorial: the Laplace problem</title>
+  <meta name="keyword" content="DEAL,DEAL tutorial">
+  <link href="../dealtut.css" rel="StyleSheet" media="screen" type="text/css" title="DEAL tutorial">
+  <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+  <meta name="keywords" content="DEAL,DEAL tutorial">
+</head>
+  <body>
+    <h1>Program structure</h1>
+    <p>
+    In order to solve our differential equation we have to deal with the
+    the following tasks:
+    </p>
+    <ul>
+      <li> <a href="triangulation.html">Grid generation</a>
+      </li>
+      <li> <a href="assemble.html">Assembly of the problem matrix</a>
+      </li>
+      <li> <a href="assemble.html#boundary">Description of the boundary conditions</a>
+      </li>
+      <li> <a href="solution.html">Solution of the equation system</a>
+      </li>
+    </ul>
+    <p>
+      All these tasks are problem specific, therefore we will put them into
+      a class called <a href="laplace.html"><em>Laplace</em></a>. 
+      The <a href="main.html">main program</a> 
+      will - for now - do nothing but call the methods of this class in their 
+      proper order. 
+    </p>
+    <p>
+      We end up with a program consisting of two major components:
+    <ul>
+      <li>a <em>main program</em> that starts the process of problem
+	generation and solution by calling methods of
+      </li>
+      <li>the <em>class Laplace</em> that contains all the parts specific
+	to the problem at hand
+      </li>
+    </ul>
+  
+
+<hr>
+<p>
+<a href="../index.html">Back to the tutorial index</a>
+</p>
+  
+<hr>
+<address><a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+
+<p>
+Last modified: Mon Feb 15, 1999
+</p>
+</body>
+</html>

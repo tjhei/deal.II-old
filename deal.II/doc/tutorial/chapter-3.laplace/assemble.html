@@ -1,0 +1,217 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" 
+    "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+  <title>DEAL tutorial: the Laplace problem</title>
+  <meta name="keyword" content="DEAL,DEAL tutorial">
+  <link href="../dealtut.css" rel="StyleSheet" media="screen" type="text/css" title="DEAL tutorial">
+  <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+  <meta name="keywords" content="DEAL,DEAL tutorial">
+</head>
+<body>
+<h1>Assembling the problem</h1>
+
+<h2>What's to be done</h2>
+In order to assemble the matrices we basically need to:
+<ol>
+<li><a href=#matrix">Generate the matrices</a>, i.e. call the <em>DEAL</em> functions that reserve 
+storage space for us.
+</li>
+<li>
+<a href="#calcfe">Calculate the finite element trial functions</a>
+</li>
+<li>
+Traverse all existing cells and <a href="#integrate">integrate the problem</a> 
+using the discretized laplace operator
+</li>
+<li>
+Traverse all the cell faces and <a href="#boundary">set the appropriate boundary conditions</a>
+</li>
+<li>
+Insert the local matrices we have used into the global matrix using the
+appropriate <em>DEAL</em> functions
+</li>
+</ol>
+
+<h2>...and how to do it</h2>
+
+<h3>Function parameters</h3>
+<pre>
+<code>
+void
+Laplace::assemble_primal(const Function<2>& exact, const Function<2>&)
+{
+</code>
+</pre>
+
+<h3><a name="matrix">Generating the matrix structures<a></h3>
+
+<p>
+First we generate an n times n square matrix where n is the number
+of the degrees of freedom, i.e. the number of points of our discretization.
+The parameter <em>max_couplings_between_dofs()</em> returns the maximum 
+number of couplings between degrees of freedom and allows <em>DEAL</em>
+to generate the matrix structure more efficiently, for most of its 
+elements are zero.
+</p>
+<p>
+Afterwards the <em>hanging nodes</em> are copied into the matrix, i.e.
+the matrix is generated.
+</p>
+<pre>
+<code>
+  matrix_structure.reinit(dof_primal.n_dofs(),dof_primal.n_dofs(),
+			  dof_primal.max_couplings_between_dofs());
+  dof_primal.make_sparsity_pattern(matrix_structure);
+  hanging_nodes.clear();
+  dof_primal.make_constraint_matrix(hanging_nodes);
+  hanging_nodes.condense(matrix_structure);
+</code>
+</pre>
+<p>
+The problem is of the form <tt>Au=f</tt>:
+</p>
+<pre>
+<code>
+  A.reinit(matrix_structure);
+  f.reinit(dof_primal.n_dofs());
+</code>
+</pre>
+
+<h3><a name+"calcfe">Calculatinginite element trial functions</a></h3>
+<p>
+The two lines below calculate trial functions for the finite elements and
+for their faces using Gaussian quadrature.
+</p>
+<pre>
+<code>
+  FEValues<2> fevalues(fe_primal, qc_primal, UpdateFlags(update_gradients |
+						   update_JxW_values));
+  FEFaceValues<2> ffvalues(fe_primal, qf_primal,
+			   UpdateFlags(update_JxW_values | update_q_points));
+</code>
+</pre>
+
+<h3><a name="integrate">Integrating the problem</a></h3>
+<p>
+Integration is done locally. Therefore we need appropriate definitions for
+<ul>
+<li>
+an index vector that will allow us to reassemble the global matrix later on
+</li>
+<li>a vector of doubles with the dimension of the total number of degrees of freedom</li>
+<li>and a square matrix of doubles with the same dimension</li>
+</ul>
+</p>
+<pre>
+<code>
+  vector<int> indices(fe_primal.total_dofs);
+  dVector elvec(fe_primal.total_dofs);
+  
+  dFMatrix elmat(fe_primal.total_dofs);
+</code>
+</pre>
+<p>
+Next we traverse all the cells and integrate the Laplace problem using the
+discretized Laplace operator. <tt>qc_primal</tt> is a Gaussian quadrature.
+</p>
+<pre>
+<code>
+  for (DoFHandler<2>::active_cell_iterator c = dof_primal.begin_active()
+					; c != dof_primal.end() ; ++c)
+  {
+    fevalues.reinit(c, stb);
+    elmat.clear();
+    elvec.clear();
+    c->get_dof_indices(indices);
+    
+    for (unsigned k=0;k<qc_primal.n_quadrature_points;++k)
+    {
+      for (unsigned i=0;i<fe_primal.total_dofs;++i)
+      {
+	const Point<2> dv = fevalues.shape_grad(i,k);
+	
+	for (unsigned j=0;j<fe_primal.total_dofs;++j)
+	{
+	  const Point<2> du = fevalues.shape_grad(j,k);
+	  
+	  elmat(i,j) += fevalues.JxW(k)
+			* du * dv
+			;
+	  
+	}
+      }
+    }
+</code>
+</pre>
+
+<h3><a name="boundary">Setting boundary conditions</a></h3>
+
+<p>
+There are two <em>DEAL</em> functions relevant for us at the moment:
+<pre>
+<code>
+static_void interpolate_boundary_values(...)
+</code>
+</pre>
+which does exactly what it says. This function returns a list of pairs
+of boundary indicators and the according functions denoting the respective 
+Dirichlet boundary values.
+</p>
+<p>
+This output is used by
+<pre>
+<code>
+static void apply_boundary_values(...)
+</code>
+</pre>
+that inserts the proper boundary conditions into the equation system:
+</p>
+<P>
+<pre><code>
+  map<int,double> boundary_values;
+  DoFHandler<2>::FunctionMap dirichlet_bc;
+  BoundaryFct bfkt;
+  dirichlet_bc[0]=&bfkt;
+  VectorTools<2>::interpolate_boundary_values(dof_primal,dirichlet_bc,fe_primal,boundary,boundary_values);
+  u.reinit(f);
+  MatrixTools<2>::apply_boundary_values(boundary_values,A,u,f);  
+</code></pre>
+First, we need a few definitions: 
+<ul>
+<li>
+<code>boundary_values</code> maps boundary values computed by <code>interpolate_boundary_values</code> to boundary indicators,i.e. to boundaries.
+</li>
+<li><code>dirichlet_bc</code> maps boundary functions, supplied by us, to boundary indicators. The boundary functions compute the boundary values.
+</li>
+<li><code>bfkt</bfkt> is a function returning <code>sin(x)*sin(y)
+</code>, thereby supplying boundary values.
+</ul>
+This may seem a bit confusing. What actually happens is the following:
+<ol>
+<li><code>interpolate_boundary_values</code> takes the boundary functions
+<code>bfkt</code>, its relation to boundaries <code>dirichlet_bc</code> and
+the triangulation <code>dof_primal, fe_primal</code> and returns a
+mapping <code>boundary_values</code> that maps values instead of functions
+to our boundaries. The function looks at <em>all</em> the boundaries. All we
+ever need to do is specify the initial triangulation.
+</li>
+<li><code>apply_boundary_values</code> subsequently takes that mapping and
+our equation system <code>Au=f</code> and inserts the boundary values into
+the equation system which can then be solved.
+</li>
+</ol>
+</p>
+
+<hr>
+<p>
+<a href="../index.html">Back to the tutorial index</a>
+</p>
+  
+<hr>
+<address><a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<p>
+Last modified: Fri Feb 12, 1999
+</p>
+</body>
+</html>

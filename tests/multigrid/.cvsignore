@@ -1,0 +1,6 @@
+*.testcase
+*.dat *.output
+Makefile.depend
+*.OK
+*.o *.exe
+threads.cc

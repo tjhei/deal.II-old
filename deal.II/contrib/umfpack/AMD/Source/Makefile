@@ -24,12 +24,12 @@ AMDL = $(addprefix $D/lib/contrib/umfpack/, $(addsuffix .$(OBJEXT), $(subst amd_
 # compile each int and long routine (with no real/complex version)
 #-------------------------------------------------------------------------------
 
-$D/lib/umfpack/amd_i_%.$(OBJEXT): amd_%.c $(INC)
+$D/lib/contrib/umfpack/amd_i_%.$(OBJEXT): amd_%.c $(INC)
 	@echo =====umfpack==========optimized==$(MT)== $(<F)
-	$(CC) $(CFLAGS) -I../Include -DDINT -c $< -o $@
+	@$(CC) $(CFLAGS) -I../Include -DDINT -c $< -o $@
 
-$D/lib/umfpack/amd_l_%.$(OBJEXT): amd_%.c $(INC)
+$D/lib/contrib/umfpack/amd_l_%.$(OBJEXT): amd_%.c $(INC)
 	@echo =====umfpack==========optimized==$(MT)== $(<F)
-	$(CC) $(CFLAGS) -I../Include -DDLONG -c $< -o $@
+	@$(CC) $(CFLAGS) -I../Include -DDLONG -c $< -o $@
 
 all: $(AMDI) $(AMDL)

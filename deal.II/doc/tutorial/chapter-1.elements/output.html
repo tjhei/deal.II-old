@@ -59,6 +59,7 @@ in depth:
 </ul>
 
 <hr>
+<hr>
 
 <h2><a name="formats">Graphics Formats</a></h2>
 <p>
@@ -105,6 +106,114 @@ The graphics formats available in <code>GridOut</code> are:
   <li><a href="#grid_eps">Encapsulated Postscript (eps)</a>
   </li>
 </ul>
+
+<hr>
+<hr>
+
+<h2><a name="parameters">Parameters for grid and data output</a></h2>
+
+<p>For each and every output format there is a class containing the
+parameters that determine how the output will look. All these classes
+have a sensible set of default parameters; you will only have
+to bother about setting parameters yourself if your desires are
+rather special. We shall commence with a brief description of 
+these classes and the most important parameters you can set.
+</p>
+
+
+<h3>UcdFlags</h3>
+
+<p>
+This class provides the settings for ucd output. The values in brackets
+denote the default values.
+</p>
+<ul>
+      <li><code>bool write_preamble</code> (true): 
+	  Determines whether to write a preamble containing creation
+	  date etc.
+      </li>
+</ul>
+
+<h3>GnuplotFlags</h3>
+
+<p>
+This class provides the settings for gnuplot output. At present it
+is empty.
+</p>
+
+<h3>EpsFlags</h3>
+
+<p>
+This class provides the settings for EPS output. The values in brackets
+denote the default values.
+</p>
+
+<ul>
+      <li><code>unsigned int height_vector</code> (0):
+	Number of the data vector to be used for generation of the height 
+	information. The number is determined by the order in which 
+	<code>DataOut&lt;dim&gt;::add_data_vector</code> was called
+	for the different vectors.
+      </li>
+      <li><code>unsigned int color_vector</code> (0):
+	Number of the data vector to be used for colorizing cells.
+	The number is determined by the order in which 
+	<code>DataOut&lt;dim&gt;::add_data_vector</code> was called
+	for the different vectors.
+      </li>
+      <li><code>SizeType sizetype</code> (width):
+	Determines whether the width or the height is used to scale
+	the output. Can be set to width or height.
+      </li>
+      <li><code>unsigned int size</code> (300): 
+	Size of the output in points. One point is 1/72 inch.
+      </li>
+      <li><code>double line_width</code> (0.5):
+	Width of a line in points. One point is 1/72 inch.
+      </li>
+      <li><code>double azimut_angle</code> (60):
+	Viewing angle with respect to the positive z-axis.
+      </li>
+      <li><code>double turn_angle</code> (30):
+	We quote the class documentation:
+	<cite>Angle by which the viewers position projected onto the 
+	  x-y-plane is rotated around the z-axis, in positive sense when 
+	  viewed from above. The unit are degrees, and zero
+	  equals a position above or below the negative y-axis.
+	</cite>
+      </li>
+      <li><code>double z_scaling</code> (1):
+	Factor by which the z-axis is stretched compared to the
+	x- and y-axis.
+      </li>
+      <li><code>bool draw_mesh</code> (true): 
+	Determines whether the cell boundaries are drawn.
+      </li>
+      <li><code>bool draw_cells</code> (true): Determines whether the
+	cells are drawn. If this flag is true and 
+	<code>shade_cells</code> is false the cells are filled with white.
+      </li>
+      <li><code>bool shade_cells</code> (true):
+	Determines whether to colour cells. 
+      </li>
+      <li><code>ColorFunction color_function</code> (&amp;default_color_function):
+	Determines the function to use for colouring the cells. The default
+	shifts the colours from black for the lowest values through the
+	spectrum towards white.
+      </li>
+ </ul>
+
+<h3>PovrayFlags</h3>
+<p>
+This class provides the settings for PoVRay output. At present it 
+is empty.
+</p>
+
+<h3>GmvFlags</h3>
+<p>
+This class provides the settings for General Mesh Viewer output. At present it 
+is empty.
+</p>
 
 
 <hr>
@@ -200,9 +309,9 @@ to a file if you want to use the data later on.
   <td>6.
   </td>
   <td>Write your data to this ofstream. The second parameter denotes the 
-      output format to be used. It must be one of <code>ucd, gnuplot, 
+      output format to be used. It must be one of <code>{ ucd, gnuplot, 
       gnuplot_draft,
-      povray_mesh, eps, epsgrid, gmv</code>.
+      povray_mesh, eps, gmv }</code>.
   </td>
   <td><code>void DataOut&lt;dim&gt;::write(ostream &amp;out, const OutputFormat output_format)</code>
   </td>
@@ -235,7 +344,8 @@ It is possible to give cell data.
 
 <p>
 In order to write your data in ucd format you need to follow the
-steps described <a href="#usage">above</a>. 
+steps described in the section on the <a href="#usage">usage of 
+<code>DataOut</code></a>. 
 The data is written using <code>void write(ostream &amp;out,"ucd")</code>.
 </p>
 
@@ -339,7 +449,8 @@ if there are any.
 
 <p>
 In order to write your data in gnuplot format you need to follow the
-steps described <a href="#usage">above</a>. 
+steps described in the section on the <a href="#usage">usage of 
+<code>DataOut</code></a>. 
 The data is written using 
 </p>
 <ul>
@@ -352,6 +463,56 @@ The data is written using
   output. 
 </li>
 </ul>
+
+<h3><a name="eps">Encapsulated Postscript (EPS)</a></h3>
+
+<p>EPS output of <acronym>deal.II</acronym> data consists of the grid
+and the cells. The cells can be left empty, printed white (which leads
+to hidden-line removal) or colorized using a data vector. This format
+does not support gradient shading, i.e. each cell has one color which 
+is taken from the value of the data in its centre. Coordinates 
+have at most five digits, and the EPS files do not have an explicit 
+bounding box, i.e. the bonding box is close to the graphics on  
+all four sides. <em>EPS output can only be used for two-dimensional
+data.</em>
+</p>
+
+<p>EPS otput is performed by calling <br>
+<code>void DataOut&lt;dim&gt;::write_eps(ostream &amp;out)</code>
+</p>
+
+
+<h3><a name="pov">PoVRay output</a></h3>
+
+<p>
+PoVRay is a most comprehensive raytracer freely available at 
+<a href="http://www.povray.org">http://www.povray.org</a>. 
+This is also the place to start looking for more information
+on its features.
+</p>
+
+<p>PoVRay output is accomplished by calling<br>
+<code>DataOut&lt;dim&gt;::write_povray(ostream &amp;out)</code><br>
+At present there is no more information available on PoVRay output
+in <acronym>deal.II</acronym>.
+</p>
+
+
+<h3><a name="gmv">General Mesh Viewer (gmv) output</a></h3>
+
+<p>
+The General Mesh Viewer can display data in both 2D, 3D and cuts through
+data sets. More information on the gmv is available at
+<a href="http://www-xdiv.lanl.gov/XCM/gmv/GMVHome.html">
+http://www-xdiv.lanl.gov/XCM/gmv/GMVHome.html</a>
+At present the gmv cannot output postscript or EPS data.
+</p>
+
+<p>
+gmv output is accomplished by calling<br>
+<code>void DataOut&lt;dim&gt;::write_gmv(ostream &amp;out)</code><br>
+There is no more information available on the output format.
+</p>
 
 <hr>
 <hr>
@@ -381,7 +542,7 @@ to which parameters can be passed.
 </p>
 
 <table>
-<caption><b>Usage of the <code>GridOut</code> class with the default parameters<b></caption>
+<caption><b>Usage of the <code>GridOut</code> class with the default parameters</b></caption>
 <tr>
   <td><b>Step</b>
   </td>
@@ -421,7 +582,7 @@ to which parameters can be passed.
 </table>
 
 <table>
-<caption><b>Usage of the <code>GridOut</code> class with new parameters<b></caption>
+<caption><b>Usage of the <code>GridOut</code> class with new parameters</b></caption>
 <tr>
   <td><b>Step</b>
   </td>
@@ -480,10 +641,12 @@ to which parameters can be passed.
 </tr>
 </table>
 
+<hr>
+
 <h2><a name="gridout_formats"><code>GridOut</code> data formats</a></h2>
 
 
-<h3><a name="grid_ucd">ucd data format</a></h3>
+<h3><a name="grid_ucd">Unstructured Cell Data (ucd)</a></h3>
 
 <p>
 The ucd data format is described in the AVS developer's guide. There
@@ -510,6 +673,33 @@ simpler method for writing ucd-files.
 <h3><a name="grid_gnuplot">Gnuplot data format</a></h3>
 
 <p>
+Gnuplot output is performed by calling<br>
+<code>void write_gnuplot (const Triangulation&lt;dim&gt; &amp;tria, 
+ostream &amp;out)  </code><br>
+It is controlled by the class <code>GnuplotFlags</code>.
+</p>
+
+<p>
+In Gnuplot format the boundaries of each cell 
+are written as a sequence of lines to your output stream. 
+Output can be modified by the following flags:
+</p>
+<ul>
+  <li><code>GnuplotFlags::write_cell_numbers</code>:
+	If this is set the (internal) number of each cell is written to the
+	output file before the cell data.
+  </li>
+  <li><code>GnuplotFlags::write_level</code>: If this flag
+	is set the refinement level of each cell is written as an
+	additional column. This can be used to raise the cells according
+	to their refinement level if a 2D-grid is plotted as 3D, or, 
+	alternatively, to plot only the cells within a given range of 
+	levels of refinement using<br>
+	<code>splot [:][:][level1:level2] &quot;filename&quot;</code> 
+  </li>
+</ul>
+<p>
+Contrary to, e.g., EPS, you do not need to set a viewpoint. 
 </p>
 
 <h3><a name="grid_eps">Encapsulated Postscript</a></h3>

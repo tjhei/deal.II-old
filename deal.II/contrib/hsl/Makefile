@@ -51,13 +51,13 @@ clean:
 
 
 
-#Rule to generate the dependency file. This file is
-#automagically remade whenever needed, i.e. whenever
-#one of the f-files changed. Make detects whether
-#to remake this file upon inclusion at the bottom
-#of this file.
+# Rule to generate the dependency file. This file is
+# automagically remade whenever needed, i.e. whenever
+# one of the f-files changed. Make detects whether
+# to remake this file upon inclusion at the bottom
+# of this file.
 #
-#note that we take care if there are no f-files
+# note that we take care if there are no f-files
 Makefile.dep: $(f-files) Makefile
 	@echo ============================ Remaking Makefile
 	@(if test "x$(f-files)" != "x" ; then \

@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <signal.h>
+#include <sys/types.h>
 
 #ifdef HAVE_STD_STRINGSTREAM
 #  include <sstream>
@@ -149,10 +150,10 @@ void monitor_parent_liveness (const pid_t master_pid)
 //      int ret = std::system (command);
       int ret = kill (master_pid, 0);
       if (ret != 0)
-        if (ret == ESRCH)
+        if ((ret == -1) && (errno == ESRCH))
           die ("Master process seems to have died!");
         else
-          die ("Unspecified error while checking for other process!");
+          die ("Unspecified error while checking for other process!", ret, errno);
 
                                        // ok, master still running,
                                        // take a little rest and then

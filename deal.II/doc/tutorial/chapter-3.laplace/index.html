@@ -7,92 +7,18 @@
     <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
     <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
 </head>
-<body lang="en">
 
-<h1>The Laplace Problem</h1>
-<p>
-We will start with a simple example for a differential equation to be solved
-with <strong>deal.II</strong>: the Laplace problem. We will try to solve the
-Laplace equation on a square where one of the four boundaries has a constant
-and the other three zero potential.</p>
-<p>
-In order to solve this problem we will need to:</p>
-<ul>
-<li>
-generate a triangulation, i.e. describe the grid on which the equation will be
-solved
-</li>
-<li>
-assemble the problem matrix, i.e. generate the matrix structure describing the
-laplace problem
-</li>
-<li>
-assemble matrices describing the boundary conditions
-</li>
-<li>
-let deal.II solve the problem
-</li>
-<li>
-take care of the data output
-</li>
-</ul>
-<p>
-</p>
-<p>
-This tutorial will accordingly be split into several chapters:</p>
-<ol>
-<li>
-<strong><a href="structure.html">Program structure</a></strong>
-<p>
-where the overall design of the program and its classes are discussed</p>
-</li>
-<li>
-<strong><a href="main.html">The main program</a></strong>
-<p>
-where we take a look at how deal.II is used</p>
-</li>
-<li>
-<strong><a href="laplace.html">The class Laplace</a></strong>
-<p>
-where some of the details of the problem generation and solution are
-discussed</p>
-</li>
-<li>
-<strong><a href="triangulation.html">Generating a triangulation</a></strong>
-<p>where a triangulation is generated and degrees of freedom are discussed</p>
-</li>
-<li>
-<strong><a href="assemble.html">Assembling the problem matrix</a></strong>
-<p>
-where the matrices describing the problem is assembled
-and the boundary conditions are set
-</p>
-</li>
-<li>
-<strong><a href="solution.html">Solving the problem</a></strong>
-<p>
-where the problem is solved
-</p>
-</li>
-<li>
-<strong><a href="source.html">The source code</a></strong>
-<p>
-contains link to all the source files.
-</p>
-</li>
-</ol>
-<hr>
+<frameset rows="*,*">
 
-<p class="navbar">
-      <a href="../index.html">Back to the tutorial index</a>
-</p>
-<hr>
-<address>
-<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
-<p>
-Last modified: Tue  Mar 23 1999 
-</p>
-</body>
+    <frame name="title" src="title.html">
+      
+      <frameset cols="*,*">
+	<frame name="navbar" src="navbar.html">
+	<frame name="body" src="toc.html">
+      </frameset>
+
+</frameset>
+
 </html>
 
 

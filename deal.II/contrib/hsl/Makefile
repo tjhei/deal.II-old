@@ -1,0 +1,74 @@
+# $Id$
+# Copyright (C) 2001 by Wolfgang Bangerth
+
+
+D = ../..
+
+include $D/common/Make.global_options
+
+ifneq ($(with-multithreading),no)
+  MT = MT
+else
+  MT = ==
+endif
+
+
+
+# get lists of files we need
+f-files     = $(shell a="`echo source/*.f`"; if test $$a != "source/*.f" ; then echo $$a ; fi)
+o-files     = $(f-files:source/%.f=lib/o/%.o)
+
+
+
+lib/o/%.o :
+	@echo =====hsl==============optimized==$(MT)== $(<F)
+	@$(F77) $(F77FLAGS.o) -c $< -o $@
+
+
+# rules
+ifeq ($(enable-shared),yes)
+  lib: lib/libhsl.so
+else
+  lib: lib/libhsl.a
+endif
+
+
+lib/libhsl.a: $(o-files)
+	@echo =====base=============optimized==$(MT)== Linking library:   $@
+	@ar ruv $@ $(o-files)
+
+lib/libhsl.so: $(forward-declarations) $(o-files)
+	@echo =====base=============optimized==$(MT)== Linking library:   $@
+	@$(CC) $(CXXFLAGS.o) -shared -o $@ $(o-files)
+
+
+
+
+clean:
+	-rm -f *~ lib/lib* lib/o/*.o lib/Makefile.dep
+
+
+
+#Rule to generate the dependency file. This file is
+#automagically remade whenever needed, i.e. whenever
+#one of the f-files changed. Make detects whether
+#to remake this file upon inclusion at the bottom
+#of this file.
+#
+#note that we take care if tehre are no f-files
+lib/Makefile.dep: $(f-files) Makefile
+	@echo ============================ Remaking Makefile
+	(if test "x$(f-files)" != "x" ; then \
+           for i in source/*.f ; do \
+	     echo $$i | perl -pi -e 's#source/(.*)\.f#lib/o/\1.o:source/\1.f#;' ;\
+	    done ; \
+          fi) \
+		> lib/Makefile.dep
+
+
+# include all the dependencies
+include lib/Makefile.dep
+
+
+.PHONY: clean
+.PHONY: lib lib.a lib.g.a

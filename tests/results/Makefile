@@ -1,4 +1,4 @@
-# $Id$
+# Makefile,v 1.10 2003/05/02 15:30:57 wolf Exp
 
 # Generate links to identical output files
 
@@ -10,14 +10,18 @@ all: .links
 # the source directory, it creates a link from the source to the
 # target directory. This way, one has only to store the files that
 # differ and cross-link all the other files.
+#
+# in order to find out whether something is a link, we use "test -L ...".
+# unfortunately, -L is not available in test when plain sh is used, so work
+# around this by explicitely using bash
 linkfiles-%:
-	@TARGET=`echo $@ | $(PERL) -pi -e 's/linkfiles-//; s/-to-.*//;'` ; \
+	TARGET=`echo $@ | $(PERL) -pi -e 's/linkfiles-//; s/-to-.*//;'` ; \
 	SOURCE=`echo $@ | $(PERL) -pi -e 's/.*-to-//;'` ; \
 	echo "Creating links from $$SOURCE into $$TARGET" ; \
 	cd $$SOURCE ; \
 	for i in */*output ; do \
 		if test ! -f ../$$TARGET/$$i ; then \
-			if test -L ../$$TARGET/$$i ; then \
+			if bash test -L ../$$TARGET/$$i ; then \
 				rm ../$$TARGET/$$i ; \
 			fi ; \
 			ln -s `pwd`/$$i ../$$TARGET/$$i ; \

@@ -13,7 +13,7 @@ all: .links
 #
 # in order to find out whether something is a link, we use "test -L ...".
 # unfortunately, -L is not available in test when plain sh is used, so work
-# around this by explicitely using bash
+# around this with a piece of autoconf magic
 linkfiles-%:
 	@TARGET=`echo $@ | $(PERL) -pi -e 's/linkfiles-//; s/-to-.*//;'` ; \
 	SOURCE=`echo $@ | $(PERL) -pi -e 's/.*-to-//;'` ; \
@@ -21,7 +21,7 @@ linkfiles-%:
 	cd $$SOURCE ; \
 	for i in */*output ; do \
 		if test ! -f ../$$TARGET/$$i ; then \
-			if bash test -L ../$$TARGET/$$i ; then \
+			if $(TEST_MINUS_L) ../$$TARGET/$$i ; then \
 				rm ../$$TARGET/$$i ; \
 			fi ; \
 			ln -s `pwd`/$$i ../$$TARGET/$$i ; \
@@ -37,7 +37,7 @@ linkdirs-%:
 	@TARGET=`echo $@ | $(PERL) -pi -e 's/linkdirs-//; s/-to-.*//;'` ; \
 	SOURCE=`echo $@ | $(PERL) -pi -e 's/.*-to-//;'` ; \
 	echo "Aliasing $$TARGET to $$SOURCE" ; \
-	if bash test -L $$TARGET ; then rm $$TARGET ; fi ; \
+	if $(TEST_MINUS_L) $$TARGET ; then rm $$TARGET ; fi ; \
 	ln -s $$SOURCE $$TARGET
 
 .links:   linkfiles-i686-pc-linux-gnu+icc7.1-to-i686-pc-linux-gnu+gcc3.2 \
@@ -53,3 +53,4 @@ clean:
 
 
 include ../../common/Make.global_options
+include ../Makefile.paths

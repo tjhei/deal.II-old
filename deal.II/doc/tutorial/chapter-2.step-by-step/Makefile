@@ -11,6 +11,7 @@ all: $(example-htmls)
 $(example-htmls):
 	@echo ================== Assembling $@
 	@cat step-by-step.header > $@
+	@cat $(@:.html=.intro) >> $@
 	@cat ../../../deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc) \
 	  | perl program2html \
 	  >> $@

@@ -49,6 +49,66 @@ This is further discussed in the chapters on
       alt="Hanging Nodes">
 </td>
 </table>
+
+<h2>Constraints on Hanging Nodes</h2>
+
+<h3>Where do the constraints come from ?</h3>
+<p>
+In order to get constraints for your hanging nodes you have to assume
+some function on the boundaries of your cells, as mentioned above.
+Take a linear function on the cell boundary between vertices 1 and 2
+with function values <code>x1</code> and <code>x2</code>. If you get
+a hanging node on this boundary during refinement it will be situated
+in the middle and therefore its value - the value of the function on 
+the boundary at this point - will be <code>x3 = 1/2 (x1+x2)</code>.
+</p>
+
+<h3>Mathematical implications, or<br>
+why is it a constraint <em>matrix</em> ?</h3>
+
+<p>
+Assume a system <code>Au=f</code> with <code>u</code> being the solution
+vector with all the degrees of freedom of the finite elements, in particular
+base functions associated with hanging nodes, which are not true degrees of 
+freedom of the system of equations.
+</p>
+<p>
+The constraint for hanging nodes now is that we must be able to calculate
+their value from the values of the surrounding nodes by interpolation.
+Let <code>y</code> be a vector with entries corresponding to true degrees of
+freedom only. We must be able to write <code>u</code> as <br>
+<code>u=Cy</code><br>
+where <code>C</code>, the constraint matrix is a square matrix containing the 
+interpolation.
+</p>
+<p>
+Now we have to solve
+</p>
+<pre>
+<code>
+  Ax = f
+</code>
+with the constraint, that there is a <code>y</code> satisfying
+<code>
+  u = Cy
+</code>
+From this we get
+<code>
+  C<sup>T</sup>ACy = C<sup>T</sup>f
+</code>
+or, taking
+<code>
+  ~A := C<sup>T</sup>AC, b := C<sup>T</sup>f 
+  ~A y = b.
+</code>
+</pre>
+
+<p>
+It is not possible to generate <code>~A</code> directly, but 
+w can generate <code>A</code> and condense it to <code>~A</code>
+using the constraints, solve the system and obtain <code>u</code> by
+<code>u=Cf</code>.
+</p>
 <!-- Page Foot -->
 <hr>
 <table class="navbar">      

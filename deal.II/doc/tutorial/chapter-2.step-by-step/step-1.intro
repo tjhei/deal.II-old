@@ -9,4 +9,4 @@ starting grid for some problems), and one more geometric attempt: a
 ring-shaped domain, which is refined towards the inner edge. The
 latter is certainly not very useful and is certainly only rarely used
 in numerical analysis, but looks nice and illustrates how loops over
-cells are written and what you can do with cells.
+cells are written and some of the things you can do with cells.

@@ -26,7 +26,7 @@ $(LIBDIR)/contrib/hsl/%.$(OBJEXT) :
 
 
 # rules
-lib: $(LIBDIR)/libhsl.s $(LIBDIR)/bin/detached_ma27$(EXEEXT)
+lib: $(LIBDIR)/libhsl$(lib-suffix) $(LIBDIR)/bin/detached_ma27$(EXEEXT)
 
 
 $(LIBDIR)/libhsl.a: $(forward-declarations) $(o-files)

@@ -82,7 +82,11 @@ GridGenerator::hyper_cube (triangulation, -1, 1);
 <p>
 A hyperball can be created using the function<br>
 <code>void GridGenerator::hyper_ball(Triangulation&lt;dim&gt; &amp;tria,const Point&lt;dim&gt; center=0.,const double radius=1.)</code><br>
-This will create a hyperball of given centre and radius where the location of the centre defaults to the origin and the radius to unity.
+This will create a hyperball of given centre and radius where the
+location of the centre defaults to the origin and the radius to
+unity. Note that the left figure is scaled a bit large, since the
+corner points of the outer square will later be the points on the
+circles surface in diagonal directions.
 </p>
 
 <table class="figure">
@@ -194,7 +198,7 @@ grid construction algorithm. Otherwise some of your matrix elements
 may have the wrong sign (plus instead of minus or vice versa).
 A more detailed description of the problems
 encountered in two dimensions can be found in the
-<a href="http://hermes.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/basic/DataIn.html" target="_top"> <code>DataIn</code> class description</a>.
+<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/basic/DataIn.html" target="_top"> <code>DataIn</code> class description</a>.
 </p>
 
 

@@ -69,6 +69,18 @@ DoFHandler&lt;dim&gt; dof;
 // Your degrees of freedom must already be distributed
 
 smstruct.reinit(dof.n_dofs(),dof.n_dofs(),dof.max_couplings_between_dofs());
+
+// Condense the <a href="hanging_nodes.html">hanging nodes</a> into
+// the matrix, taking into account the constraints to the hanging nodes.
+// This must be done before the matrix structure is compressed, but only
+// on locally refined grids.
+// You can skip this part if your grid is not locally refined.
+
+dof.make_sparsity_pattern(smstruct); 
+hanging_nodes.clear();
+dof.make_constraint_matrix(hanging_nodes);
+hanging_nodes.condense(smstruct);
+
 </code>
 </pre>
 

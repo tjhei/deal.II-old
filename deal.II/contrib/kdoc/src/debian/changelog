@@ -1,0 +1,27 @@
+kdoc (2.0a15-1.0) unstable; urgency=low
+
+  * New upstream version
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Wed, 13 Oct 1999 23:30:06 -0400
+
+kdoc (2.0a12-1.0) unstable; urgency=low
+
+  * New upstream version
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 27 Sep 1999 23:30:06 -0400
+
+kdoc (2.0a9-2) unstable; urgency=low
+
+  * Use DESTDIR for 'make install'
+
+ -- Bernd Gehrmann <bernd@physik.hu-berlin.de>  Sat, 22 May 1999 18:30:06 +0200
+
+kdoc (2.0a9-1) experimental; urgency=low
+
+  * Initial Release.
+
+ -- Bernd Gehrmann <bernd@physik.hu-berlin.de>  Fri, 23 Apr 1999 19:30:14 +0200
+
+Local variables:
+mode: debian-changelog
+End:

@@ -1,0 +1,16 @@
+Source: kdoc
+Section: devel
+Priority: optional
+Maintainer: Bernd Gehrmann <bernd@physik.hu-berlin.de>
+Standards-Version: 3.0.1
+
+Package: kdoc
+Architecture: all
+Section: devel
+Depends: ${perl:Depends}
+Description: C++ and IDL Source Documentation System 
+ KDOC creates cross-referenced documentation for C++ 
+ and CORBA IDL libraries directly from the source. 
+ Documentation can be embedded in special doccomments 
+ in the source.
+  

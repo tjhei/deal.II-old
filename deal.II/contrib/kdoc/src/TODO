@@ -1,0 +1,82 @@
+
+Bugs
+----
+Refs for external nodes are being double-escaped.
+
+templates
+	template functions
+variables
+	multivars cannot have values
+	array initializers don't work
+	pointers to functions
+compound typedefs
+functions
+	Constructor initializers are appearing as part of the args.
+	functions with funcptr or paren'd arguments
+	operators are not properly quoted
+	operators not always correctly parsed
+
+Source for Forward decls should not be picked up.
+Preprocessor screws up line numbers.
+
+check "@params ... */"
+check namespaces
+
+HTML: links are screwed (multiple escapes somewhere).
+
+General
+-------
+Running kdoc in-place
+Major IDL cleanup
+
+parser
+------
+documentation in source
+CODE etc
+templates
+
+IDL specific: 
+	parse "raises"
+
+Doc specific
+------------
+	pre should be allowed inline.
+	exceptions:
+		@exception <exception>	Reason
+		exception is a class
+
+Ast
+---
+Allow cross-referencing between languages. I don't know how to do this,
+other than by reading every language into the same syntax tree.
+
+postprocessor
+------------
+referenced text use namespaces
+	searchspaces:
+		upward-searching (this and parents)
+		enclosed (namespaces)
+
+DocBook
+-------
+Don't use deref, we need a textref function instead.
+	deref is for @refs etc.
+visibility and flags in member docs.
+Globals.
+group indices.
+Index.
+
+HTML
+----
+Filenames - "/" being replaced by "#" is silly.
+group indices.
+cross-referenced headers
+
+Libs
+----
+-L doesn't work properly (KDOCLIBS works ok).
+
+Other
+-----
+Man
+lxr

@@ -150,6 +150,43 @@ A.reinit(smstruct);
 </pre>
 
 
+<h2>Vector Generation</h2>
+
+<p>
+Vector operations are supplied by the class 
+<code><a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/lac/Vector.html">Vector</a></code>.
+The first and most important operation on a vector is its initialization
+using <code>void Vector::reinit(const usigned int N, const bool fast=false)</code>.
+</p>
+
+<p>
+In addition to standard vector operations such as addition, multiplication with
+a vector etc. <acronym>deal.II</acronym> provides several vector norms, too:
+</p>
+
+<ul>
+  <li>the l1-norm: <code>Number Vector::l1_norm() const</code></li>
+  <li>the l2-norm: <code>Number Vector::l2_norm() const</code></li>
+  <li>the infinity-norm: <code>Number Vector::infty_norm() const</code></li>
+</ul>
+
+<p class="Example">
+<span class="example">Example:</span>Continuing the above example, 
+we initialize the vector for the right hand side. Recall that the problem 
+matrix is a sparse square matrix of size 
+<code>dof.n_dofs()<sup>2</sup></code>. 
+</p>
+<pre class="example">
+<code>
+#include &lt;lac/vector.h&gt;
+
+Vector&lt;double&gt; f;
+
+f.reinit(dof.n_dofs());
+</code>
+</pre>
+
+
 <!-- Page Foot -->
 <hr>
 <table class="navbar">      

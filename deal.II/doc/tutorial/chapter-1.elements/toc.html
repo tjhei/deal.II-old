@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+<title>Structure of a Finite Element Program</title>
+    <link href="../dealtut.css" rel="StyleSheet" title="deal.II Tutorial">
+    <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+    <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
+</head>
+<body lang="en">
+
+<h1>Structure of a Finite Element Program</h1>
+
+<h2>About this tutorial</h2> 
+<p>
+This part of the <acronym>deal.II</acronym> documentation will discuss
+how to build a finite element program. We will take a look at the general
+structure of programs of this kind and at the various possibilities 
+in that respect offered by <acronym>deal.II</acronym>. The order of
+the <a href="#toc">table of contents</a> below reflects the order in which
+you need to do perform the tasks. Some things may be left out according to
+your needs.
+</p>
+
+<h2><a name="toc">Table of contents</a></h2>
+
+    <ol>      
+      <li>
+	<p>
+	  <b><a href="grid_creation.html">Creation of a grid</a></b>
+	</p>
+	<p>dealing with grid creation, grid input from a file and grid 
+	  refinement. 
+	  The various kinds of grid are also discussed.
+	</p>
+      </li>
+
+      <li>
+	<p>
+	  <b><a href="dofs.html">Degrees of Freedom</a></b>
+	</p>
+	<p>where degrees of freedom are distriuted and numbered.</p>
+      </li>
+      
+      <li>
+	<p>
+	  <b><a href="hanging_nodes.html">Hanging Nodes</a></b>
+	</p>
+	<p>where hanging nodes are discussed.</p>
+      </li>
+      
+      <li>
+	<p>
+	  <b><a href="matrix_structure.html">Matrix Structure</a></b>
+	</p>
+	<p>where efficient structures for sparse matrices are discussed.</p>
+      </li>
+
+      <li>
+	<p>
+	  <b><a href="matrix_generation.html">Matrix and Vector Generation</a></b>
+	</p>
+	<p>where the different kinds of matrices and vectors are discussed.</p>
+      </li>
+      
+      <li>
+	<p>
+	  <b><a href="rhs.html">The Problem Matrix and the Right Hand Side</a></b>
+	</p>
+	<p>which shows how to implement a particular problem.</p>
+      </li>
+
+      <li>
+	<p>
+	  <b><a href="boundary.html">Boundary Conditions</a></b>
+	</p>
+	<p>which shows how to set boundary conditions in deal.II.</p>
+      </li>
+      
+      <li>
+	<p>
+	  <b><a href="condense.html">Condensing the Hanging Nodes</a></b>
+	</p>
+	<p>which shows how, when and why to condense hanging nodes.</p>
+      </li>
+
+      <li>
+	<p>
+	  <b><a href="solve.html">Solving the Problem</a></b>
+	</p>
+	<p>explaining the different solvers available and how to use them.</p>
+      </li>
+
+      <li>
+	<p>
+	  <b><a href="postprocess.html">Postprocessing</a></b>
+	</p>
+	<p>where the data is postprocessed and stored and the error
+	  is calculated.
+	</p>
+      </li>
+      
+      <li>
+	<p>
+	  <b><a href="adaptivity.html">Error Estimate and Adaptivity</a></b>
+	</p>
+	<p>explaining how to use adaptive refinement with error estimates.</p>
+      </li>
+      
+      <li>
+	<p>
+	  <b><a href="parameters.html">Parameter Input</a></b>
+	</p>
+	<p>explaining how to use a parameter file for configuration
+	  of your program.
+	</p>
+      </li>
+    </ol>
+
+<hr>
+
+<table class="navbar">      
+<tr>
+  <td>
+    <a href="index.html">Back to this chapter's index</a>
+  </td>
+  <td>
+    <a href="../index.html">Back to the tutorial index</a>
+  </td>
+</tr>
+</table>
+<hr>
+<address>
+<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<p>
+Last modified: Tue 9 Mar 1999 
+</p>
+</body>
+</html>
+
+
+
+
+

@@ -15,7 +15,7 @@ endif
 
 
 # get lists of files we need
-f-files     = $(shell a="`echo source/*.f`"; if test $$a != "source/*.f" ; then echo $$a ; fi)
+f-files     = $(shell a="`echo source/*.f`"; if test "$$a" != "source/*.f" ; then echo $$a ; fi)
 o-files     = $(f-files:source/%.f=lib/o/%.o)
 
 
@@ -55,10 +55,10 @@ clean:
 #to remake this file upon inclusion at the bottom
 #of this file.
 #
-#note that we take care if tehre are no f-files
+#note that we take care if there are no f-files
 lib/Makefile.dep: $(f-files) Makefile
 	@echo ============================ Remaking Makefile
-	(if test "x$(f-files)" != "x" ; then \
+	@(if test "x$(f-files)" != "x" ; then \
            for i in source/*.f ; do \
 	     echo $$i | perl -pi -e 's#source/(.*)\.f#lib/o/\1.o:source/\1.f#;' ;\
 	    done ; \

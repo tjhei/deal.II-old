@@ -600,7 +600,7 @@ sub identifyDecl
 	    $newNode = newFriendClass ($2, $1);
 	}
 
-	# Class/Struct
+	# Class/Struct/Namespace
 	elsif ( $decl =~ /^\s*((?:template\s*<.*>)?)      # 1 template
 					\s*(class|struct|union|namespace) # 2 struct type
 					\s+([\w_]+                        # 3 name
@@ -774,9 +774,17 @@ sub identifyDecl
 
 		$skipBlock = 1 if $end eq '{';
 	}
-	# end of an "extern" block
+	# end of an "extern" or namespace block
 	elsif ( $decl =~ /^\s*}\s*$/ ) {
-		$inExtern = 0;
+		if ( ! ($#classStack < 0 )) {
+		    $cNode = pop @classStack;
+
+		    print "end decl: popped $cNode->{astNodeName}\n" 
+			if $debug;
+		}
+		else {
+		    $inExtern = 0;
+		}
 	}
 	# end of an in-block declaration
 	elsif ( $decl =~ /^\s*}\s*(.*?)\s*;\s*$/ ) {

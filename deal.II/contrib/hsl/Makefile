@@ -1,5 +1,5 @@
 # $Id$
-# Copyright (C) 2001, 2002, 2003 by Wolfgang Bangerth
+# Copyright (C) 2001, 2002, 2003, 2004 by Wolfgang Bangerth
 
 
 D = ../..
@@ -67,6 +67,10 @@ clean:
 # of this file.
 #
 # note that we take care if there are no f-files
+#
+# If the file should turn out to be empty, then blow it
+# away to let make issue a proper error message rather than
+# some obscure follow-up problems
 Makefile.dep: $(f-files) Makefile
 	@echo ============================ Remaking Makefile
 	@(if test "x$(f-files)" != "x" ; then \
@@ -75,6 +79,7 @@ Makefile.dep: $(f-files) Makefile
 	    done ; \
           fi) \
 		> Makefile.dep
+	@if test -s $@ ; then : else rm $@ ; fi
 
 
 # include all the dependencies

@@ -4,7 +4,7 @@
 # include paths and global variables
 include ../../../common/Make.global_options
 
-example-directories = $(shell echo $D/deal.II/examples/step-by-step/step-*)
+example-directories = $(shell echo $D/examples/step-*)
 example-names       = $(notdir $(example-directories))
 example-htmls       = $(addsuffix .html,$(example-names))
 example-sgmls       = $(addsuffix .sgml,$(example-names))
@@ -16,13 +16,13 @@ $(example-htmls):
 	@echo ================== Assembling $@
 	@cat head.html > $@
 	@cat $(@:.html=.data/intro.html) >> $@
-	@cat $D/deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc) \
+	cat $D/examples/$(@:.html=)/$(@:.html=.cc) \
 	  | $(PERL) program2html \
 	  >> $@
 	@cat $(@:.html=.data/results.html) >> $@
-	@cat $D/deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc) \
+	@cat $D/examples/$(@:.html=)/$(@:.html=.cc) \
 	  | $(PERL) program2plain \
-	  | $(PERL) -e '$$path="$D/deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc)"; \
+	  | $(PERL) -e '$$path="$D/examples/$(@:.html=)/$(@:.html=.cc)"; \
                         $$path =~ s!/! /!g; \
 		        while (<>) { s!PROGRAMPATH!$$path!g; print; };' \
 	  >> $@
@@ -34,15 +34,15 @@ $(example-sgmls):
 	@echo ================== Assembling $@
 	@cat $(@:.sgml=.data/intro.html) >> $@
 	@echo "</sect2>" >> $@
-	@cat $D/deal.II/examples/step-by-step/$(@:.sgml=)/$(@:.sgml=.cc) \
+	@cat $D/examples/$(@:.sgml=)/$(@:.sgml=.cc) \
 	  | $(PERL) program2html \
 	  >> $@
 	@echo "</sect2>" >> $@
 	@cat $(@:.sgml=.data/results.html) >> $@
 	@echo "</sect2>" >> $@
-	@cat $D/deal.II/examples/step-by-step/$(@:.sgml=)/$(@:.sgml=.cc) \
+	@cat $D/examples/$(@:.sgml=)/$(@:.sgml=.cc) \
 	  | $(PERL) program2plain \
-	  | $(PERL) -e '$$path="$D/deal.II/examples/step-by-step/$(@:.sgml=)/$(@:.sgml=.cc)"; \
+	  | $(PERL) -e '$$path="$D/examples/$(@:.sgml=)/$(@:.sgml=.cc)"; \
                         $$path =~ s!/! /!g; \
 		        while (<>) { s!PROGRAMPATH!$$path!g; print; };' \
 	  >> $@

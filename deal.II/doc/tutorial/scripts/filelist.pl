@@ -3,7 +3,7 @@
 # Takes table title as argument, traverses the files in .
 # and writes to STDOUT a list of all files 
 # as a TeX-table, with modification date and revision number.
-# Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de> 1999
+# Jan Schrage and others <deal@iwr.uni-heidelberg.de> 1999
 
 use File::Find;
 use File::stat;

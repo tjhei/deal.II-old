@@ -386,15 +386,21 @@ to be plotted.
 
 <p>The limitations of the gnuplot data format have been well described
 in the 
-<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/basic/DataOut.html">
-<code>DataOut</code> class description</a>:
+<a href="../../auto/kdoc/base/DataOutBase.html">
+<code>DataOutBase</code> class description</a>:
 </p>
 <blockquote>
 <p>
-This format is somewhat restricted to coninuous data and to finite elements of first order only. The reason for the first restriction is that it takes nodal values and can
-therefore only work if a finite element has degrees of freedom in the vertices of each cell. This is not the case for discontinuous elements. The second restriction is only a
-problem of quality of output: you actually can print quadratic or higher order elements using this style, but you will only see the contour of each cell with the bounding lines of
-each cell being straight lines. You won't see the structure of the solution in the interior of a cell nor on the lines bounding it. 
+This format is somewhat restricted to coninuous data and to finite
+elements of first order only. The reason for the first restriction is
+that it takes nodal values and can therefore only work if a finite
+element has degrees of freedom in the vertices of each cell. This is
+not the case for discontinuous elements. The second restriction is
+only a problem of quality of output: you actually can print quadratic
+or higher order elements using this style, but you will only see the
+contour of each cell with the bounding lines of each cell being
+straight lines. You won't see the structure of the solution in the
+interior of a cell nor on the lines bounding it.
 </p>
 </blockquote>
 
@@ -403,8 +409,8 @@ each cell being straight lines. You won't see the structure of the solution in t
 <p>The limitations mentioned above can to some extent be remedied,
 and that is why there is also an option for high quality output.
 For how this is done, we quote (again) the 
-<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/basic/DataOut.html">
-<code>DataOut</code> class description</a>:
+<a href="../../auto/kdoc/base/DataOutBase.html">
+<code>DataOutBase</code> class description</a>:
 </p>
 
 <blockquote>

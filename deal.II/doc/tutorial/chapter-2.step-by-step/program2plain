@@ -12,7 +12,9 @@ print <<END;
 <h1> The plain program</h1>
 
 <p>
-(The program can be found at <i>PROGRAMPATH</i>.)
+(If you are looking at a locally installed deal.II version, then the
+program can be found at <i>PROGRAMPATH</i>. Otherwise, this is only
+the path on some remote server.) 
 </p>
 
 <p>

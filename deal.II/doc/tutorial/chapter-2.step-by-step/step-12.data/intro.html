@@ -2,11 +2,12 @@
 <h1>Introduction</h1>
 
 
+
 <H3><A NAME="SECTION00001000000000000000">
 Overview</A>
 </H3>
 This example is devoted to the <EM>discontinuous Galerkin method</EM>, or
-in short: DG method. It treats following topics.
+in short: DG method. It includes following topics.
 <UL>
 <LI>Discretization of the linear transport equation with the DG method
 <LI>Two different assembling routines of the system matrix based on face terms given
@@ -21,7 +22,7 @@ in short: DG method. It treats following topics.
 <P>
 
 <H3><A NAME="SECTION00002000000000000000">
-Introduction</A>
+Problem</A>
 </H3>
 The DG method was first introduced to discretize simple transport
 equations. Over the past years DG methods have been applied to a
@@ -308,16 +309,26 @@ such that for all
  SRC="step-12.data/img22.gif"
  ALT="$v_h\in V_h$">
 following equation holds:
-<BR>
-<A NAME="dg-transport">&#160;</A><IMG
- WIDTH="534" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"
+<BR><P></P>
+<DIV ALIGN="CENTER">
+
+<!-- MATH: \begin{equation}
+\sum_K\left\{-(u_h,\beta\cdot\nabla v_h)_K+(\beta\cdot n\, u_h, v_h)_{\partial K_+\setminus\partial\Omega}+(\beta\cdot n\, \hat u_h, v_h)_{\partial K_-\setminus\partial\Omega}\right\}=(f,v)_\Omega-(\beta\cdot n\, g, v_h)_{\partial\Omega_-},
+\end{equation} -->
+
+<TABLE WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE"><TD ALIGN="CENTER" NOWRAP><A NAME="dg-transport">&#160;</A><IMG
+ WIDTH="718" HEIGHT="50"
  SRC="step-12.data/img23.gif"
- ALT="\begin{multline}
-\sum_K\left\{-(u_h,\beta\cdot\nabla v_h)_K+(\beta\cdot n\, u_h...
-...ht\}\\
-=(f,v)_\Omega-(\beta\cdot n\, g, v_h)_{\partial\Omega_-},
-\end{multline}">
-<BR>
+ ALT="\begin{displaymath}
+\sum_K\left\{-(u_h,\beta\cdot\nabla v_h)_K+(\beta\cdot n\, ...
+...ght\}=(f,v)_\Omega-(\beta\cdot n\, g, v_h)_{\partial\Omega_-},
+\end{displaymath}"></TD>
+<TD WIDTH=10 ALIGN="RIGHT">
+(5)</TD></TR>
+</TABLE>
+</DIV>
+<BR CLEAR="ALL"><P></P>
 where 
 <!-- MATH: $\partial K_-:=\{x\in\partial K, \beta(x)\cdot n(x)<0\}$ -->
 <IMG
@@ -410,7 +421,7 @@ such that
 ...s\partial\Omega}\right\}=(f,v)_\Omega \quad\forall v_h\in V_h,
 \end{displaymath}"></TD>
 <TD WIDTH=10 ALIGN="RIGHT">
-(5)</TD></TR>
+(6)</TD></TR>
 </TABLE>
 </DIV>
 <BR CLEAR="ALL"><P></P>
@@ -438,7 +449,7 @@ such that
 ...Gamma\cap\partial\Omega}=(f,v)_\Omega \quad\forall v_h\in V_h.
 \end{displaymath}"></TD>
 <TD WIDTH=10 ALIGN="RIGHT">
-(6)</TD></TR>
+(7)</TD></TR>
 </TABLE>
 </DIV>
 <BR CLEAR="ALL"><P></P>
@@ -465,18 +476,28 @@ be one of the two normals and denote the other normal by
 the jump [<I>v</I><SUB><I>h</I></SUB>] in equation (<A HREF="step-12.html#dg-scheme-faces">7</A>).
 
 <P>
-For the linear transport equation (<A HREF="step-12.html#transport-equation">1</A>) this
+For the linear transport equation (<A HREF="step-12.html#transport-equation">1</A>)
 equation (<A HREF="step-12.html#dg-scheme-faces">7</A>) simplifies to
-<BR>
-<A NAME="dg-transport-gamma">&#160;</A><IMG
- WIDTH="534" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"
+<BR><P></P>
+<DIV ALIGN="CENTER">
+
+<!-- MATH: \begin{equation}
+-\sum_K(u_h,\beta\cdot\nabla v_h)_K+\sum_\Gamma\left\{(\beta\cdot n\, u_h, [v_h])_{\Gamma_+\setminus\partial\Omega}+(\beta\cdot n\, \hat u_h, [v_h])_{\Gamma_-\setminus\partial\Omega}\right\}=(f,v)_\Omega-(\beta\cdot n\, g, v_h)_{\partial\Omega_-},
+\end{equation} -->
+
+<TABLE WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE"><TD ALIGN="CENTER" NOWRAP><A NAME="dg-transport-gamma">&#160;</A><IMG
+ WIDTH="744" HEIGHT="50"
  SRC="step-12.data/img34.gif"
- ALT="\begin{multline}
--\sum_K(u_h,\beta\cdot\nabla v_h)_K+\sum_\Gamma\left\{(\beta\c...
-...ht\}\\
-=(f,v)_\Omega-(\beta\cdot n\, g, v_h)_{\partial\Omega_-},
-\end{multline}">
-<BR>
+ ALT="\begin{displaymath}
+-\sum_K(u_h,\beta\cdot\nabla v_h)_K+\sum_\Gamma\left\{(\bet...
+...ght\}=(f,v)_\Omega-(\beta\cdot n\, g, v_h)_{\partial\Omega_-},
+\end{displaymath}"></TD>
+<TD WIDTH=10 ALIGN="RIGHT">
+(8)</TD></TR>
+</TABLE>
+</DIV>
+<BR CLEAR="ALL"><P></P>
 what will be refered to as <EM>second version</EM> of the DG method.
 
 <H3><A NAME="SECTION00004000000000000000">
@@ -566,7 +587,7 @@ of the face terms are either the same or similar to each other. Hence,
 we can implement the assembling of the face terms either by `copy and
 paste' (the lazy way, that revenges not later than the scheme or the
 equation might want to be changed afterwards) or by calling a separate
-function that covers all four cases. To be a bit educational within
+function that covers all four cases. To be kind of educational within
 this tutorial we perform the latter approach, of course. We go even
 further and encapsulate this function and everything that is needed
 for assembling the specific equation under consideration within a
@@ -574,16 +595,18 @@ class called <EM>DGTransportEquation</EM>. This class includes objects
 of all equation-specific functions, as there are the <EM>RHS</EM> and
 the <EM>BoundaryValues</EM> class, both derived from the <EM>Function</EM>
 class, and the <EM>Beta</EM> class representing the vector field.
-Furthermore the <EM>DGTransportEquation</EM> class comprises member
+Furthermore, the <EM>DGTransportEquation</EM> class comprises member
 functions <EM>assemble_face_terms1</EM> and
 <EM>assemble_face_terms2</EM> that are invoked by the
 <EM>assemble_system1</EM> and <EM>assemble_system2</EM> functions of the
-<EM>DGMethod</EM>, respectively, and the function
-<EM>assemble_cell_term</EM> that is the same for both assembling
-routines.  The <EM>DGTransportEquation</EM> class can then easily be
-replaced by a different class that implements a different equation and
-a different DG method. Indeed, the implementation of the
-<EM>assemble_system1</EM> and <EM>assemble_system2</EM> functions will
+<EM>DGMethod</EM>, respectively, and the functions
+<EM>assemble_cell_term</EM> and <EM>assemble_boundary_term</EM> that
+are the same for both assembling routines. Due to the encapsulation of
+all equation- and scheme-specific functions, the
+<EM>DGTransportEquation</EM> class can easily be replaced by a similar
+class that implements a different equation and a different DG method.
+Indeed, the implementation of the <EM>assemble_system1</EM> and
+<EM>assemble_system2</EM> functions of the <EM>DGMethod</EM> class will
 be general enough to serve for different DG methods, different
 equations, even for systems of equations (!) and, under small
 modifications, for nonlinear problems.

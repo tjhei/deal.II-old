@@ -6,7 +6,7 @@
 \begin{document}
 \subsection{Overview}
 This example is devoted to the \emph{discontinuous Galerkin method}, or
-in short: DG method. It treats following topics.
+in short: DG method. It includes following topics.
 \begin{itemize}
 \item Discretization of the linear transport equation with the DG method
 \item Two different assembling routines of the system matrix based on face terms given
@@ -17,7 +17,7 @@ in short: DG method. It treats following topics.
 \item Time comparison of the two assembling routines.
 \end{itemize}
 
-\subsection{Introduction}
+\subsection{Problem}
 The DG method was first introduced to discretize simple transport
 equations. Over the past years DG methods have been applied to a
 variety of problems and many different schemes were introduced
@@ -95,10 +95,9 @@ is given by
 \end{equation}
 Hence, the discontinuous Galerkin scheme for the transport equation
 \eqref{transport-equation} is given by: find $u_h\in V_h$ such that for all $v_h\in V_h$ following equation holds:
-\begin{multline}\label{dg-transport}
-  \sum_K\left\{-(u_h,\beta\cdot\nabla v_h)_K+(\beta\cdot n\, u_h, v_h)_{\partial K_+\setminus\partial\Omega}+(\beta\cdot n\, \hat u_h, v_h)_{\partial K_-\setminus\partial\Omega}\right\}\\
-=(f,v)_\Omega-(\beta\cdot n\, g, v_h)_{\partial\Omega_-},
-\end{multline}
+\begin{equation}\label{dg-transport}
+  \sum_K\left\{-(u_h,\beta\cdot\nabla v_h)_K+(\beta\cdot n\, u_h, v_h)_{\partial K_+\setminus\partial\Omega}+(\beta\cdot n\, \hat u_h, v_h)_{\partial K_-\setminus\partial\Omega}\right\}=(f,v)_\Omega-(\beta\cdot n\, g, v_h)_{\partial\Omega_-},
+\end{equation}
 where $\partial K_-:=\{x\in\partial K, \beta(x)\cdot n(x)<0\}$ denotes
 the inflow boundary and $\partial K_+=\partial K\setminus \partial
 K_-$ the outflow part of cell $K$. This equation will be
@@ -135,12 +134,11 @@ $-n$. This way we get $-n$ in the second face term in
 \eqref{dg-scheme-faces-long} that finally produces the minus sign in
 the jump $[v_h]$ in equation \eqref{dg-scheme-faces}.
 
-For the linear transport equation \eqref{transport-equation} this
+For the linear transport equation \eqref{transport-equation}
 equation \eqref{dg-scheme-faces} simplifies to
-\begin{multline}\label{dg-transport-gamma}
-  -\sum_K(u_h,\beta\cdot\nabla v_h)_K+\sum_\Gamma\left\{(\beta\cdot n\, u_h, [v_h])_{\Gamma_+\setminus\partial\Omega}+(\beta\cdot n\, \hat u_h, [v_h])_{\Gamma_-\setminus\partial\Omega}\right\}\\
-=(f,v)_\Omega-(\beta\cdot n\, g, v_h)_{\partial\Omega_-},
-\end{multline}
+\begin{equation}\label{dg-transport-gamma}
+  -\sum_K(u_h,\beta\cdot\nabla v_h)_K+\sum_\Gamma\left\{(\beta\cdot n\, u_h, [v_h])_{\Gamma_+\setminus\partial\Omega}+(\beta\cdot n\, \hat u_h, [v_h])_{\Gamma_-\setminus\partial\Omega}\right\}=(f,v)_\Omega-(\beta\cdot n\, g, v_h)_{\partial\Omega_-},
+\end{equation}
 what will be refered to as \emph{second version} of the DG method.
 \subsection{Implementation}
 As already mentioned at the beginning of this example we will
@@ -203,7 +201,7 @@ of the face terms are either the same or similar to each other. Hence,
 we can implement the assembling of the face terms either by `copy and
 paste' (the lazy way, that revenges not later than the scheme or the
 equation might want to be changed afterwards) or by calling a separate
-function that covers all four cases. To be a bit educational within
+function that covers all four cases. To be kind of educational within
 this tutorial we perform the latter approach, of course. We go even
 further and encapsulate this function and everything that is needed
 for assembling the specific equation under consideration within a
@@ -211,16 +209,18 @@ class called \emph{DGTransportEquation}. This class includes objects
 of all equation--specific functions, as there are the \emph{RHS} and
 the \emph{BoundaryValues} class, both derived from the \emph{Function}
 class, and the \emph{Beta} class representing the vector field.
-Furthermore the \emph{DGTransportEquation} class comprises member
+Furthermore, the \emph{DGTransportEquation} class comprises member
 functions \emph{assemble\_face\_terms1} and
 \emph{assemble\_face\_terms2} that are invoked by the
 \emph{assemble\_system1} and \emph{assemble\_system2} functions of the
-\emph{DGMethod}, respectively, and the function
-\emph{assemble\_cell\_term} that is the same for both assembling
-routines.  The \emph{DGTransportEquation} class can then easily be
-replaced by a different class that implements a different equation and
-a different DG method. Indeed, the implementation of the
-\emph{assemble\_system1} and \emph{assemble\_system2} functions will
+\emph{DGMethod}, respectively, and the functions
+\emph{assemble\_cell\_term} and \emph{assemble\_boundary\_term} that
+are the same for both assembling routines. Due to the encapsulation of
+all equation- and scheme-specific functions, the
+\emph{DGTransportEquation} class can easily be replaced by a similar
+class that implements a different equation and a different DG method.
+Indeed, the implementation of the \emph{assemble\_system1} and
+\emph{assemble\_system2} functions of the \emph{DGMethod} class will
 be general enough to serve for different DG methods, different
 equations, even for systems of equations (!) and, under small
 modifications, for nonlinear problems.

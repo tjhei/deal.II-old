@@ -40,6 +40,19 @@ linkdirs-%:
 	if $(TEST_MINUS_L) $$TARGET ; then rm $$TARGET ; fi ; \
 	ln -s $$SOURCE $$TARGET
 
+# This is a list of directories linked to others. The master directories right now are
+#    sparc-sun-solaris2.7+gcc2.95
+#    i686-pc-linux-gnu+gcc3.2
+# They contain no symlinks, but all files are stored.
+#
+# The second class relies on a master direcory, but has some differing files.
+# Therefore, most of their entries are symlinks, the others are files. They are
+#    linkfiles-i686-pc-linux-gnu+gcc2.95
+#    linkfiles-i686-pc-linux-gnu+gcc3.4
+#    i686-pc-linux-gnu+icc7.1
+#
+# All other configurations produce the same output as another, so there we link whole directories.
+
 .links:   linkfiles-i686-pc-linux-gnu+icc7.1-to-i686-pc-linux-gnu+gcc3.2 \
 	  linkfiles-i686-pc-linux-gnu+gcc3.4-to-i686-pc-linux-gnu+gcc3.2 \
 	  linkfiles-i686-pc-linux-gnu+gcc2.95-to-sparc-sun-solaris2.7+gcc2.95 \

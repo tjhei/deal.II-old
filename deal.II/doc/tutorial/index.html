@@ -2,15 +2,15 @@
    "http://www.w3.org/TR/REC-html40/strict.dtd">
 <html>
   <head>
-    <link href="dealdoc.css" rel="StyleSheet" type="text/css" title="DEAL Documentation" media="screen">
-    <title>The DEAL Tutorial</title>
+    <link href="dealdoc.css" rel="StyleSheet" type="text/css" title="deal.II Documentation" media="screen">
+    <title>The deal.II Tutorial</title>
     <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
-    <meta name="keywords" content="DEAL,DEAL tutorial"></head>
+    <meta name="keywords" content="deal.II,deal.II tutorial,deal II"></head>
   <body>
     
-    <h1>The <acronym>DEAL</acronym> Tutorial</h1>
+    <h1>The <acronym>deal.II</acronym> Tutorial</h1>
     
-    <h2>or <acronym>DEAL</acronym> in several easy and some more hard lessons</h2>
+    <h2>or <acronym>deal.II</acronym> in several easy and some more hard lessons</h2>
     
     <h3>Prerequisites</h3>
     <p>
@@ -29,30 +29,36 @@
     <p>
       This tutorial is split into several parts, starting with the stationary
       Laplace problem and advancing to more complicated problems. If you have never
-      used <acronym>DEAL</acronym> we recommend that you begin at the beginning and
+      used <acronym>deal.II</acronym> we recommend that you begin at the beginning and
       advance through the chapters in their proper order. This tutorial contains the
       complete code for every example program and can be used as a reference, too,
       if you are looking for code to solve a specific problem with
-      <acronym>DEAL</acronym>.
+      <acronym>deal.II</acronym>.
     </p>
     
-    <h3>On <acronym>DEAL</acronym></h3>
+    <h3>On <acronym>deal.II</acronym></h3>
     <p>
-      <acronym>DEAL</acronym> is short for Differential Equations Analysis Library,
+      <acronym>deal.II</acronym> is short for Differential Equations Analysis Library, version II,
       which says it all, really. Its purpose it the solution of partial differential
       equations on unstructured grids with error control. You can find more
-      information on <acronym>DEAL</acronym> and some examples at 
-      <a href="http://gaia.iwr.uni-heidelberg.de/DEAL/">
-	http://gaia.iwr.uni-heidelberg.de/DEAL/</a>. <acronym>DEAL</acronym> was written 
+      information on <acronym>deal.II</acronym> and some examples at 
+      <a href="http://gaia.iwr.uni-heidelberg.de/~deal/">
+	http://gaia.iwr.uni-heidelberg.de/~deal/</a>. <acronym>deal.II</acronym> was written 
       by the numerics group at the IWR, University of Heidelberg.
+    </p>
+    <h3><a href="00.fe_structure/index.html">Chapter 0: Structure of a
+	Finite Element Program</a></h3>
+    <p>We will discuss the various elements needed for a working
+      finite element program and some of the possibilitier 
+      <acronym>deal.II</acronym> offers in this respect.
     </p>
     
     <h3><a href="01.laplace/index.html">Chapter 1: The Laplace
-	problem</a></h3>
+	Problem</a></h3>
     <p>
-      We will solve the stationary Laplace problem on a square grid with zero
-      boundary condition on three of the edges and a constant boundary condition on
-      one edge.
+      We will solve the stationary Laplace problem on a square grid with  
+      boundary conditions of the form <code>cos(2*PI*x)cos(2*PI*y)</code>.
+      You can also obtain the <a href="01.laplace/source.html">source code</a>.
     </p>
 
     <h3>Technical terms</h3>
@@ -65,7 +71,7 @@
     <address>
       <a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
     <p>
-      Last modified: Tue 5 Jan 1999
+      Last modified: Tue 9 Mar 1999
     </p>
   </body>
 </html>

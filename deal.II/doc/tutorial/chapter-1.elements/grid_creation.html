@@ -46,7 +46,7 @@ exactly one cell. In two dimensions, this amounts to a unit square, in three, to
 </table>
 	  
 <p class="Example">
-<span class="example">Example - create the square [-1,1]x[-1,x]:</span> Below we show the includes,
+<span class="example">Example - create the square [-1,-1]x[-1,1]:</span> Below we show the includes,
 definitions and
 function calls needed. Be sure to use them in their appropriate places.
 </p>
@@ -68,6 +68,13 @@ A hyperball can be created using the function<br>
 <code>void Triangulation::create_hyper_ball(const Point&lt;dim&gt; center=0.,const double radius=1.)</code><br>
 This will create a hyperball of given centre and radius where the location of the centre defaults to the origin and the radius to unity.
 </p>
+
+<table class="figure">
+<caption class="figure" align="bottom">Different levels of refinement for a  2D-Hyperball</caption>
+<td>
+  <img src="../images/hyperballs.gif" alt="Hyperballs" width=399 height=219>
+</td>
+</table>
 
 <p class="Example">
 <span class="example">Example:</span> Below we show the includes,

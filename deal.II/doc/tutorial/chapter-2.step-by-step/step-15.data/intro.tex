@@ -243,42 +243,32 @@ converges it yields a different solution, with a different energy every
 time. One can therefore not say that the solver converges to a certain energy,
 and we can't answer the question what the smallest value of $I(u)$ might be in
 $W^{1,\infty}$. This is unsatisfactory, but maybe to be expected for such a
-contrived and pathological problem.
+contrived and pathological problem. Consider it an example in programming with
+deal.II then, and not an example in solving this particular problem.
 
 
 \section{Implementation}
 
-The program does exactly this: it discretizes each Newton step, and forms the
-update. That is, it computes the matrix and right hand side vector
-\begin{equation*}
-  A_{ij} = I''(u_k, \varphi_i, \varphi_j),
-  \qquad\qquad 
-  f_i = -I'(u_k, \varphi_i),
-\end{equation*}
-and solves $Ax=f$ for the update $\delta u_k=\sum_i x_i \varphi_i$. Note that
-emerging from the second derivatives of a functional, the matrix is of course
-symmetric, but it is not necessarily positive definite. In fact, it is not in
-general, but should of course be at the solution (otherwise this would be a
-saddle point instead of a minimum, or it would be an unstable minimum).
+The program implements all the steps mentioned above, and we will discuss them
+in the commented code below. In general, however, note that formulating the
+Newton method in function spaces, and only discretizing afterwards has
+consequences: we have to linearize around $u_k$ when we want to compute
+$\delta u_k$, and we have to sum up these two functions afterwards.  However,
+they may be living on different grids, if we have refined the grid before this
+step, so we will have to present a way to actually get a function from one
+grid to another. The \textrm{SolutionTransfer} class will help us here. On the
+other hand, discretizing every nonlinear step separately has the advantage
+that we can do the initial steps, when we are still far away from the
+solution, on a coarse mesh, and only go on to more expensive computations when
+we home in on an solution. We will use a
+very simplistic strategy for when we refine the mesh (every fifth nonlinear
+step), though. Realistic programs solving nonlinear problems will have to be more
+clever in this respect, but it suffices for the purposes of this program.
 
-Formulating the Newton method in function spaces, and only discretizing
-afterwards has consequences: we have to linearize around $u_k$ when we want to
-compute $\delta u_k$, and we have to sum up these two functions afterwards.
-However, they may be living on different grids, if we have refined the grid
-before this step, so we will have to present a way to actually get a function
-from one grid to another. The \textrm{SolutionTransfer} class will help us
-here. On the other hand, discretizing every Newton step separately has the
-advantage that we can do the initial steps, when we are still far away from
-the solution, on a coarse mesh, and only go on to more expensive computations
-when we home in on the solution.
-
-Apart from this, the program does not contain much new stuff. We will use a
-very simplistic strategy for step length control in the Newton method (always
-take full steps) and for when we refine the mesh (every third step). Realistic
-programs solving nonlinear problems will have to be more clever in this
-respect, but it suffices for the purposes of this program, and, after all,
-this is a tutorial on programming with \textrm{deal.II}, not one on writing
-clever nonlinear solvers.
-
+We will show some of the things that are really simple in 1d (but sometimes
+different from what we are used to in 2d or 3d). Apart from this, the program
+does not contain much new stuff, but if it explains a few of the techniques
+that are available for nonlinear problems and in particular 1d problems, then
+this is not so bad, after all.
 
 \end{document}

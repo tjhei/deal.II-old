@@ -14,7 +14,11 @@ all: $(example-htmls)
 
 $(example-htmls):
 	@echo ================== Assembling $@
-	@cat head.html > $@
+	@cat head.html \
+	  | perl -pi -e '$$step="$@";                     \
+                         $$step=~s/step-(\d+).html/$$1/g; \
+                         s/step xxx/step $$step/g;'       \
+	  > $@
 	@cat $(@:.html=.data/intro.html) >> $@
 	@cat $D/examples/$(@:.html=)/$(@:.html=.cc) \
 	  | $(PERL) program2html \

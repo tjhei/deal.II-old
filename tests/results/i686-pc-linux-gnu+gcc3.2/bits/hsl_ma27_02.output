@@ -1,22 +1,25 @@
 
 DEAL::1d
+DEAL::Number of dofs = 193
 DEAL::relative norm distance = 0.00000
-DEAL::absolute norms = 0.00000 7.48331
+DEAL::absolute norms = 0.00000 3084.00
 DEAL::relative norm distance = 0.00000
-DEAL::absolute norms = 0.00000 18.7083
+DEAL::absolute norms = 0.00000 7709.99
 DEAL::relative norm distance = 0.00000
-DEAL::absolute norms = 0.00000 37.4166
+DEAL::absolute norms = 0.00000 15420.0
 DEAL::2d
+DEAL::Number of dofs = 1889
 DEAL::relative norm distance = 0.00000
-DEAL::absolute norms = 0.00000 57.2364
+DEAL::absolute norms = 0.00000 94764.3
 DEAL::relative norm distance = 0.00000
-DEAL::absolute norms = 0.00000 143.091
+DEAL::absolute norms = 1.22813e-10 236911.
 DEAL::relative norm distance = 0.00000
-DEAL::absolute norms = 0.00000 286.182
+DEAL::absolute norms = 2.45627e-10 473822.
 DEAL::3d
+DEAL::Number of dofs = 1333
 DEAL::relative norm distance = 0.00000
-DEAL::absolute norms = 0.00000 354.373
+DEAL::absolute norms = 1.01168e-10 56165.6
 DEAL::relative norm distance = 0.00000
-DEAL::absolute norms = 0.00000 885.932
+DEAL::absolute norms = 1.89570e-10 140414.
 DEAL::relative norm distance = 0.00000
-DEAL::absolute norms = 0.00000 1771.86
+DEAL::absolute norms = 3.79141e-10 280828.

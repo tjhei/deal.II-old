@@ -98,6 +98,22 @@ directly to the applications in Section <A HREF="node8.html#sec:applications">4<
 <A HREF="node8.html#sec:applications"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
  SRC="../deal.II-paper/cross_ref_motif.gif"></A>). 
 
+
+<P>
+<B>Note (2003-01-11):</B> In this report we frequently make reference to the 
+<a href="http://www.cs.wustl.edu/~schmidt/ACE.html" target="_top">ACE
+(Adaptive Communications Environment)</a> library. This library has been used
+in previous versions of the library to start and control threads, and to
+provide other multithreading features in a cross-platform way. We dropped
+support for ACE after version 3.4 of the <acronym>deal.II</acronym> library
+since we found that using POSIX functions instead is much simpler to
+support. One of the main problems with ACE was the complicated installation,
+while POSIX functions are provided by most modern system's C libraries.
+
+<P>Since the features we used from ACE are limited to the features that POSIX
+also provides for multithreading, the impact of this replacement on the
+underlying foundations used in this report are minor, and can be ignored.
+
 <P>
 <HR>
 <!--Navigation Panel-->

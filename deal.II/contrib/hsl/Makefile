@@ -16,11 +16,11 @@ endif
 
 # get lists of files we need
 f-files     = $(shell a="`echo source/*.f`"; if test "$$a" != "source/*.f" ; then echo $$a ; fi)
-o-files     = $(f-files:source/%.f=$(LIBDIR)/contrib/hsl/%.o)
+o-files     = $(f-files:source/%.f=$(LIBDIR)/contrib/hsl/%.$(OBJEXT))
 
 
 
-$(LIBDIR)/contrib/hsl/%.o :
+$(LIBDIR)/contrib/hsl/%.$(OBJEXT) :
 	@echo =====hsl==============optimized==$(MT)== $(<F)
 	@$(F77) $(F77FLAGS.o) -c $< -o $@
 
@@ -56,7 +56,7 @@ $(LIBDIR)/bin/detached_ma27: source/detached_ma27.cc include/hsl/hsl.h \
 
 
 clean:
-	-rm -f *~ lib/lib* lib/o/*.o lib/Makefile.dep
+	-rm -f *~ lib/lib* lib/o/*.$(OBJEXT) lib/Makefile.dep
 
 
 
@@ -71,7 +71,7 @@ Makefile.dep: $(f-files) Makefile
 	@echo ============================ Remaking Makefile
 	@(if test "x$(f-files)" != "x" ; then \
            for i in source/*.f ; do \
-	     echo $$i | $(PERL) -pi -e 's#source/(.*)\.f#\$$(LIBDIR)/contrib/hsl/\1.o:source/\1.f#;' ;\
+	     echo $$i | $(PERL) -pi -e 's#source/(.*)\.f#\$$(LIBDIR)/contrib/hsl/\1.$(OBJEXT):source/\1.f#;' ;\
 	    done ; \
           fi) \
 		> Makefile.dep

@@ -1,2 +1,4 @@
 error-estimation
 Makefile.dep
+*.go
+*.o

@@ -1,3 +1,5 @@
 dof_test
 Makefile.dep
 Makefile.dep
+*.go
+*.o

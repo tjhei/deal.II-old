@@ -1,2 +1,4 @@
 convergence
 Makefile.dep
+*.go
+*.o

@@ -1,2 +1,4 @@
 grid_test
 Makefile.dep
+*.go
+*.o

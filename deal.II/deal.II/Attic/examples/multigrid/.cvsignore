@@ -1,2 +1,4 @@
 multigrid
 Makefile.dep
+*.go
+*.o

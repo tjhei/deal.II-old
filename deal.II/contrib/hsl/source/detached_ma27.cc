@@ -243,11 +243,12 @@ int main ()
   pid_t master_pid;
   get (&master_pid, 1, "master_pid");
                                    // ...and start off a thread that
-                                   // actually checks that
-  Threads::ThreadManager thread_manager;
-  Threads::spawn (thread_manager,
-                  Threads::encapsulate (&monitor_parent_liveness)
-                  .collect_args(master_pid, getpid()));
+                                   // actually checks that. this
+                                   // second process will eventually
+                                   // be kill when we exit the main
+                                   // program, but part from that we
+                                   // create it detached
+  Threads::spawn (&monitor_parent_liveness)(master_pid, getpid());
   
                                    // then go into the action loop...
   unsigned int N, NZ, NSTEPS, LA, MAXFRT, LIW;
@@ -373,14 +374,11 @@ int main ()
 		     getpid());
         };
     };
-                                   // exit here explicitly, without
-                                   // giving the thread manager a
-                                   // chance to wait for the child
-                                   // thread, since that will loop
-                                   // forever. however, we should
+                                   // exit without waiting for the
+                                   // child thread, since that will
+                                   // loop forever. however, we should
                                    // never be able to get to this
                                    // point anyway...
-  exit (1);
 }
 
                 

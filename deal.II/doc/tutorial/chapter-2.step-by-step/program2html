@@ -18,7 +18,7 @@ $state =  $comment_mode;
 
 print "<p>\n";
 
-while (<>) {
+do {
     # substitute special characters
     s/&/&amp;/g;
     s/</&lt;/g;
@@ -67,7 +67,7 @@ while (<>) {
     {
 	print "        $_";
     }
-}
+} while (<>);
 
 if ($state == $program_mode) {
    print "</code></pre>\n";

@@ -20,17 +20,17 @@ print <<END;
 END
 
 
-while (<>) {
+do {
     # ignore comment lines
-    next if m!^\s*//!;  
+    if ( ! m!^\s*//! ) {
+	# substitute special characters
+	s/&/&amp;/g; 
+	s/</&lt;/g;	 
+	s/>/&gt;/g;
+	s/\t/        /g;
 
-    # substitute special characters
-    s/&/&amp;/g;
-    s/</&lt;/g;
-    s/>/&gt;/g;
-    s/\t/        /g;
-
-    print "  $_";
-}
+	print "  $_";
+    }
+} while (<>);
 
 print "</code></pre>\n</p>\n\n";

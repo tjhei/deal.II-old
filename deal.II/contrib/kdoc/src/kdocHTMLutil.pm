@@ -628,7 +628,11 @@ sub deref
 			# @ref -- cross reference
 			if ( $command eq "ref" ) {
 			    $content =~ s/^\s*#//g;
-			    $out .= wordRef( $content, $rootnode );
+
+			    my $reference = wordRef( $content, $rootnode );
+			    # as xrefs can only point to other source code components, we 
+			    # put them into typewriter font, as is common style
+			    $out .= "<code>" . $reference . "</code>";
 			}
 
 			# @p  -- typewriter

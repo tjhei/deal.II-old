@@ -1,0 +1,301 @@
+<HTML>
+<HEAD>
+<TITLE>DEAL</TITLE>
+</HEAD>
+<BODY LINK="#0000ff" VLINK="#800080">
+
+<H1 ALIGN="CENTER">
+Description of the C++ class hierarchy for the
+accessor classes
+</H1>
+
+
+The class hierarchy of the accessor classes used to retrieve and store
+data in the triangulation and degree of freedom handler objects is one
+of  the more complicated parts of  the library. It  makes heavy use of
+class templates with  integers  as template parameters  as  well as of
+explicit specialization  of classes and  member functions.  Therefore,
+it is not so  easy to  see the  connections and  inheritance relations
+within this part of the class tree; this  document tries to shed a bit
+of light onto this.
+
+
+
+<H3>
+What iterators and accessors are
+</H3>
+
+When  using  adative finite elements,   the data structures  often are
+extremely complex, requiring   multiply indirected access  and complex
+relationships between  the different places  where data is stored. The
+traditional way  to  handle this is  to  put  all  data which  belongs
+together somehow into  a structure or  object; however, sometimes this
+can  not  be done  efficiently,    leading  to either higher    memory
+consumption (when you have to store many small data pieces and because
+you have to store a lot of pointers to other objects) or higher coding
+requirements (when you want to follow all those pointers to the object
+you desire).
+
+<P>
+
+Therefore, we took  over a concept  which was already  used in the C++
+standard template library, namely iterators and accessors. An accessor
+is an object that looks like if it  had all the information stored but
+really only delegates the access to the right  places; in fact, within
+this library, accessor store almost  no information but know where  to
+get   everything   from the complex  and   nested  data structures the
+triangulation object offers. They have a simple interface which allows
+to     extract any desired   information   from  the triangulation and
+therefore makes access  much easier and safer in  three ways: first it
+performs range and parameter checking  when in debugging mode; second,
+it encapsulates the access to the real data  from the user, hiding the
+true data structures and thus allowing  them without changing the user
+programs as well as those parts of the  library which only act through
+accessors; and third by reducing the coding  errors because of reduced
+complexity, since the chains of indirect access are replaces by simple
+commands.
+
+<P>
+
+Iterators are a  related concept: while  accessors act as if they were
+structures with data contained in them, iterators act  as if they were
+pointers pointing to   accessors. You can  dereference  them using the
+-&gt; and * operators  as with any  other pointer, but they have  more
+functionality. Essentially, they  have overloaded ++ and -- operators,
+which  allow the next  or previous object  pointed to to be just about
+anywhere  in memory. A good introductory  example are the iterators of
+the STL  <CODE>list&lt;T&gt;</CODE> class, which  act on a linked list
+as if it  were a contiguous  array. The  iterators in  this library go
+even a step further: they do not point to different objects but rather
+tell  the   associated  accessor   object which   data   to  look   at
+next.
+
+<P>
+
+Additionally, there  are different  versions  of the   iterators which
+behave  differently   when  being  incremented or   decremented: while
+<I>raw</I> iterators let the  associated accessor point  to any of the
+objects it   is  made for,  <I>normal</I>  iterators   always point to
+objects which are in use.  Usually, you will not want  to see cells or
+lines which are there but are unused by the triangulation (these cells
+are  somewhat like  holes in  the   arrays of the triangulation;  such
+things happen  when unrefining a cell,  the freed memory  is then kept
+for a while  because of better efficiency), so  you will  almost never
+want to use raw iterators;  they are mostly there  for internal use in
+the    library. Normal iterators are   almost  like raw iterators, but
+whenever you call the ++  or -- operator,  the  look at what they  are
+pointing at  and skip all unused  elements by increasing or decreasing
+the pointer as often as necessary to reach the next used object.
+
+<P>
+
+Finally,    there are <I>active</I>  iterators,    which are the  most
+important ones. They  are  like normal   iterators but  only point  to
+active cells or lines.  By active we  mean that they have no children;
+in  the context in which this  library is used,  this is equivalent to
+the  fact   that   we  do  computations   on these   cells,   lines or
+whatever. Active iterators  are normal iterators  which  skip over all
+non-active cells, lines, etc when being incremented or decremented.
+
+
+
+<H3>
+The triangulation accessor hierarchy
+</H3>
+
+The triangulation accessors are used to retrieve and store data in the
+triangulation.  There  exist accessors  for  lines  in one and  higher
+dimensions, accessors for  quads in two  and higher dimensions, and so
+on. Their inheritance tree is shown in the following two pictures:
+
+
+<CENTER>
+<IMG SRC="1d-tria.gif" ALIGN="CENTER"> 
+</CENTER>
+<P>
+
+<CENTER>
+<IMG SRC="2d-tria.gif" ALIGN="CENTER"> 
+</CENTER>
+<P>
+
+Some of the data is only  useful if an object is  a cell. For example,
+neighborship is only accessible for cells,  while faces (e.g. lines in
+2D) can't access their neighbors (neither the  adjacent cells, nor the
+other   faces it touches).    Therefore, the CellAccessor classes  are
+derived from whatever  object a cell  is in the respective  dimension,
+i.e. from lines  in 1D, from quads  in 2D,  and  so on.  For technical
+reasons, this  inheritance  it mediated by  the  TriaSubstructAccessor
+classes; they  have   no functionality but  only  serve   as interface
+classes; they have no meaning to the user.
+
+
+<H4>
+Typedefs of the Triangulation class to iterators and accessors
+</H4>
+
+The <CODE>Triangulation<1></CODE> class declares the following data
+types which involve accessors:
+<PRE>
+    typedef TriaRawIterator   <1,CellAccessor<1> >    raw_line_iterator;
+    typedef TriaIterator      <1,CellAccessor<1> >        line_iterator;
+    typedef TriaActiveIterator<1,CellAccessor<1> > active_line_iterator;
+
+    typedef    raw_line_iterator    raw_cell_iterator;
+    typedef        line_iterator        cell_iterator;
+    typedef active_line_iterator active_cell_iterator; 
+</PRE>
+Since lines are cells in one space dimension, all line iterators are
+cell iterators as well.
+
+<P>
+
+In two space dimensions, the following types are declared by the
+<CODE>Triangulation<2></CODE> class:
+<PRE>
+    typedef TriaRawIterator   <2,LineAccessor<2> >    raw_line_iterator;
+    typedef TriaIterator      <2,LineAccessor<2> >        line_iterator;
+    typedef TriaActiveIterator<2,LineAccessor<2> > active_line_iterator;
+    
+    typedef TriaRawIterator   <2,CellAccessor<2> >    raw_quad_iterator;
+    typedef TriaIterator      <2,CellAccessor<2> >        quad_iterator;
+    typedef TriaActiveIterator<2,CellAccessor<2> > active_quad_iterator;
+
+    typedef    raw_quad_iterator    raw_cell_iterator;
+    typedef        quad_iterator        cell_iterator;
+    typedef active_quad_iterator active_cell_iterator;
+
+    typedef    raw_line_iterator    raw_face_iterator;
+    typedef        line_iterator        face_iterator;
+    typedef active_line_iterator active_face_iterator;    
+</PRE>
+
+Since in this space dimension, quads are cells and lines are the faces
+of  cells, the  appropriate face  and  cell iterators  are declared in
+terms of the underlying accessor types.
+
+
+
+
+<H3>
+The degree of freedom accessor hierarchy
+</H3>
+
+
+The DoFAccessor classes    provide access to  the   degree  of freedom
+information associated  with  cells,   lines, etc.   The   inheritance
+relationship is much the    same  as for the   triangulation  accessor
+classes, as can  be seen from the  following  pictures. In particular,
+the DoFSubstructAccessor  classes  fulfill the   same purpose  as  the
+TriaSubstructAccessors,  i.e.  they  only serve as  interface  classes
+without meaning to the user.
+
+
+<CENTER>
+<IMG SRC="1d-dof.gif" ALIGN="CENTER"> 
+</CENTER>
+<P>
+
+
+<CENTER>
+<IMG SRC="2d-dof.gif" ALIGN="CENTER"> 
+</CENTER>
+<P>
+
+The main difference to the triangulation accessor hierarchy is that we
+want the DoF accessors to provide the information about the degrees of
+freedom, but for convenience also that of the triangulation. This way,
+we can get all the information from one object rather than needing two
+which work in parallel.
+
+<P>
+
+For  the named reason, it is   necessary to derive the DoFLineAccessor
+from the LineAccessor  class of the triangulation accessor  hierarchy,
+as well as  the DoFQuadAccessor  from  the QuadAccessor. However,   we
+would also like to include the functionality added by the CellAccessor
+class;  this  is done through some  template  magic: when in one space
+dimension, the  DoFLineAccessor is derived from CellAccessor&lt;1&gt;,
+while   when   in   higher     dimensions,   it   is    derived   from
+LineAccessor&lt;dim&gt;;  the  same  applies for  the  DoFQuadAccessor
+class.  Note  that this way,  CellAccessor is  always  a base class to
+DoFCellAccessor and the  inheritance  lattice is dimension  dependant;
+the  exact way of  achieving this  is complicated but  not of interest
+here.
+
+
+<H4>
+Typedefs of the DoFHandler class to iterators and accessors
+</H4>
+
+
+The typedefs done by the DoFHandler class are much alike those done by
+the Triangulation class. They could be summarized as follows:
+
+<P>
+
+For one space dimension:
+
+<PRE>
+    typedef TriaRawIterator   <1,DoFCellAccessor<1> >    raw_line_iterator;
+    typedef TriaIterator      <1,DoFCellAccessor<1> >        line_iterator;
+    typedef TriaActiveIterator<1,DoFCellAccessor<1> > active_line_iterator;
+
+    typedef    raw_line_iterator    raw_cell_iterator;
+    typedef        line_iterator        cell_iterator;
+    typedef active_line_iterator active_cell_iterator; 
+</PRE>
+Since lines are cells in one space dimension, all line iterators are
+cell iterators as well.
+
+<P>
+
+For two space dimensions:
+
+<PRE>
+    typedef TriaRawIterator   <2,DoFLineAccessor<2> >    raw_line_iterator;
+    typedef TriaIterator      <2,DoFLineAccessor<2> >        line_iterator;
+    typedef TriaActiveIterator<2,DoFLineAccessor<2> > active_line_iterator;
+    
+    typedef TriaRawIterator   <2,DoFCellAccessor<2> >    raw_quad_iterator;
+    typedef TriaIterator      <2,DoFCellAccessor<2> >        quad_iterator;
+    typedef TriaActiveIterator<2,DoFCellAccessor<2> > active_quad_iterator;
+
+    typedef    raw_quad_iterator    raw_cell_iterator;
+    typedef        quad_iterator        cell_iterator;
+    typedef active_quad_iterator active_cell_iterator;
+
+    typedef    raw_line_iterator    raw_face_iterator;
+    typedef        line_iterator        face_iterator;
+    typedef active_line_iterator active_face_iterator;    
+</PRE>
+
+<P>
+
+However, because of the  dimension dependant inheritance lattice,  the
+actual structure of the  data types is  more complex for more than one
+space dimension and looks like  given below. Since the exact mechanism
+is not of  matter for the  user of  the library, we  simply show these
+typedefs for completeness without going into details here.
+
+<PRE>
+    typedef TriaRawIterator   <2,DoFLineAccessor<2,LineAccessor<2> > >    raw_line_iterator;
+    typedef TriaIterator      <2,DoFLineAccessor<2,LineAccessor<2> > >        line_iterator;
+    typedef TriaActiveIterator<2,DoFLineAccessor<2,LineAccessor<2> > > active_line_iterator;
+</PRE>
+
+
+
+<P><HR></P>
+
+<div ALIGN="RIGHT">
+Wolfgang Bangerth, 1998
+</div>
+<P>&nbsp;</P></BODY>
+</HTML>
+
+
+
+</BODY>
+</HTML>
+

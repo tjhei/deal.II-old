@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+<!-- deal.II tutorial template
+     Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de> 1999 
+-->
+
+<title>Solving the Problem</title>
+    <link href="../dealtut.css" rel="StyleSheet" title="deal.II Tutorial">
+    <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+    <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
+</head>
+
+<!-- Page Body -->
+<body lang="en">
+
+<h1>Solving the Problem</h1>
+
+<p>
+<acronym>deal.II</acronym> offers several solver classes:
+</p>
+
+<ul>
+<li>
+  <code><a href="#bicgstab">SolverBicgstab</a></code>, the Bicgstab algorithm 
+	by van der Worst
+</li>
+<li>
+  <code><a href="#cg">SolverCG</a></code>, the preconditioned cg-algorithm
+</li>
+<li>
+  <code><a href="#gmres">SolverGMRES</a></code>, an implementation of the 
+	Restarted 
+	Preconditioned Direct Generalized Minimal Residual Method
+</li>
+<li>
+  <code><a href="#richardson">SolverRichardson</a></code>, the Richardson 
+	iteration method
+</li>
+</ul>
+
+<p>
+Besides, there is a class named 
+<code><a href="#control">SolverControl</a></code> in order to 
+control the iterative solvers, i.e. to determine whether the iteration 
+should be continued.
+</p>
+
+<p>
+We will begin with the discussion of the <code>SolverControl</code>
+class and preconditioners, then discuss the solvers in more detail.
+</p>
+
+<h2><a name="control">Solver Control</a></h2>
+
+<p>
+The class <code>SolverControl</code> is used by iterative solvers
+to determine whether to continue with the iteration. It takes two
+to three parameters: the maximum number of iterations and the criterium for
+abortion, usually the residual and a flag controlling whether to log the 
+history (the value to be checked and the number of the iteration step).  
+<code>SolverControl</code> is initialized using<br>
+<code>SolverControl (const unsigned int n, const double tol, const bool log_history = false)</code>
+
+<p class="Example">
+<span class="example">Example:</span>We initialize a solver control with
+a maximum of 1000 iterations and a maximum residual of 1e-6.
+</p>
+
+<pre class="example">
+<code>
+#include <lac/solver_control.h>
+
+SolverControl control(1000,1e-6);
+</code>
+</pre>
+
+<h2><a name="bicgstab">SolverBicgstab</a></h2>
+
+<p>
+This class implements the Bicgstab algorithm by van der Worst.
+It is initialized by<br>
+<code>SolverBicgstab (SolverControl &cn, VectorMemory<Vector> &mem)</code>.
+</p>
+<p class="Example">
+<span class="example">Example:</span>We initialize a Bicgstab-solver for
+the problem <code>Au=f</code>.
+</p>
+
+<pre class="example">
+<code>
+</code>
+</pre>
+
+
+
+<!-- Page Foot -->
+<hr>
+<table class="navbar">      
+<tr>
+  <td>
+    <a href="postprocess.html">Next Chapter: Postprocessing</a>
+  </td>
+  <td>
+    <a href="toc.html">Back to this chapter's index</a>
+  </td>
+  <td>
+    <a href="../index.html" target="_top">Back to the tutorial index</a>
+  </td>
+</tr>
+</table>
+<hr>
+<address>
+<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<p>
+Last modified: $Date$ 
+</p>
+</body>
+</html>

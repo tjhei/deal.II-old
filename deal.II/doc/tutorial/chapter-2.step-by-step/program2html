@@ -61,6 +61,9 @@ do {
 	   $_ = "\n<a name=\"$sect_name\"></a>" . $_;
 	}
 
+	# then replace references to other example programs automatically:
+	s!(step-\d+)!<a href="\1.html" target="body">\1</a>!g;
+
 	# finally print this line
 	print $_, "\n";
 

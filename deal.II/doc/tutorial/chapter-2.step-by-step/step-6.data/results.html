@@ -178,3 +178,41 @@ to store which other object subscribed to it. However, by thinking a
 little bit about which objects use the one that is presently
 destructed, one usually quite quickly finds out where the problem is.
 </p>
+
+
+<p>
+Versions after <acronym>deal.II<acronym> 3.0 give slightly better
+information in that they are at least able to tell which object is
+destructed. The output then looks like this:
+</p>
+<pre><code>
+--------------------------------------------------------
+An error occurred in line <20> of file <source/subscriptor.cc> in function
+    Subscriptor::~Subscriptor()
+The violated condition was:
+    counter == 0
+The name and call sequence of the exception was:
+    InUse()
+Additional Information:
+Object of class t4FEQ21i2 is still used by 1 other objects.
+--------------------------------------------------------
+</code></pre>
+</p>
+
+<p>
+This tells us, that the object that is presently deleted is of type
+<code>t4FEQ21i2</code>. Of course, this is not the actual name of the
+class, but what the C++ run time library returns as name; it is in
+fact the <it>mangled name</it> of the class, and you can get back the
+true class name by running the program <code>c++filt</code> on that
+name, which then returns <code>FEQ2&lt;2&gt;</code>. (The mangled name
+can be read without <code>c++filt</code> in the following way: the
+first letter tells us that the class name is a template, the second
+that the name of the class name without template arguments is four
+characters; we then already have <code>FEQ2&lt;...&gt;</code>. After
+the class name, the next character tells us that the class has one
+template parameter, the ``i'' indicates that it is of type ``int'' and
+finally that it has the value ``2''. Thus, we arrive at
+<code>FEQ2&lt;2&gt;</code>.)
+</p>
+

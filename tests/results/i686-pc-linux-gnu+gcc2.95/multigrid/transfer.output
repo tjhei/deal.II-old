@@ -1,0 +1,18 @@
+
+DEAL::FE_DGQ<2>(1)
+DEAL::u0 2.00	u1 4.00	u2 8.00	u1 16.0	u0 32.0
+DEAL::FESystem<2>[FE_DGQ<2>(1)^4]
+DEAL::Level 0 dofs: 4 4 4 4
+DEAL::Level 1 dofs: 16 16 16 16
+DEAL::Level 2 dofs: 64 64 64 64
+DEAL::u0 2.00	u1 4.00	u2 8.00	u1 16.0	u0 32.0
+DEAL::FESystem<2>[FE_DGQ<2>(1)^4]
+DEAL::Level 0 dofs: 16 0 0 0
+DEAL::Level 1 dofs: 64 0 0 0
+DEAL::Level 2 dofs: 256 0 0 0
+DEAL::u0 4.00	u1 8.00	u2 16.0	u1 32.0	u0 64.0
+DEAL::FESystem<2>[FE_DGQ<2>(1)^4]
+DEAL::Level 0 dofs: 8 8 0 0
+DEAL::Level 1 dofs: 32 32 0 0
+DEAL::Level 2 dofs: 128 128 0 0
+DEAL::u0 2.83	u1 5.66	u2 11.3	u1 22.6	u0 45.3

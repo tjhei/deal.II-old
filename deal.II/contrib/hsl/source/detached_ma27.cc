@@ -65,14 +65,14 @@ void * monitor_thread (void *)
       int ret = std::system (command);
       if (ret < 0)
         {
-          std::cerr << "---- Monitor process couldn't start 'ps'!"
+          std::cerr << "---- detached_ma27: Monitor process couldn't start 'ps'!"
                     << std::endl;
           std::abort ();
         }
       else
         if (ret != 0)
           {
-            std::cerr << "---- Master process seems to have died!"
+            std::cerr << "---- detached_ma27: Master process seems to have died!"
                       << std::endl;
             std::abort ();
           };
@@ -80,7 +80,7 @@ void * monitor_thread (void *)
                                        // ok, master still running,
                                        // take a little rest and then
                                        // ask again
-      std::sleep (10);
+      sleep (10);
     };
 };
 

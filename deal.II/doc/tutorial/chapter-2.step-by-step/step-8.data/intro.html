@@ -30,7 +30,7 @@ absolute value. The elastic equations are the following:
 <DIV ALIGN="CENTER">
 <IMG
  WIDTH="248" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img1.png"
+ SRC="step-8.data/intro/img1.png"
  ALT="$\displaystyle -
 \partial_j (c_{ijkl} \partial_k u_l)
 =
@@ -41,17 +41,17 @@ $">
 </DIV><P></P>
 where the values <IMG
  WIDTH="33" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img2.png"
+ SRC="step-8.data/intro/img2.png"
  ALT="$ c_{ijkl}$"> are the stiffness coefficients and
 will usually depend on the space coordinates. In
 many cases, one knows that the material under consideration is
 isotropic, in which case by introduction of the two coefficients
 <IMG
  WIDTH="13" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img3.png"
+ SRC="step-8.data/intro/img3.png"
  ALT="$ \lambda$"> and <IMG
  WIDTH="14" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img4.png"
+ SRC="step-8.data/intro/img4.png"
  ALT="$ \mu$"> the coefficient tensor reduces to
 <!-- MATH
  \begin{displaymath}
@@ -65,7 +65,7 @@ c_{ijkl}
 <DIV ALIGN="CENTER">
 <IMG
  WIDTH="241" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img5.png"
+ SRC="step-8.data/intro/img5.png"
  ALT="$\displaystyle c_{ijkl}
 =
 \lambda \delta_{ij} \delta_{kl} +
@@ -91,7 +91,7 @@ The elastic equations can then be rewritten in much simpler a form:
 <DIV ALIGN="CENTER">
 <IMG
  WIDTH="309" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img6.png"
+ SRC="step-8.data/intro/img6.png"
  ALT="$\displaystyle -
 \nabla \lambda (\div\vec u)
 -
@@ -125,7 +125,7 @@ a(\vec u, \vec v) =
 <DIV ALIGN="CENTER">
 <IMG
  WIDTH="477" HEIGHT="52" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img7.png"
+ SRC="step-8.data/intro/img7.png"
  ALT="$\displaystyle a(\vec u, \vec v) =
 \left(
 \lambda \div\vec u, \div\vec v
@@ -162,7 +162,7 @@ a(\vec u, \vec v) =
 <DIV ALIGN="CENTER">
 <IMG
  WIDTH="492" HEIGHT="53" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img8.png"
+ SRC="step-8.data/intro/img8.png"
  ALT="$\displaystyle a(\vec u, \vec v) =
 \sum_{i,j}
 \left(
@@ -182,28 +182,28 @@ need is some knowledge about how the shape functions work in the case of
 vector-valued finite elements. Basically, this comes down to the following:
 let <IMG
  WIDTH="14" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img9.png"
+ SRC="step-8.data/intro/img9.png"
  ALT="$ n$"> be the number of shape functions for the scalar finite element of
 which we build the vector element (for example, we will use bilinear functions
 for each component of the vector-valued finite element, so the scalar finite
 element is the <TT>FEQ1</TT> element which we have used in previous examples
 already, and <IMG
  WIDTH="43" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img10.png"
+ SRC="step-8.data/intro/img10.png"
  ALT="$ n=4$"> in two space dimensions). Further, let <IMG
  WIDTH="19" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img11.png"
+ SRC="step-8.data/intro/img11.png"
  ALT="$ N$"> be the number of
 shape functions for the vector element; in two space dimensions, we need <IMG
  WIDTH="14" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img9.png"
+ SRC="step-8.data/intro/img9.png"
  ALT="$ n$">
 shape functions for each component of the vector, so <IMG
  WIDTH="57" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img12.png"
+ SRC="step-8.data/intro/img12.png"
  ALT="$ N=2n$">. Then, the <IMG
  WIDTH="10" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img13.png"
+ SRC="step-8.data/intro/img13.png"
  ALT="$ i$">th
 shape function of the vector element has the form
 <!-- MATH
@@ -215,23 +215,23 @@ shape function of the vector element has the form
 <DIV ALIGN="CENTER">
 <IMG
  WIDTH="200" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img14.png"
+ SRC="step-8.data/intro/img14.png"
  ALT="$\displaystyle \Phi_i(\vec x) = \varphi_{base(i)}(\vec x) \vec e_{comp(i)},
 $">
 </DIV><P></P>
 where <IMG
  WIDTH="16" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img15.png"
+ SRC="step-8.data/intro/img15.png"
  ALT="$ e_l$"> is the <IMG
  WIDTH="9" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img16.png"
+ SRC="step-8.data/intro/img16.png"
  ALT="$ l$">th unit vector, <IMG
  WIDTH="58" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img17.png"
+ SRC="step-8.data/intro/img17.png"
  ALT="$ comp(i)$"> is the function that tells
 us which component of <IMG
  WIDTH="21" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img18.png"
+ SRC="step-8.data/intro/img18.png"
  ALT="$ \Phi_i$"> is the one that is nonzero (for
 each vector shape function, only one component is nonzero, and all others are
 zero). <!-- MATH
@@ -239,37 +239,37 @@ zero). <!-- MATH
  -->
 <IMG
  WIDTH="76" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img19.png"
+ SRC="step-8.data/intro/img19.png"
  ALT="$ \varphi_{base(i)}(x)$"> describes the space dependence of the shape
 function, which is taken to be the <IMG
  WIDTH="52" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img20.png"
+ SRC="step-8.data/intro/img20.png"
  ALT="$ base(i)$">-th shape function of the scalar
 element. Of course, while <IMG
  WIDTH="10" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img13.png"
+ SRC="step-8.data/intro/img13.png"
  ALT="$ i$"> is in the range <!-- MATH
  $0,\ldots,N-1$
  -->
 <IMG
  WIDTH="89" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img21.png"
+ SRC="step-8.data/intro/img21.png"
  ALT="$ 0,\ldots,N-1$">, the functions
 <IMG
  WIDTH="58" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img17.png"
+ SRC="step-8.data/intro/img17.png"
  ALT="$ comp(i)$"> and <IMG
  WIDTH="52" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img20.png"
+ SRC="step-8.data/intro/img20.png"
  ALT="$ base(i)$"> have the ranges <IMG
  WIDTH="27" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img22.png"
+ SRC="step-8.data/intro/img22.png"
  ALT="$ 0,1$"> (in 2D) and <!-- MATH
  $0,\ldots,n-1$
  -->
 <IMG
  WIDTH="84" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img23.png"
+ SRC="step-8.data/intro/img23.png"
  ALT="$ 0,\ldots,n-1$">,
 respectively. 
 
@@ -304,7 +304,7 @@ the following layout could be used by the library:
  -->
 <IMG
  WIDTH="522" HEIGHT="94" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img24.png"
+ SRC="step-8.data/intro/img24.png"
  ALT="\begin{multline*}
 \Phi_0(\vec x) =
 \begin{pmatrix}
@@ -329,7 +329,7 @@ comp(0)=0, \quad  comp(1)=1, \quad  comp(2)=0, \quad  comp(3)=1, \quad  \ldots
 <DIV ALIGN="CENTER">
 <IMG
  WIDTH="459" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img25.png"
+ SRC="step-8.data/intro/img25.png"
  ALT="$\displaystyle comp(0)=0, \quad comp(1)=1, \quad comp(2)=0, \quad comp(3)=1, \quad \ldots
 $">
 </DIV><P></P>
@@ -342,7 +342,7 @@ base(0)=0, \quad  base(1)=0, \quad  base(2)=1, \quad  base(3)=1, \quad  \ldots
 <DIV ALIGN="CENTER">
 <IMG
  WIDTH="433" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img26.png"
+ SRC="step-8.data/intro/img26.png"
  ALT="$\displaystyle base(0)=0, \quad base(1)=0, \quad base(2)=1, \quad base(3)=1, \quad \ldots
 $">
 </DIV><P></P>
@@ -354,10 +354,10 @@ In all but very rare cases, you will not need to know which shape function
  -->
 <IMG
  WIDTH="54" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img27.png"
+ SRC="step-8.data/intro/img27.png"
  ALT="$ \varphi_{base(i)}$"> of the scalar element belongs to a shape function <IMG
  WIDTH="21" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img18.png"
+ SRC="step-8.data/intro/img18.png"
  ALT="$ \Phi_i$">
 of the vector element. Let us therefore define
 <!-- MATH
@@ -369,7 +369,7 @@ of the vector element. Let us therefore define
 <DIV ALIGN="CENTER">
 <IMG
  WIDTH="90" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img28.png"
+ SRC="step-8.data/intro/img28.png"
  ALT="$\displaystyle \phi_i = \varphi_{base(i)}
 $">
 </DIV><P></P>
@@ -383,13 +383,13 @@ by which we can write the vector shape function as
 <DIV ALIGN="CENTER">
 <IMG
  WIDTH="164" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img29.png"
+ SRC="step-8.data/intro/img29.png"
  ALT="$\displaystyle \Phi_i(\vec x) = \phi_{i}(\vec x) \vec e_{comp(i)}.
 $">
 </DIV><P></P>
 You can now safely forget about the function <IMG
  WIDTH="52" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img20.png"
+ SRC="step-8.data/intro/img20.png"
  ALT="$ base(i)$">, at least for the rest
 of this example program.
 
@@ -406,22 +406,22 @@ element solution as
 <DIV ALIGN="CENTER">
 <IMG
  WIDTH="150" HEIGHT="48" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img30.png"
+ SRC="step-8.data/intro/img30.png"
  ALT="$\displaystyle \vec u_h(\vec x) =
 \sum_i \Phi_i(\vec x) u_i
 $">
 </DIV><P></P>
 with scalar coefficients <IMG
  WIDTH="19" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img31.png"
+ SRC="step-8.data/intro/img31.png"
  ALT="$ u_i$">. If we define an analog function <IMG
  WIDTH="22" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img32.png"
+ SRC="step-8.data/intro/img32.png"
  ALT="$ \vec v_h$"> as
 test function, we can write the discrete problem as follows: Find coefficients
 <IMG
  WIDTH="19" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img31.png"
+ SRC="step-8.data/intro/img31.png"
  ALT="$ u_i$"> such that
 <!-- MATH
  \begin{displaymath}
@@ -434,7 +434,7 @@ a(\vec u_h, \vec v_h) = (\vec f, \vec v_h)
 <DIV ALIGN="CENTER">
 <IMG
  WIDTH="197" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img33.png"
+ SRC="step-8.data/intro/img33.png"
  ALT="$\displaystyle a(\vec u_h, \vec v_h) = (\vec f, \vec v_h)
 \qquad
 \forall \vec v_h.
@@ -445,10 +445,10 @@ $">
 If we insert the definition of the bilinear form and the representation of
 <IMG
  WIDTH="22" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img34.png"
+ SRC="step-8.data/intro/img34.png"
  ALT="$ \vec u_h$"> and <IMG
  WIDTH="22" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img32.png"
+ SRC="step-8.data/intro/img32.png"
  ALT="$ \vec v_h$"> into this formula:
 <DIV ALIGN="CENTER">
 </DIV><P></P>
@@ -482,7 +482,7 @@ If we insert the definition of the bilinear form and the representation of
  -->
 <IMG
  WIDTH="560" HEIGHT="97" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img35.png"
+ SRC="step-8.data/intro/img35.png"
  ALT="\begin{multline*}
 \sum_{i,j}
 u_i v_j
@@ -504,24 +504,24 @@ f_l,
 </DIV>
 We note that here and in the following, the indices <IMG
  WIDTH="25" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img36.png"
+ SRC="step-8.data/intro/img36.png"
  ALT="$ k,l$"> run over spatial
 directions, i.e. <!-- MATH
  $0\le k,l < d$
  -->
 <IMG
  WIDTH="84" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img37.png"
+ SRC="step-8.data/intro/img37.png"
  ALT="$ 0\le k,l &lt; d$">, and that indices <IMG
  WIDTH="24" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img38.png"
+ SRC="step-8.data/intro/img38.png"
  ALT="$ i,j$"> run over degrees
 of freedoms.
 
 <P>
 The local stiffness matrix on cell <IMG
  WIDTH="19" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img39.png"
+ SRC="step-8.data/intro/img39.png"
  ALT="$ K$"> therefore has the following entries:
 <!-- MATH
  \begin{displaymath}
@@ -547,7 +547,7 @@ A^K_{ij}
 <DIV ALIGN="CENTER">
 <IMG
  WIDTH="567" HEIGHT="54" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img40.png"
+ SRC="step-8.data/intro/img40.png"
  ALT="$\displaystyle A^K_{ij}
 =
 \sum_{k,l}
@@ -564,18 +564,18 @@ $">
 </DIV><P></P>
 where <IMG
  WIDTH="24" HEIGHT="28" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img38.png"
+ SRC="step-8.data/intro/img38.png"
  ALT="$ i,j$"> now are local degrees of freedom and therefore <!-- MATH
  $0\le i,j < N$
  -->
 <IMG
  WIDTH="89" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img41.png"
+ SRC="step-8.data/intro/img41.png"
  ALT="$ 0\le i,j &lt; N$">. 
 In these formulas, we always take some component of the vector shape functions
 <IMG
  WIDTH="21" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img18.png"
+ SRC="step-8.data/intro/img18.png"
  ALT="$ \Phi_i$">, which are of course given as follows (see their definition):
 <!-- MATH
  \begin{displaymath}
@@ -586,7 +586,7 @@ In these formulas, we always take some component of the vector shape functions
 <DIV ALIGN="CENTER">
 <IMG
  WIDTH="139" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img42.png"
+ SRC="step-8.data/intro/img42.png"
  ALT="$\displaystyle (\Phi_i)_l = \phi_i \delta_{l,comp(i)},
 $">
 </DIV><P></P>
@@ -595,14 +595,14 @@ with the Kronecker symbol <!-- MATH
  -->
 <IMG
  WIDTH="31" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img43.png"
+ SRC="step-8.data/intro/img43.png"
  ALT="$ \delta_{nm}$">. Due to this, we can delete some of
 the sums over <IMG
  WIDTH="13" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img44.png"
+ SRC="step-8.data/intro/img44.png"
  ALT="$ k$"> and <IMG
  WIDTH="9" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img16.png"
+ SRC="step-8.data/intro/img16.png"
  ALT="$ l$">:
 <DIV ALIGN="CENTER">
 </DIV><P></P>
@@ -610,11 +610,11 @@ the sums over <IMG
 <TR VALIGN="MIDDLE">
 <TD NOWRAP ALIGN="RIGHT"><IMG
  WIDTH="28" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img45.png"
+ SRC="step-8.data/intro/img45.png"
  ALT="$\displaystyle A^K_{ij}$"></TD>
 <TD NOWRAP ALIGN="LEFT"><IMG
  WIDTH="293" HEIGHT="53" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img46.png"
+ SRC="step-8.data/intro/img46.png"
  ALT="$\displaystyle = \sum_{k,l} \Bigl\{ \left( \lambda \partial_l \phi_i \delta_{l,comp(i)}, \partial_k \phi_j \delta_{k,comp(j)} \right)_K$"></TD>
 <TD NOWRAP WIDTH="10" ALIGN="RIGHT">
 &nbsp;&nbsp;&nbsp;</TD></TR>
@@ -622,7 +622,7 @@ the sums over <IMG
 <TD>&nbsp;</TD>
 <TD NOWRAP ALIGN="LEFT"><IMG
  WIDTH="587" HEIGHT="45" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img47.png"
+ SRC="step-8.data/intro/img47.png"
  ALT="$\displaystyle \qquad\qquad + \left( \mu \partial_l \phi_i \delta_{k,comp(i)}, ...
 ..._i \delta_{k,comp(i)}, \partial_k \phi_j \delta_{l,comp(j)} \right)_K \Bigr\}$"></TD>
 <TD NOWRAP WIDTH="10" ALIGN="RIGHT">
@@ -631,7 +631,7 @@ the sums over <IMG
 <TD>&nbsp;</TD>
 <TD NOWRAP ALIGN="LEFT"><IMG
  WIDTH="656" HEIGHT="50" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img48.png"
+ SRC="step-8.data/intro/img48.png"
  ALT="$\displaystyle = \left( \lambda \partial_{comp(i)} \phi_i, \partial_{comp(j)} \p...
 ...j)} + \left( \mu \partial_{comp(j)} \phi_i, \partial_{comp(i)} \phi_j \right)_K$"></TD>
 <TD NOWRAP WIDTH="10" ALIGN="RIGHT">
@@ -640,7 +640,7 @@ the sums over <IMG
 <TD>&nbsp;</TD>
 <TD NOWRAP ALIGN="LEFT"><IMG
  WIDTH="638" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img49.png"
+ SRC="step-8.data/intro/img49.png"
  ALT="$\displaystyle = \left( \lambda \partial_{comp(i)} \phi_i, \partial_{comp(j)} \p...
 ...)} + \left( \mu \partial_{comp(j)} \phi_i, \partial_{comp(i)} \phi_j \right)_K.$"></TD>
 <TD NOWRAP WIDTH="10" ALIGN="RIGHT">
@@ -653,7 +653,7 @@ the sums over <IMG
 <P>
 Likewise, the contribution of cell <IMG
  WIDTH="19" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
- SRC="intro/img39.png"
+ SRC="step-8.data/intro/img39.png"
  ALT="$ K$"> to the right hand side vector is
 <DIV ALIGN="CENTER">
 </DIV><P></P>
@@ -661,11 +661,11 @@ Likewise, the contribution of cell <IMG
 <TR VALIGN="MIDDLE">
 <TD NOWRAP ALIGN="RIGHT"><IMG
  WIDTH="26" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img50.png"
+ SRC="step-8.data/intro/img50.png"
  ALT="$\displaystyle f^K_j$"></TD>
 <TD NOWRAP ALIGN="LEFT"><IMG
  WIDTH="126" HEIGHT="49" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img51.png"
+ SRC="step-8.data/intro/img51.png"
  ALT="$\displaystyle = \sum_l \left( f_l, (\Phi_j)_l \right)_K$"></TD>
 <TD NOWRAP WIDTH="10" ALIGN="RIGHT">
 &nbsp;&nbsp;&nbsp;</TD></TR>
@@ -673,7 +673,7 @@ Likewise, the contribution of cell <IMG
 <TD>&nbsp;</TD>
 <TD NOWRAP ALIGN="LEFT"><IMG
  WIDTH="171" HEIGHT="49" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img52.png"
+ SRC="step-8.data/intro/img52.png"
  ALT="$\displaystyle = \sum_l \left( f_l, \phi_j \delta_{l,comp(j)} \right)_K$"></TD>
 <TD NOWRAP WIDTH="10" ALIGN="RIGHT">
 &nbsp;&nbsp;&nbsp;</TD></TR>
@@ -681,7 +681,7 @@ Likewise, the contribution of cell <IMG
 <TD>&nbsp;</TD>
 <TD NOWRAP ALIGN="LEFT"><IMG
  WIDTH="132" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
- SRC="intro/img53.png"
+ SRC="step-8.data/intro/img53.png"
  ALT="$\displaystyle = \left( f_{comp(j)}, \phi_j \right)_K.$"></TD>
 <TD NOWRAP WIDTH="10" ALIGN="RIGHT">
 &nbsp;&nbsp;&nbsp;</TD></TR>

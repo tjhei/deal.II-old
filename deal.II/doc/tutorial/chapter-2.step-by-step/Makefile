@@ -14,31 +14,31 @@ all: $(example-htmls)
 
 $(example-htmls):
 	@echo ================== Assembling $@
-	@cat step-by-step.header > $@
-	@cat $(@:.html=.intro) >> $@
+	@cat head.html > $@
+	@cat $(@:.html=.data/intro.html) >> $@
 	@cat ../../../deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc) \
 	  | $(PERL) program2html \
 	  >> $@
-	@cat $(@:.html=.results) >> $@
+	@cat $(@:.html=.data/results.html) >> $@
 	@cat $D/deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc) \
 	  | $(PERL) program2plain \
 	  | $(PERL) -e '$$path="$D/deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc)"; \
                         $$path =~ s!/! /!g; \
 		        while (<>) { s!PROGRAMPATH!$$path!g; print; };' \
 	  >> $@
-	@cat step-by-step.foot >> $@
+	@cat foot.html >> $@
 
 
 # Note: SGML support is very preliminary and not very functional at present!
 $(example-sgmls):
 	@echo ================== Assembling $@
-	@cat $(@:.sgml=.intro) >> $@
+	@cat $(@:.sgml=.data/intro.html) >> $@
 	@echo "</sect2>" >> $@
 	@cat ../../../deal.II/examples/step-by-step/$(@:.sgml=)/$(@:.sgml=.cc) \
 	  | $(PERL) program2html \
 	  >> $@
 	@echo "</sect2>" >> $@
-	@cat $(@:.sgml=.results) >> $@
+	@cat $(@:.sgml=.data/results.html) >> $@
 	@echo "</sect2>" >> $@
 	@cat $D/deal.II/examples/step-by-step/$(@:.sgml=)/$(@:.sgml=.cc) \
 	  | $(PERL) program2plain \

@@ -1,0 +1,298 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+<!-- deal.II tutorial template
+     Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de> 1999 
+-->
+
+<title>Data Output</title>
+    <link href="../dealtut.css" rel="StyleSheet" title="deal.II Tutorial">
+    <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+    <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
+</head>
+
+<!-- Page Body -->
+<body lang="en">
+
+<h1>Data Output</h1>
+
+<h2>Graphics Formats</h2>
+<p>
+<acronym>deal.II</acronym> provides a class called <code>DataOut</code>
+dealing with the output of grid and simulation data. It is fairly versatile 
+and handles a 
+number of different data formats. There are, however, some limitations
+with regard to grouping of components and the degrees of freedom.
+</p>
+
+<p>
+The graphics formats available are:
+</p>
+<ul>
+  <li><a href="#ucd">Unstructured Cell Data (ucd)</a>
+  </li>
+
+  <li><a href="#gnuplot">Gnuplot</a>, in two different qualities.
+  </li>
+
+  <li><a href="#eps">Encapsulated Postscript (eps)</a>
+  </li>
+
+  <li><a href="#pov">PoVRay mesh data</a>, for use with the PoVRay raytracer.
+  </li>
+
+  <li><a href="#gmv">General Mesh Viewer</a>
+  </li>
+</ul>
+
+
+<h2>Limitations of the <code>DataOut</code> class</h2>
+
+<p>
+Grouping of components to vectors is not implemented, i.e. each 
+component must be written independent of the others. It is 
+also not possible to write the results of calculations on grids
+with more or less than one degree of freedom per vertex.
+</p>
+
+<h2><a name="usage">General description of the usage of 
+<code>DataOut</code></a></h2>
+
+<p>
+What exactly it is you need to do in order to make use of the 
+<code>DataOut</code> 
+class is described in the table below. Note that data is written to an 
+<code>ostream</code>. That means you have to attach your <code>ostream</code>
+to a file if you want to use the data later on.
+</p>
+
+<table>
+<caption><b>Usage of the <code>DataOut</code> class</b></caption>
+<tr>
+  <td><b>Step</b>
+  </td>
+  <td><b>Function</b>
+  </td>
+  <td><b>Call</b>
+  </td>
+</tr>
+<tr>
+  <td>1.</td>
+  <td>Create an object of this class with the right dimension. 
+      It takes no initialization parameters.
+  </td>
+  <td><code>DataOut&lt;dim&gt; my_data_out;</code>
+  </td>
+</tr>
+<tr>
+  <td>2.
+  </td>
+  <td>Attach a <a href="dofs.html"><code>DoFHandler</code></a> 
+      object to your <code>DataOut</code>
+      object. This <code>DoFHandler</code> 
+      is used to extract geometry
+      data and the mapping between nodes and node values.
+  </td>
+  <td><code>
+        void DataOut&lt;dim&gt;::attach_dof_handler(const DoFHandler&lt;dim&gt; &amp;)
+      </code>
+  </td>
+</tr>
+<tr>
+  <td>3.
+  </td>
+  <td>Add data vectors to be written to a file. The second and third argument
+      are the name of the vector and its physical units.
+  </td>
+  <td><code>
+        void DataOut&lt;dim&gt;::add_data_vector(const Vector&lt;double&gt; &amp;data,
+        const string &amp;name, const string &amp;
+	units=&quot;&lt;dimensionless&gt;&quot;)
+      </code>
+  </td>
+</tr>
+<tr>
+  <td>4.
+  </td>
+  <td>Generate an <code>ostream</code> (and, normally, attach it to a file).
+  </td>
+  <td><code>
+      ostream out;
+      </code>
+  </td>
+</tr>
+<tr>
+  <td>5.
+  </td>
+  <td>Write your data to this ostream. The second parameter denotes the 
+      output format to be used. It must be one of <code>ucd, gnuplot, 
+      gnuplot_draft,
+      povray_mesh, eps, epsgrid, gmv</code>.
+  </td>
+  <td><code>void DataOut&lt;dim&gt;::write(ostream &amp;out, const OutputFormat output_format)</code>
+  </td>
+</tr>
+</table>
+
+
+
+<h2><a name="ucd">Unstructured Cell Data (ucd)</a></h2>
+
+<p>
+The ucd data format is described in the AVS developer's guide. There
+are a binary and a ASCII version of this format. <acronym>deal.II</acronym>
+uses the ASCII ucd format.
+</p>
+
+<h3>Limitations of the ucd format</h3>
+<p>
+Only node based data can be written, higher order elements are written
+with their node values, not with interior or line values. This is
+due to limitations in the present format. In this implementation
+it is not possible to give model data since this is not widely supported.
+It is possible to give cell data.
+</p>
+
+<h3>Usage of the ucd format</h3>
+
+<p>
+In order to write your data in ucd format you need to follow the
+steps described <a href="#usage">above</a>. 
+The data is written using <code>void write(ostream &amp;out,"ucd")</code>.
+</p>
+
+
+<h2><a name="gnuplot">Gnuplot data format</a></h2>
+
+<h3>Understanding gnuplot data</h3>
+
+<p>
+The gnuplot data format is a pure ASCII format where each line is 
+of the form<br>
+<code>x v1 v2 ...</code><br>
+for one-dimensional data and<br>
+<code>x y v1 v2 ...</code><br>
+for two-dimensional data.<br>
+<code>x</code> and <code>y</code> denote the grid coordinates,
+<code>v<sub>i</sub></code> denote the vertex values.
+</p>
+
+<p>
+A somewhat more elaborate description can be found in the 
+<a href="http://www.cs.dartmouth.edu/gnuplot/gptug.ps">Gnuplot User's Guide (Postscript)</a>
+</p>
+
+<h3>Viewing gnuplot data</h3>
+
+<p>
+In order to view a one-dimensional plot you use<br>
+<code>
+plot &quot;filename&quot; using 1:x</code><br>
+where <code>x</code> denotes the number of the vertex you wish to plot.
+</p>
+
+<p>
+In order to view your grid in two dimensions you should use<br>
+<code>
+set data style lines<br>
+plot &quot;filename&quot;<br>
+</code>
+and to finally see your results<br>
+<code>
+set data style lines<br>
+plot &quot;filename&quot; using 1:2:x
+</code><br>
+where again <code>x</code> denotes the number of the vertex 
+to be plotted.
+</p>
+
+
+<h3>Limitations of the gnuplot data format</h3>
+
+<p>The limitations of the gnuplot data format are already well described
+in the 
+<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/basic/DataOut.html">
+<code>DataOut</code> class description</a>:
+</p>
+<blockquote>
+<p>
+This format is somewhat restricted to coninuous data and to finite elements of first order only. The reason for the first restriction is that it takes nodal values and can
+therefore only work if a finite element has degrees of freedom in the vertices of each cell. This is not the case for discontinuous elements. The second restriction is only a
+problem of quality of output: you actually can print quadratic or higher order elements using this style, but you will only see the contour of each cell with the bounding lines of
+each cell being straight lines. You won't see the structure of the solution in the interior of a cell nor on the lines bounding it. 
+</p>
+</blockquote>
+
+<h3>The two different qualities of gnuplot output</h3>
+
+<p>The limitations mentioned above can to some extent be remedied,
+and that is why there is also an option for high quality output.
+For how this is done, we quote (again) the 
+<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/basic/DataOut.html">
+<code>DataOut</code> class description</a>:
+</p>
+
+<blockquote>
+<p>
+To remedy the abovementioned problems, the gnuplot &quot;quality&quot; format 
+was introduced. [...] gnuplot can handle tensor grids and 
+displays them quite nicely,
+including hidden line removal. It can also handle more than one tensor grid, 
+then called a patch. The idea now is to describe each cell as a patch of 
+<code>N x N</code> points (in 2D).
+For linear elements, <code>2 x 2</code> is sufficient, but for elements
+of higher order you will want to use a higher number. The 
+<code>write_gnuplot</code> 
+function writes the data in this format and
+the argument it takes is the number of subintervals it divides each cell into,
+ i.e. <code>N-1</code>. 
+</p>
+<p>
+This output routine also addresses the problem introduced with discontinuous 
+elements, since it takes its data locally from each cell and displays it as a 
+patch separately; it
+therefore does not use continuity and gnuplot will also plot discontinuities 
+if there are any. 
+</p>
+</blockquote>
+
+
+<h3>Usage of the gnuplot data format</h3>
+
+<p>
+In order to write your data in gnuplot format you need to follow the
+steps described <a href="#usage">above</a>. 
+The data is written using 
+</p>
+<ul>
+<li>
+  <code>void write(ostream &amp;out,"gnuplot_draft")</code> for the lower 
+  (draft) quality output.
+</li>
+<li>
+  <code>void write(ostream &amp;out,"gnuplot")</code> for the high quality
+  output. 
+</li>
+</ul>
+
+<!-- Page Foot -->
+<hr>
+<table class="navbar">      
+<tr>
+  <td>
+    <a href="toc.html">Back to this chapter's index</a>
+  </td>
+  <td>
+    <a href="../index.html" target="_top">Back to the tutorial index</a>
+  </td>
+</tr>
+</table>
+<hr>
+<address>
+<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<p>
+Last modified: $Date$ 
+</p>
+</body>
+</html>

@@ -32,6 +32,7 @@ lib: $(LIBDIR)/libhsl$(lib-suffix) $(LIBDIR)/bin/detached_ma27$(EXEEXT)
 $(LIBDIR)/libhsl$(static-lib-suffix): $(forward-declarations) $(o-files)
 	@echo =====hsl==============optimized==$(MT)== Linking library:   $(@F)
 	@$(AR) ru $@ $(o-files)
+	@$(RANLIB) $@
 
 # link the object files to a shared library. since this is not C++,
 # simply use the C compiler, rather than $(SHLIBLD)

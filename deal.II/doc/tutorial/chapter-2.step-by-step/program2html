@@ -46,14 +46,16 @@ while (<>) {
     {
 	# in comment mode: first skip leading whitespace and
 	# comment // signs
-	s!\s*//\s*(.*)!$1!;
+	s!\s*//\s*(.*)\n!$1!;
 
 	# second, replace section headers, and generate addressable
 	# anchor
-	s!\@sect(\d)\{(.*)\}\s*$!<h$1>$2</h$1>!g;
-	$sect_name = $2;
-	$sect_name =~ s/\s/_/g;
-	$_ = "\n<a name=\"$sect_name\"></a>" . $_;
+	if ( /\@sect/ ) {
+	   s!\@sect(\d)\{(.*)\}\s*$!<h$1>$2</h$1>!g;
+	   $sect_name = $2;
+	   $sect_name =~ s/\s/_/g;
+	   $_ = "\n<a name=\"$sect_name\"></a>" . $_;
+	}
 
 	# finally print this line
 	print $_, "\n";

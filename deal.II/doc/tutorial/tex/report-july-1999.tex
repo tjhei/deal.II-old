@@ -62,7 +62,8 @@ There are at the time of this writing two main parts of the tutorial:
   code of this part is not compatible with the current
   version of \dealii{} any more.
 \end{itemize}
-Other parts can easily be added as needed.
+Other parts can easily be added as needed following the steps 
+in appendix~\ref{sec:steps}.
 
 
 \section{Standards employed}
@@ -81,10 +82,11 @@ The tutorial makes use of HTML4\footnote{c.f. \cite{html4,htmlhelp4,niederst:web
 including frames
 and Cascading Style Sheets (CSS) Level 1.
 \footnote{c.f. \cite{css1,htmlhelpcss,niederst:webdesign}}
-Not all web browsers currently support CSS, we expect this technology
+Even though
+not all web browsers currently support CSS we expect this technology
 to gain more widespread support in the near future. The browsers
 currently at use in the IWR support a large part of the 
-specifications of CSS1 and HTML 4.
+specifications of CSS1 and HTML4.
 
 All the web pages has been validated against the HTML4 Document Type
 Definition (DTD)\footnote{c.f. \cite{html4dtd}} and are guaranteed to be
@@ -98,17 +100,17 @@ syntactically correct.
 \subsubsection{Usability by third parties}
 
 \begin{list}{Frames}{}
-\item[Frames] Frames are supported by most web browsers, even older versions.
+\item[{\bf Frames:}] Frames are supported by most web browsers, even older versions.
   It is possible to view the tutorial without frames if a browser does not
   support them.
-\item[HTML4] HTML4 to its full extent is supported by almost no browser; 
+\item[{\bf HTML4:}] HTML4 to its full extent is supported by almost no browser; 
   Netscape Navigator 4 (NN4) and Microsoft Internet Explorer 4 (MSIE4)
   support a large
   subset of HTML4 and even older browsers can render most of it. We have
   taken care to use a subset of HTML4 mostly 
   compatible with older versions of HTML. Browsers that do not 
   support HTML4 will render small parts of the web pages incorrectly.
-\item[CSS] Cascading Style Sheets Level 1 to their full extent are not 
+\item[{\bf CSS:}] Cascading Style Sheets Level 1 to their full extent are not 
   supported
   by any browser currently available. Again, NN4 and MSIE4 support a large 
   subset of CSS1. Browsers that do not support CSS1 will render the 
@@ -145,7 +147,7 @@ and adapt the appropriate template. Where replacements
 are needed in a template they are prefixed with ``INSERT\_''
 to ease the adaption to any specific case.
 
-A more detailed explanation is provided in~\ref{steps}.
+A more detailed explanation is provided in appendix~\ref{sec:steps}.
 
 
 \section{A question of style}
@@ -156,7 +158,7 @@ exceptions) strictly separated. This makes the design easily changeable
 and adaptable to different needs. It also helps to keep the design 
 and style consistent throughout the tutorial. 
 We have used abstract HTML markup, defining classes for different
-element types. The visual markup of each class for different media
+element types. The visual (or aural) markup of each class for different media
 is defined in the style sheets. 
 
 We have taken care to ensure easy and consistent means of navigation
@@ -169,7 +171,7 @@ In the bibliography we list a few references on good HTML style, like
 \section{Feedback so far}
 \label{sec:feedback}
 
-Feedback on the tutorial so far has been little, but positive.
+Feedback on the tutorial so far has been positive.
 The methods of navigation and the general look and feel of the
 \dealii{} tutorial have met with agreement.
 
@@ -191,14 +193,15 @@ All the relevant files and directories are contained in the directory
 {\tt doc/tutorial} in the \dealii{} directory structure.
 At the moment the following subdirectories and files exist on the top
 level:
-
-\begin{tabular}[H]{l|r|r|p{6cm}}
+\par
+\vspace{0.5cm}
+\begin{tabular}[H]{l|r|p{6cm}}
 Name & Revision number & Description \\
 \hline
-index.html & & tutorial entry page \\
-screen.css & & CSS1 style sheet, media: screen \\
-print.css & & CSS1 style sheet, media: print media \\
-audio.css & & CSS1 style sheet, media: aural media \\
+index.html & 1.10 & tutorial entry page \\
+screen.css & 1.1 & CSS1 style sheet, media: screen \\
+print.css & 1.1 & CSS1 style sheet, media: print media \\
+audio.css & 1.1 & CSS1 style sheet, media: aural media \\
 templates/ & --- & template directory \\
 figures/ & --- & figures in {\tt eps} or {\tt fig} format\\
 images/ & --- & figures in {\tt gif} format for the web pages\\
@@ -215,7 +218,8 @@ tex/ & --- & reports \\
 Below we show the CSS1--classes currently in use and the 
 structural elements to which they should be applied, i.e.
 which elements should have the attribute ``class=...'' set.
-
+\par
+\vspace{0.5cm}
 \begin{tabular}[H]{l|p{6cm}}
 Class & Corresponding Elements \\
 \hline
@@ -226,14 +230,15 @@ parhead & paragraph heading \\
 example & examples, used in the appropriate template \\
 navbar & navigation bar at the page bottom\\
 \end{tabular}
-
+\par
+\vspace{0.5cm}
 In addition to this we have defined some properties common to 
 all elements of a particular type, like background colour for the
 page body etc.
 
 
 \section{Extending the tutorial -- step by step}
-\label{steps}
+\label{sec:steps}
 
 \begin{enumerate}
 \item Create a directory with the number and name of the new

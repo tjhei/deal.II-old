@@ -19,8 +19,11 @@ $(example-htmls):
 	  | $(PERL) program2html \
 	  >> $@
 	@cat $(@:.html=.results) >> $@
-	@cat ../../../deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc) \
+	@cat $D/deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc) \
 	  | $(PERL) program2plain \
+	  | $(PERL) -e '$$path="$D/deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc)"; \
+                        $$path =~ s!/! /!g; \
+		        while (<>) { s!PROGRAMPATH!$$path!g; print; };' \
 	  >> $@
 	@cat step-by-step.foot >> $@
 

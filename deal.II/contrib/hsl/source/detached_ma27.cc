@@ -16,6 +16,7 @@
 #include <hsl/hsl.h>
 #include <vector>
 #include <iostream>
+#include <errno.h>
 
 
 template <typename T>

@@ -17,8 +17,8 @@ INC = ../Include/amd.h amd_internal.h
 # object files for each version
 #-------------------------------------------------------------------------------
 
-AMDI = $(addprefix $D/lib/umfpack/, $(addsuffix .$(OBJEXT), $(subst amd_,amd_i_,$(AMD))))
-AMDL = $(addprefix $D/lib/umfpack/, $(addsuffix .$(OBJEXT), $(subst amd_,amd_l_,$(AMD))))
+AMDI = $(addprefix $D/lib/contrib/umfpack/, $(addsuffix .$(OBJEXT), $(subst amd_,amd_i_,$(AMD))))
+AMDL = $(addprefix $D/lib/contrib/umfpack/, $(addsuffix .$(OBJEXT), $(subst amd_,amd_l_,$(AMD))))
 
 #-------------------------------------------------------------------------------
 # compile each int and long routine (with no real/complex version)

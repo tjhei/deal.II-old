@@ -17,12 +17,12 @@ UMFPACK:
 
 $(LIBDIR)/liblac_umfpack.so: AMD UMFPACK
 	@echo "=====umfpack==========optimized==$(MT)== Linking library:   $(@F)"
-	@$(SHLIBLD) $(LDFLAGS) -shared -o $@ $D/lib/umfpack/*.o
+	@$(SHLIBLD) $(LDFLAGS) -shared -o $@ $D/lib/contrib/umfpack/*.o
 
 
 $(LIBDIR)/liblac_umfpack.a: AMD UMFPACK
 	@echo "=====umfpack==========optimized==$(MT)== Linking library:   $(@F)"
-	@$(AR) ru $@ $D/lib/umfpack/*.o
+	@$(AR) ru $@ $D/lib/contrib/umfpack/*.o
 	@$(RANLIB) $@
 
 

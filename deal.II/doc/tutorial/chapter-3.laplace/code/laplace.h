@@ -24,7 +24,7 @@ public:
 class Laplace
 {
 protected:
-  Point<2> direction;
+//  Point<2> direction;
   Triangulation<2> tr;
   DoFHandler<2> dof;
 

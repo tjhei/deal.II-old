@@ -37,12 +37,51 @@ default to 0 and 1, creating the unit hypercube. The hypercube will consist of
 exactly one cell.
 </p>
 
+<p class="Example">
+<span class="example">Example:</span> Below we show the includes,
+definitions and
+function calls needed. Be sure to use them in their appropriate places.
+This example will create the hypercube [-1,1]<sup>dim</sup>.
+</p>
+<pre class="example">
+<code>
+#include &lt;grid/tria.h&gt;
+
+int dim=2;  // For example
+Triangulation&lt;dim&gt; tr;
+
+tr.create_hypercube(-1,1);
+</code>
+</pre>
+
+
 <h3><a name="ball">Hyperball</a></h3>
 <p>
 A hyperball can be created using the function<br>
-<code>void Triangulation::create_hyper_ball(const Point&lt;dim&rt; center=0.,const double radius=1.)</code><br>
+<code>void Triangulation::create_hyper_ball(const Point&lt;dim&gt; center=0.,const double radius=1.)</code><br>
 This will create a hyperball of given centre and radius where the location of the centre defaults to the origin and the radius to unity.
 </p>
+
+<p class="Example">
+<span class="example">Example:</span> Below we show the includes,
+definitions and
+function calls needed. Be sure to use them in their appropriate places.
+This example will create a hyperball with unit radius centred on (1,0).
+</p>
+<pre class="example">
+<code>
+#include &lt;grid/tria.h&gt;
+#include &lt;base/point.h&gt;
+
+int dim=2;  // For example
+Triangulation&lt;dim&gt; tr;
+Point&lt;dim&gt; centre(1,0); // Taking (1,0) as the centre of the ball
+
+tr.create_hyperball(centre,1);
+
+</code>
+</pre>
+
 
 <h3><a name="L">Hyper-L</a></h3>
 <p>
@@ -60,6 +99,24 @@ hypercube and <code>&part;<sub>n</sub>u=0</code> on the "inner" faces resulting
 from the smaller hypercube taken away.
 </p>
 
+<p class="example">
+<span class="example">Example:</span> Below we show the includes,
+definitions and
+function calls needed. Be sure to use them in their appropriate places.
+This example will create the default hyper-L.
+</p>
+<pre class="example">
+<code>
+#include &lt;grid/tria.h&gt;
+
+int dim=2;  // For example
+Triangulation&lt;dim&gt; tr;
+
+tr.create_hyper_L(-1,1);
+</code>
+</pre>
+
+
 <h3><a name="file">Reading a grid from a file</a></h3>
 
 <p>In many problems taken from real life you will find those grid types
@@ -68,7 +125,7 @@ this is possible. <acronym>deal.II</acronym> offers the possibility of
 reading a complete triangulation from a file in the <tt>ucd</tt>-format 
 used by avs. A <tt>ucd</tt>-file can be read with the function<br> 
 <code>void DataIn::read_ucd(istream&)</code><br>
-At present only lines in on dimension and lines and quads in two dimensions
+At present only lines in one dimension and lines and quads in two dimensions
 are accepted. All other data is rejected. 
 </p>
 
@@ -88,7 +145,7 @@ encountered in two dimensions can be found in the
 <table class="navbar" >      
 <tr>
   <td>
-    <a href="index.html">Back to this chapter's index</a>
+    <a href="toc.html">Back to this chapter's index</a>
   </td>
   <td>
     <a href="../index.html">Back to the tutorial index</a>
@@ -99,7 +156,7 @@ encountered in two dimensions can be found in the
 <address>
 <a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
 <p>
-Last modified: Wed Mar 24 1999 
+Last modified: $Date$
 </p>
 </body>
 </html>

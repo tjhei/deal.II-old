@@ -146,8 +146,8 @@ Laplace::assemble()
   // Insert the boundary conditions into the matrix.
   map<int,double> boundary_values;
   DoFHandler<2>::FunctionMap dirichlet_bc;
-  BoundaryFct bfkt;
-  dirichlet_bc[0]=&bfkt;
+  BoundaryFct bfct;
+  dirichlet_bc[0]=&bfct;
   VectorTools<2>::interpolate_boundary_values(dof,dirichlet_bc,
 					      fe,boundary,
 					      boundary_values);

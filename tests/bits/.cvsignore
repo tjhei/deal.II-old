@@ -2,6 +2,7 @@
 *.testcase
 *.dat *.output
 Makefile.depend
+Makefile.tests
 *.check *.OK
 *.exe
 threads.cc

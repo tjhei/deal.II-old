@@ -1,0 +1,5 @@
+
+DEAL:Rect::vmult ok
+DEAL:Rect::vmult_add ok
+DEAL:Rect::Tvmult ok
+DEAL:Rect::Tvmult_add ok

@@ -28,6 +28,28 @@ very large, and therefore storage is expensive in terms of memory.
 providing means of generating memory efficient structures for sparse
 matrices where only non-zero elements are stored.
 </p>
+<p>
+To show only two example of matrices which are quite typical of finite
+element discretizations of partial differential equations, we present
+the following two graphics, in which each dot represents a non-zero
+entry of the matrix:
+</p>
+<p>
+ <img src="../images/sparsity_1.jpg" alt="Sparsity 1" width="45%">
+ <img src="../images/sparsity_2.jpg" alt="Sparsity 2" width="45%">
+</p>
+<p>
+The first is a 300x300 matrix, the second has approximately 4000 rows
+and columns. As can be seen, the vast majority of entries is zero, and
+we can also guess that the proportion of zeroes is even growing as the
+matrix size is increased (this is in fact so, but can not so clearly
+be seen from the pictures, admittedly). The equation discretized to
+yield these matrices is rather complex, so the number of non-zero
+entries per row is quite large for finite element matrices.
+Both matrices were derived after renumbering of the degrees of freedom
+using the algorithm of Cuthill-McKee, which concentrates the entries
+around the diagonal of the matrix.
+
 
 <h2>Ways of dealing with matrix structures provided by <acronym>deal.II</acronym></h2>
 <p>
@@ -44,16 +66,49 @@ tell the matrix for which elements to allocate memory.
 The <acronym>deal.II</acronym> function initializing a standard sparse matrix
 structure is <code>void SparseMatrixStruct::reinit(const unsigned int m, const unsigned int n, const unsigned int max_per_row)</code>. It takes as its arguments
 the size of the matrix in question and the maximum number of non-zero elements
-in one row.
-This number can be calculated with 
-<code>int DoFHandler::max_couplings_between_dofs()</code>.
-<em>Beware: This function was written to cope with refined grids only !
-If your grid consists exclusively of cells next to boundaries its 
-return value will be wrong.</em>
-This matrix structure can then be used to generate a matrix using 
-<code>void SparseMatrix::reinit(const SparseMatrixStruct &sparsity)</code>.
-In cases of locally refined grids you will also need to take care of the constraints to your
-matrix given by the <a href="hanging_nodes.html">hanging nodes</a>.
+in one row. This first sets up a blank sparsity pattern which,
+however, has as yet no information which entries are non-zero.
+</p>
+<p>
+Before going on with showing how to find out which elements are
+non-zero, we have to talk about how to find out about the maximum
+number of non-zero entries per row which we will need for our matrix.
+Since this number depends of the actual finite element used (higher
+order elements need more non-zero entries than linear elements, for
+example), of the equation under consideration, and of some properties
+of the triangulation on which we want to do our computations. Since
+all these factors can't be considered by the user all the time, there
+is a library function which does the necessary computations for you:
+<code>unsigned int DoFHandler::max_couplings_between_dofs()</code>.
+We note that this function was written to cope with refined grids, and
+if you only have structured grids without local refinement and hanging
+nodes, the result of this function will overestimate the maximal
+number of non-zero entries per row.
+</p>
+<p>
+After having fixed the basic properties of the sparsity structure, we
+can tell it which entries actually are non-zero. This is again done
+using a library function,
+<code>DoFHandler::make_sparsity_pattern</code>. Then we have to take
+into account that constraints due to hanging nodes (see the previous
+chapter) add some more non-zero entries, which is again done using 
+some library functions (see the example below). After this, we can
+instruct the sparsity pattern to throw out all unused elements
+(in those rows where the actual number of non-zero elements is less
+than the maximal number given to <code>reinit</code>, we can discard
+the unused one to save some more memory). This is discussed in the
+next subsection.
+</p>
+<p>
+This matrix structure can then be used to serve as sparsity pattern to
+one or several matrices using 
+<code>void SparseMatrix::reinit(const SparseMatrixStruct&sparsity)</code>.
+We note the distinction that the <code>SparseMatrixStruct</code> only
+stores the places of the non-zero elements, while the
+<code>SparseMatrix</code> actually stores the values of these
+elements. The separation was made since often several matrices are
+needed with the same sparsity pattern, but different entry values;
+this way, we can save some memory space.
 </p>
 
 <p class="Example">
@@ -68,25 +123,29 @@ appropriate places. This example initializes a sparse square matrix structure.
 
 
 const unsigned int dim=2; // For example
-SparseMatrixStruct&lt;double&gt; sparsity_pattern;
-DoFHandler&lt;dim&gt; dof;
-ConstraintMatrix hanging_nodes;  // Only necessary for locally refined grids
+SparseMatrixStruct sparsity_pattern;
+DoFHandler&lt;dim&gt; dof_handler;
 
-// Your degrees of freedom must already be distributed
+// set up a triangulation, refine it, associate the DoFHandler object
+// shown above to it, and distribute the degrees of freedom
+...
 
-sparsity_pattern.reinit(dof.n_dofs(),dof.n_dofs(),dof.max_couplings_between_dofs());
+// now fix the size of the matrix and the maximal number
+// of non-zero entries:
+sparsity_pattern.reinit (dof_handler.n_dofs(),
+                         dof_handler.n_dofs(),
+                         dof_handler.max_couplings_between_dofs());
+
+// tell the sparsity pattern which entries are non-zero:
+dof_handler.make_sparsity_pattern (sparsity_pattern); 
 
 // Condense the <a href="hanging_nodes.html">hanging nodes</a> into
-// the matrix, taking into account the constraints to the hanging nodes.
-// This must be done before the matrix structure is compressed, but only
-// on locally refined grids.
+// the matrix structure, taking into account the constraints due to
+// the hanging nodes. 
 // You can skip this part if your grid is not locally refined.
-
-dof.make_sparsity_pattern(sparsity_pattern); 
-hanging_nodes.clear();
-dof.make_constraint_matrix(hanging_nodes);
-hanging_nodes.condense(sparsity_pattern);
-
+ConstraintMatrix hanging_nodes; 
+dof_handler.make_constraint_matrix(hanging_nodes);
+hanging_nodes.condense (sparsity_pattern);
 </code>
 </pre>
 
@@ -125,6 +184,19 @@ compress our matrix structure <code>sparsity_pattern</code>.
 sparsity_pattern.compress();
 </code>
 </pre>
+
+
+<h3>More complex matrices</h3>
+
+Finally, we note that in some cases not all variables in a system of
+partial differential equations couple to each other, or that the
+operators have a special structure. For this reason, there are more
+specialized version of the
+<code>DoFHandler::make_sparsity_pattern</code> and 
+<code>SparseMatrixStruct::reinit</code> functions, which allow you to
+more flexibly determine the actual number of non-zero elements of all
+or individual rows. See the documentation of the respective classes
+for more information.
 
 
 <!-- Page Foot -->

@@ -9,24 +9,11 @@
     <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
     <meta name="keywords" content="deal.II,deal.II tutorial,deal II"></head>
   <body>
-    <img align=right valign=top alt="Deal Logo" src="../pictures/deal100.gif">
+    <img align=right valign=top width="50%" alt="Deal Logo" src="../pictures/deal100.gif">
     <h1>The <acronym>deal.II</acronym> Tutorial</h1>
     
     <h2>or <acronym>deal.II</acronym> in several easy and some more hard lessons</h2>
     
-    <h3>Prerequisites</h3>
-    <p>
-      This tutorial is written in <a href="http://www.w3.org/TR/REC-html40">HTML
-	4.0</a> which your browser may or may not support. If you run into problems
-      you are advised to try a recent browser or one that is able to parse Document
-      Type Definitions. The reason for this is the math support of HTML 4.0. Most
-      people should, however, not run into any
-      problems.</p>
-    <p>
-      You yourself should have some background knowledge on numerical methods, finite 
-      elements and C++.
-    </p>
-
     <h3>Usage of this document</h3>
     <p>
       This tutorial is split into several parts, starting with an outline of
@@ -43,28 +30,37 @@
     <h3>On <acronym>deal.II</acronym></h3>
     <p>
       <acronym>deal.II</acronym> is short for Differential Equations Analysis Library, version II,
-      which says it all, really. Its purpose it the solution of partial differential
-      equations on unstructured grids with error control. You can find more
+      which says it all, really. Its purpose is the solution of partial differential
+      equations on unstructured, locally refined grids with error control. You can find more
       information on <acronym>deal.II</acronym> and some examples at 
-      <a href="http://gaia.iwr.uni-heidelberg.de/~deal/">
-	http://gaia.iwr.uni-heidelberg.de/~deal/</a>. <acronym>deal.II</acronym> was written 
-      by the numerics group at the IWR, University of Heidelberg.
+      <a href="http://gaia.iwr.uni-heidelberg.de/~deal/">the
+      <acronym>deal.II</acronym> homepage </a>.
+      <acronym>deal.II</acronym> was written 
+      by the numerics group at the IWR, University of Heidelberg,
+      mainly by Wolfgang Bangerth and in parts by Guido Kanschat, but
+      several others have contributed as well.
     </p>
-    <h3><a href="00.fe_structure/index.html">Chapter 0: Structure of a
-	Finite Element Program</a> </h3>
+
+    <p>
+    The structure of this tutorial is as follows:
+    <p>
+
+    <h4><a href="00.fe_structure/index.html">Chapter 0: Basic Elements of a
+	Finite Element Program</a> </h4>
     <p> (also available in a <a href="00.fe_structure/toc.html">version without frames</a>)
     </p>
     <p>We will discuss the various elements needed for a working
-      finite element program and some of the possibilitier 
+      finite element program and some of the possibilities 
       <acronym>deal.II</acronym> offers in this respect.
     </p>
     
-    <h3><a href="01.laplace/index.html">Chapter 1: The Laplace
-	Problem</a> </h3>
+    <h4><a href="01.laplace/index.html">Chapter 1: The very simple Laplace
+	Problem</a> </h4>
     <p>
       (also available in a <a href="01.laplace/toc.html">version without frames</a>)
     </p>
     <p>
+      ***********
       We will solve the stationary Laplace problem on a square grid with  
       boundary conditions of the form <code>cos(2*PI*x)cos(2*PI*y)</code>.
       You can also obtain the <a href="01.laplace/source.html">source code</a>.
@@ -87,7 +83,7 @@
     <hr>
     
     <address>
-      <a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+      <a href="mailto:deal@gaia.iwr.uni-heidelberg.de">The deal.II group</a></address>
     <p>
       Last modified: $Date$
     </p>

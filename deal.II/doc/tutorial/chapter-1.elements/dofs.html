@@ -20,9 +20,12 @@
 <h1>Degrees of Freedom</h1>
 
 <p>
-Degrees of freedom - short DoFs -are virtually the most important entities you will 
-encounter in <acronym>deal.II</acronym>. Most of the task of setting up
-your problem is accomplished by manipulating them.
+Degrees of freedom - short DoFs - are needed to associate a numering
+to the shape functions living on our triangulation. Using this
+numbering, we can then interpret the discretized operator as a matrix,
+where the matrix row and column numbers are identified with the DoF
+numbers, and likewise the index of a vector denotes the number of the
+respective degree of freedom.
 </p>
 <p>
 For now we will only discuss how and when to number and renumber the
@@ -49,7 +52,7 @@ afterwards the structure will be invalid.
 <h2>How to Distribute and Renumber Degrees of Freedom</h2>
 <p>
 The degrees of freedom are distributed on a triangulation using the function<br>
-<code>void DoFHandler::distribute_dofs(const FiniteElement&lt;dim&gt; &amp;)</code><br>
+<code>void DoFHandler&lt;dim&gt;::distribute_dofs(const FiniteElement&lt;dim&gt; &amp;)</code><br>
 The argument to <code>distribute_dofs</code> is a finite element that describes
 how many degrees of freedom are located on vertices, lines etc. 
 (<code>FiniteElement</code> objects have much more functionality than only storing
@@ -74,42 +77,53 @@ The finite elements used are bilinear.
 #include &lt;grid/grid_generator.h&gt;
 #include &lt;fe/fe_lib.lagrange.h&gt;
 
-Triangulation&lt;dim&gt; tr;
-DoFHandler&lt;dim&gt; dof;
-FEQ1&lt;dim&gt; fe;
+// first build up the triangulation
+Triangulation&lt;dim&gt; triangulation;
+GridGenerator::hyper_cube (triangulation,-1,1);
 
-GridGenerator&lt;dim&gt;::hyper_cube(tr,-1,1);
-dof.distribute_dofs(fe);
+// you may want to refine the triangulation a bit here
+...
+
+// then associate a DoFHandler object with this triangulation...
+DoFHandler&lt;dim&gt; dof_handler (&tria);
+
+// ...and distribute degrees of freedom for linear elements
+FEQ1&lt;dim&gt; fe;
+dof_handler.distribute_dofs(fe);
 </code>
 </pre>
 
 <p>
-For a number of solution algorithms this way of numbering is way below optimal.
-To achieve a kind of numbering better suited to your problem the <acronym>deal.II</acronym> 
-offers the function<br>
-<code>void DoFHandler::renumber_dofs(const RenumberingMethod method,const bool use_constraints=false, const vector&lt;int&gt; &amp;starting_points=vector&lt;int&gt;())</code><br>
-or alternatively, the easier to use<br>
-<code>void DoFHandler::renumber_dofs(const RenumberingMethod method)</code><br>
-The methods available are <code>Cuthill_McKee</code> and <code>reverse_Cuthill_McKee</code>. Both algorithms are usually better than the one used
-by <code>distribute_dofs</code> and neither is optimal (there is no algorithm
-that accomplishes optimal results within a reasonable amount of time).
-Both algorithms require a good index to start with to achieve good results.
-Whenever you know a good set of starting indices you might wish to use the 
-first way of calling <code>renumber_dofs</code>,
-in every other case the second way is more advisable.
-<p class="Example">
-<span class="example">Example:</span> We use the definitions from the
-<a href="#ex_distribute">first example</a> given above. We renumber our 
-degrees of freedom with the 
-<code>Cuthill_McKee</code> method.
+For a number of solution algorithms this way of numbering is way below
+optimal. In particular, as mentioned above, the degrees of freedom are
+numbered starting on the active cells of coarser levels and going to
+finer levels, but depending on how your triangulation was refined, the
+order in which the cells are traversed will have no geometrical
+pattern. Likewise, the distribution of DoF numbers will look mostly
+random.
 </p>
-<pre class="example">
-<code>
-dof.renumber_dofs(Cuthill_McKee);
-</code>
-</pre>
-
-<h2>Access to triangulation cells, faces and vertices</h2>
+<p>
+For some problems, it is better if the numbering of DoFs is roughly
+into a certain direction, for example from inflow to outflow in
+hyperbolic problems.
+To achieve a kind of numbering better suited to your problem the <acronym>deal.II</acronym> 
+offers the class
+<code>DoFRenumbering</code> with several functions implementing
+different ways of renumbering.
+The methods presently available are Cuthill-McKee and reverse
+Cuthill-McKee, and some other methods you will only want to ask for in
+more advanced applications. The first two algorithms are usually much
+better than the one used 
+by <code>distribute_dofs</code>, but neither is optimal (there is no algorithm
+that accomplishes optimal results within a reasonable amount of time).
+Both algorithms require a good point to start numbering from (for
+example one or more degrees of freedom on the inflow boundary) to
+achieve good results.
+</p>
+<p>
+The documentation of the <code>DoFRenumbering</code> gives a good
+overview of how the methods mentioned above work, and how the
+functions performing the re-enumerations have to be called.
 
 
 <!-- Page Foot -->

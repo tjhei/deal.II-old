@@ -17,30 +17,40 @@
 <h2>Different kinds of grids</h2>
 
 <p>
-All numerics are done on a grid. 
+The numerics for which this library was written is always done on a grid. 
 Choosing the right kind of grid can be essential for solving your problem.
 A grid should be chosen to fit your problem space in the best way possible.
 This chapter describes coarse grids for the triangulation of your domain.
 </p>
-<p>Please remember throughout this chapter:
-<b>A triangulation must be void before it is initialized !</b>
-</p>
 <p>
-<acronym>deal.II</acronym> offers three fundamental grid types: 
+<acronym>deal.II</acronym> offers various ways to produce grids for
+standard domains, such as 
 a <a href="#cube">hypercube</a>, a <a href="#ball">hyperball</a> 
-and a <a href="#L">hyper_L</a>. Furthermore it is possible to 
+and a <a href="#L">hyper_L</a>. There may be more in the meantime (for
+example I can now see a ring domain), and you may want to check out
+the documentation of the <tt>GridGenerator</tt> class for this.
+<p>
+Furthermore it is possible to 
 <a href="#file">read a triangulation from a <tt>ucd</tt>-file</a> or 
 <a href="#program">generate a custom grid from within a program</a>.
+</p>
+<p>We note before actually going to some code snippets that
+a triangulation object must be empty before it is initialized with a
+grid. However, you need not fear now, since the library will tell you
+if you try to initialize a triangulation which is already initialized;
+in general, the library will warn you about almost all errors you do,
+since in the debug version there are very many checks.
 </p>
 
 <h3><a name="cube">Hypercube</a></h3>
 
 <p>
 A hypercube can be created using the function<br>
-<code>void GridGenerator&lt;dim&gt;::hyper_cube(Triangulation&lt;dim&gt; &amp;tria,const double left=0.,const double right=1.)</code><br>
+<code>void GridGenerator::hyper_cube(Triangulation&lt;dim&gt; &amp;tria,const double left=0.,const double right=1.)</code><br>
 The cube created is the tensor product of the left and right edges which
 default to 0 and 1, creating the unit hypercube. The hypercube will consist of
-exactly one cell. In two dimensions, this amounts to a unit square, in three, to a unit cube.  
+exactly one cell. In two dimensions, this amounts to a unit square, in
+three, to a unit cube. In one dimension, you simply get a line.
 </p>
 
 <table class="figure">
@@ -60,10 +70,10 @@ function calls needed. Be sure to use them in their appropriate places.
 #include &lt;grid/tria.h&gt;
 #include &lt;grid/grid_generator.h&gt;
 
-const unsigned int dim=2;  // Two dimensions; to create a cube set to three
-Triangulation&lt;dim&gt; tr;
+const unsigned int dim=2;  // Two dimensions; to create a cube set to dim=3
+Triangulation&lt;dim&gt; triangulation;
 
-GridGenerator&lt;dim&gt;::hyper_cube(tr,-1,1);
+GridGenerator::hyper_cube (triangulation, -1, 1);
 </code>
 </pre>
 
@@ -71,7 +81,7 @@ GridGenerator&lt;dim&gt;::hyper_cube(tr,-1,1);
 <h3><a name="ball">Hyperball</a></h3>
 <p>
 A hyperball can be created using the function<br>
-<code>void GridGenerator&lt;dim&gt;::hyper_ball(Triangulation&lt;dim&gt; &amp;tria,const Point&lt;dim&gt; center=0.,const double radius=1.)</code><br>
+<code>void GridGenerator::hyper_ball(Triangulation&lt;dim&gt; &amp;tria,const Point&lt;dim&gt; center=0.,const double radius=1.)</code><br>
 This will create a hyperball of given centre and radius where the location of the centre defaults to the origin and the radius to unity.
 </p>
 
@@ -95,13 +105,20 @@ This example will create a hyperball with unit radius centred on (1,0).
 #include &lt;base/point.h&gt;
 
 const unsigned int dim=2;  // For example
-Triangulation&lt;dim&gt; tr;
+Triangulation&lt;dim&gt; triangulation;
 Point&lt;dim&gt; centre(1,0); // Taking (1,0) as the centre of the ball
 
-GridGenerator&lt;dim&gt;::hyper_ball(tr,centre,1);
+GridGenerator::hyper_ball (triangulation, centre, 1);
 
 </code>
 </pre>
+
+As can be seen above, the unrefined ball (or circle) does not look
+very much like a ball (or circle). After several refinement
+steps, it looks much better, though. However, along the rays pointing
+outward in the initial grid, the cells ar distorted even in the fine
+grid and if you want to do high-accuracy computations on circles, you
+may want to use a better coarse grid than the one on the left.
 
 
 <h3><a name="L">Hyper-L</a></h3>
@@ -123,7 +140,11 @@ can be used to test the efficiency of error estimators.
 </p>
 
 <table class="figure">
-<caption class="figure" align="bottom">Hyper-L in three dimensions</caption>
+<caption class="figure" align="bottom">
+Hyper-L in three dimensions (not a good picture, since the proportions
+of short and long lines is not exactly one half, but you might get a
+clue about it)
+</caption>
 <td>
   <img src="../images/Hyper-L.gif" alt="Hyper-L" width=348 height=321>
 </td>
@@ -141,9 +162,9 @@ This example will create the default hyper-L.
 #include &lt;grid/grid_generator.h&gt;
 
 const unsigned int dim=2;  // For example
-Triangulation&lt;dim&gt; tr;
+Triangulation&lt;dim&gt; triangulation;
 
-GridGenerator&lt;dim&gt;::hyper_L(tr,-1,1);
+GridGenerator::hyper_L (triangulation, -1, 1);
 </code>
 </pre>
 
@@ -151,14 +172,21 @@ GridGenerator&lt;dim&gt;::hyper_L(tr,-1,1);
 <h3><a name="file">Reading a grid from a file</a></h3>
 
 <p>In many problems taken from real life you will find those grid types
-insufficient and you will need to create your own grid. Fortunately,
-this is possible. <acronym>deal.II</acronym> offers the possibility of
+insufficient and you will need to create your own grid. 
+This is possible: <acronym>deal.II</acronym> offers the possibility of
 reading a complete triangulation from a file in the <tt>ucd</tt>-format 
 used by avs. A <tt>ucd</tt>-file can be read with the function<br> 
 <code>void DataIn::read_ucd(istream&)</code><br>
 </p>
 
-<p><span class="parhead">Vertex numbering in input files:</span>
+<p><span class="parhead">
+Since the creation of input grids is probably not something you need to do on a
+daily basis, we will only very briefly describe the format of the
+input file. More information can be found in the documentation of the
+<code>GridIn</code> class.
+</p>
+<p>
+Vertex numbering in input files:</span>
 The vertex numbering must start at the vertex with the lowest number for lines
 and be counterclockwise for quads. Also, faces between adjacent cells
 must face in the same direction. This must be ensured by you, or by the
@@ -181,9 +209,10 @@ for creating grid cells and their properties. This is done in the order
 <li>boundaries</li>
 <li>create a triangulation from this information</li>
 </ol>
-You first create the vertices, then create cells by assigning vertices
-to them, then you set the boundary conditions. Last you use this information
-to create a triangulation. This is probably best illustrated by an example.
+In fact, this is the way the functions in the
+<code>GridGenerator</code> class use to produce the grids we have
+shown above.
+</p>
 <p class="example">
 <span class="example">Example:</span> Below we show the includes,
 definitions and
@@ -229,20 +258,23 @@ for (unsigned int i=0; i&lt;3; ++i)
 // to distinguish them from cell data like vertices and material.
 SubCellData boundary_info;                                       
 
-// We are using a boundary of cell number 1
+// We want to describe a line in 2d, which would be a cell in 1d,
+// which is why we can use the object for a 1d cell
+// (CellData&lt;1&gt;) for its description:
 boundary_info.boundary_lines.push_back (CellData&lt;1&gt;());
 
-// The boundary gets a material id of 
-boundary_info.boundary_lines.back().material_id = 1;
+// The boundary gets a material id of 1. The boundary id of lines in 2d
+// will be interpreted as the boundary id
+boundary_info.boundary_lines[0].material_id = 1;
 
-// The boundary is between vertices number 1 and 3
+// The boundary is between vertices number 0 and 3
 boundary_info.boundary_lines[0].vertices[0] = 0; 
 boundary_info.boundary_lines[0].vertices[1] = 3;
 
 // From this information the triangulation is created 
 coarse_grid-&gt;create_triangulation (vector&lt;Point&lt;2&gt; &gt;(&vertices[0],
                                                        &vertices[8]),
-                                                       cells, boundary_info);
+                                      cells, boundary_info);
 </code>
 </pre>
 

@@ -19,16 +19,17 @@
 
 <h1>Hanging Nodes</h1>
 
-This chapter discusses locally refined grids, which are the only ones with
-hanging nodes. A node is called hanging if its value is subject to a 
-constraint.
-In particular, nodes on the boundary of your domain
-are not hanging.
+This chapter discusses one aspect of locally refined grids. Using the
+approach chosen in <acronym>deal.II</acronym>, grids are produced with
+so-called hanging nodes.
+A node is called hanging if its value is subject to a 
+constraint induced by the requirement of globally continuous
+functions. We will make this clearer in the following.
 
-<h2>When do you get hanging nodes ?</h2>
+<h2>When do you get hanging nodes?</h2>
 
 <p>
-You get hanging nodes after each refinement. Hanging nodes are those that 
+You get hanging nodes after some refinements. Hanging nodes are those that 
 are situated on the boundary of a larger active cell. The global function 
 is assumed
 to be linear on the boundary of each active cell, therefore the value
@@ -63,6 +64,9 @@ with function values <code>x1</code> and <code>x2</code>. If you get
 a hanging node on this boundary during refinement it will be situated
 in the middle and therefore its value - the value of the function on 
 the boundary at this point - will be <code>x3 = 1/2 (x1+x2)</code>.
+The value <code>x3</code> is therefore not a free degree of freedom,
+but it is bound by this constraining equation and we will have to take
+this into account.
 </p>
 
 <h3>Mathematical implications, or<br>
@@ -107,7 +111,7 @@ or, taking
 
 <p>
 It is not possible to generate <code>~A</code> directly, but 
-w can generate <code>A</code> and condense it to <code>~A</code>
+we can generate <code>A</code> and condense it to <code>~A</code>
 using the constraints, solve the system and obtain <code>u</code> by
 <code>u=Cy</code>.
 </p>

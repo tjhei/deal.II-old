@@ -22,9 +22,16 @@
 template <typename T>
 void put (const T *t, const size_t N, const char */*debug_info*/)
 {
-  write (1,
-         reinterpret_cast<const char *> (t),
-         sizeof(T) * N);
+  try_write:
+  int ret = write (1,
+                   reinterpret_cast<const char *> (t),
+                   sizeof(T) * N);
+                                   // if write call was
+                                   // interrupted, just
+                                   // retry
+  if ((ret<0) && (errno==EINTR))
+    goto try_write;
+  
   fflush (NULL);
 };
 
@@ -35,9 +42,16 @@ void get (T *t, const size_t N, const char */*debug_info*/)
   unsigned int count = 0;
   while (count < sizeof(T)*N)
     {
+      try_read:
       int ret = read (0,
                       reinterpret_cast<char *> (t) + count,
                       sizeof(T) * N - count);
+                                       // if read call was
+                                       // interrupted, just
+                                       // retry
+      if ((ret<0) && (errno==EINTR))
+        goto try_read;
+      
       if (ret < 0)
         {
           std::cerr << "------ error " << ret << " on client side!"

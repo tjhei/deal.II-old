@@ -112,6 +112,7 @@ void die (const std::string &text, const T1 t1, const T2 t2)
   std::cerr << "----- detached_ma27: " << text
             << " code1=" << t1 << ", code2=" << t2
             << std::endl;
+  CommunicationsLog::list_communication ();
   abort ();
 };
 

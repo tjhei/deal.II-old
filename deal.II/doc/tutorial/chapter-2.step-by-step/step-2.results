@@ -30,10 +30,12 @@ one):
 </table>
 <p>
 
-As can be seen, the sparsity pattern is much better clustered around
-the main diagonal of the matrix after renumbering. Although this might
-not be apparent, the number of nonzero entries is the same in both
-pictures, of course.
+The different regions in the left picture represent the degrees of
+freedom on the different refinement levels of the triangulation.  As
+can be seen in the right picture, the sparsity pattern is much better
+clustered around the main diagonal of the matrix after
+renumbering. Although this might not be apparent, the number of
+nonzero entries is the same in both pictures, of course.
 
 <p>
 

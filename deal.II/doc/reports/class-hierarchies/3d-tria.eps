@@ -1,10 +1,10 @@
 %!PS-Adobe-2.0 EPSF-2.0
-%%Title: 1d-tria.eps
+%%Title: 3d-tria.eps
 %%Creator: fig2dev Version 3.2 Patchlevel 1
-%%CreationDate: Sun Dec 19 15:49:56 1999
+%%CreationDate: Sun Dec 19 16:06:42 1999
 %%For: wolf@adaptive (Wolfgang Bangerth)
 %%Orientation: Portrait
-%%BoundingBox: 0 0 513 239
+%%BoundingBox: 0 0 576 239
 %%Pages: 0
 %%BeginSetup
 %%EndSetup
@@ -49,7 +49,7 @@ $F2psDict /mtrx matrix put
 
 end
 save
--9.0 258.0 translate
+-15.0 258.0 translate
 1 -1 scale
 
 /cp {closepath} bind def
@@ -127,44 +127,67 @@ newfontname newfont definefont pop end } def
 
 $F2psBegin
 10 setmiterlimit
-n -1000 5287 m -1000 -1000 l 9692 -1000 l 9692 5287 l cp clip
+n -1000 5287 m -1000 -1000 l 10837 -1000 l 10837 5287 l cp clip
  0.06000 0.06000 sc
 % Polyline
+15.000 slw
+n 5100 1875 m 5100 2700 l gs col0 s gr 
+% Polyline
 7.500 slw
-n 3705 1500 m 3600 1500 3600 1770 105 arcto 4 {pop} repeat
-  3600 1875 5895 1875 105 arcto 4 {pop} repeat
-  6000 1875 6000 1605 105 arcto 4 {pop} repeat
-  6000 1500 3705 1500 105 arcto 4 {pop} repeat
+n 380 2700 m 275 2700 275 2970 105 arcto 4 {pop} repeat
+  275 3075 3245 3075 105 arcto 4 {pop} repeat
+  3350 3075 3350 2805 105 arcto 4 {pop} repeat
+  3350 2700 380 2700 105 arcto 4 {pop} repeat
+ cp gs col0 s gr 
+% Polyline
+n 3480 2700 m 3375 2700 3375 2970 105 arcto 4 {pop} repeat
+  3375 3075 6470 3075 105 arcto 4 {pop} repeat
+  6575 3075 6575 2805 105 arcto 4 {pop} repeat
+  6575 2700 3480 2700 105 arcto 4 {pop} repeat
+ cp gs col0 s gr 
+% Polyline
+n 6730 2700 m 6625 2700 6625 2970 105 arcto 4 {pop} repeat
+  6625 3075 9720 3075 105 arcto 4 {pop} repeat
+  9825 3075 9825 2805 105 arcto 4 {pop} repeat
+  9825 2700 6730 2700 105 arcto 4 {pop} repeat
+ cp gs col0 s gr 
+% Polyline
+n 4005 1500 m 3900 1500 3900 1770 105 arcto 4 {pop} repeat
+  3900 1875 6195 1875 105 arcto 4 {pop} repeat
+  6300 1875 6300 1605 105 arcto 4 {pop} repeat
+  6300 1500 4005 1500 105 arcto 4 {pop} repeat
  cp gs col0 s gr 
 % Polyline
 15.000 slw
-n 4800 1875 m 1800 2700 l gs col0 s gr 
+n 5100 1875 m 1800 2700 l gs col0 s gr 
 % Polyline
-n 1800 3075 m 1800 3900 l gs col0 s gr 
+n 5100 1875 m 8200 2700 l gs col0 s gr 
+% Polyline
+n 8250 3075 m 8250 3900 l gs col0 s gr 
 % Polyline
 7.500 slw
-n 280 2700 m 175 2700 175 2970 105 arcto 4 {pop} repeat
-  175 3075 3345 3075 105 arcto 4 {pop} repeat
-  3450 3075 3450 2805 105 arcto 4 {pop} repeat
-  3450 2700 280 2700 105 arcto 4 {pop} repeat
+n 7305 3900 m 7200 3900 7200 4170 105 arcto 4 {pop} repeat
+  7200 4275 9195 4275 105 arcto 4 {pop} repeat
+  9300 4275 9300 4005 105 arcto 4 {pop} repeat
+  9300 3900 7305 3900 105 arcto 4 {pop} repeat
  cp gs col0 s gr 
-% Polyline
-n 755 3900 m 650 3900 650 4170 105 arcto 4 {pop} repeat
-  650 4275 2845 4275 105 arcto 4 {pop} repeat
-  2950 4275 2950 4005 105 arcto 4 {pop} repeat
-  2950 3900 755 3900 105 arcto 4 {pop} repeat
- cp gs col0 s gr 
-/Times-Roman-iso ff 300.00 scf sf
-4800 1800 m
-gs 1 -1 sc (TriaAccessor<1>) dup sw pop 2 div neg 0 rm  col0 sh gr
-/Times-Roman-iso ff 375.00 scf sf
-4800 600 m
-gs 1 -1 sc (Class Hierarchy for the 1-dimensional Case, Part 1) dup sw pop 2 div neg 0 rm  col0 sh gr
 /Times-Roman-iso ff 300.00 scf sf
 1800 3000 m
-gs 1 -1 sc (TriaObjectAccessor<1,1>) dup sw pop 2 div neg 0 rm  col0 sh gr
+gs 1 -1 sc (TriaObjectAccessor<1,3>) dup sw pop 2 div neg 0 rm  col0 sh gr
 /Times-Roman-iso ff 300.00 scf sf
-1800 4200 m
-gs 1 -1 sc (CellAccessor<1>) dup sw pop 2 div neg 0 rm  col0 sh gr
+8250 3000 m
+gs 1 -1 sc (TriaObjectAccessor<3,3>) dup sw pop 2 div neg 0 rm  col0 sh gr
+/Times-Roman-iso ff 300.00 scf sf
+5100 1800 m
+gs 1 -1 sc (TriaAccessor<3>) dup sw pop 2 div neg 0 rm  col0 sh gr
+/Times-Roman-iso ff 300.00 scf sf
+8250 4200 m
+gs 1 -1 sc (CellAccessor<3>) dup sw pop 2 div neg 0 rm  col0 sh gr
+/Times-Roman-iso ff 300.00 scf sf
+5025 3000 m
+gs 1 -1 sc (TriaObjectAccessor<2,3>) dup sw pop 2 div neg 0 rm  col0 sh gr
+/Times-Roman-iso ff 375.00 scf sf
+4800 600 m
+gs 1 -1 sc (Class Hierarchy for the 3-dimensional Case, Part 1) dup sw pop 2 div neg 0 rm  col0 sh gr
 $F2psEnd
 rs

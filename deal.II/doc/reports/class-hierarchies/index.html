@@ -106,28 +106,53 @@ The triangulation accessor hierarchy
 The triangulation accessors are used to retrieve and store data in the
 triangulation.  There  exist accessors  for  lines  in one and  higher
 dimensions, accessors for  quads in two  and higher dimensions, and so
-on. Their inheritance tree is shown in the following two pictures:
+on. The general naming scheme is as follows:
+<ul>
+<li> <code>TriaAccessor&lt;dim&gt;</code> is a general base class
+     which is of not much interest.
+<li> <code>TriaObjectAccessor&lt;objectdim,spacedim&gt;</code> denotes
+     an accessor for an object with dimension
+     <code>objectdim</code> in a <code>spacedim</code> dimensional
+     space. It is derived from <code>TriaAccessor&lt;spacedim&gt;</code>.
+<li> <code>CellAccessor&lt;dim&gt;</code> presents the special
+     properties that a cell has. It is therefore derived from
+     <code>TriaObjectAccessor&lt;spacedimdim,spacedim&gt;</code>.
+</ul>
 
+
+
+Their inheritance trees in the different space dimensions therefore
+look like this:
+
+<hr>
 
 <CENTER>
-<IMG SRC="1d-tria.gif" ALIGN="CENTER"> 
+<IMG SRC="1d-tria.jpg" ALIGN="CENTER" WIDTH="80%"> 
 </CENTER>
 <P>
 
+<hr>
+
 <CENTER>
-<IMG SRC="2d-tria.gif" ALIGN="CENTER"> 
+<IMG SRC="2d-tria.jpg" ALIGN="CENTER" WIDTH="80%"> 
 </CENTER>
 <P>
+
+<hr>
+
+<CENTER>
+<IMG SRC="3d-tria.jpg" ALIGN="CENTER" WIDTH="80%"> 
+</CENTER>
+<P>
+
+<hr>
 
 Some of the data is only  useful if an object is  a cell. For example,
 neighborship is only accessible for cells,  while faces (e.g. lines in
 2D) can't access their neighbors (neither the  adjacent cells, nor the
 other   faces it touches).    Therefore, the CellAccessor classes  are
 derived from whatever  object a cell  is in the respective  dimension,
-i.e. from lines  in 1D, from quads  in 2D,  and  so on.  For technical
-reasons, this  inheritance  it mediated by  the  TriaSubstructAccessor
-classes; they  have   no functionality but  only  serve   as interface
-classes; they have no meaning to the user.
+i.e. from lines  in 1D, from quads  in 2D,  and  so on. 
 
 
 <H4>
@@ -153,9 +178,9 @@ cell iterators as well.
 In two space dimensions, the following types are declared by the
 <CODE>Triangulation<2></CODE> class:
 <PRE>
-    typedef TriaRawIterator   <2,LineAccessor<2> >    raw_line_iterator;
-    typedef TriaIterator      <2,LineAccessor<2> >        line_iterator;
-    typedef TriaActiveIterator<2,LineAccessor<2> > active_line_iterator;
+    typedef TriaRawIterator   <2,TriaObjectAccessor<1, 2> >    raw_line_iterator;
+    typedef TriaIterator      <2,TriaObjectAccessor<1, 2> >        line_iterator;
+    typedef TriaActiveIterator<2,TriaObjectAccessor<1, 2> > active_line_iterator;
     
     typedef TriaRawIterator   <2,CellAccessor<2> >    raw_quad_iterator;
     typedef TriaIterator      <2,CellAccessor<2> >        quad_iterator;
@@ -176,6 +201,38 @@ terms of the underlying accessor types.
 
 
 
+<P>
+
+In three space dimensions, the following types are declared by the
+<CODE>Triangulation<3></CODE> class:
+<PRE>
+    typedef TriaRawIterator   <3,TriaObjectAccessor<1, 3> >    raw_line_iterator;
+    typedef TriaIterator      <3,TriaObjectAccessor<1, 3> >        line_iterator;
+    typedef TriaActiveIterator<3,TriaObjectAccessor<1, 3> > active_line_iterator;
+    
+    typedef TriaRawIterator   <3,TriaObjectAccessor<2, 3> >    raw_quad_iterator;
+    typedef TriaIterator      <3,TriaObjectAccessor<2, 3> >        quad_iterator;
+    typedef TriaActiveIterator<3,TriaObjectAccessor<2, 3> > active_quad_iterator;
+
+    typedef TriaRawIterator   <3,CellAccessor<3> >    raw_hex_iterator;
+    typedef TriaIterator      <3,CellAccessor<3> >        hex_iterator;
+    typedef TriaActiveIterator<3,CellAccessor<3> > active_hex_iterator;
+
+    typedef    raw_hex_iterator    raw_cell_iterator;
+    typedef        hex_iterator        cell_iterator;
+    typedef active_hex_iterator active_cell_iterator;
+
+    typedef    raw_quad_iterator    raw_face_iterator;
+    typedef        quad_iterator        face_iterator;
+    typedef active_quad_iterator active_face_iterator;    
+</PRE>
+
+Since in this space dimension, hexes are cells and quads are the faces
+of  cells, the  appropriate face  and  cell iterators  are declared in
+terms of the underlying accessor types.
+
+
+
 
 <H3>
 The degree of freedom accessor hierarchy
@@ -185,43 +242,57 @@ The degree of freedom accessor hierarchy
 The DoFAccessor classes    provide access to  the   degree  of freedom
 information associated  with  cells,   lines, etc.   The   inheritance
 relationship is much the    same  as for the   triangulation  accessor
-classes, as can  be seen from the  following  pictures. In particular,
-the DoFSubstructAccessor  classes  fulfill the   same purpose  as  the
-TriaSubstructAccessors,  i.e.  they  only serve as  interface  classes
-without meaning to the user.
+classes, as can  be seen from the  following  pictures.
 
+<hr>
 
 <CENTER>
-<IMG SRC="1d-dof.gif" ALIGN="CENTER"> 
+<IMG SRC="1d-dof.jpg" ALIGN="CENTER" WIDTH="80%"> 
 </CENTER>
 <P>
 
 
+<hr>
+
 <CENTER>
-<IMG SRC="2d-dof.gif" ALIGN="CENTER"> 
+<IMG SRC="2d-dof.jpg" ALIGN="CENTER" WIDTH="80%"> 
 </CENTER>
 <P>
+
+
+<hr>
+
+<CENTER>
+<IMG SRC="3d-dof.jpg" ALIGN="CENTER" WIDTH="80%"> 
+</CENTER>
+<P>
+
+<hr>
 
 The main difference to the triangulation accessor hierarchy is that we
 want the DoF accessors to provide the information about the degrees of
 freedom, but for convenience also that of the triangulation. This way,
 we can get all the information from one object rather than needing two
-which work in parallel.
+which  work in  parallel, and  the  class hierarchy  shown above  does
+exactly this.
 
 <P>
 
-For  the named reason, it is   necessary to derive the DoFLineAccessor
-from the LineAccessor  class of the triangulation accessor  hierarchy,
-as well as  the DoFQuadAccessor  from  the QuadAccessor. However,   we
-would also like to include the functionality added by the CellAccessor
-class;  this  is done through some  template  magic: when in one space
-dimension, the  DoFLineAccessor is derived from CellAccessor&lt;1&gt;,
-while   when   in   higher     dimensions,   it   is    derived   from
-LineAccessor&lt;dim&gt;;  the  same  applies for  the  DoFQuadAccessor
-class.  Note  that this way,  CellAccessor is  always  a base class to
-DoFCellAccessor and the  inheritance  lattice is dimension  dependant;
-the  exact way of  achieving this  is complicated but  not of interest
-here.
+For the named reason, it is necessary to derive the
+<code>DoFObjectAccessor&lt;1,dim&gt;</code> from the
+<code>TriaObjectAccessor&lt;1,dim&gt;</code> class of the
+triangulation accessor hierarchy, as well as the
+<code>DoFObjectAccessor&lt;2,dim&gt;</code> from the
+<code>TriaObjectAccessor&lt;2,dim&gt;</code>. However, we would also
+like to include the functionality added by the CellAccessor class;
+this is done through some template magic: when in one space dimension,
+the <code>DoFObjectAccessor&lt;1,1&gt;</code> is derived from
+CellAccessor&lt;1&gt;, while when in higher dimensions, it is derived
+from <code>DoFObjectAccessor&lt;1,dim&gt;</code>; the same applies for
+the <code>DoFObjectAccessor&lt;2,dim&gt;</code> class.  Note that this
+way, CellAccessor is always a base class to DoFCellAccessor and the
+inheritance lattice is dimension dependant; the exact way of achieving
+this is complicated but not of interest here.
 
 
 <H4>
@@ -253,9 +324,9 @@ cell iterators as well.
 For two space dimensions:
 
 <PRE>
-    typedef TriaRawIterator   <2,DoFLineAccessor<2> >    raw_line_iterator;
-    typedef TriaIterator      <2,DoFLineAccessor<2> >        line_iterator;
-    typedef TriaActiveIterator<2,DoFLineAccessor<2> > active_line_iterator;
+    typedef TriaRawIterator   <2,DoFObjectAccessor<1, 2> >    raw_line_iterator;
+    typedef TriaIterator      <2,DoFObjectAccessor<1, 2> >        line_iterator;
+    typedef TriaActiveIterator<2,DoFObjectAccessor<1, 2> > active_line_iterator;
     
     typedef TriaRawIterator   <2,DoFCellAccessor<2> >    raw_quad_iterator;
     typedef TriaIterator      <2,DoFCellAccessor<2> >        quad_iterator;
@@ -270,26 +341,38 @@ For two space dimensions:
     typedef active_line_iterator active_face_iterator;    
 </PRE>
 
+
 <P>
 
-However, because of the  dimension dependant inheritance lattice,  the
-actual structure of the  data types is  more complex for more than one
-space dimension and looks like  given below. Since the exact mechanism
-is not of  matter for the  user of  the library, we  simply show these
-typedefs for completeness without going into details here.
+For three space dimensions:
 
 <PRE>
-    typedef TriaRawIterator   <2,DoFLineAccessor<2,LineAccessor<2> > >    raw_line_iterator;
-    typedef TriaIterator      <2,DoFLineAccessor<2,LineAccessor<2> > >        line_iterator;
-    typedef TriaActiveIterator<2,DoFLineAccessor<2,LineAccessor<2> > > active_line_iterator;
-</PRE>
+    typedef TriaRawIterator   <3,DoFObjectAccessor<1, 3> >    raw_line_iterator;
+    typedef TriaIterator      <3,DoFObjectAccessor<1, 3> >        line_iterator;
+    typedef TriaActiveIterator<3,DoFObjectAccessor<1, 3> > active_line_iterator;
 
+    typedef TriaRawIterator   <3,DoFObjectAccessor<2, 3> >    raw_quad_iterator;
+    typedef TriaIterator      <3,DoFObjectAccessor<2, 3> >        quad_iterator;
+    typedef TriaActiveIterator<3,DoFObjectAccessor<2, 3> > active_quad_iterator;
+
+    typedef TriaRawIterator   <3,DoFCellAccessor<3> >         raw_hex_iterator;
+    typedef TriaIterator      <3,DoFCellAccessor<3> >             hex_iterator;
+    typedef TriaActiveIterator<3,DoFCellAccessor<3> >      active_hex_iterator;
+
+    typedef    raw_hex_iterator    raw_cell_iterator;
+    typedef        hex_iterator        cell_iterator;
+    typedef active_hex_iterator active_cell_iterator;
+
+    typedef    raw_quad_iterator    raw_face_iterator;
+    typedef        quad_iterator        face_iterator;
+    typedef active_quad_iterator active_face_iterator;    
+</PRE>
 
 
 <P><HR></P>
 
 <div ALIGN="RIGHT">
-Wolfgang Bangerth, 1998
+Wolfgang Bangerth, 1998, 1999
 </div>
 <P>&nbsp;</P></BODY>
 </HTML>

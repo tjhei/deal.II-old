@@ -1,9 +1,9 @@
-# Copyright (C) 1999, 2000, 2001 by Wolfgang Bangerth, Univerisity of Heidelberg.de
+# Copyright (C) 1999, 2000, 2001, 2002 by Wolfgang Bangerth, University of Heidelberg
 
 # ignore comments at the start of the program. this includes CVS
 # tags and copyright notices.
 $_ = <>;
-while ( m!^/[/\*]!) {
+while ( m!^/[/\*]!  ||  m/^$/ ) {
     $_ = <>;
 }
 

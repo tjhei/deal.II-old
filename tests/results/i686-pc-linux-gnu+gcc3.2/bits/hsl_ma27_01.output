@@ -1,0 +1,22 @@
+
+DEAL::1d
+DEAL::relative norm distance = 0.00000
+DEAL::absolute norms = 0.00000 7.48331
+DEAL::relative norm distance = 0.00000
+DEAL::absolute norms = 0.00000 18.7083
+DEAL::relative norm distance = 0.00000
+DEAL::absolute norms = 0.00000 37.4166
+DEAL::2d
+DEAL::relative norm distance = 0.00000
+DEAL::absolute norms = 0.00000 57.2364
+DEAL::relative norm distance = 0.00000
+DEAL::absolute norms = 0.00000 143.091
+DEAL::relative norm distance = 0.00000
+DEAL::absolute norms = 0.00000 286.182
+DEAL::3d
+DEAL::relative norm distance = 0.00000
+DEAL::absolute norms = 0.00000 354.373
+DEAL::relative norm distance = 0.00000
+DEAL::absolute norms = 0.00000 885.932
+DEAL::relative norm distance = 0.00000
+DEAL::absolute norms = 0.00000 1771.86

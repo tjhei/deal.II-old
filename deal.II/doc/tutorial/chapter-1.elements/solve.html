@@ -146,7 +146,7 @@ doubles and the right hand side a vector of doubles.
 <code>
 #include &lt;lac/solver_control.h&gt;
 #include &lt;lac/solver_selector.h&gt;
-#include &lt;lac/sparsematrix.h&gt;
+#include &lt;lac/sparse_matrix.h&gt;
 #include &lt;lac/vector.h&gt;
 
 SolverControl control;
@@ -202,8 +202,8 @@ of the problem <code>Au=f</code>.
 <pre class="example">
 <code>
 #include &lt;lac/precondition_selector.h&gt;
-#include &lt;grid/dof.h&gt;
-#include &lt;lac/fullmatrix.h&gt;
+#include &lt;dofs/dof_handler.h&gt;
+#include &lt;lac/full_matrix.h&gt;
 
 FullMatrix&lt;double&gt; A(100,50);
 
@@ -237,7 +237,7 @@ we solve the problem.
 #include &lt;lac/precondition_selector.h&gt;
 
 // Include files for matrices and vectors
-#include &lt;lac/sparsematrix.h&gt;
+#include &lt;lac/sparse_matrix.h&gt;
 #include &lt;lac/vector.h&gt;
 
 // Initialize the solver control and the solver
@@ -287,7 +287,7 @@ we solve the problem.
 #include &lt;lac/precondition_selector.h&gt;
 
 // Include files for matrices and vectors
-#include &lt;lac/sparsematrix.h&gt;
+#include &lt;lac/sparse_matrix.h&gt;
 #include &lt;lac/vector.h&gt;
 
 // Initialize the solver control and the solver
@@ -348,7 +348,7 @@ vectors.
 #include &lt;lac/precondition_selector.h&gt;
 
 // Include files for matrices and vectors
-#include &lt;lac/sparsematrix.h&gt;
+#include &lt;lac/sparse_matrix.h&gt;
 #include &lt;lac/vector.h&gt;
 
 // Initialize the solver control and the solver
@@ -403,7 +403,7 @@ we solve the problem. We use the default damping parameter of 1.
 #include &lt;lac/precondition_selector.h&gt;
 
 // Include files for matrices and vectors
-#include &lt;lac/sparsematrix.h&gt;
+#include &lt;lac/sparse_matrix.h&gt;
 #include &lt;lac/vector.h&gt;
 
 // Initialize the solver control and the solver

@@ -1,4 +1,4 @@
-JobId Sat Oct 18 22:43:43 2003
+
 DEAL::0.0 face integration is ok: 7.07631e-16
 DEAL::0.0 subface integration is ok: 3.19491e-16
 DEAL::0.1 face integration is ok: 7.21645e-16
@@ -9,5 +9,3 @@ DEAL::0.3 face integration is ok: 7.07631e-16
 DEAL::0.3 subface integration is ok: 3.19491e-16
 DEAL::0.4 face integration is ok: 7.21645e-16
 DEAL::0.4 subface integration is ok: 2.98937e-16
-DEAL::0.0 face integration is ok: 2.57014e-17
-DEAL::0.0 subface integration is ok: 4.79657e-17

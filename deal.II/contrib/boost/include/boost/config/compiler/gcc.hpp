@@ -72,13 +72,4 @@
 #if (__GNUC__ == 2) && (__GNUC_MINOR__ < 90)
 #  error "Compiler not configured - please reconfigure"
 #endif
-//
-// last known and checked version is 3.4:
-#if (__GNUC__ > 3) || ((__GNUC__ == 3) && (__GNUC_MINOR__ > 4))
-#  if defined(BOOST_ASSERT_CONFIG)
-#     error "Unknown compiler version - please run the configure tests and report the results"
-#  else
-#     warning "Unknown compiler version - please run the configure tests and report the results"
-#  endif
-#endif
 

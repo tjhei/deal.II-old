@@ -1,3 +1,11 @@
+print "<h1> The commented program</h1>";
+
+# ignore the first few lines
+$_ = <>;
+while ( m!/\*\s*\$Id$!) {
+    $_ = <>;
+}
+
 # have two states, in which the program can be:
 # comment-mode and program-mode
 $comment_mode = 0;
@@ -10,13 +18,16 @@ while (<>) {
     # substitute special characters
     s/</&lt;/g;
     s/>/&gt;/g;
+    s/\t/        /g;
 
     if (($state == $program_mode) && m!^\s*//!)
     {     
 	$state = $comment_mode;
 	print "</code></pre>\n";
     }
-    elsif (($state == $comment_mode) && !m!^\s*//!)
+    # if in comment mode and no comment line: toggle state.
+    # don't do so, if only a blank line
+    elsif (($state == $comment_mode) && !m!^\s*//! && !m!^\s*$!)
     {     
 	$state = $program_mode;
 	print "<pre><code>\n";
@@ -33,3 +44,8 @@ while (<>) {
 	print "        $_";
     }
 }
+
+if ($state == $program_mode) {
+   print "</code></pre>\n";
+}
+

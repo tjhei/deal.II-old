@@ -1,0 +1,26 @@
+# ignore the first few lines
+$_ = <>;
+while ( m!/\*\s*\$Id$!) {
+    $_ = <>;
+}
+
+print "<h1> The plain program</h1>";
+print "<pre><code>";
+
+
+while (<>) {
+    # ignore cvs tag
+    next if m!/\*\s*\$Id:!;
+
+    # ignore comment lines
+    next if m!^\s*//!;  
+
+    # substitute special characters
+    s/</&lt;/g;
+    s/>/&gt;/g;
+    s/\t/        /g;
+
+    print "  $_";
+}
+
+print "</code></pre>";

@@ -1,0 +1,4050 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>2 N&#233;d&#233;lec's elements of first type for </TITLE>
+<META NAME="description" CONTENT="2 N&#233;d&#233;lec's elements of first type for ">
+<META NAME="keywords" CONTENT="main">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="main.css">
+
+</HEAD>
+
+<BODY >
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html59"
+  HREF="#SECTION00021000000000000000">2.1 Construction of N&#233;d&#233;lec elements on tetrahedral grids</A>
+<UL>
+<LI><A NAME="tex2html60"
+  HREF="#SECTION00021100000000000000">2.1.1 Polynomial spaces on the reference element</A>
+<LI><A NAME="tex2html61"
+  HREF="#SECTION00021200000000000000">2.1.2 Degrees of freedom on the reference element</A>
+<LI><A NAME="tex2html62"
+  HREF="#SECTION00021300000000000000">2.1.3 Piola transformation</A>
+<LI><A NAME="tex2html63"
+  HREF="#SECTION00021400000000000000">2.1.4 Transformation of the curl in 2d</A>
+<LI><A NAME="tex2html64"
+  HREF="#SECTION00021500000000000000">2.1.5 Transformation of the curl in 3d</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html65"
+  HREF="#SECTION00022000000000000000">2.2 N&#233;d&#233;lec Elements on affine quadrilateral or hexahedral grids</A>
+<UL>
+<LI><A NAME="tex2html66"
+  HREF="#SECTION00022100000000000000">2.2.1 Polynomial spaces on the reference element</A>
+<LI><A NAME="tex2html67"
+  HREF="#SECTION00022200000000000000">2.2.2 Degrees of freedom on the reference element</A>
+<LI><A NAME="tex2html68"
+  HREF="#SECTION00022300000000000000">2.2.3 Transformation of the vector field</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html69"
+  HREF="#SECTION00023000000000000000">2.3 Construction of N&#233;d&#233;lec elements on bi- or trilinear elements</A>
+<UL>
+<LI><A NAME="tex2html70"
+  HREF="#SECTION00023100000000000000">2.3.1 Bilinear elements in 2d</A>
+<LI><A NAME="tex2html71"
+  HREF="#SECTION00023200000000000000">2.3.2 Trilinear elements in 3d</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html72"
+  HREF="#SECTION00024000000000000000">2.4 Construction of global shape functions</A>
+<LI><A NAME="tex2html73"
+  HREF="#SECTION00025000000000000000">2.5 Approximation and convergence results</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00020000000000000000">
+2 <FONT SIZE="+1">N&#233;d&#233;lec's elements of first type for <!-- MATH
+ $H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$"></FONT></A>
+</H1><FONT SIZE="-1">
+	In this section we will present present <!-- MATH
+ $H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-conforming vector-valued finite elements, 
+	the N&#233;d&#233;lec elements of first type (cf.&nbsp;[<A
+ HREF="node4.html#Ned1">8</A>]), which can be used to discretize the variational problem (<A HREF="node1.html#eq:_varform">3</A>). 
+<BR></FONT>
+<P>
+<FONT SIZE="-1">In order to define a finite element we must specify
+	</FONT><DL>
+<DT><STRONG>the geometry</STRONG></DT>
+<DD>We choose a reference element <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$"> and a change of variables <!-- MATH
+ $F_K(\hat{x})$
+ -->
+<IMG
+ WIDTH="54" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img82.gif"
+ ALT="$ F_K(\hat{x})$">, the element map.
+		 We set <!-- MATH
+ $K = F_K(\hat{K})$
+ -->
+<IMG
+ WIDTH="100" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img83.gif"
+ ALT="$ K = F_K(\hat{K})$">.
+		
+</DD>
+<DT><STRONG>a function space</STRONG></DT>
+<DD>We need a <I>finite dimensional</I> function space <IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img84.gif"
+ ALT="$ \hat{R}$">, typically a space of polynomials, on the reference
+		cell, plus a transformation of <IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img84.gif"
+ ALT="$ \hat{R}$"> to a function space <IMG
+ WIDTH="33" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img85.gif"
+ ALT="$ R_K$"> on a general cell <IMG
+ WIDTH="23" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ K$">.
+		
+</DD>
+<DT><STRONG>dofs</STRONG></DT>
+<DD>We have to define a set of dofs <!-- MATH
+ $\mathcal{A} = \{\alpha_i(\cdot)\}_{i=1}^N$
+ -->
+<IMG
+ WIDTH="119" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img87.gif"
+ ALT="$ \mathcal{A} = \{\alpha_i(\cdot)\}_{i=1}^N$">. These are linear functionals on 
+		<IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img84.gif"
+ ALT="$ \hat{R}$"> and <!-- MATH
+ $N < \infty$
+ -->
+<IMG
+ WIDTH="63" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img88.gif"
+ ALT="$ N &lt; \infty$"> is the dimension of <IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img84.gif"
+ ALT="$ \hat{R}$">. <!-- MATH
+ $\mathcal{A}$
+ -->
+<IMG
+ WIDTH="20" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img89.gif"
+ ALT="$ \mathcal{A}$"> should be <I>unisolvent</I>, that is, the dofs <!-- MATH
+ $\alpha_i(\cdot)$
+ -->
+<IMG
+ WIDTH="41" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img90.gif"
+ ALT="$ \alpha_i(\cdot)$">
+		are linearly independent.
+	
+</DD>
+</DL>
+<P>
+<FONT SIZE="-1">First, we observe that for a conforming discretization of (<A HREF="node1.html#eq:_varform">3</A>) we cannot take vector-valued finite elements
+	that are build by taking the standard nodal finite element spaces of globally continuous functions for each vector component. 
+	For <!-- MATH
+ $H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-functions, the only continuity condition is the continuity of the tangential component over cell boundaries. 
+	This fact will motivate the choice of appropriate degrees of freedom (abbreviated by dofs in the following).
+<BR>
+We will give an outline of the construction of the finite element spaces described by N&#233;d&#233;lec in [<A
+ HREF="node4.html#Ned1">8</A>]. In literature, they are also referred to as
+ 	<I>N&#233;d&#233;lec's elements of first type</I>.
+<BR></FONT>
+<P>
+
+<H2><A NAME="SECTION00021000000000000000">
+2.1 Construction of N&#233;d&#233;lec elements on tetrahedral grids</A>
+</H2>
+<P>
+<FONT SIZE="-1">In this section, we denote by <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$"> the standard triangular or tetrahedral reference element.
+</FONT>
+<P>
+
+<H3><A NAME="SECTION00021100000000000000">
+2.1.1 Polynomial spaces on the reference element</A>
+</H3><FONT SIZE="-1">
+			In [<A
+ HREF="node4.html#Ned1">8</A>], N&#233;d&#233;lec introduces the function spaces <!-- MATH
+ $\hat{R} = \mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="66" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img91.gif"
+ ALT="$ \hat{R} = \mathcal{R}^k$">, on which his finite element will be based. These spaces are subject to this
+			section.
+			For more details, consult [<A
+ HREF="node4.html#Ned1">8</A>].
+<BR>
+We denote by <!-- MATH
+ $\mathbb{P}_k(\hat{\Sigma})$
+ -->
+<IMG
+ WIDTH="51" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img92.gif"
+ ALT="$ \mathbb{P}_k(\hat{\Sigma})$"> the space of polynomials of degree <IMG
+ WIDTH="16" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img93.gif"
+ ALT="$ k$"> on <!-- MATH
+ $\hat{\Sigma}$
+ -->
+<IMG
+ WIDTH="19" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img94.gif"
+ ALT="$ \hat{\Sigma}$">, where <!-- MATH
+ $\hat{\Sigma}$
+ -->
+<IMG
+ WIDTH="19" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img94.gif"
+ ALT="$ \hat{\Sigma}$"> is an edge, a
+			face of or the reference element itself.. The space <!-- MATH
+ $\tilde{\mathbb{P}}_k$
+ -->
+<IMG
+ WIDTH="25" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img95.gif"
+ ALT="$ \tilde{\mathbb{P}}_k$"> of homogeneous 
+			polynomials of degree <IMG
+ WIDTH="16" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img93.gif"
+ ALT="$ k$"> is the span of monomials of total degree <IMG
+ WIDTH="16" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img93.gif"
+ ALT="$ k$"> in <IMG
+ WIDTH="15" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img96.gif"
+ ALT="$ d$"> variables on <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$">. 
+</FONT>
+<P>
+<P>
+<DIV><B>D<SMALL>EFINITION</SMALL>  3</B> &nbsp; 
+We define the auxiliary space
+				<P></P>
+<DIV ALIGN="CENTER"><A NAME="def:_space_Sk"></A><!-- MATH
+ \begin{equation}
+\mathcal{S}^k := \{\, \underline p \in (\tilde{\mathbb{P}}_k)^d : \underline p \cdot \hat{\underline x} = \sum_{i=1}^{d} p_i\,\hat{x}_i \equiv 0 \,\}\,,
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="317" HEIGHT="75" ALIGN="MIDDLE" BORDER="0"
+ SRC="img97.gif"
+ ALT="$\displaystyle \mathcal{S}^k := \{\, \underline p \in (\tilde{\mathbb{P}}_k)^d :...
+...ine p \cdot \hat{\underline x} = \sum_{i=1}^{d} p_i\,\hat{x}_i \equiv 0 \,\}\,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(4)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+with <!-- MATH
+ $\hat{x} \in \hat{K}$
+ -->
+<IMG
+ WIDTH="54" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img98.gif"
+ ALT="$ \hat{x} \in \hat{K}$">.
+<BR>
+The dimension of this space is <IMG
+ WIDTH="16" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img93.gif"
+ ALT="$ k$"> in the case <IMG
+ WIDTH="47" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img13.gif"
+ ALT="$ d=2$"> and <IMG
+ WIDTH="69" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img99.gif"
+ ALT="$ k(k+2)$"> for <IMG
+ WIDTH="47" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img27.gif"
+ ALT="$ d=3$">.
+			</DIV><P></P>
+
+<P>
+<FONT SIZE="-1">N&#233;d&#233;lec's first family of <!-- MATH
+ $H(\mathop{\rm curl}; \Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-conforming finite elements is based on the polynomial spaces
+			</FONT><P>
+<DIV><B>D<SMALL>EFINITION</SMALL>  4</B> &nbsp; 
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="def:_space_Rk"></A><!-- MATH
+ \begin{equation}
+\mathcal{R}^k = \left(\mathbb{P}_{k-1}(\hat{K}) \right)^d \oplus \mathcal{S}^k\,.
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="196" HEIGHT="58" ALIGN="MIDDLE" BORDER="0"
+ SRC="img100.gif"
+ ALT="$\displaystyle \mathcal{R}^k = \left(\mathbb{P}_{k-1}(\hat{K}) \right)^d \oplus \mathcal{S}^k\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(5)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+These spaces have dimension 
+				<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\begin{split}
+					\mathrm{dim} (\mathcal{R}^k) &= k(k+2) \qquad \textrm{for} \quad d=2\,, \\
+					\mathrm{dim} (\mathcal{R}^k) &= \frac{(k+3)(k+2)k}{2} \qquad \textrm{for} \quad d=3\,.
+				\end{split}
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="446" HEIGHT="72" BORDER="0"
+ SRC="img101.gif"
+ ALT="\begin{displaymath}\begin{split}\mathrm{dim} (\mathcal{R}^k) &amp;= k(k+2) \qquad \t...
+...ac{(k+3)(k+2)k}{2} \qquad \textrm{for} \quad d=3\,. \end{split}\end{displaymath}"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P></DIV><P></P>
+
+<P>
+<FONT SIZE="-1">In the two-dimensional case, an equivalent characterization of the space <!-- MATH
+ $\mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img102.gif"
+ ALT="$ \mathcal{R}^k$"> is
+</FONT>
+<P>
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_spaces_2d"></A><!-- MATH
+ \begin{equation}
+\mathcal{R}^k = \left(\mathbb{P}_{k-1}(\hat{K}) \right)^2 \oplus \tilde{\mathbb{P}}_{k-1}\, \left(\begin{array}{cc} \hat{x}_2 \\-\hat{x}_1
+				\end{array}\right)\,.
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="293" HEIGHT="63" ALIGN="MIDDLE" BORDER="0"
+ SRC="img103.gif"
+ ALT="$\displaystyle \mathcal{R}^k = \left(\mathbb{P}_{k-1}(\hat{K}) \right)^2 \oplus ...
+..._{k-1}\, \left(\begin{array}{cc} \hat{x}_2 \\  -\hat{x}_1 \end{array}\right)\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(6)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">
+			This can be seen by noting that for <IMG
+ WIDTH="47" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img13.gif"
+ ALT="$ d=2$"> 
+			</FONT><!-- MATH
+ \begin{displaymath}
+\tilde{\mathbb{P}}_{k-1}\, \left(\begin{array}{cc} \hat{x}_2 \\-\hat{x}_1 \end{array}\right) \subseteq \mathcal{S}^k
+				%%\left\{\v p\quad \big|\quad \v p = \tilde{p} \left(\begin{array}{cc} x_2 \\-x_1 \end{array}\right)\,,\, \tilde{p}
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="164" HEIGHT="63" ALIGN="MIDDLE" BORDER="0"
+ SRC="img104.gif"
+ ALT="$\displaystyle \tilde{\mathbb{P}}_{k-1}\, \left(\begin{array}{cc} \hat{x}_2 \\  ...
+...ilde{p} \left(\begin{array}{cc} x_2 \\ -x_1 \end{array}\right)\,,\, \tilde{p}
+$">
+</DIV><P></P><FONT SIZE="-1"> 
+			obviously holds.
+			Moreover, the dimension of the space <!-- MATH
+ $\tilde{\mathbb{P}}_{k-1}$
+ -->
+<IMG
+ WIDTH="43" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img105.gif"
+ ALT="$ \tilde{\mathbb{P}}_{k-1}$"> of homogeneous polynomials of degree <IMG
+ WIDTH="46" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img106.gif"
+ ALT="$ k-1$"> in two variables is <IMG
+ WIDTH="16" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img93.gif"
+ ALT="$ k$"> and this is
+			also the dimension <!-- MATH
+ $\mathcal{S}^k$
+ -->
+<IMG
+ WIDTH="27" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img107.gif"
+ ALT="$ \mathcal{S}^k$">. This proves the stated equivalent representation of the space <!-- MATH
+ $\mathcal{S}^k$
+ -->
+<IMG
+ WIDTH="27" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img107.gif"
+ ALT="$ \mathcal{S}^k$">.
+<BR>			
+<BR>
+We illustrate these definitions with some examples. We start with the case <IMG
+ WIDTH="47" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img13.gif"
+ ALT="$ d=2$"> and consider the spaces of polynomials of degree
+			<IMG
+ WIDTH="48" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img108.gif"
+ ALT="$ k=1$"> and <IMG
+ WIDTH="48" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img109.gif"
+ ALT="$ k=2$">:
+</FONT>
+<P>
+<P>
+<DIV><B>E<SMALL>XAMPLE</SMALL>  1</B> &nbsp; 
+
+<P>
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_R1"></A><!-- MATH
+ \begin{equation}
+\mathcal{R}^1 = \left\langle
+								\left(\begin{array}{cc} 1 \\0 \end{array}\right)\,_,
+								\left(\begin{array}{cc} 0 \\1 \end{array}\right)\,_,
+								\left(\begin{array}{cc} \hat{x}_2 \\-\hat{x}_1 \end{array}\right) \right\rangle
+					
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="278" HEIGHT="63" ALIGN="MIDDLE" BORDER="0"
+ SRC="img110.gif"
+ ALT="$\displaystyle \mathcal{R}^1 = \left\langle \left(\begin{array}{cc} 1 \\  0 \end...
+...eft(\begin{array}{cc} \hat{x}_2 \\  -\hat{x}_1 \end{array}\right) \right\rangle$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(7)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+
+<P>
+<!-- MATH
+ \begin{displaymath}
+\mathcal{R}^2 = \left(\mathbb{P}_{1}(\hat{K}) \right)^2 \oplus
+							\left\langle 
+								\left(\begin{array}{cc} \hat{x}_1\,\hat{x}_2 \\-{\hat{x}_1}^2 \end{array}\right)\,_,
+								\left(\begin{array}{cc} {\hat{x}_2}^2 \\-\hat{x}_1\,\hat{x}_2 \end{array}\right)
+							\right\rangle					
+					
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="361" HEIGHT="63" ALIGN="MIDDLE" BORDER="0"
+ SRC="img111.gif"
+ ALT="$\displaystyle \mathcal{R}^2 = \left(\mathbb{P}_{1}(\hat{K}) \right)^2 \oplus
+\...
+...{cc} {\hat{x}_2}^2 \\  -\hat{x}_1\,\hat{x}_2 \end{array}\right)
+\right\rangle
+$">
+</DIV><P></P>
+
+<P>
+</DIV><P></P>
+
+<P>
+<FONT SIZE="-1">To illustrate a case for <IMG
+ WIDTH="47" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img27.gif"
+ ALT="$ d=3$">, we consider the lowest polynomial degree <IMG
+ WIDTH="48" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img108.gif"
+ ALT="$ k=1$">:
+			</FONT><P>
+<DIV><B>E<SMALL>XAMPLE</SMALL>  2</B> &nbsp; 
+We have to specify a basis for <!-- MATH
+ $\mathcal{S}^1$
+ -->
+<IMG
+ WIDTH="26" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img112.gif"
+ ALT="$ \mathcal{S}^1$">:
+<BR>
+Let <!-- MATH
+ $\underline p$
+ -->
+<IMG
+ WIDTH="15" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img113.gif"
+ ALT="$ \underline p$"> be a polynomial in <!-- MATH
+ $(\mathbb{P}_{1}(\hat{K}))^3$
+ -->
+<IMG
+ WIDTH="75" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img114.gif"
+ ALT="$ (\mathbb{P}_{1}(\hat{K}))^3$"> with componentwise representation
+				<!-- MATH
+ \begin{displaymath}
+p_i = \sum_{j=1}^3 a_{ij} \hat{x}_j\,, \qquad i=1,2,3\,.
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="234" HEIGHT="74" ALIGN="MIDDLE" BORDER="0"
+ SRC="img115.gif"
+ ALT="$\displaystyle p_i = \sum_{j=1}^3 a_{ij} \hat{x}_j\,, \qquad i=1,2,3\,.
+$">
+</DIV><P></P>
+The condition for <!-- MATH
+ $\underline p$
+ -->
+<IMG
+ WIDTH="15" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img113.gif"
+ ALT="$ \underline p$"> being in <!-- MATH
+ $\mathcal{S}^1$
+ -->
+<IMG
+ WIDTH="26" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img112.gif"
+ ALT="$ \mathcal{S}^1$"> is 
+				<!-- MATH
+ \begin{displaymath}
+\underline p \cdot \hat{\underline x} =
+						\sum_{i=1}^3 a_{ii}\hat{x}_i^2 + \sum_{\substack{i,j=1 \\j>i}}^3 (a_{ij}+a_{ji})\hat{x}_i \hat{x}_j \equiv 0\,.
+				
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="327" HEIGHT="86" ALIGN="MIDDLE" BORDER="0"
+ SRC="img116.gif"
+ ALT="$\displaystyle \underline p \cdot \hat{\underline x} =
+\sum_{i=1}^3 a_{ii}\hat{...
+...um_{\substack{i,j=1 \\  j&gt;i}}^3 (a_{ij}+a_{ji})\hat{x}_i \hat{x}_j \equiv 0\,.
+$">
+</DIV><P></P>
+This leads to the condition on the coefficients of a polynomial in <!-- MATH
+ $\mathcal{S}^1$
+ -->
+<IMG
+ WIDTH="26" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img112.gif"
+ ALT="$ \mathcal{S}^1$">:
+				<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\begin{split}
+					&a_{11}=a_{22}=a_{33} = 0 \\
+					&a_{12}= - a_{21}\,,\quad a_{13}= - a_{31}\,,\quad a_{23}= - a_{32}\,.
+				\end{split}
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="439" HEIGHT="55" BORDER="0"
+ SRC="img117.gif"
+ ALT="\begin{displaymath}\begin{split}&amp;a_{11}=a_{22}=a_{33} = 0 \\  &amp;a_{12}= - a_{21}\,,\quad a_{13}= - a_{31}\,,\quad a_{23}= - a_{32}\,. \end{split}\end{displaymath}"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+
+<P>
+With the basis of <!-- MATH
+ $\mathcal{S}^1$
+ -->
+<IMG
+ WIDTH="26" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img112.gif"
+ ALT="$ \mathcal{S}^1$"> which is obtained by choosing <!-- MATH
+ $a_{ij} = 1$
+ -->
+<IMG
+ WIDTH="59" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img118.gif"
+ ALT="$ a_{ij} = 1$">, <IMG
+ WIDTH="77" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img119.gif"
+ ALT="$ i=1,2,3$">, <IMG
+ WIDTH="44" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img120.gif"
+ ALT="$ j&gt;i$"> and setting all the other 
+				coefficients to zero, we get
+				<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\mathcal{R}^1 = \left(\mathbb{P}_{0}(\hat{K}) \right)^3 \oplus
+													 \left\langle 
+													 	\left(\begin{array}{ccc} 0 \\\hat{x}_3 \\\hat{x}_2 \end{array}\right)\,_,\,
+														\left(\begin{array}{ccc} \hat{x}_3 \\0 \\\hat{x}_1 \end{array}\right)\,_,\,
+														\left(\begin{array}{ccc} \hat{x}_2 \\\hat{x}_1 \\0 \end{array}\right)
+														\right\rangle
+				
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="402" HEIGHT="84" ALIGN="MIDDLE" BORDER="0"
+ SRC="img121.gif"
+ ALT="$\displaystyle \mathcal{R}^1 = \left(\mathbb{P}_{0}(\hat{K}) \right)^3 \oplus \l...
+...egin{array}{ccc} \hat{x}_2 \\  \hat{x}_1 \\  0 \end{array}\right) \right\rangle$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+
+<P>
+</DIV><P></P>
+
+<P>
+<FONT SIZE="-1">We remark at this point that the spaces <!-- MATH
+ $\mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img102.gif"
+ ALT="$ \mathcal{R}^k$"> do not span the whole <!-- MATH
+ $(\mathbb{P}_{k}(\hat{K}) )^d$
+ -->
+<IMG
+ WIDTH="76" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img122.gif"
+ ALT="$ (\mathbb{P}_{k}(\hat{K}) )^d$">. 
+			An <!-- MATH
+ $H(\mathop{\rm curl}; \Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-conforming FEM based on full polynomial spaces, the so called 
+			<I>N&#233;d&#233;lec elements of second type</I>, was introduced in 1986 by N&#233;d&#233;lec in [<A
+ HREF="node4.html#Ned2">10</A>].
+</FONT>
+<P>
+<P>
+<DIV><B>R<SMALL>EMARK</SMALL>  3</B> &nbsp; 
+The original, rather technical, representation of the spaces <!-- MATH
+ $\mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img102.gif"
+ ALT="$ \mathcal{R}^k$"> is given in Definition 2 in [<A
+ HREF="node4.html#Ned1">8</A>]. 
+				N&#233;d&#233;lec uses this representation in most of his proofs. We will not refer to it here.
+			</DIV><P></P>
+
+<P>
+
+<H3><A NAME="SECTION00021200000000000000"></A>
+		<A NAME="subsubsect:_dofs_on_tria"></A>
+<BR>
+2.1.2 Degrees of freedom on the reference element
+</H3><FONT SIZE="-1">
+			In this section we define the set <!-- MATH
+ $\mathcal{A}$
+ -->
+<IMG
+ WIDTH="20" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img89.gif"
+ ALT="$ \mathcal{A}$"> of dofs, which is a set of linear functionals on <!-- MATH
+ $\mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img102.gif"
+ ALT="$ \mathcal{R}^k$">.
+			</FONT><P>
+<DIV><B>R<SMALL>EMARK</SMALL>  4</B> &nbsp; 
+Recall that the dimension of the spaces of polynomials of degree <IMG
+ WIDTH="16" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img93.gif"
+ ALT="$ k$"> in <IMG
+ WIDTH="17" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img123.gif"
+ ALT="$ n$"> variables is <!-- MATH
+ $n+k+2 \choose n$
+ -->
+<IMG
+ WIDTH="66" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img124.gif"
+ ALT="$ n+k+2 \choose n$">. 
+			</DIV><P></P>
+
+<P>
+<P>
+<DIV><A NAME="def:_dofs_2d"><B>D<SMALL>EFINITION</SMALL>  5</B></A> &nbsp; 
+Let <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$"> be the reference triangle and <!-- MATH
+ $\hat{\underline t}$
+ -->
+<IMG
+ WIDTH="13" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img125.gif"
+ ALT="$ \hat{\underline t}$"> the tangent as defined in convention <A HREF="node1.html#def:_tangent">1</A>. 
+				The set of degrees of freedom <!-- MATH
+ $\mathcal{A}$
+ -->
+<IMG
+ WIDTH="20" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img89.gif"
+ ALT="$ \mathcal{A}$"> on <!-- MATH
+ $\mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img102.gif"
+ ALT="$ \mathcal{R}^k$"> in the 2d case consists of the linear functionals
+				<DL>
+<DT><STRONG>edge dofs</STRONG></DT>
+<DD><P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\hat{\alpha}(\hat{\underline u}) := \int_{\hat{e}} (\hat{\underline t}\cdot \hat{\underline u})\, \hat{\varphi }\,d\hat{s} \quad \forall \hat{\varphi }
+						\in \mathbb{P}_{k-1}(\hat{e})\,,
+					
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="288" HEIGHT="58" ALIGN="MIDDLE" BORDER="0"
+ SRC="img126.gif"
+ ALT="$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{e}} (\hat{\underli...
+...arphi }\,d\hat{s} \quad \forall \hat{\varphi } \in \mathbb{P}_{k-1}(\hat{e})\,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+for every edge <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img127.gif"
+ ALT="$ \hat{e}$"> of <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$">. We have a total of <IMG
+ WIDTH="25" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img128.gif"
+ ALT="$ 3k$"> of edge dofs.
+
+<P>
+</DD>
+<DT><STRONG>inner dofs</STRONG></DT>
+<DD><P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\hat{\alpha}(\hat{\underline u}) := \int_{\hat{K}} \hat{\underline u}\cdot \hat{\underline \varphi }\,d\hat{x} \quad \forall \hat{\underline \varphi }
+						\in (\mathbb{P}_{k-2}(\hat{K}))^2\,.
+					
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="305" HEIGHT="58" ALIGN="MIDDLE" BORDER="0"
+ SRC="img129.gif"
+ ALT="$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{K}} \hat{\underlin...
+...x} \quad \forall \hat{\underline \varphi } \in (\mathbb{P}_{k-2}(\hat{K}))^2\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+We have a total of <IMG
+ WIDTH="69" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img130.gif"
+ ALT="$ k(k-1)$"> of inner dofs.
+
+<P>
+</DD>
+</DL></DIV><P></P>
+
+<P>
+<P>
+<DIV><A NAME="def:_dofs_3d"><B>D<SMALL>EFINITION</SMALL>  6</B></A> &nbsp; 
+Let <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$"> be the reference tetrahedron, <!-- MATH
+ $\hat{\underline t}$
+ -->
+<IMG
+ WIDTH="13" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img125.gif"
+ ALT="$ \hat{\underline t}$"> the tangent to an edge as defined in convention <A HREF="node1.html#def:_tangent">1</A> 
+				and <!-- MATH
+ $\hat{\underline n}$
+ -->
+<IMG
+ WIDTH="17" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img131.gif"
+ ALT="$ \hat{\underline n}$"> the outward unit normal vector to a face. 
+				The set of degrees of freedom <!-- MATH
+ $\mathcal{A}$
+ -->
+<IMG
+ WIDTH="20" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img89.gif"
+ ALT="$ \mathcal{A}$"> on <!-- MATH
+ $\mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img102.gif"
+ ALT="$ \mathcal{R}^k$"> in the 3d case consists of the linear functionals
+				<DL>
+<DT><STRONG>edge dofs</STRONG></DT>
+<DD><P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\hat{\alpha}(\hat{\underline u}) := \int_{\hat{e}} (\hat{\underline t}\cdot \hat{\underline u})\, \hat{\varphi }\,d\hat{s} \quad \forall
+						\hat{\varphi } \in \mathbb{P}_{k-1}(\hat{e})\,,
+					
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="288" HEIGHT="58" ALIGN="MIDDLE" BORDER="0"
+ SRC="img126.gif"
+ ALT="$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{e}} (\hat{\underli...
+...arphi }\,d\hat{s} \quad \forall \hat{\varphi } \in \mathbb{P}_{k-1}(\hat{e})\,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+for every edge <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img127.gif"
+ ALT="$ \hat{e}$"> of the tetrahedron <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$">. We have a total of <IMG
+ WIDTH="25" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img132.gif"
+ ALT="$ 6k$"> of edge dofs.
+
+<P>
+</DD>
+<DT><STRONG>face dofs</STRONG></DT>
+<DD><P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\hat{\alpha}(\hat{\underline u}) := \int_{\hat{f}} (\hat{\underline u}\wedge \hat{\underline n})\cdot \hat{\underline \varphi }\,d\hat{a} \quad
+						\forall \hat{\varphi } \in (\mathbb{P}_{k-2}(\hat{f}) )^2\,,
+					
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="335" HEIGHT="58" ALIGN="MIDDLE" BORDER="0"
+ SRC="img133.gif"
+ ALT="$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{f}} (\hat{\underli...
+... }\,d\hat{a} \quad \forall \hat{\varphi } \in (\mathbb{P}_{k-2}(\hat{f}) )^2\,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+for every face <IMG
+ WIDTH="17" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img134.gif"
+ ALT="$ \hat{f}$"> of the tetrahedron <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$">. We have a total of <IMG
+ WIDTH="78" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img135.gif"
+ ALT="$ 4k(k-1)$"> of face dofs.
+
+<P>
+</DD>
+<DT><STRONG>inner dofs</STRONG></DT>
+<DD><P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\hat{\alpha}(\hat{\underline u}) := \int_{\hat{K}} \hat{\underline u}\cdot \hat{\underline \varphi }\,d\hat{x} \quad
+						\forall \hat{\underline \varphi } \in (\mathbb{P}_{k-3}(\hat{K}))^3\,.
+					
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="305" HEIGHT="58" ALIGN="MIDDLE" BORDER="0"
+ SRC="img136.gif"
+ ALT="$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{K}} \hat{\underlin...
+...x} \quad \forall \hat{\underline \varphi } \in (\mathbb{P}_{k-3}(\hat{K}))^3\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+We have a total of <!-- MATH
+ $\frac{k(k-1)(k-2)}{2}$
+ -->
+<IMG
+ WIDTH="88" HEIGHT="47" ALIGN="MIDDLE" BORDER="0"
+ SRC="img137.gif"
+ ALT="$ \frac{k(k-1)(k-2)}{2}$"> of inner dofs.
+				
+</DD>
+</DL></DIV><P></P>
+
+<P>
+<FONT SIZE="-1">We note that in the case of lowest order elements, i.&nbsp;e. <IMG
+ WIDTH="48" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img108.gif"
+ ALT="$ k=1$">, only edge dofs occur. This is not so for higher order elements. For
+			<IMG
+ WIDTH="48" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img109.gif"
+ ALT="$ k=2$"> we additionally have inner dofs in the 2d case and face dofs in the 3d case. For <IMG
+ WIDTH="48" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img138.gif"
+ ALT="$ k\leq3$"> we have all types of dofs in both
+			cases.
+<BR>
+We also note that the total number of dofs equals the dimension of the spaces <!-- MATH
+ $\mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img102.gif"
+ ALT="$ \mathcal{R}^k$">, as it should be.
+<BR>
+The representation of the <I>interface</I> dofs, that is edge dofs in 2d, edge and face dofs in 3d, is motivated by the continuity
+			condition on <!-- MATH
+ $H(\mathop{\rm curl}; \Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-functions stated in proposition <A HREF="node1.html#prop:_no_jumps">1</A>.
+</FONT>
+<P>
+<P>
+<DIV><B>P<SMALL>ROPOSITION</SMALL>  2</B> &nbsp; 
+The set <!-- MATH
+ $\mathcal{A}$
+ -->
+<IMG
+ WIDTH="20" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img89.gif"
+ ALT="$ \mathcal{A}$"> of dofs befined above is unisolvent on <!-- MATH
+ $\mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img102.gif"
+ ALT="$ \mathcal{R}^k$">. 
+				<!-- MATH
+ $\hat{\underline u}\in \mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="61" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img139.gif"
+ ALT="$ \hat{\underline u}\in \mathcal{R}^k$"> is uniquely defined by the moments <!-- MATH
+ $\hat{\alpha}(\hat{\underline u})$
+ -->
+<IMG
+ WIDTH="41" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img140.gif"
+ ALT="$ \hat{\alpha}(\hat{\underline u})$">.
+			</DIV><P></P>
+<FONT SIZE="-1">
+			</FONT><FONT SIZE="-1">P<SMALL>ROOF. </SMALL>See [<A
+ HREF="node4.html#Ned1">8</A>], proof of theorem 1 and preceeding lemmas.
+</FONT>
+<P>
+<P>
+<DIV><A NAME="ex:_shape_functions"><B>E<SMALL>XAMPLE</SMALL>  3</B></A> (Reference shape functions of lowest order for N&#233;d&#233;lec elements on triangular meshes)  &nbsp; 
+Let the reference element be the triangle 
+				<!-- MATH
+ $\hat{K} = \left\{ (\hat{x},\hat{y})\in\mathbb{R}^2:\quad 0\leq \hat{x}\leq 1\,,\,\, 0\leq \hat{y}\leq 1-\hat{x} \right\}$
+ -->
+<IMG
+ WIDTH="374" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img141.gif"
+ ALT="$ \hat{K} = \left\{ (\hat{x},\hat{y})\in\mathbb{R}^2:\quad 0\leq \hat{x}\leq 1\,,\,\, 0\leq \hat{y}\leq 1-\hat{x} \right\}$">.
+				Label the edges couterclockwise startung with <!-- MATH
+ $\hat{e}_0 = \overline{(0,0),(1,0)}$
+ -->
+<IMG
+ WIDTH="131" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img142.gif"
+ ALT="$ \hat{e}_0 = \overline{(0,0),(1,0)}$">. 
+				The tangential vectors to the edges are (oriented counterclockwise)
+				<!-- MATH
+ \begin{displaymath}
+\hat{\underline t}_0 = \left(\begin{array}{cc} 1 \\0 \end{array}\right)\,,\quad
+					\hat{\underline t}_1 = \frac{1}{\sqrt{2}}\left(\begin{array}{cc} -1 \\1 \end{array}\right)\,,\quad
+					\hat{\underline t}_2 = \left(\begin{array}{cc} 0 \\-1 \end{array}\right)\,.
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="398" HEIGHT="63" ALIGN="MIDDLE" BORDER="0"
+ SRC="img143.gif"
+ ALT="$\displaystyle \hat{\underline t}_0 = \left(\begin{array}{cc} 1 \\  0 \end{array...
+...
+\hat{\underline t}_2 = \left(\begin{array}{cc} 0 \\  -1 \end{array}\right)\,.
+$">
+</DIV><P></P>
+The underlying function space for lowest order N&#233;d&#233;lec elements on a triangular mesh is <!-- MATH
+ $\mathcal{R}^1$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img144.gif"
+ ALT="$ \mathcal{R}^1$"> from (<A HREF="#eq:_____R1"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.gif"></A>).
+<BR>
+In the case of <IMG
+ WIDTH="48" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img108.gif"
+ ALT="$ k=1$"> only egde-dofs occur. On <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$"> we have dofs of the type
+				<!-- MATH
+ $\int_{\hat{e}_i} (\hat{\underline t}\cdot \hat{\underline u})\, \hat{\varphi }\,d\hat{s}\,, \forall \hat{\varphi } \in \mathbb{P}_{0}(\hat{e}_i)$
+ -->
+<IMG
+ WIDTH="202" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img145.gif"
+ ALT="$ \int_{\hat{e}_i} (\hat{\underline t}\cdot \hat{\underline u})\, \hat{\varphi }\,d\hat{s}\,, \forall \hat{\varphi } \in \mathbb{P}_{0}(\hat{e}_i)$">. 
+				More precisely, since <!-- MATH
+ $\varphi \equiv 1$
+ -->
+<IMG
+ WIDTH="50" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img146.gif"
+ ALT="$ \varphi \equiv 1$"> is a basis for <!-- MATH
+ $\mathbb{P}_{0}(\hat{e}_i)$
+ -->
+<IMG
+ WIDTH="52" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img147.gif"
+ ALT="$ \mathbb{P}_{0}(\hat{e}_i)$"> we have the three dofs
+				<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\hat{\alpha}_i(\hat{\underline u}) = \int_{\hat{e}_i} (\hat{\underline t}\cdot \hat{\underline u})\,d\hat{s} \quad i=0,1,2\,.
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="250" HEIGHT="58" ALIGN="MIDDLE" BORDER="0"
+ SRC="img148.gif"
+ ALT="$\displaystyle \hat{\alpha}_i(\hat{\underline u}) = \int_{\hat{e}_i} (\hat{\underline t}\cdot \hat{\underline u})\,d\hat{s} \quad i=0,1,2\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+In order to construct a FE-basis <!-- MATH
+ $\hat{\underline N}_0,\hat{\underline N}_1,\hat{\underline N}_2$
+ -->
+<IMG
+ WIDTH="92" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img149.gif"
+ ALT="$ \hat{\underline N}_0,\hat{\underline N}_1,\hat{\underline N}_2$"> for <!-- MATH
+ $\mathcal{R}^1$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img144.gif"
+ ALT="$ \mathcal{R}^1$"> with respect to these dofs, we require
+				<!-- MATH
+ $\hat{\alpha}_i(\hat{\underline N}_j) = \delta_{ij}$
+ -->
+<IMG
+ WIDTH="102" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img150.gif"
+ ALT="$ \hat{\alpha}_i(\hat{\underline N}_j) = \delta_{ij}$">. This leads to a linear system for
+				the coefficients of the <!-- MATH
+ $\hat{\underline N}_i$
+ -->
+<IMG
+ WIDTH="28" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img151.gif"
+ ALT="$ \hat{\underline N}_i$"> in a general basis of <!-- MATH
+ $\mathcal{R}^1$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img144.gif"
+ ALT="$ \mathcal{R}^1$">. In the case of lowest order elements, it is easy to
+				verify that we have
+				<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation}
+\hat{\underline N}_0 = \left(\begin{array}{cc} 1-\hat{y} \\\hat{x} \end{array}\right)\,,\quad
+					\hat{\underline N}_1 = \left(\begin{array}{cc} -\hat{y} \\\hat{x} \end{array}\right)\,,\quad
+					\hat{\underline N}_2 = \left(\begin{array}{cc} -\hat{y} \\\hat{x}-1 \end{array}\right)\,.
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="446" HEIGHT="63" ALIGN="MIDDLE" BORDER="0"
+ SRC="img152.gif"
+ ALT="$\displaystyle \hat{\underline N}_0 = \left(\begin{array}{cc} 1-\hat{y} \\  \hat...
+...ine N}_2 = \left(\begin{array}{cc} -\hat{y} \\  \hat{x}-1 \end{array}\right)\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(8)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P></DIV><P></P>
+
+<P>
+
+<H3><A NAME="SECTION00021300000000000000"></A>	<A NAME="sec:_Piola_for_triangles"></A>
+<BR>
+2.1.3 Piola transformation
+</H3><FONT SIZE="-1">
+				An affine triangle or tetrahedron <IMG
+ WIDTH="23" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ K$"> is described by the affine element map
+				</FONT><!-- MATH
+ \begin{displaymath}
+K \ni x = F_K(\hat{x}) = B_K \hat{x} + b_K
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="226" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img153.gif"
+ ALT="$\displaystyle K \ni x = F_K(\hat{x}) = B_K \hat{x} + b_K
+$">
+</DIV><P></P>
+<P>
+<FONT SIZE="-1">In standard <!-- MATH
+ $H^1(\Omega )$
+ -->
+<IMG
+ WIDTH="56" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img37.gif"
+ ALT="$ H^1(\Omega )$">-conforming FEM, the shape functions <IMG
+ WIDTH="26" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img154.gif"
+ ALT="$ N_i$"> on a general cell <IMG
+ WIDTH="23" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ K$"> are obtained from the reference shape functions 
+				<IMG
+ WIDTH="26" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img155.gif"
+ ALT="$ \hat{N}_i$"> on the reference element <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$"> by the pull-back
+				</FONT><P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+N_i(x) = \left( \hat{N}_i \circ F_K^{-1} \right)(x)
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="187" HEIGHT="51" ALIGN="MIDDLE" BORDER="0"
+ SRC="img156.gif"
+ ALT="$\displaystyle N_i(x) = \left( \hat{N}_i \circ F_K^{-1} \right)(x)$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">
+				In the case of <!-- MATH
+ $H(\mathop{\rm curl}; \Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-conforming N&#233;d&#233;lec FEM we cannot transforme our shape function in this way. The pull-back of a 
+				<!-- MATH
+ $H(\mathop{\rm curl};\hat{K})$
+ -->
+<IMG
+ WIDTH="89" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img157.gif"
+ ALT="$ H(\mathop{\rm curl};\hat{K})$">-function needs not to be in <!-- MATH
+ $H(\mathop{\rm curl}; K)$
+ -->
+<IMG
+ WIDTH="89" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img158.gif"
+ ALT="$ H(\mathop{\rm curl}; K)$">. In addition, the pull-back is not an <!-- MATH
+ $\mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img102.gif"
+ ALT="$ \mathcal{R}^k$">-isomorphism and it
+				does not lead to an <!-- MATH
+ $H(\mathop{\rm curl}; \Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-conforming method if prescribing the dofs by definitions <A HREF="node2.html#def:_dofs_2d">5</A> or <A HREF="#def:_dofs_____3d"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.gif"></A>.
+<BR>
+In N&#233;d&#233;lec's FEM (or, more general, in <!-- MATH
+ $H(\mathop{\rm curl}; \Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-conforming FEM), the shape functions are transformed by the following covariant 
+				transformation for vector-fields:
+</FONT>
+<P>
+<DL COMPACT>
+<DT></DT>
+<DD>The element shape functions <!-- MATH
+ $\underline N_i(x)$
+ -->
+<IMG
+ WIDTH="51" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img159.gif"
+ ALT="$ \underline N_i(x)$"> on the element <!-- MATH
+ $K = F_K(\hat{K})$
+ -->
+<IMG
+ WIDTH="100" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img83.gif"
+ ALT="$ K = F_K(\hat{K})$"> are obtained 
+					from the reference shape functions by
+					<P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_Piola"></A><!-- MATH
+ \begin{equation}
+\underline N_i(x) = \mathcal{P}_K (\hat{\underline N}_i) =  \left(\hat{D}F_K^{-T} \hat{\underline N}_i\right) \circ F_K^{-1} (x)\,,
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="329" HEIGHT="51" ALIGN="MIDDLE" BORDER="0"
+ SRC="img160.gif"
+ ALT="$\displaystyle \underline N_i(x) = \mathcal{P}_K (\hat{\underline N}_i) = \left(\hat{D}F_K^{-T} \hat{\underline N}_i\right) \circ F_K^{-1} (x)\,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(9)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+where <!-- MATH
+ $\hat{D}F_K$
+ -->
+<IMG
+ WIDTH="46" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img161.gif"
+ ALT="$ \hat{D}F_K$"> is the jacobian <!-- MATH
+ $\frac{d}{d\hat{x}}F_K(\hat{x})$
+ -->
+<IMG
+ WIDTH="73" HEIGHT="42" ALIGN="MIDDLE" BORDER="0"
+ SRC="img162.gif"
+ ALT="$ \frac{d}{d\hat{x}}F_K(\hat{x})$"> of the element map.
+				
+</DD>
+</DL>
+<P>
+<FONT SIZE="-1">In literature, an equivalent to this transformation for <!-- MATH
+ $H(\mathop{\rm div}; \Omega )$
+ -->
+<IMG
+ WIDTH="80" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img163.gif"
+ ALT="$ H(\mathop{\rm div}; \Omega )$">-conforming FEM (which in that case is a contravariant map) 
+				is referred to as <I>Piola transformation</I>, cf. [<A
+ HREF="node4.html#Brezzi-Fortin">3</A>] pp.&nbsp;97. 
+<BR>
+Here, we will refer to the transformation (<A HREF="node2.html#eq:_Piola">9</A>) of the vector field also as <I>Piola transformation</I>.
+<BR>
+We note that the gradients of scalar nodal <!-- MATH
+ $H^1(\Omega )$
+ -->
+<IMG
+ WIDTH="56" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img37.gif"
+ ALT="$ H^1(\Omega )$">-conforming finite elements transform according to the Piola
+				transformation (<A HREF="node2.html#eq:_Piola">9</A>).
+</FONT>
+<P>
+<FONT SIZE="-1">In the case of tetrahedral elements and affine element map <!-- MATH
+ $F_K(\hat{x}) = B_K \hat{x} + b_k$
+ -->
+<IMG
+ WIDTH="151" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img164.gif"
+ ALT="$ F_K(\hat{x}) = B_K \hat{x} + b_k$">, the jacobian <!-- MATH
+ $\hat{D}F_K$
+ -->
+<IMG
+ WIDTH="46" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img161.gif"
+ ALT="$ \hat{D}F_K$"> 
+				is just the constant matrix <IMG
+ WIDTH="33" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img165.gif"
+ ALT="$ B_K$"> and we have 
+				</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_Piola_tri"></A><!-- MATH
+ \begin{equation}
+\underline v(x) = \mathcal{P}_K (\hat{\underline v}) =  B_K^{-T} \left(\hat{\underline v} \circ F_K^{-1} \right)(x)\,,
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="279" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img166.gif"
+ ALT="$\displaystyle \underline v(x) = \mathcal{P}_K (\hat{\underline v}) = B_K^{-T} \left(\hat{\underline v} \circ F_K^{-1} \right)(x)\,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(10)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+<P>
+
+<H3><A NAME="SECTION00021400000000000000"></A>
+				<A NAME="subsubsect:_2d-curl_on_tria"></A>
+<BR>
+2.1.4 Transformation of the curl in 2d
+</H3><FONT SIZE="-1">
+				For <!-- MATH
+ $\Omega \subset\mathbb{R}^2$
+ -->
+<IMG
+ WIDTH="62" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img167.gif"
+ ALT="$ \Omega \subset\mathbb{R}^2$">, we noted in remark <A HREF="node1.html#re:_rotation">1</A> that vector fields in <!-- MATH
+ $H(\mathop{\rm curl}; \Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$"> can be represented as
+			    rotated <!-- MATH
+ $H(\mathop{\rm div}; \Omega )$
+ -->
+<IMG
+ WIDTH="80" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img163.gif"
+ ALT="$ H(\mathop{\rm div}; \Omega )$"> vector fields. 
+				Moreover, it is easy to verify that
+				</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_rot._jacobian"></A><!-- MATH
+ \begin{equation}
+B_K^{-T} = \det B_K^{-1}\,R^T B_K\,R \,,
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="201" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img168.gif"
+ ALT="$\displaystyle B_K^{-T} = \det B_K^{-1}\,R^T B_K\,R \,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(11)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">
+				where <IMG
+ WIDTH="20" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img169.gif"
+ ALT="$ R$"> is the rotation matrix from remark <A HREF="node1.html#re:_rotation">1</A>.
+				Therefore, the properties of the Piola transformation (<A HREF="node2.html#eq:_Piola_tri">10</A>) in the 2d case can be derived directly
+				from the properties 
+				of the <!-- MATH
+ $H(\mathop{\rm div}; \Omega )$
+ -->
+<IMG
+ WIDTH="80" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img163.gif"
+ ALT="$ H(\mathop{\rm div}; \Omega )$">-Piola transformation stated in [<A
+ HREF="node4.html#Brezzi-Fortin">3</A>] pp.&nbsp;97.
+</FONT>
+<P>
+<P>
+<DIV><A NAME="th:_piola_2d"><B>T<SMALL>HEOREM</SMALL>  4</B></A> (Some properties of 2d Piola transformation for affine element map)  &nbsp; 
+Let <!-- MATH
+ $\underline v(x) = \mathcal{P}_K(\hat{\underline v})$
+ -->
+<IMG
+ WIDTH="110" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img170.gif"
+ ALT="$ \underline v(x) = \mathcal{P}_K(\hat{\underline v})$">, <!-- MATH
+ $\varphi (x) = \left( \hat{\varphi }\circ F_K^{-1} \right)(x)$
+ -->
+<IMG
+ WIDTH="166" HEIGHT="42" ALIGN="MIDDLE" BORDER="0"
+ SRC="img171.gif"
+ ALT="$ \varphi (x) = \left( \hat{\varphi }\circ F_K^{-1} \right)(x)$">, <!-- MATH
+ $\hat{x} =
+F_K^{-1}(x)$
+ -->
+<IMG
+ WIDTH="95" HEIGHT="42" ALIGN="MIDDLE" BORDER="0"
+ SRC="img172.gif"
+ ALT="$ \hat{x} =
+F_K^{-1}(x)$">, with  affine element map <IMG
+ WIDTH="31" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img173.gif"
+ ALT="$ F_K$">.
+					<DL COMPACT>
+<DT>(i)</DT>
+<DD>The gradient <!-- MATH
+ $D\underline v$
+ -->
+<IMG
+ WIDTH="30" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img174.gif"
+ ALT="$ D\underline v$"> transforms according to
+						<P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_gradient_trafo_2d"></A><!-- MATH
+ \begin{equation}
+D\underline v = B_K^{-T}\, \hat{D}\hat{\underline v}\, B_K^{-1}\, .
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="159" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img175.gif"
+ ALT="$\displaystyle D\underline v = B_K^{-T}\, \hat{D}\hat{\underline v}\, B_K^{-1}\, .$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(12)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+						
+</DD>
+<DT>(ii)</DT>
+<DD>The curl transforms according to
+							<P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:curl_trafo_2d"></A><!-- MATH
+ \begin{equation}
+\mathop{\rm curl}\underline v = \det B_K^{-1} \widehat{\mathop{\rm curl}} \hat{\underline v}\, .
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="176" HEIGHT="46" ALIGN="MIDDLE" BORDER="0"
+ SRC="img176.gif"
+ ALT="$\displaystyle \mathop{\rm curl}\underline v = \det B_K^{-1} \widehat{\mathop{\rm curl}} \hat{\underline v}\, .$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(13)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+As a consequence we see that <!-- MATH
+ $H(\mathop{\rm curl};K)$
+ -->
+<IMG
+ WIDTH="89" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img158.gif"
+ ALT="$ H(\mathop{\rm curl}; K)$"> is isomorphic to <!-- MATH
+ $H(\mathop{\rm curl};\hat{K})$
+ -->
+<IMG
+ WIDTH="89" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img157.gif"
+ ALT="$ H(\mathop{\rm curl};\hat{K})$"> under the Piola transformation
+							(<A HREF="node2.html#eq:_Piola_tri">10</A>).
+					
+</DD>
+</DL></DIV><P></P>
+
+<P>
+<FONT SIZE="-1">P<SMALL>ROOF. </SMALL>
+					</FONT><DL COMPACT>
+<DT>(i)</DT>
+<DD>Chain rule
+					
+</DD>
+<DT>(ii)</DT>
+<DD>We use that the 2d <!-- MATH
+ $\mathop{\rm curl}$
+ -->
+<IMG
+ WIDTH="36" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img19.gif"
+ ALT="$ \mathop{\rm curl}$"> operator is just the trace of the rotated jacobian <IMG
+ WIDTH="47" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img177.gif"
+ ALT="$ R\,Dv$">. By remark <A HREF="node2.html#eq:_rot._jacobian">11</A>,
+						we can replace <IMG
+ WIDTH="42" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img178.gif"
+ ALT="$ B_K^{-T}$"> and we get that <IMG
+ WIDTH="47" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img177.gif"
+ ALT="$ R\,Dv$"> is affine-equivalent to  <!-- MATH
+ $\det B_K^{-1}\,R\,\hat{D}\hat{v}$
+ -->
+<IMG
+ WIDTH="109" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img179.gif"
+ ALT="$ \det B_K^{-1}\,R\,\hat{D}\hat{v}$">,
+						which proves (ii).
+					
+</DD>
+</DL><FONT SIZE="-1">
+				
+</FONT>
+<P>
+<P>
+<DIV><B>C<SMALL>OROLLARY</SMALL>  1</B> &nbsp; 
+From (ii) in theorem <A HREF="node2.html#th:_piola_2d">4</A> we deduce
+					<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\int_{K} \mathop{\rm curl}\underline v\, \varphi \, dx = \int_{\hat{K}} \widehat{\mathop{\rm curl}}\hat{\underline v}\, \hat{\varphi } \,d\hat{x}\,,
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="240" HEIGHT="58" ALIGN="MIDDLE" BORDER="0"
+ SRC="img180.gif"
+ ALT="$\displaystyle \int_{K} \mathop{\rm curl}\underline v\, \varphi \, dx = \int_{\h...
+...}} \widehat{\mathop{\rm curl}}\hat{\underline v}\, \hat{\varphi } \,d\hat{x}\,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+and we have, together with (ii) from theorem <A HREF="node2.html#th:_piola_2d">4</A>
+					<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\int_{K} \mathop{\rm curl}\underline v\, \mathop{\rm curl}\underline u \, dx = | B_K |^{-1}\,\int_{\hat{K}} \widehat{\mathop{\rm curl}}\hat{\underline v}\,
+						\widehat{\mathop{\rm curl}}\hat{\underline u}  \,d\hat{x}\,.
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="362" HEIGHT="58" ALIGN="MIDDLE" BORDER="0"
+ SRC="img181.gif"
+ ALT="$\displaystyle \int_{K} \mathop{\rm curl}\underline v\, \mathop{\rm curl}\underl...
+...hat{\underline v}\, \widehat{\mathop{\rm curl}}\hat{\underline u} \,d\hat{x}\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P></DIV><P></P>
+
+<P>
+<FONT SIZE="-1"></FONT>
+<P>
+
+<H3><A NAME="SECTION00021500000000000000"></A>
+<A NAME="subsubsect:_3d-curl_on_tria"></A>
+<BR>
+2.1.5 Transformation of the curl in 3d
+</H3><FONT SIZE="-1">
+	In three dimensions, we cannot identify the curl-operator with the rotated
+	gradient or with the divergence of a rotated vector field. We cannot, as in 2d, derive a transformation formula for the curl from the
+	transformatin formula of the divergence.
+<BR>
+By the chain rule, we obtain the transformation of the gradient of a vector field <!-- MATH
+ $\underline v$
+ -->
+<IMG
+ WIDTH="15" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img20.gif"
+ ALT="$ \underline v$">, defined by the Piola transformation (<A HREF="#eq:__Piola_tri"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.gif"></A>) of a reference field <!-- MATH
+ $\hat{\underline v}$
+ -->
+<IMG
+ WIDTH="15" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img182.gif"
+ ALT="$ \hat{\underline v}$">:
+	</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_trafo_grad_3d"></A><!-- MATH
+ \begin{equation}
+D\underline v = B_K^{-T}\, \hat{D}\hat{\underline v}\, B_K^{-1}\, .
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="159" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img175.gif"
+ ALT="$\displaystyle D\underline v = B_K^{-T}\, \hat{D}\hat{\underline v}\, B_K^{-1}\, .$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(14)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+<P>
+<FONT SIZE="-1">We introduce the skew symmetric matrix <!-- MATH
+ $\mathop{\rm Curl}v$
+ -->
+<IMG
+ WIDTH="52" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img183.gif"
+ ALT="$ \mathop{\rm Curl}v$"> as 
+	 </FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_Curl"></A><!-- MATH
+ \begin{equation}
+\left({\mathop{\rm Curl}v}\right)_{ij} = \frac{\partial v_j}{\partial x_i} - \frac{\partial v_i}{\partial x_j}
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="183" HEIGHT="59" ALIGN="MIDDLE" BORDER="0"
+ SRC="img184.gif"
+ ALT="$\displaystyle \left({\mathop{\rm Curl}v}\right)_{ij} = \frac{\partial v_j}{\partial x_i} - \frac{\partial v_i}{\partial x_j}$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(15)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+<P>
+<FONT SIZE="-1">We see that <!-- MATH
+ $\mathop{\rm Curl}v = D\underline v^T - D\underline v$
+ -->
+<IMG
+ WIDTH="155" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img185.gif"
+ ALT="$ \mathop{\rm Curl}v = D\underline v^T - D\underline v$"> and therefore by (<A HREF="node2.html#eq:_trafo_grad_3d">14</A>)
+	 </FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_Curl_trafo"></A><!-- MATH
+ \begin{equation}
+\mathop{\rm Curl}v = B_K^{-T} \widehat{\mathop{\rm Curl}}\,\hat{v} \,B_K^{-1}
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="192" HEIGHT="46" ALIGN="MIDDLE" BORDER="0"
+ SRC="img186.gif"
+ ALT="$\displaystyle \mathop{\rm Curl}v = B_K^{-T} \widehat{\mathop{\rm Curl}}\,\hat{v} \,B_K^{-1}$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(16)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+<P>
+<P>
+<DIV><B>P<SMALL>ROPOSITION</SMALL>  3</B> (Transformation of the curl in 3d)  &nbsp; 
+Let <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$"> be the reference tetrahedron and <!-- MATH
+ $K=F_K(\hat{K})$
+ -->
+<IMG
+ WIDTH="100" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img83.gif"
+ ALT="$ K = F_K(\hat{K})$"> an affine image of it.
+	 	The curl of a vector field <!-- MATH
+ $\underline v(x)$
+ -->
+<IMG
+ WIDTH="39" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img187.gif"
+ ALT="$ \underline v(x)$"> on <IMG
+ WIDTH="23" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ K$">, defined by the Piola transformation of a reference field <!-- MATH
+ $\hat{\underline v}(\hat{x})$
+ -->
+<IMG
+ WIDTH="39" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img188.gif"
+ ALT="$ \hat{\underline v}(\hat{x})$">
+		transforms according to
+		<P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_curl_trafo_3d"></A><!-- MATH
+ \begin{equation}
+\left(\mathop{\rm curl}\underline v\right)_i(x) = \det \mathrm{M_i}(x) \,, \qquad i= 1,2,3\,
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="307" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img189.gif"
+ ALT="$\displaystyle \left(\mathop{\rm curl}\underline v\right)_i(x) = \det \mathrm{M_i}(x) \,, \qquad i= 1,2,3\,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(17)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+We obtain the matrix <!-- MATH
+ $\mathrm{M_i}$
+ -->
+<IMG
+ WIDTH="27" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img190.gif"
+ ALT="$ \mathrm{M_i}$"> by replacing i-th column of the (constant) jacobian <!-- MATH
+ $D(F_K^{-1}) = B_K^{-1}$
+ -->
+<IMG
+ WIDTH="122" HEIGHT="42" ALIGN="MIDDLE" BORDER="0"
+ SRC="img191.gif"
+ ALT="$ D(F_K^{-1}) = B_K^{-1}$"> 
+		by the vector <!-- MATH
+ $(\widehat{\mathop{\rm curl}}\,\hat{\underline v}\circ F_K^{-1})(x)$
+ -->
+<IMG
+ WIDTH="133" HEIGHT="46" ALIGN="MIDDLE" BORDER="0"
+ SRC="img192.gif"
+ ALT="$ (\widehat{\mathop{\rm curl}}\,\hat{\underline v}\circ F_K^{-1})(x)$">:
+		<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\left(\mathrm{M_i}\right)_{kl}(x) := \left\{ \begin{array}{ll}
+																(\widehat{\mathop{\rm curl}}\,\hat{v} \circ F_K^{-1})_k (x) & \textrm{if} \quad l=i \\
+																(B_K^{-1})_{kl} & \textrm{if} \quad l\neq i
+												\end{array} \right.
+		
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="351" HEIGHT="66" ALIGN="MIDDLE" BORDER="0"
+ SRC="img193.gif"
+ ALT="$\displaystyle \left(\mathrm{M_i}\right)_{kl}(x) := \left\{ \begin{array}{ll} (\...
+...} \quad l=i \\  (B_K^{-1})_{kl} &amp; \textrm{if} \quad l\neq i \end{array} \right.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+		(Note: an alternative, equivalent, transformation formula for the curl in 3d is given in proposition <A HREF="node2.html#prop:_Demko_curl">4</A>).
+	 </DIV><P></P>
+
+<P>
+<FONT SIZE="-1">P<SMALL>ROOF. </SMALL>
+	 	It holds
+		</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_curl2Curl"></A><!-- MATH
+ \begin{equation}
+\mathop{\rm curl}\underline v = \left( \begin{array}{ccc} ({\mathop{\rm Curl}v})_{23} \\({\mathop{\rm Curl}v})_{31}  \\({\mathop{\rm Curl}v})_{12} \end{array}\right)\,.
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="202" HEIGHT="84" ALIGN="MIDDLE" BORDER="0"
+ SRC="img194.gif"
+ ALT="$\displaystyle \mathop{\rm curl}\underline v = \left( \begin{array}{ccc} ({\math...
+...\mathop{\rm Curl}v})_{31} \\  ({\mathop{\rm Curl}v})_{12} \end{array}\right)\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(18)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">
+	 	We demonstrate the statement of the proposition for the first component of the curl, which is <!-- MATH
+ $(\mathop{\rm curl}\underline v)_1 = {\mathop{\rm Curl}v}_{23}$
+ -->
+<IMG
+ WIDTH="152" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img195.gif"
+ ALT="$ (\mathop{\rm curl}\underline v)_1 = {\mathop{\rm Curl}v}_{23}$">. 
+		Using the transformation (<A HREF="node2.html#eq:_Curl_trafo">16</A>), implicit summation over equal indices and the 
+		abbreviation <!-- MATH
+ $b_{ij} := (B_K^{-1})_{ij}$
+ -->
+<IMG
+ WIDTH="111" HEIGHT="42" ALIGN="MIDDLE" BORDER="0"
+ SRC="img196.gif"
+ ALT="$ b_{ij} := (B_K^{-1})_{ij}$">, we have
+		</FONT><!-- MATH
+ \begin{displaymath}
+({\mathop{\rm Curl}v})_{23} = b_{k2}\, (\widehat{\mathop{\rm Curl}}\, \hat{v})_{kl}\,b_{l3}
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="223" HEIGHT="46" ALIGN="MIDDLE" BORDER="0"
+ SRC="img197.gif"
+ ALT="$\displaystyle ({\mathop{\rm Curl}v})_{23} = b_{k2}\, (\widehat{\mathop{\rm Curl}}\, \hat{v})_{kl}\,b_{l3}
+$">
+</DIV><P></P><FONT SIZE="-1">
+		Writing this out and recalling that <!-- MATH
+ $\mathop{\rm Curl}v$
+ -->
+<IMG
+ WIDTH="52" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img183.gif"
+ ALT="$ \mathop{\rm Curl}v$"> is skew symmetric, yields
+		</FONT><!-- MATH
+ \begin{displaymath}
+({\mathop{\rm Curl}v})_{23} = (b_{12}b_{23} - b_{22}b_{13})(\widehat{\mathop{\rm Curl}} \,\hat{v})_{12}
+							-(b_{12}b_{33} - b_{32}b_{13})(\widehat{\mathop{\rm Curl}}\, \hat{v})_{31}
+							+(b_{22}b_{33} - b_{32}b_{23})(\widehat{\mathop{\rm Curl}}\, \hat{v})_{23}\,,
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="739" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img198.gif"
+ ALT="$\displaystyle ({\mathop{\rm Curl}v})_{23} = (b_{12}b_{23} - b_{22}b_{13})(\wide...
+...
++(b_{22}b_{33} - b_{32}b_{23})(\widehat{\mathop{\rm Curl}}\, \hat{v})_{23}\,,
+$">
+</DIV><P></P><FONT SIZE="-1">
+		and with (<A HREF="node2.html#eq:_curl2Curl">18</A>) this is equal to the determinant of 
+		</FONT><!-- MATH
+ \begin{displaymath}
+\mathrm{M_1} := \left(\begin{array}{ccc} (\widehat{\mathop{\rm curl}}\, v)_1 & b_{12} & b_{13} \\
+									 (\widehat{\mathop{\rm curl}}\, v)_2 & b_{22} & b_{23} \\
+									 (\widehat{\mathop{\rm curl}}\, v)_3 & b_{32} & b_{33}
+							\end{array}\right) \,.
+		
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="253" HEIGHT="93" ALIGN="MIDDLE" BORDER="0"
+ SRC="img199.gif"
+ ALT="$\displaystyle \mathrm{M_1} := \left(\begin{array}{ccc} (\widehat{\mathop{\rm cu...
+...
+(\widehat{\mathop{\rm curl}}\, v)_3 &amp; b_{32} &amp; b_{33}
+\end{array}\right) \,.
+$">
+</DIV><P></P><FONT SIZE="-1">
+		The proof for the other components follows analogously.
+	
+</FONT>
+<P>
+<FONT SIZE="-1">In the next proposition, we state an alternative, equivalent, formula for the transformation of the curl 
+	(e.&nbsp;g.&nbsp;used by Demkovicz in [<A
+ HREF="node4.html#Demko3d">12</A>]) 
+	</FONT><P>
+<DIV><A NAME="prop:_Demko_curl"><B>P<SMALL>ROPOSITION</SMALL>  4</B></A> &nbsp; 
+For a vector field <!-- MATH
+ $\underline v$
+ -->
+<IMG
+ WIDTH="15" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img20.gif"
+ ALT="$ \underline v$"> on the tetrahedron <!-- MATH
+ $K=F_K(\hat{K})$
+ -->
+<IMG
+ WIDTH="100" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img83.gif"
+ ALT="$ K = F_K(\hat{K})$">, defined by the Piola transformation (<A HREF="node2.html#eq:_Piola_tri">10</A>) of a reference 
+		field <!-- MATH
+ $\hat{\underline v}$
+ -->
+<IMG
+ WIDTH="15" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img182.gif"
+ ALT="$ \hat{\underline v}$"> on <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$">, we have
+		<P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_3d_curl_trafo_Demko"></A><!-- MATH
+ \begin{equation}
+\mathop{\rm curl}\underline v = \frac{1}{\det B_K}\,B_K\,(\widehat{\mathop{\rm curl}}\,\hat{\underline v} \circ F_K^{-1})\,.
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="271" HEIGHT="57" ALIGN="MIDDLE" BORDER="0"
+ SRC="img200.gif"
+ ALT="$\displaystyle \mathop{\rm curl}\underline v = \frac{1}{\det B_K}\,B_K\,(\widehat{\mathop{\rm curl}}\,\hat{\underline v} \circ F_K^{-1})\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(19)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P></DIV><P></P>
+
+<P>
+<FONT SIZE="-1">P<SMALL>ROOF. </SMALL>
+		The transformation formula (<A HREF="node2.html#eq:_3d_curl_trafo_Demko">19</A>) can be proven componentwise, and 
+	    we will only carry out the proof for the first vector component <!-- MATH
+ $(\mathop{\rm curl}\underline v)_1$
+ -->
+<IMG
+ WIDTH="69" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img201.gif"
+ ALT="$ (\mathop{\rm curl}\underline v)_1$">. The proofs for the other components
+		follow analogously.
+<BR>
+The identity (<A HREF="node2.html#eq:_3d_curl_trafo_Demko">19</A>) reads for the first vector component
+		</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_1.comp_of_curl_trafo"></A><!-- MATH
+ \begin{equation}
+(\mathop{\rm curl}\underline v)_1 = \frac{1}{\det B_K} (B_K)_{1j} ((\widehat{\mathop{\rm curl}}\,\hat{\underline v})_j \circ F^{-1})\,.
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="334" HEIGHT="57" ALIGN="MIDDLE" BORDER="0"
+ SRC="img202.gif"
+ ALT="$\displaystyle (\mathop{\rm curl}\underline v)_1 = \frac{1}{\det B_K} (B_K)_{1j} ((\widehat{\mathop{\rm curl}}\,\hat{\underline v})_j \circ F^{-1})\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(20)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1"> 
+		Referring to (<A HREF="node2.html#eq:_curl_trafo_3d">17</A>), we show that the right hand side of (<A HREF="node2.html#eq:_1.comp_of_curl_trafo">20</A>) equals 
+		<!-- MATH
+ $\det \mathrm{M_1}$
+ -->
+<IMG
+ WIDTH="57" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img203.gif"
+ ALT="$ \det \mathrm{M_1}$">.
+		For this, we expand <!-- MATH
+ $\det  \mathrm{M_1}$
+ -->
+<IMG
+ WIDTH="57" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img203.gif"
+ ALT="$ \det \mathrm{M_1}$"> to
+		</FONT><!-- MATH
+ \begin{displaymath}
+\det  \mathrm{M_1} = (\widehat{\mathop{\rm curl}}\, \hat{\underline v})_1 \det\mathcal{B}^{inv}_{11}
+								-(\widehat{\mathop{\rm curl}}\, \hat{\underline v})_2 \det\mathcal{B}^{inv}_{21}
+								+(\widehat{\mathop{\rm curl}}\, \hat{\underline v})_3 \det\mathcal{B}^{inv}_{31} \,,
+		
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="505" HEIGHT="46" ALIGN="MIDDLE" BORDER="0"
+ SRC="img204.gif"
+ ALT="$\displaystyle \det \mathrm{M_1} = (\widehat{\mathop{\rm curl}}\, \hat{\underlin...
+...ehat{\mathop{\rm curl}}\, \hat{\underline v})_3 \det\mathcal{B}^{inv}_{31} \,,
+$">
+</DIV><P></P><FONT SIZE="-1">
+		where <!-- MATH
+ $\mathcal{B}^{inv}_{ij}$
+ -->
+<IMG
+ WIDTH="39" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img205.gif"
+ ALT="$ \mathcal{B}^{inv}_{ij}$"> is the <!-- MATH
+ $2 \times 2$
+ -->
+<IMG
+ WIDTH="45" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img206.gif"
+ ALT="$ 2 \times 2$">-matrix arising from <IMG
+ WIDTH="39" HEIGHT="42" ALIGN="MIDDLE" BORDER="0"
+ SRC="img207.gif"
+ ALT="$ B_K^{-1}$"> when cancelling its i-th row and its j-th column.
+<BR>
+We recall the formula for the inverse of a matrix <!-- MATH
+ $A \in \mathbb{R}^{3\times 3}$
+ -->
+<IMG
+ WIDTH="78" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img208.gif"
+ ALT="$ A \in \mathbb{R}^{3\times 3}$">
+		</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_Ainv"></A><!-- MATH
+ \begin{equation}
+(A^{-1})_{ij} = \frac{1}{\det A} (-1)^{i+j} \det \mathcal{A}_{ji} \,,
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="251" HEIGHT="57" ALIGN="MIDDLE" BORDER="0"
+ SRC="img209.gif"
+ ALT="$\displaystyle (A^{-1})_{ij} = \frac{1}{\det A} (-1)^{i+j} \det \mathcal{A}_{ji} \,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(21)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1"> 
+		where <!-- MATH
+ $\mathcal{A}_{ij}$
+ -->
+<IMG
+ WIDTH="32" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img210.gif"
+ ALT="$ \mathcal{A}_{ij}$"> is the <!-- MATH
+ $2 \times 2$
+ -->
+<IMG
+ WIDTH="45" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img206.gif"
+ ALT="$ 2 \times 2$">-matrix arising from <IMG
+ WIDTH="19" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img211.gif"
+ ALT="$ A$"> when cancelling its i-th row and its j-th column.
+<BR>
+Replacing <IMG
+ WIDTH="33" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img165.gif"
+ ALT="$ B_K$"> in the right hand side of (<A HREF="node2.html#eq:_3d_curl_trafo_Demko">19</A>) by the expression (<A HREF="node2.html#eq:_Ainv">21</A>)
+		for <!-- MATH
+ $A = B_K^{-1}$
+ -->
+<IMG
+ WIDTH="75" HEIGHT="42" ALIGN="MIDDLE" BORDER="0"
+ SRC="img212.gif"
+ ALT="$ A = B_K^{-1}$">, we get
+		</FONT><!-- MATH
+ \begin{displaymath}
+\frac{1}{\det B_K}\,\frac{1}{\det B_K^{-1}} (-1)^{1+j} \det \mathcal{B}^{inv}_{j1} (\widehat{\mathop{\rm curl}}\, \hat{\underline v})_j
+			= (\widehat{\mathop{\rm curl}}\, \hat{\underline v})_1 \det \mathcal{B}^{inv}_{11}
+			-(\widehat{\mathop{\rm curl}}\, \hat{\underline v})_2 \det \mathcal{B}^{inv}_{21}
+			+(\widehat{\mathop{\rm curl}}\, \hat{\underline v})_3 \det \mathcal{B}^{inv}_{31} = \det  \mathrm{M_1}\,.
+		
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="834" HEIGHT="54" ALIGN="MIDDLE" BORDER="0"
+ SRC="img213.gif"
+ ALT="$\displaystyle \frac{1}{\det B_K}\,\frac{1}{\det B_K^{-1}} (-1)^{1+j} \det \math...
+...l}}\, \hat{\underline v})_3 \det \mathcal{B}^{inv}_{31} = \det \mathrm{M_1}\,.
+$">
+</DIV><P></P><FONT SIZE="-1">
+	
+</FONT>
+<P>
+<FONT SIZE="-1"></FONT>
+<H2><A NAME="SECTION00022000000000000000"></A> <A NAME="sec:_parallelo"></A>
+<BR>
+2.2 N&#233;d&#233;lec Elements on affine quadrilateral or hexahedral grids
+</H2><FONT SIZE="-1">
+	We want to present the ingredients for N&#233;d&#233;lec's finite elements of first type on
+	grids consisiting of parallelograms (in 2d) or the respective objects in 3d, so called parallelotops (cf. section 
+	<I>FE built on cubes</I> in [<A
+ HREF="node4.html#Ned1">8</A>]). Such grids consist
+	 of elements <IMG
+ WIDTH="20" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img214.gif"
+ ALT="$ C$"> that are affine images of the square or cubic reference element <!-- MATH
+ $\hat{C} = [0,1]^d$
+ -->
+<IMG
+ WIDTH="86" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img215.gif"
+ ALT="$ \hat{C} = [0,1]^d$">:
+	</FONT><!-- MATH
+ \begin{displaymath}
+C = F_C(\hat{C}) \quad C \ni x = B_C \hat{x} + \underline b_C \,, \hat{x} \in \hat{C}\,.
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="317" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img216.gif"
+ ALT="$\displaystyle C = F_C(\hat{C}) \quad C \ni x = B_C \hat{x} + \underline b_C \,, \hat{x} \in \hat{C}\,.
+$">
+</DIV><P></P>
+<P>
+
+<H3><A NAME="SECTION00022100000000000000">
+2.2.1 Polynomial spaces on the reference element</A>
+</H3>
+<P>
+<FONT SIZE="-1">In order to introduce the function spaces needed for the construction of N&#233;d&#233;lec's finite elements, 
+	let us define some spaces of vector-valued polynomials
+	</FONT><P>
+<DIV><B>D<SMALL>EFINITION</SMALL>  7</B> &nbsp; 
+<!-- MATH
+ $\mathcal{Q}_{l,m}$
+ -->
+<IMG
+ WIDTH="41" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img217.gif"
+ ALT="$ \mathcal{Q}_{l,m}$"> are the spaces of polynomials on the reference square <IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img218.gif"
+ ALT="$ \hat{C}$"> with maximal degree <IMG
+ WIDTH="12" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img219.gif"
+ ALT="$ l$"> in <IMG
+ WIDTH="24" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img220.gif"
+ ALT="$ \hat{x}_1$"> and 
+		<IMG
+ WIDTH="22" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img221.gif"
+ ALT="$ m$"> in <IMG
+ WIDTH="24" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img222.gif"
+ ALT="$ \hat{x}_2$">.
+<BR>		<!-- MATH
+ $\mathcal{Q}_{l,m,n}$
+ -->
+<IMG
+ WIDTH="53" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img223.gif"
+ ALT="$ \mathcal{Q}_{l,m,n}$"> are the spaces of polynomials on the reference cube <IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img218.gif"
+ ALT="$ \hat{C}$"> with maximal degree <IMG
+ WIDTH="12" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img219.gif"
+ ALT="$ l$"> 
+		in <IMG
+ WIDTH="24" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img220.gif"
+ ALT="$ \hat{x}_1$">, <IMG
+ WIDTH="22" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img221.gif"
+ ALT="$ m$"> in <IMG
+ WIDTH="24" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img222.gif"
+ ALT="$ \hat{x}_2$"> and <IMG
+ WIDTH="17" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img123.gif"
+ ALT="$ n$"> in <IMG
+ WIDTH="24" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img224.gif"
+ ALT="$ \hat{x}_3$">.
+	</DIV><P></P>
+
+<P>
+<FONT SIZE="-1">The spaces <IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img84.gif"
+ ALT="$ \hat{R}$"> for the reference shape functions now are in 2d
+	</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_2d_spaces_for_quads"></A><!-- MATH
+ \begin{equation}
+\mathcal{P}^k = \left\{ \hat{\underline u} =
+			\left(\begin{array}{cc} \hat{u}_1 \\\hat{u}_2 \end{array}\right): \quad 
+						 \hat{u}_1 \in \mathcal{Q}_{k-1,k}\,,
+								\hat{u}_2 \in \mathcal{Q}_{k,k-1} \right\}\,,
+	
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="402" HEIGHT="63" ALIGN="MIDDLE" BORDER="0"
+ SRC="img225.gif"
+ ALT="$\displaystyle \mathcal{P}^k = \left\{ \hat{\underline u} = \left(\begin{array}{...
+...t{u}_1 \in \mathcal{Q}_{k-1,k}\,, \hat{u}_2 \in \mathcal{Q}_{k,k-1} \right\}\,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(22)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1"> 
+</FONT>
+<P>
+<FONT SIZE="-1">and in 3d
+	</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_3d_spaces_for_quads"></A><!-- MATH
+ \begin{equation}
+\mathcal{P}^k = \left\{ \hat{\underline u} = \left(\begin{array}{ccc}
+					\hat{u}_1 \\\hat{u}_2 \\\hat{u}_3 \end{array}\right):\quad 
+								\hat{u}_1 \in \mathcal{Q}_{k-1,k,k}\,,
+								\hat{u}_2 \in \mathcal{Q}_{k,k-1,k}\,, 
+								\hat{u}_3 \in \mathcal{Q}_{k,k,k-1}\right\}\,.
+	
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="546" HEIGHT="84" ALIGN="MIDDLE" BORDER="0"
+ SRC="img226.gif"
+ ALT="$\displaystyle \mathcal{P}^k = \left\{ \hat{\underline u} = \left(\begin{array}{...
+...}_2 \in \mathcal{Q}_{k,k-1,k}\,, \hat{u}_3 \in \mathcal{Q}_{k,k,k-1}\right\}\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(23)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">  
+</FONT>
+<P>
+<FONT SIZE="-1">We renounce an example, since it is quite evident, what these spaces look like for a specific <IMG
+ WIDTH="16" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img93.gif"
+ ALT="$ k$">.
+</FONT>
+<P>
+
+<H3><A NAME="SECTION00022200000000000000"></A>
+<A NAME="subsubsect:_dofs_on_quads"></A>
+<BR>
+2.2.2 Degrees of freedom on the reference element
+</H3><FONT SIZE="-1">
+	We start with the degrees of freedoms on the reference square <!-- MATH
+ $\hat{C}\subset \mathbb{R}^2$
+ -->
+<IMG
+ WIDTH="64" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img227.gif"
+ ALT="$ \hat{C}\subset \mathbb{R}^2$">:
+	</FONT><P>
+<DIV><A NAME="def:_quad-dofs_2d"><B>D<SMALL>EFINITION</SMALL>  8</B></A> &nbsp; 
+Let <IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img218.gif"
+ ALT="$ \hat{C}$"> denote the reference square and <!-- MATH
+ $\hat{\underline t}$
+ -->
+<IMG
+ WIDTH="13" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img125.gif"
+ ALT="$ \hat{\underline t}$"> the tangent as defined in convention <A HREF="node1.html#def:_tangent">1</A>. 
+	The set of degrees of freedom <!-- MATH
+ $\mathcal{A}$
+ -->
+<IMG
+ WIDTH="20" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img89.gif"
+ ALT="$ \mathcal{A}$"> on <!-- MATH
+ $\mathcal{P}^k$
+ -->
+<IMG
+ WIDTH="28" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img228.gif"
+ ALT="$ \mathcal{P}^k$"> in the 2d case consists of the linear functionals
+	<DL>
+<DT><STRONG>edge dofs</STRONG></DT>
+<DD><P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\hat{\alpha}(\hat{\underline u}) := \int_{\hat{e}} (\hat{\underline t}\cdot \hat{\underline u})\, \hat{\varphi }\,d\hat{s}\,, \quad
+			\forall\, \hat{\varphi } \in \mathbb{P}_{k-1}(\hat{e})\,,
+		
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="302" HEIGHT="58" ALIGN="MIDDLE" BORDER="0"
+ SRC="img229.gif"
+ ALT="$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{e}} (\hat{\underli...
+... }\,d\hat{s}\,, \quad \forall\, \hat{\varphi } \in \mathbb{P}_{k-1}(\hat{e})\,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+for every edge <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img127.gif"
+ ALT="$ \hat{e}$"> of <IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img218.gif"
+ ALT="$ \hat{C}$">. We have a total of <IMG
+ WIDTH="25" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img230.gif"
+ ALT="$ 4k$"> of edge dofs.
+
+<P>
+</DD>
+<DT><STRONG>inner dofs</STRONG></DT>
+<DD><P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\hat{\alpha}(\hat{\underline u}) := \int_{\hat{C}}  \hat{\underline u}\cdot \hat{\underline \varphi }\,d\hat{x}\,, \quad
+			\forall\, \hat{\underline \varphi } = \left(\begin{array}{cc} \hat{\varphi }_1 \\\hat{\varphi }_2 \end{array}\right) \,,
+			\quad\hat{\varphi }_1\in\mathcal{Q}_{k-2,k-1}\,,\quad\hat{\varphi }_2\in\mathcal{Q}_{k-1,k-2}\,.
+		
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="566" HEIGHT="60" ALIGN="MIDDLE" BORDER="0"
+ SRC="img231.gif"
+ ALT="$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{C}} \hat{\underlin...
+... }_1\in\mathcal{Q}_{k-2,k-1}\,,\quad\hat{\varphi }_2\in\mathcal{Q}_{k-1,k-2}\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+We have a total of <IMG
+ WIDTH="78" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img232.gif"
+ ALT="$ 2k(k-1)$"> of inner dofs.
+
+<P>
+</DD>
+</DL></DIV><P></P>
+
+<P>
+<P>
+<DIV><A NAME="def:_quad-dofs_3d"><B>D<SMALL>EFINITION</SMALL>  9</B></A> &nbsp; 
+Let <IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img218.gif"
+ ALT="$ \hat{C}$"> denote the reference cube, <!-- MATH
+ $\hat{\underline t}$
+ -->
+<IMG
+ WIDTH="13" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img125.gif"
+ ALT="$ \hat{\underline t}$"> the tangent to an edge as defined in convention <A HREF="node1.html#def:_tangent">1</A> 
+	and <!-- MATH
+ $\hat{\underline n}$
+ -->
+<IMG
+ WIDTH="17" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img131.gif"
+ ALT="$ \hat{\underline n}$"> the outward unit normal vector to a face.  
+	The set of degrees of freedom <!-- MATH
+ $\mathcal{A}$
+ -->
+<IMG
+ WIDTH="20" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img89.gif"
+ ALT="$ \mathcal{A}$"> on <!-- MATH
+ $\mathcal{P}^k$
+ -->
+<IMG
+ WIDTH="28" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img228.gif"
+ ALT="$ \mathcal{P}^k$"> in the 3d case consists of the linear functionals
+	<DL>
+<DT><STRONG>edge dofs</STRONG></DT>
+<DD><P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\hat{\alpha}(\hat{\underline u}) := \int_{\hat{e}} (\hat{\underline t}\cdot \hat{\underline u})\, \hat{\varphi }\,d\hat{s}\,, \quad
+			\forall\, \hat{\varphi } \in \mathbb{P}_{k-1}(\hat{e})\,,
+			
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="302" HEIGHT="58" ALIGN="MIDDLE" BORDER="0"
+ SRC="img229.gif"
+ ALT="$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{e}} (\hat{\underli...
+... }\,d\hat{s}\,, \quad \forall\, \hat{\varphi } \in \mathbb{P}_{k-1}(\hat{e})\,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+for every edge <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img127.gif"
+ ALT="$ \hat{e}$"> of <IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img218.gif"
+ ALT="$ \hat{C}$">. We have a total of <IMG
+ WIDTH="33" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img233.gif"
+ ALT="$ 12k$"> of edge dofs.
+
+<P>
+</DD>
+<DT><STRONG>face dofs</STRONG></DT>
+<DD><P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\hat{\alpha}(\hat{\underline u}) := \int_{\hat{f}} (\hat{\underline u}\wedge \hat{\underline n})\cdot \hat{\underline \varphi }\,d\hat{a} \,,\quad
+			\forall \,\hat{\underline \varphi } = \left(\begin{array}{cc} \hat{\varphi }_1 \\\hat{\varphi }_2 \end{array}\right) \,,
+			\quad\hat{\varphi }_1\in\mathcal{Q}_{k-2,k-1}(\hat{f})\,,\quad\hat{\varphi }_2\in\mathcal{Q}_{k-1,k-2}(\hat{f})\,.
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="651" HEIGHT="60" ALIGN="MIDDLE" BORDER="0"
+ SRC="img234.gif"
+ ALT="$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{f}} (\hat{\underli...
+..._{k-2,k-1}(\hat{f})\,,\quad\hat{\varphi }_2\in\mathcal{Q}_{k-1,k-2}(\hat{f})\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+for every face <IMG
+ WIDTH="17" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img134.gif"
+ ALT="$ \hat{f}$"> of <IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img218.gif"
+ ALT="$ \hat{C}$">. We have a total of <!-- MATH
+ $6\cdot 2k(k-1)$
+ -->
+<IMG
+ WIDTH="99" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img235.gif"
+ ALT="$ 6\cdot 2k(k-1)$"> of face dofs.
+
+<P>
+</DD>
+<DT><STRONG>inner dofs</STRONG></DT>
+<DD><P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\hat{\alpha}(\hat{\underline u}) := \int_{\hat{C}}  \hat{\underline u}\cdot \hat{\underline \varphi }\,d\hat{x} \,,\quad
+			\forall\, \hat{\underline \varphi } = \left(\begin{array}{ccc} \hat{\varphi }_1 \\\hat{\varphi }_2 \\
+			\hat{\varphi }_3\end{array}\right) \,,\quad\hat{\varphi }_1\in\mathcal{Q}_{k-1,k-2,k-2}\,,\quad\hat{\varphi _2}\in\mathcal{Q}_{k-2,k-1,k-2}\,,
+			\quad\hat{\varphi _3}\in\mathcal{Q}_{k-2,k-2,k-1}\,.
+		
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="793" HEIGHT="82" ALIGN="MIDDLE" BORDER="0"
+ SRC="img236.gif"
+ ALT="$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{C}} \hat{\underlin...
+...athcal{Q}_{k-2,k-1,k-2}\,, \quad\hat{\varphi _3}\in\mathcal{Q}_{k-2,k-2,k-1}\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+We have a total of <IMG
+ WIDTH="86" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img237.gif"
+ ALT="$ 3k(k-1)^2$"> of inner dofs.
+	
+</DD>
+</DL></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>E<SMALL>XAMPLE</SMALL>  4</B> &nbsp; 
+Proceeding the same way as in example <A HREF="node2.html#ex:_shape_functions">3</A> for a triangular reference element, we obtain
+the reference shape functions of lowest
+order on the square <IMG
+ WIDTH="49" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img238.gif"
+ ALT="$ [0,1]^2$">. For the unit tangents as in convention <A HREF="node1.html#def:_tangent">1</A>
+<!-- MATH
+ \begin{displaymath}
+\hat{\underline t}_0 = \left(\begin{array}{cc} 1 \\0 \end{array}\right)\,,\quad
+		\hat{\underline t}_1 = \left(\begin{array}{cc} 0 \\1 \end{array}\right)\,,\quad
+		\hat{\underline t}_2 = \left(\begin{array}{cc} -1 \\0 \end{array}\right)\,, \quad
+		\hat{\underline t}_3 = \left(\begin{array}{cc} 0 \\-1 \end{array}\right)\,,
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="487" HEIGHT="63" ALIGN="MIDDLE" BORDER="0"
+ SRC="img239.gif"
+ ALT="$\displaystyle \hat{\underline t}_0 = \left(\begin{array}{cc} 1 \\  0 \end{array...
+...
+\hat{\underline t}_3 = \left(\begin{array}{cc} 0 \\  -1 \end{array}\right)\,,
+$">
+</DIV><P></P>
+they read
+	<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation}
+\hat{\underline N}_0 = \left(\begin{array}{cc} 1-\hat{y} \\0 \end{array}\right)\,,\quad
+		\hat{\underline N}_1 = \left(\begin{array}{cc} 0 \\\hat{x} \end{array}\right)\,,\quad
+		\hat{\underline N}_2 = \left(\begin{array}{cc} -\hat{y} \\0 \end{array}\right)\,,\quad
+		\hat{\underline N}_3 = \left(\begin{array}{cc} 0 \\\hat{x}-1 \end{array}\right)\,.
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="573" HEIGHT="60" ALIGN="MIDDLE" BORDER="0"
+ SRC="img240.gif"
+ ALT="$\displaystyle \hat{\underline N}_0 = \left(\begin{array}{cc} 1-\hat{y} \\  0 \e...
+...\underline N}_3 = \left(\begin{array}{cc} 0 \\  \hat{x}-1 \end{array}\right)\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(24)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P></DIV><P></P>
+
+<P>
+
+<H3><A NAME="SECTION00022300000000000000">
+2.2.3 Transformation of the vector field</A>
+</H3><FONT SIZE="-1">
+Since the elements of the considered grids are still affine images of the reference element, we can use the Piola transformation 
+(<A HREF="node2.html#eq:_Piola_tri">10</A>) to transform vector fields and the results stated in sections 
+<A HREF="node2.html#sec:_Piola_for_triangles">2.1.3</A> - <A HREF="node2.html#subsubsect:_3d-curl_on_tria">2.1.5</A> can be carried over one to one.
+</FONT>
+<H2><A NAME="SECTION00023000000000000000">
+2.3 Construction of N&#233;d&#233;lec elements on bi- or trilinear elements</A>
+</H2><FONT SIZE="-1">
+	We now want to consider grids that are composed of elements that are a bi- resp. trilinear images <!-- MATH
+ $F_C(\hat{C})$
+ -->
+<IMG
+ WIDTH="56" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img241.gif"
+ ALT="$ F_C(\hat{C})$"> of the reference 
+	element <!-- MATH
+ $\hat{C} = [0,1]^d$
+ -->
+<IMG
+ WIDTH="86" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img215.gif"
+ ALT="$ \hat{C} = [0,1]^d$">.
+ 	The main difference here is, that the jacobian <!-- MATH
+ $\hat{D}F_C(\hat{x})$
+ -->
+<IMG
+ WIDTH="67" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img242.gif"
+ ALT="$ \hat{D}F_C(\hat{x})$"> of the element map <IMG
+ WIDTH="29" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img243.gif"
+ ALT="$ F_C$"> is not
+ 	constant, and we have to use Piola transformation (<A HREF="node2.html#eq:_Piola">9</A>) to
+ 	transform vector fields. 
+<BR></FONT>
+<P>
+
+<H3><A NAME="SECTION00023100000000000000">
+2.3.1 Bilinear elements in 2d</A>
+</H3><FONT SIZE="-1">
+		The polynomial spaces <!-- MATH
+ $\mathcal{P}^k$
+ -->
+<IMG
+ WIDTH="28" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img228.gif"
+ ALT="$ \mathcal{P}^k$"> and the dofs remain the same as in the case of affine quadrilateral elements.
+<BR>
+A transformed vector field on a general element is now defined by the Piola transformation (<A HREF="node2.html#eq:_Piola">9</A>) 
+		</FONT><!-- MATH
+ \begin{displaymath}
+\underline v(x) = (\hat{D}F_C^{-T} \hat{\underline v}_i) \circ F_C^{-1} (x)
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="212" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img244.gif"
+ ALT="$\displaystyle \underline v(x) = (\hat{D}F_C^{-T} \hat{\underline v}_i) \circ F_C^{-1} (x)$">
+</DIV><P></P><FONT SIZE="-1"> of a vector field on the reference element. Note that
+		the jacobian <!-- MATH
+ $\hat{D}F_C(\hat{x})$
+ -->
+<IMG
+ WIDTH="67" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img242.gif"
+ ALT="$ \hat{D}F_C(\hat{x})$"> is not constant in this case. In contrast to the case of affine elements, the gradient <!-- MATH
+ $D\underline v$
+ -->
+<IMG
+ WIDTH="30" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img174.gif"
+ ALT="$ D\underline v$"> does not transform according to 
+		formula (<A HREF="node2.html#eq:_gradient_trafo_2d">12</A>). Non-vanishing second derivatives of <!-- MATH
+ $\hat{D}F_C(\hat{x})$
+ -->
+<IMG
+ WIDTH="67" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img242.gif"
+ ALT="$ \hat{D}F_C(\hat{x})$"> appear in the transformation rule
+		for gradients of vector fields.
+		This requires a new approach to express <!-- MATH
+ $\mathop{\rm curl}\underline v$
+ -->
+<IMG
+ WIDTH="47" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img245.gif"
+ ALT="$ \mathop{\rm curl}\underline v$"> in terms of
+		<!-- MATH
+ $\widehat{\mathop{\rm curl}}\,\hat{\underline v}$
+ -->
+<IMG
+ WIDTH="47" HEIGHT="46" ALIGN="MIDDLE" BORDER="0"
+ SRC="img246.gif"
+ ALT="$ \widehat{\mathop{\rm curl}}\,\hat{\underline v}$">. 
+		Nevertheless, it can be shown that the curl of a vector field transforms analogously to the case of affine elements.
+</FONT>
+<P>
+<P>
+<DIV><B>P<SMALL>ROPOSITION</SMALL>  5</B> &nbsp; 
+Let <IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img218.gif"
+ ALT="$ \hat{C}$"> be the reference element <IMG
+ WIDTH="49" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img238.gif"
+ ALT="$ [0,1]^2$"> and <IMG
+ WIDTH="20" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img214.gif"
+ ALT="$ C$"> a bilinear image of <IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img218.gif"
+ ALT="$ \hat{C}$">. If the vector field <!-- MATH
+ $\underline v(x)$
+ -->
+<IMG
+ WIDTH="39" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img187.gif"
+ ALT="$ \underline v(x)$">
+			transforms according to the Piola transformation (<A HREF="node2.html#eq:_Piola">9</A>), then the transformation of the curl obeys
+			<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\mathop{\rm curl}\underline v(x) = (\det \hat{D}F)^{-1} \widehat{\mathop{\rm curl}}\, \hat{\underline v}(\hat{x})\,, \qquad  x = F(\hat{x})\,,
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="370" HEIGHT="46" ALIGN="MIDDLE" BORDER="0"
+ SRC="img247.gif"
+ ALT="$\displaystyle \mathop{\rm curl}\underline v(x) = (\det \hat{D}F)^{-1} \widehat{\mathop{\rm curl}}\, \hat{\underline v}(\hat{x})\,, \qquad x = F(\hat{x})\,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+as in the affine case. 
+<BR>		</DIV><P></P>
+
+<P>
+<FONT SIZE="-1">P<SMALL>ROOF. </SMALL>
+			In this proof, the mapped element <IMG
+ WIDTH="20" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img214.gif"
+ ALT="$ C$"> will be fixed, so for simplicity we write <IMG
+ WIDTH="20" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img248.gif"
+ ALT="$ F$"> for <IMG
+ WIDTH="29" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img243.gif"
+ ALT="$ F_C$">.
+<BR>
+First note that <!-- MATH
+ $(\hat{D}F(F^{-1}(x)))^{-1} = D(F^{-1})(x)$
+ -->
+<IMG
+ WIDTH="242" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img249.gif"
+ ALT="$ (\hat{D}F(F^{-1}(x)))^{-1} = D(F^{-1})(x)$">. We use the notation <!-- MATH
+ $D(F^{-1})_{ij}(x)=
+\frac{\partial \hat{x}_i}{\partial x_j}(x)$
+ -->
+<IMG
+ WIDTH="174" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img250.gif"
+ ALT="$ D(F^{-1})_{ij}(x)=
+\frac{\partial \hat{x}_i}{\partial x_j}(x)$"> and imlicit summation to rewrite the Piola transformation of the vector field componentwise
+			</FONT><!-- MATH
+ \begin{displaymath}
+v_i(x) = \frac{\partial \hat{x}_j}{\partial x_i}(x) \,\hat{\underline v}_j (F^{-1}(x)) \,, \qquad i=1,2\,.
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="317" HEIGHT="59" ALIGN="MIDDLE" BORDER="0"
+ SRC="img251.gif"
+ ALT="$\displaystyle v_i(x) = \frac{\partial \hat{x}_j}{\partial x_i}(x) \,\hat{\underline v}_j (F^{-1}(x)) \,, \qquad i=1,2\,.
+$">
+</DIV><P></P><FONT SIZE="-1">
+			In the case of affine elements, i.&nbsp;e.&nbsp;for constant jacobian, we have
+</FONT>
+<P>
+<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\begin{split}
+			 \frac{\partial v_2}{\partial x_1} &= \frac{\partial \hat{x}_i}{\partial x_2}(x) \,\frac{\partial }{\partial x_1}\hat{\underline v}_i(F^{-1}(x)) \\
+			 \frac{\partial v_1}{\partial x_2} &= \frac{\partial \hat{x}_i}{\partial x_1}(x) \,\frac{\partial }{\partial x_2}\hat{\underline v}_i(F^{-1}(x)) \,,
+			\end{split}
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="398" HEIGHT="90" BORDER="0"
+ SRC="img252.gif"
+ ALT="\begin{displaymath}\begin{split}\frac{\partial v_2}{\partial x_1} &amp;= \frac{\part...
+... }{\partial x_2}\hat{\underline v}_i(F^{-1}(x)) \,, \end{split}\end{displaymath}"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+<P>
+<FONT SIZE="-1">whereas for non-constant jacobian we have
+</FONT>
+<P>
+<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\begin{split}
+			 \frac{\partial v_2}{\partial x_1} &= \frac{\partial ^2 \hat{x}_i}{\partial x_1\partial x_2}(x)\, \hat{\underline v}_i(F^{-1}(x)) +
+			 						  \frac{\partial \hat{x}_i}{\partial x_2}(x) \,\frac{\partial }{\partial x_1}\hat{\underline v}_i(F^{-1}(x)) \\
+			 \frac{\partial v_1}{\partial x_2} &= \frac{\partial ^2 \hat{x}_i}{\partial x_1\partial x_2}(x) \,\hat{\underline v}_i(F^{-1}(x)) +
+			 						  \frac{\partial \hat{x}_i}{\partial x_1}(x) \,\frac{\partial }{\partial x_2}\hat{\underline v}_i(F^{-1}(x)) \,.
+			\end{split}
+			
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="493" HEIGHT="95" BORDER="0"
+ SRC="img253.gif"
+ ALT="\begin{displaymath}\begin{split}\frac{\partial v_2}{\partial x_1} &amp;= \frac{\part...
+... }{\partial x_2}\hat{\underline v}_i(F^{-1}(x)) \,. \end{split}\end{displaymath}"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+<P>
+<FONT SIZE="-1">We see that in <I>both</I> cases we have 
+			</FONT><!-- MATH
+ \begin{displaymath}
+\mathop{\rm curl}\underline v = \frac{\partial v_2}{\partial x_1} - \frac{\partial v_1}{\partial x_2} =
+							\frac{\partial \hat{x}_i}{\partial x_2}(x) \,\frac{\partial }{\partial x_1}\hat{\underline v}_i(F^{-1}(x)) 
+							- \frac{\partial \hat{x}_i}{\partial x_1}(x) \,\frac{\partial }{\partial x_2}\hat{\underline v}_i(F^{-1}(x)) \,
+			
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="548" HEIGHT="59" ALIGN="MIDDLE" BORDER="0"
+ SRC="img254.gif"
+ ALT="$\displaystyle \mathop{\rm curl}\underline v = \frac{\partial v_2}{\partial x_1}...
+...ial x_1}(x) \,\frac{\partial }{\partial x_2}\hat{\underline v}_i(F^{-1}(x)) \,
+$">
+</DIV><P></P><FONT SIZE="-1">
+			that is, the second derivatives cancel out in the expression for the curl and the curl in the non-affine case transforms equally
+			to the curl in the affine case.
+		
+</FONT>
+<P>
+
+<H3><A NAME="SECTION00023200000000000000">
+2.3.2 Trilinear elements in 3d</A>
+</H3><FONT SIZE="-1">
+		The polynomial spaces <!-- MATH
+ $\mathcal{P}^k$
+ -->
+<IMG
+ WIDTH="28" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img228.gif"
+ ALT="$ \mathcal{P}^k$"> and the dofs remain the same as in the case of affine hexahedral elements.
+<BR>
+The
+		vector field on a genereal element is defined by the Piola transformation (<A HREF="node2.html#eq:_Piola">9</A>).
+<BR>
+The problem of the non-vanishing second derivatives of the jacobian <!-- MATH
+ $D(F_C^{-1})(x)$
+ -->
+<IMG
+ WIDTH="90" HEIGHT="42" ALIGN="MIDDLE" BORDER="0"
+ SRC="img255.gif"
+ ALT="$ D(F_C^{-1})(x)$"> arises again, and we cannot generalize the results
+		from the affine case straight away.
+<BR>
+But analogously to the 2d case, one can check that in in the transformation rule for expressions 
+		<!-- MATH
+ $\frac{\partial v_i}{\partial x_j} - \frac{\partial v_j}{\partial x_i}$
+ -->
+<IMG
+ WIDTH="78" HEIGHT="47" ALIGN="MIDDLE" BORDER="0"
+ SRC="img256.gif"
+ ALT="$ \frac{\partial v_i}{\partial x_j} - \frac{\partial v_j}{\partial x_i}$">, <!-- MATH
+ $i,j = 1,2,3$
+ -->
+<IMG
+ WIDTH="93" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img257.gif"
+ ALT="$ i,j = 1,2,3$">,
+		which define the curl-operator, the terms containing second derivatives vanish. We have therefore again the transformation rule 
+		(<A HREF="node2.html#eq:_Curl_trafo">16</A>) for the skew matrix <!-- MATH
+ $\mathop{\rm Curl}v = Dv^T - Dv$
+ -->
+<IMG
+ WIDTH="155" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img258.gif"
+ ALT="$ \mathop{\rm Curl}v = Dv^T - Dv$">:
+		</FONT><!-- MATH
+ \begin{displaymath}
+\mathop{\rm Curl}v (x) = ((\hat{D}F_C^{-T} \widehat{\mathop{\rm Curl}}\,\hat{v} \,\hat{D}F_C^{-1}) \circ F_C^{-1})(x)
+						= (DF_C^{-1})^T(x)\, (\widehat{\mathop{\rm Curl}}\,\hat{v}\circ F_C^{-1})(x)\,DF_C^{-1}(x) \,.
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="673" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img259.gif"
+ ALT="$\displaystyle \mathop{\rm Curl}v (x) = ((\hat{D}F_C^{-T} \widehat{\mathop{\rm C...
+...x)\, (\widehat{\mathop{\rm Curl}}\,\hat{v}\circ F_C^{-1})(x)\,DF_C^{-1}(x) \,.
+$">
+</DIV><P></P>
+<P>
+<FONT SIZE="-1">It follows that the following proposition can be proved analogously to the case of affine elements (replace there <IMG
+ WIDTH="31" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img260.gif"
+ ALT="$ B_C$"> by 
+		<!-- MATH
+ $\hat{D}F_C(\hat(x))$
+ -->
+<IMG
+ WIDTH="81" HEIGHT="46" ALIGN="MIDDLE" BORDER="0"
+ SRC="img261.gif"
+ ALT="$ \hat{D}F_C(\hat(x))$">).	
+		</FONT><P>
+<DIV><B>P<SMALL>ROPOSITION</SMALL>  6</B> &nbsp; 
+Let the vector field <!-- MATH
+ $\underline v(x)$
+ -->
+<IMG
+ WIDTH="39" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img187.gif"
+ ALT="$ \underline v(x)$"> on a trilinear image <!-- MATH
+ $C = F_C(\hat{C})$
+ -->
+<IMG
+ WIDTH="93" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img262.gif"
+ ALT="$ C = F_C(\hat{C})$"> be defined by the Piola transformation of a 
+			reference field <!-- MATH
+ $\hat{\underline v}(\hat{x})$
+ -->
+<IMG
+ WIDTH="39" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img188.gif"
+ ALT="$ \hat{\underline v}(\hat{x})$"> on <IMG
+ WIDTH="20" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img218.gif"
+ ALT="$ \hat{C}$">. The transformation formula for the curl then reads
+			<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\mathop{\rm curl}\underline v =
+				\left(\frac{1}{\det \hat{D}F_C}\,\hat{D}F_C\, \widehat{\mathop{\rm curl}}\,\hat{\underline v} \right) \circ F_C^{-1}\,.
+			
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="305" HEIGHT="61" ALIGN="MIDDLE" BORDER="0"
+ SRC="img263.gif"
+ ALT="$\displaystyle \mathop{\rm curl}\underline v = \left(\frac{1}{\det \hat{D}F_C}\,...
+...F_C\, \widehat{\mathop{\rm curl}}\,\hat{\underline v} \right) \circ F_C^{-1}\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P></DIV><P></P>
+
+<P>
+<FONT SIZE="-1"></FONT>
+<H2><A NAME="SECTION00024000000000000000">
+2.4 Construction of global shape functions</A>
+</H2><FONT SIZE="-1">
+	In the previous sections we have introduced function spaces and degrees of freedom, which, together with the Piola transformation,
+	 will allow us to define an <!-- MATH
+ $H(\mathop{\rm curl}; \Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-conforming finite element method.
+	Indeed, in [<A
+ HREF="node4.html#Ned1">8</A>], N&#233;d&#233;lec shows the invariance of the spaces
+	<!-- MATH
+ $\mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img102.gif"
+ ALT="$ \mathcal{R}^k$"> and <!-- MATH
+ $\mathcal{Q}^k$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img264.gif"
+ ALT="$ \mathcal{Q}^k$"> under Piola transformation of the vector field, as well as the unisolvence of the set of 
+	degrees of freedom <!-- MATH
+ $\mathcal{A}$
+ -->
+<IMG
+ WIDTH="20" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img89.gif"
+ ALT="$ \mathcal{A}$"> from sections <A HREF="node2.html#subsubsect:_dofs_on_tria">2.1.2</A> and <A HREF="node2.html#subsubsect:_dofs_on_quads">2.2.2</A>  
+	(for details, see [<A
+ HREF="node4.html#Ned1">8</A>], Section 1.2, Theorem 1 and Section 2, Theorem 5).
+	This leads to the fact that <!-- MATH
+ $H(\mathop{\rm curl}; \Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-conforming global shape functions can be defined by mapping elementwise the reference
+	shape functions with the Piola transformation <!-- MATH
+ $\mathcal{P}_K$
+ -->
+<IMG
+ WIDTH="32" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img265.gif"
+ ALT="$ \mathcal{P}_K$">.
+	However, we must pay some care to the orientation of an interface on which the moments defining the degrees of freedom are based.
+	For the 2d case, we will illustrate in this section how we must take into account the <I>orientation of an edge</I> 
+	in the definition of the respective element edge shape function, in order to get an <!-- MATH
+ $H(\mathop{\rm curl}; \Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-conforming finite element space 
+	of global shape functions.
+	
+<BR></FONT>
+<P>
+<FONT SIZE="-1">Let <!-- MATH
+ $K=F(\hat{K})$
+ -->
+<IMG
+ WIDTH="89" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img266.gif"
+ ALT="$ K=F(\hat{K})$"> be an affine or bilinear image of a reference element, <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img66.gif"
+ ALT="$ e$"> one of its edges and <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img127.gif"
+ ALT="$ \hat{e}$"> the
+	corresponding edge on the reference element.
+<BR>
+Let further <!-- MATH
+ $[0,|e|] \ni s \mapsto \underline x(s) \in e$
+ -->
+<IMG
+ WIDTH="168" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img267.gif"
+ ALT="$ [0,\vert e\vert] \ni s \mapsto \underline x(s) \in e$"> and <!-- MATH
+ $[0,|\hat{e}|] \ni \hat{s} \mapsto \hat{\underline x}(\hat{s}) \in \hat{e}$
+ -->
+<IMG
+ WIDTH="168" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img268.gif"
+ ALT="$ [0,\vert\hat{e}\vert] \ni \hat{s} \mapsto \hat{\underline x}(\hat{s}) \in \hat{e}$"> be parametrizations
+	with respect to the arc length of <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img66.gif"
+ ALT="$ e$"> and <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img127.gif"
+ ALT="$ \hat{e}$"> respectively. We can assume that these parametrizations endow the edges with a
+	counterclockwise orientation. Then, the unit tangent vectors <!-- MATH
+ $\underline t$
+ -->
+<IMG
+ WIDTH="13" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img12.gif"
+ ALT="$ \underline t$"> and <!-- MATH
+ $\hat{\underline t}$
+ -->
+<IMG
+ WIDTH="13" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img125.gif"
+ ALT="$ \hat{\underline t}$"> are given by
+	<!-- MATH
+ $\frac{d \underline x}{ds}$
+ -->
+<IMG
+ WIDTH="25" HEIGHT="45" ALIGN="MIDDLE" BORDER="0"
+ SRC="img269.gif"
+ ALT="$ \frac{d \underline x}{ds}$"> and <!-- MATH
+ $\frac{d \hat{\underline x}}{d\hat{s}}$
+ -->
+<IMG
+ WIDTH="25" HEIGHT="45" ALIGN="MIDDLE" BORDER="0"
+ SRC="img270.gif"
+ ALT="$ \frac{d \hat{\underline x}}{d\hat{s}}$">.
+</FONT>
+<P>
+<P>
+<DIV><A NAME="lemma:__v_dot_t_-Trafo"><B>L<SMALL>EMMA</SMALL>  1</B></A> &nbsp; 
+Let <!-- MATH
+ $\hat{\underline v}(\hat{x})$
+ -->
+<IMG
+ WIDTH="39" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img188.gif"
+ ALT="$ \hat{\underline v}(\hat{x})$"> be a vector field on the reference element and <!-- MATH
+ $\underline v(x)$
+ -->
+<IMG
+ WIDTH="39" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img187.gif"
+ ALT="$ \underline v(x)$"> be the corresponding vector field on <IMG
+ WIDTH="23" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ K$">, defined by the
+		Piola transformation (<A HREF="node2.html#eq:_Piola">9</A>). It then holds
+		<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation}
+\underline v\cdot \underline t = \frac{|\hat{e}|}{|e|} (\hat{\underline v}\cdot \hat{\underline t})\,,
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="129" HEIGHT="60" ALIGN="MIDDLE" BORDER="0"
+ SRC="img271.gif"
+ ALT="$\displaystyle \underline v\cdot \underline t = \frac{\vert\hat{e}\vert}{\vert e\vert} (\hat{\underline v}\cdot \hat{\underline t})\,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(25)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+where <IMG
+ WIDTH="24" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img272.gif"
+ ALT="$ \vert\hat{e}\vert$"> and <IMG
+ WIDTH="24" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img273.gif"
+ ALT="$ \vert e\vert$"> denote the length of the edges <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img127.gif"
+ ALT="$ \hat{e}$"> and <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img66.gif"
+ ALT="$ e$">.
+	</DIV><P></P>
+
+<P>
+<FONT SIZE="-1">P<SMALL>ROOF. </SMALL>
+		With 
+		</FONT><!-- MATH
+ \begin{displaymath}
+(\underline v(x))_i = (D(F^{-1})^T \hat{\underline v})_i = \frac{\partial \hat{x}_j}{\partial x_i}(x) \hat{\underline v}_j(\hat{x})\,
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="300" HEIGHT="59" ALIGN="MIDDLE" BORDER="0"
+ SRC="img274.gif"
+ ALT="$\displaystyle (\underline v(x))_i = (D(F^{-1})^T \hat{\underline v})_i = \frac{\partial \hat{x}_j}{\partial x_i}(x) \hat{\underline v}_j(\hat{x})\,
+$">
+</DIV><P></P><FONT SIZE="-1">
+		and <!-- MATH
+ $\hat{x}_j = \hat{x}_j(\underline x(s))$
+ -->
+<IMG
+ WIDTH="109" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img275.gif"
+ ALT="$ \hat{x}_j = \hat{x}_j(\underline x(s))$"> and <!-- MATH
+ $\hat{x}_j = \hat{x}_j(\hat{s}(s))$
+ -->
+<IMG
+ WIDTH="107" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img276.gif"
+ ALT="$ \hat{x}_j = \hat{x}_j(\hat{s}(s))$"> on the edges, we have
+		</FONT><!-- MATH
+ \begin{displaymath}
+\underline v\cdot \underline t= \underline v \cdot \frac{d \underline x}{ds} = \left( \hat{\underline v}_j\frac{\partial \hat{x}_j}{\partial x_i}\right) (x)\frac{dx_i}{ds}
+			= \hat{\underline v}_j \frac{d \hat{x}_j}{ds} = \hat{\underline v}_j \frac{d \hat{x}_j}{d\hat{s}} \frac{d\hat{s}}{ds}
+			= (\hat{\underline v}\cdot \hat{\underline t}) \frac{d\hat{s}}{ds} 
+		
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="498" HEIGHT="61" ALIGN="MIDDLE" BORDER="0"
+ SRC="img277.gif"
+ ALT="$\displaystyle \underline v\cdot \underline t= \underline v \cdot \frac{d \under...
+...t{s}}{ds}
+= (\hat{\underline v}\cdot \hat{\underline t}) \frac{d\hat{s}}{ds}
+$">
+</DIV><P></P><FONT SIZE="-1">
+		and with <!-- MATH
+ $\frac{d\hat{s}}{ds}=\frac{|\hat{e}|}{|e|}$
+ -->
+<IMG
+ WIDTH="64" HEIGHT="47" ALIGN="MIDDLE" BORDER="0"
+ SRC="img278.gif"
+ ALT="$ \frac{d\hat{s}}{ds}=\frac{\vert\hat{e}\vert}{\vert e\vert}$"> the lemma follows.
+	
+</FONT>
+<P>
+<FONT SIZE="-1">As a consequence, we have
+</FONT>
+<P>
+<P>
+<DIV><A NAME="prop:_Dof_invariance"><B>P<SMALL>ROPOSITION</SMALL>  7</B></A> (Invariance of the edge dofs)  &nbsp; 
+Let the vector field <!-- MATH
+ $\underline v(x)$
+ -->
+<IMG
+ WIDTH="39" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img187.gif"
+ ALT="$ \underline v(x)$"> on <IMG
+ WIDTH="23" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ K$"> be defined by the Piola transformation (<A HREF="node2.html#eq:_Piola">9</A>) of a reference vector field 
+		<!-- MATH
+ $\hat{\underline v}(\hat{x})$
+ -->
+<IMG
+ WIDTH="39" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img188.gif"
+ ALT="$ \hat{\underline v}(\hat{x})$"> on <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$">. Then, the functionals (<I>edge dofs</I>) 
+		<!-- MATH
+ $\alpha^{[K]}(\underline u) := \int_e (\underline v\cdot \underline t)\varphi \,ds$
+ -->
+<IMG
+ WIDTH="178" HEIGHT="42" ALIGN="MIDDLE" BORDER="0"
+ SRC="img279.gif"
+ ALT="$ \alpha^{[K]}(\underline u) := \int_e (\underline v\cdot \underline t)\varphi \,ds$"> are invariant in the sense of
+		<!-- MATH
+ \begin{displaymath}
+\alpha^{[K]}(\underline u) = \int_e (\underline v\cdot \underline t)\varphi \,ds =
+			\int_{\hat{e}} (\hat{\underline v} \cdot \hat{\underline t}) \hat{\varphi } \, d\hat{s}\, = \hat{\alpha}(\hat{\underline u})\,,
+			\qquad \forall\, \hat{\varphi } \in
+			\mathbb{P}_{k-1}(\hat{e})\,, \quad \varphi = \hat{\varphi } \circ F^{-1} \in \mathbb{P}_{k-1}(e)\,.
+		
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="704" HEIGHT="56" ALIGN="MIDDLE" BORDER="0"
+ SRC="img280.gif"
+ ALT="$\displaystyle \alpha^{[K]}(\underline u) = \int_e (\underline v\cdot \underline...
+...{e})\,, \quad \varphi = \hat{\varphi } \circ F^{-1} \in \mathbb{P}_{k-1}(e)\,.
+$">
+</DIV><P></P></DIV><P></P>
+
+<P>
+<FONT SIZE="-1">Let now <!-- MATH
+ $K_- = F_-(\hat{K})$
+ -->
+<IMG
+ WIDTH="108" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img281.gif"
+ ALT="$ K_- = F_-(\hat{K})$"> and <!-- MATH
+ $K_+ = F_+(\hat{K})$
+ -->
+<IMG
+ WIDTH="108" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img282.gif"
+ ALT="$ K_+ = F_+(\hat{K})$"> be two neighbouring triangles with common edge <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img66.gif"
+ ALT="$ e$">. Let <!-- MATH
+ $\underline N$
+ -->
+<IMG
+ WIDTH="22" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img283.gif"
+ ALT="$ \underline N$"> be the global edge shape
+	function that 'lives' on <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img66.gif"
+ ALT="$ e$">. By <!-- MATH
+ $\underline N_-$
+ -->
+<IMG
+ WIDTH="34" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img284.gif"
+ ALT="$ \underline N_-$"> and <!-- MATH
+ $\underline N_+$
+ -->
+<IMG
+ WIDTH="34" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img285.gif"
+ ALT="$ \underline N_+$"> we denote the restriction of <!-- MATH
+ $\underline N$
+ -->
+<IMG
+ WIDTH="22" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img283.gif"
+ ALT="$ \underline N$"> to <IMG
+ WIDTH="32" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img57.gif"
+ ALT="$ K_+$"> and <IMG
+ WIDTH="32" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img56.gif"
+ ALT="$ K_-$"> respectively.
+	Let <!-- MATH
+ $e_+ =F_+(\hat{e}_i)$
+ -->
+<IMG
+ WIDTH="99" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img286.gif"
+ ALT="$ e_+ =F_+(\hat{e}_i)$"> and <!-- MATH
+ $e_- =F_-(\hat{e}_j)$
+ -->
+<IMG
+ WIDTH="100" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img287.gif"
+ ALT="$ e_- =F_-(\hat{e}_j)$">.
+	We write <!-- MATH
+ $\underline t_+$
+ -->
+<IMG
+ WIDTH="24" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img288.gif"
+ ALT="$ \underline t_+ $"> for the tangential unit vector to <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img66.gif"
+ ALT="$ e$">, oriented 
+	counterclockwise with respect to <IMG
+ WIDTH="32" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img57.gif"
+ ALT="$ K_+$"> and <!-- MATH
+ $\underline t_- = -\underline t_+$
+ -->
+<IMG
+ WIDTH="78" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img289.gif"
+ ALT="$ \underline t_- = -\underline t_+$"> 
+	for the respective from <IMG
+ WIDTH="32" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img56.gif"
+ ALT="$ K_-$">. For line integrals over the edge <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img66.gif"
+ ALT="$ e$"> we write <!-- MATH
+ $\int_{e_+}$
+ -->
+<IMG
+ WIDTH="32" HEIGHT="39" ALIGN="MIDDLE" BORDER="0"
+ SRC="img290.gif"
+ ALT="$ \int_{e_+}$"> if we chose the orientation induced by 
+	<!-- MATH
+ $\underline t_+$
+ -->
+<IMG
+ WIDTH="24" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img288.gif"
+ ALT="$ \underline t_+ $"> and <!-- MATH
+ $\int_{e_-}$
+ -->
+<IMG
+ WIDTH="32" HEIGHT="39" ALIGN="MIDDLE" BORDER="0"
+ SRC="img291.gif"
+ ALT="$ \int_{e_-}$"> for the orientation of <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img66.gif"
+ ALT="$ e$"> induced by <!-- MATH
+ $\underline t_-$
+ -->
+<IMG
+ WIDTH="24" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img292.gif"
+ ALT="$ \underline t_-$">. 
+<BR>
+In order to obtain an <!-- MATH
+ $H(\mathop{\rm curl}; \Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-conforming method, proposition <A HREF="node1.html#prop:_no_jumps">1</A> tells us that we must ensure the continuity of the
+	tangential components of the global shape functions, that is
+	</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_conformity_of_shape_func"></A><!-- MATH
+ \begin{equation}
+\underline N_+\cdot\underline t_+ + \underline N_-\cdot\underline t_- = 0\,.
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="182" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img293.gif"
+ ALT="$\displaystyle \underline N_+\cdot\underline t_+ + \underline N_-\cdot\underline t_- = 0\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(26)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">
+	The following lemma will justify the choice of the moments describing the edge dofs. A consequence of the lemma will be, 
+	that the matching of the local edge dofs <!-- MATH
+ $\alpha^{[K_+]}$
+ -->
+<IMG
+ WIDTH="47" HEIGHT="23" ALIGN="BOTTOM" BORDER="0"
+ SRC="img294.gif"
+ ALT="$ \alpha^{[K_+]}$"> and <!-- MATH
+ $\alpha^{[K_-]}$
+ -->
+<IMG
+ WIDTH="47" HEIGHT="23" ALIGN="BOTTOM" BORDER="0"
+ SRC="img295.gif"
+ ALT="$ \alpha^{[K_-]}$"> guarantees  
+	the pointwise condition (<A HREF="node2.html#eq:_conformity_of_shape_func">26</A>).
+	</FONT><P>
+<DIV><A NAME="lemma:_trace"><B>L<SMALL>EMMA</SMALL>  2</B></A> &nbsp; 
+Let <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$"> denote the reference triangle and <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img127.gif"
+ ALT="$ \hat{e}$"> one of its edges, parametrized by <!-- MATH
+ $\hat{e} \ni \hat{x}(s) := \underline a +
+s\, \hat{\underline t}$
+ -->
+<IMG
+ WIDTH="143" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img296.gif"
+ ALT="$ \hat{e} \ni \hat{x}(s) := \underline a +
+s\, \hat{\underline t}$">. 
+		Let <!-- MATH
+ $\hat{\underline p} \in \mathcal{S}^k$
+ -->
+<IMG
+ WIDTH="57" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img297.gif"
+ ALT="$ \hat{\underline p} \in \mathcal{S}^k$">, <!-- MATH
+ $\mathcal{S}^k$
+ -->
+<IMG
+ WIDTH="27" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img107.gif"
+ ALT="$ \mathcal{S}^k$"> as defined in (<A HREF="node2.html#def:_space_Sk">4</A>). It then holds
+		<!-- MATH
+ \begin{displaymath}
+(\hat{\underline p}\cdot \hat{\underline t})|_{\hat{e}} \in \mathbb{P}_{k-1}(\hat{e})\,.
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="146" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img298.gif"
+ ALT="$\displaystyle (\hat{\underline p}\cdot \hat{\underline t})\vert _{\hat{e}} \in \mathbb{P}_{k-1}(\hat{e})\,.
+$">
+</DIV><P></P></DIV><P></P>
+
+<P>
+<FONT SIZE="-1">P<SMALL>ROOF. </SMALL>
+			</FONT><!-- MATH
+ \begin{displaymath}
+\hat{\underline p} \in \mathcal{S}^k \quad \Longrightarrow \quad \textrm{for } i=1,2,3:
+				\quad \hat{p}_i(\hat{x}) = \prod_{j=1}^3 \hat{x}_j^{k_{ij}}\,, \quad
+				\textrm{where } \sum_{j=1}^3 k_{ij} = k\,.
+			
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="545" HEIGHT="74" ALIGN="MIDDLE" BORDER="0"
+ SRC="img299.gif"
+ ALT="$\displaystyle \hat{\underline p} \in \mathcal{S}^k \quad \Longrightarrow \quad ...
+...{j=1}^3 \hat{x}_j^{k_{ij}}\,, \quad
+\textrm{where } \sum_{j=1}^3 k_{ij} = k\,.
+$">
+</DIV><P></P><FONT SIZE="-1">
+			Hence, with the parametrization of <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img127.gif"
+ ALT="$ \hat{e}$"> by <!-- MATH
+ $\hat{x}(s)$
+ -->
+<IMG
+ WIDTH="38" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img300.gif"
+ ALT="$ \hat{x}(s)$">
+			</FONT><!-- MATH
+ \begin{displaymath}
+\hat{p}_i(\hat{x}(s)) = \prod_{j=1}^3 (a_j + s\,\hat{t}_j)^{k_{ij}} = s^k\,\prod_{j=1}^3 \hat{t}_j^{k_{ij}} +
+						\hat{\varphi }_{k-1}(s)\,,
+			
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="390" HEIGHT="74" ALIGN="MIDDLE" BORDER="0"
+ SRC="img301.gif"
+ ALT="$\displaystyle \hat{p}_i(\hat{x}(s)) = \prod_{j=1}^3 (a_j + s\,\hat{t}_j)^{k_{ij}} = s^k\,\prod_{j=1}^3 \hat{t}_j^{k_{ij}} +
+\hat{\varphi }_{k-1}(s)\,,
+$">
+</DIV><P></P><FONT SIZE="-1">
+			with <!-- MATH
+ $\hat{\varphi }_{k-1}(s) \in \mathbb{P}_{k-1}(\hat{e})$
+ -->
+<IMG
+ WIDTH="144" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img302.gif"
+ ALT="$ \hat{\varphi }_{k-1}(s) \in \mathbb{P}_{k-1}(\hat{e})$">, 
+			and 
+			</FONT><!-- MATH
+ \begin{displaymath}
+(\hat{\underline p}\cdot \hat{\underline t})|_{\hat{e}} = s^k\,\sum_{i=1}^3\hat{t}_i\left(\prod_{j=1}^3 \hat{t}_j^{k_{ij}}\right) +
+				\hat{\varphi }_{k-1}(s)\,.
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="317" HEIGHT="82" ALIGN="MIDDLE" BORDER="0"
+ SRC="img303.gif"
+ ALT="$\displaystyle (\hat{\underline p}\cdot \hat{\underline t})\vert _{\hat{e}} = s^...
+...t}_i\left(\prod_{j=1}^3 \hat{t}_j^{k_{ij}}\right) +
+\hat{\varphi }_{k-1}(s)\,.
+$">
+</DIV><P></P><FONT SIZE="-1">
+			We observe that the coefficient of <IMG
+ WIDTH="23" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img304.gif"
+ ALT="$ s^k$"> is exactly <!-- MATH
+ $\hat{\underline p}(\hat{\underline t}) \cdot \hat{\underline t}$
+ -->
+<IMG
+ WIDTH="54" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img305.gif"
+ ALT="$ \hat{\underline p}(\hat{\underline t}) \cdot \hat{\underline t}$">. By the definition of the space 
+			<!-- MATH
+ $\mathcal{S}^k$
+ -->
+<IMG
+ WIDTH="27" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img107.gif"
+ ALT="$ \mathcal{S}^k$">, this expression must vanish.
+	
+</FONT>
+<P>
+<P>
+<DIV><B>R<SMALL>EMARK</SMALL>  5</B> &nbsp; 
+In the case of <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$"> being a quadrilateral, we have <!-- MATH
+ $\hat{R} = \mathcal{P}^k$
+ -->
+<IMG
+ WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img306.gif"
+ ALT="$ \hat{R} = \mathcal{P}^k$">. By the definition of <!-- MATH
+ $\mathcal{P}^k$
+ -->
+<IMG
+ WIDTH="28" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img228.gif"
+ ALT="$ \mathcal{P}^k$"> we see
+		immediately that here also <!-- MATH
+ $(\hat{\underline v}\cdot \hat{\underline t})|_{\hat{e}} \in \mathbb{P}_{k-1}(\hat{e})$
+ -->
+<IMG
+ WIDTH="139" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img307.gif"
+ ALT="$ (\hat{\underline v}\cdot \hat{\underline t})\vert _{\hat{e}} \in \mathbb{P}_{k-1}(\hat{e})$">.
+	</DIV><P></P>
+
+<P>
+<FONT SIZE="-1">The next proposition tells us how exactly to define element shape functions on a mapped element <IMG
+ WIDTH="23" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ K$"> in order to get 
+	<!-- MATH
+ $H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-conforming global shape functions.
+	</FONT><P>
+<DIV><B>P<SMALL>ROPOSITION</SMALL>  8</B> &nbsp; 
+Condition (<A HREF="node2.html#eq:_conformity_of_shape_func">26</A>) is satiesfied, if we define the element shape functions <!-- MATH
+ $\underline N_+$
+ -->
+<IMG
+ WIDTH="34" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img285.gif"
+ ALT="$ \underline N_+$"> and <!-- MATH
+ $\underline N_-$
+ -->
+<IMG
+ WIDTH="34" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img284.gif"
+ ALT="$ \underline N_-$"> 
+		by the Piola transformation (<A HREF="node2.html#eq:_Piola_tri">10</A>) and take into account the orientation of the edge <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img66.gif"
+ ALT="$ e$">: 
+		<P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_trafo_shape_functions"></A><!-- MATH
+ \begin{equation}
+\underline N_+ := \mathcal{P}_+(\hat{\underline N}_i) = \hat{D}F_+^{-T} \hat{\underline N}_i \,,
+			\qquad \underline N_- := -\,\mathcal{P}_-(\hat{\underline N}_j) = -\hat{D}F_-^{-T}\hat{\underline N}_j\,.
+		
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="508" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img308.gif"
+ ALT="$\displaystyle \underline N_+ := \mathcal{P}_+(\hat{\underline N}_i) = \hat{D}F_...
+...\,\mathcal{P}_-(\hat{\underline N}_j) = -\hat{D}F_-^{-T}\hat{\underline N}_j\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(27)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P></DIV><P></P>
+
+<P>
+<FONT SIZE="-1">P<SMALL>ROOF. </SMALL>
+		Let <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$"> be the reference element and <IMG
+ WIDTH="23" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ K$"> its affine or bilinear image.
+		Let <!-- MATH
+ $\underline v := \mathcal{P}_K(\hat{\underline v})$
+ -->
+<IMG
+ WIDTH="92" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img309.gif"
+ ALT="$ \underline v := \mathcal{P}_K(\hat{\underline v})$"> be a vector field on <IMG
+ WIDTH="23" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ K$">, defined by the Piola transformation of a reference vector field
+		<!-- MATH
+ $\hat{\underline v} \in \hat{R}$
+ -->
+<IMG
+ WIDTH="50" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img310.gif"
+ ALT="$ \hat{\underline v} \in \hat{R}$">. Let <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img66.gif"
+ ALT="$ e$"> be one of the edges of <IMG
+ WIDTH="23" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ K$"> and <!-- MATH
+ $\underline t$
+ -->
+<IMG
+ WIDTH="13" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img12.gif"
+ ALT="$ \underline t$">
+		the tangent according to convention <A HREF="node1.html#def:_tangent">1</A>.
+<BR>
+In the case of <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$"> being a triangle, we have <!-- MATH
+ $\hat{R} = \mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="66" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img91.gif"
+ ALT="$ \hat{R} = \mathcal{R}^k$">. 
+		By the definition of the space <!-- MATH
+ $\mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img102.gif"
+ ALT="$ \mathcal{R}^k$">, lemma <A HREF="node2.html#lemma:_trace">2</A> and <A HREF="node2.html#lemma:__v_dot_t_-Trafo">1</A> we can
+		conclude that <!-- MATH
+ $(\underline v\cdot \underline t)|_{e} \in \mathbb{P}_{k-1}(e)$
+ -->
+<IMG
+ WIDTH="139" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img311.gif"
+ ALT="$ (\underline v\cdot \underline t)\vert _{e} \in \mathbb{P}_{k-1}(e)$">.
+<BR>
+If <IMG
+ WIDTH="23" HEIGHT="24" ALIGN="BOTTOM" BORDER="0"
+ SRC="img81.gif"
+ ALT="$ \hat{K}$"> is a quadrilateral, the previous remark and 
+		<A HREF="node2.html#lemma:__v_dot_t_-Trafo">1</A> also tell us that <!-- MATH
+ $(\underline v\cdot \underline t)|_{e} \in \mathbb{P}_{k-1}(e)$
+ -->
+<IMG
+ WIDTH="139" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img311.gif"
+ ALT="$ (\underline v\cdot \underline t)\vert _{e} \in \mathbb{P}_{k-1}(e)$">.
+<BR>
+Hence the condition
+		</FONT><!-- MATH
+ \begin{displaymath}
+\int_{e_+} \left((\underline N_+\cdot \underline t_+) + (\underline N_-\cdot \underline t_-)\right)\,\varphi \,ds\,, \qquad \forall\,\varphi \in\mathbb{P}_{k-1}(e)
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="401" HEIGHT="58" ALIGN="MIDDLE" BORDER="0"
+ SRC="img312.gif"
+ ALT="$\displaystyle \int_{e_+} \left((\underline N_+\cdot \underline t_+) + (\underli...
+...ne t_-)\right)\,\varphi \,ds\,, \qquad \forall\,\varphi \in\mathbb{P}_{k-1}(e)
+$">
+</DIV><P></P><FONT SIZE="-1">
+		on the edge moments
+		is sufficient for the global edge shape functions to satiesfy (<A HREF="node2.html#eq:_conformity_of_shape_func">26</A>).
+		Note that 
+<BR><!-- MATH
+ $\int_{e_+}(\underline N_-\cdot \underline t_-)\,\varphi \,ds = -\int_{e_-}(\underline N_-\cdot \underline t_-)\,\varphi \,ds$
+ -->
+<IMG
+ WIDTH="307" HEIGHT="39" ALIGN="MIDDLE" BORDER="0"
+ SRC="img313.gif"
+ ALT="$ \int_{e_+}(\underline N_-\cdot \underline t_-)\,\varphi \,ds = -\int_{e_-}(\underline N_-\cdot \underline t_-)\,\varphi \,ds$">.
+		So, by the definition (<A HREF="node2.html#eq:_trafo_shape_functions">27</A>) of the element shape functions on <IMG
+ WIDTH="32" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img57.gif"
+ ALT="$ K_+$"> resp. on <IMG
+ WIDTH="32" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img56.gif"
+ ALT="$ K_-$">,
+		by the invariance of the dofs (proposition <A HREF="node2.html#prop:_Dof_invariance">7</A>) and by the definition of the 
+		reference shape functions (example <A HREF="node2.html#ex:_shape_functions">3</A>) we have
+		</FONT><P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\int_{e_+} (\underline N_+ \cdot \underline t_+)\varphi \,ds = \int_{\hat{e}_i}  (\hat{\underline N}_i\cdot \hat{\underline t}_i)\hat{\varphi }\,d\hat{s} = 1
+			\qquad \textrm{and} \qquad
+			\int_{e_-} (\underline N_- \cdot \underline t_-)\varphi \,ds = -\int_{\hat{e}_j}  (\hat{\underline N}_j\cdot \hat{\underline t}_j)\hat{\varphi }\,d\hat{s} = -1\,.
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="740" HEIGHT="56" ALIGN="MIDDLE" BORDER="0"
+ SRC="img314.gif"
+ ALT="$\displaystyle \int_{e_+} (\underline N_+ \cdot \underline t_+)\varphi \,ds = \i...
+...\hat{\underline N}_j\cdot \hat{\underline t}_j)\hat{\varphi }\,d\hat{s} = -1\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">
+	
+</FONT>
+<P>
+<FONT SIZE="-1">To close this section, let us make a note on the interpretation of the dofs on an element <IMG
+ WIDTH="23" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ K$"> in the case of lowest order polynomial
+	degree. In this case, all dofs are edge dofs, the degrees of freedom are <!-- MATH
+ $\hat{\alpha}_j(\hat{\underline
+v}) = \int_{\hat{e}_j} \hat{\underline v} \cdot \hat{\underline t}_j\,d\hat{s}$
+ -->
+<IMG
+ WIDTH="150" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img315.gif"
+ ALT="$ \hat{\alpha}_j(\hat{\underline
+v}) = \int_{\hat{e}_j} \hat{\underline v} \cdot \hat{\underline t}_j\,d\hat{s}$"> and the tangential traces of shape functions are constant on each edge.
+	Since we require  <!-- MATH
+ $\hat{\alpha}_j(\hat{\underline N}_i) = \delta_{ij}$
+ -->
+<IMG
+ WIDTH="102" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img316.gif"
+ ALT="$ \hat{\alpha}_j(\hat{\underline N}_i) = \delta_{ij}$"> for the reference shape functions, we have 
+	</FONT><!-- MATH
+ \begin{displaymath}
+v_j = \hat{\alpha}_j(\hat{\underline v}) = (\hat{\underline N}_j \cdot \hat{\underline t})\,|\hat{e}_j| = ({\underline N}_j \cdot {\underline t}_j)\, |e_j|\,,
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="313" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img317.gif"
+ ALT="$\displaystyle v_j = \hat{\alpha}_j(\hat{\underline v}) = (\hat{\underline N}_j ...
+...\hat{e}_j\vert = ({\underline N}_j \cdot {\underline t}_j)\, \vert e_j\vert\,,
+$">
+</DIV><P></P><FONT SIZE="-1">
+	where for the last equality we have used lemma <A HREF="node2.html#lemma:__v_dot_t_-Trafo">1</A>. We see that
+	the dof <!-- MATH
+ $\alpha_j(\underline v)$
+ -->
+<IMG
+ WIDTH="47" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img318.gif"
+ ALT="$ \alpha_j(\underline v)$"> 'sitting' on the edge <IMG
+ WIDTH="22" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img319.gif"
+ ALT="$ e_j$"> is the value of the <I>scaled</I> tangential component 
+	<!-- MATH
+ $|e_j|\left(\underline v\cdot \underline t_j\right)|_e$
+ -->
+<IMG
+ WIDTH="100" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img320.gif"
+ ALT="$ \vert e_j\vert\left(\underline v\cdot \underline t_j\right)\vert _e$">. 
+<BR>	</FONT><P>
+<DIV><B>R<SMALL>EMARK</SMALL>  6</B> &nbsp; 
+For the invariance of the edge dofs it is essential that the moments <!-- MATH
+ $\alpha^{[K]}$
+ -->
+<IMG
+ WIDTH="38" HEIGHT="23" ALIGN="BOTTOM" BORDER="0"
+ SRC="img321.gif"
+ ALT="$ \alpha^{[K]}$"> on <IMG
+ WIDTH="23" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ K$"> are defined by using the 
+		<I>unit</I> tangent
+		vector <!-- MATH
+ $\underline t = \frac{|\hat{e}|}{|e|}\,(\hat{D}F)\,\hat{\underline t}$
+ -->
+<IMG
+ WIDTH="108" HEIGHT="47" ALIGN="MIDDLE" BORDER="0"
+ SRC="img322.gif"
+ ALT="$ \underline t = \frac{\vert\hat{e}\vert}{\vert e\vert}\,(\hat{D}F)\,\hat{\underline t}$"> on <IMG
+ WIDTH="23" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img86.gif"
+ ALT="$ K$">. If not, e.&nbsp;g.&nbsp;if we
+		just used the tangent <!-- MATH
+ $\tilde{\underline t} = (\hat{D}F)\,\hat{\underline t}$
+ -->
+<IMG
+ WIDTH="87" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img323.gif"
+ ALT="$ \tilde{\underline t} = (\hat{D}F)\,\hat{\underline t}$">, we would lose the invariance of the dofs. In that case the dofs would
+		scale by a factor depending on the size of the edge or face ([<A
+ HREF="node4.html#Ned1">8</A>], remark on p.&nbsp;326).
+<BR>		</DIV><P></P>
+
+<P>
+<FONT SIZE="-1"></FONT>
+<H2><A NAME="SECTION00025000000000000000">
+2.5 Approximation and convergence results</A>
+</H2><FONT SIZE="-1">
+	Without going into details, we will cite here some results on approximation properties and convergence of N&#233;d&#233;lec FEM of first type.
+	
+<BR>
+We are in the setting of a
+	<I>conforming</I> FEM and have quasi-optimal approximation properties of the FE-spaces <!-- MATH
+ $V_h \subset H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="127" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img324.gif"
+ ALT="$ V_h \subset H(\mathop{\rm curl};\Omega )$">
+	</FONT><!-- MATH
+ \begin{displaymath}
+\| \underline u - \Pi_h^k \underline u\|_{H(\mathop{\rm curl}; \Omega )} = C\,\inf_{w\in V_h}\| \underline u -  \underline w\|_{H(\mathop{\rm curl}; \Omega )}\,,
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="355" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img325.gif"
+ ALT="$\displaystyle \Vert \underline u - \Pi_h^k \underline u\Vert _{H(\mathop{\rm cu...
+...V_h}\Vert \underline u - \underline w\Vert _{H(\mathop{\rm curl}; \Omega )}\,,
+$">
+</DIV><P></P><FONT SIZE="-1">
+	where <!-- MATH
+ $\Pi_h^k \underline u \in \mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="82" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img326.gif"
+ ALT="$ \Pi_h^k \underline u \in \mathcal{R}^k$"> or <!-- MATH
+ $\Pi_h^k \underline u \in \mathcal{P}^k$
+ -->
+<IMG
+ WIDTH="81" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img327.gif"
+ ALT="$ \Pi_h^k \underline u \in \mathcal{P}^k$"> respectively,
+	 denotes the interpolate of <!-- MATH
+ $\underline u$
+ -->
+<IMG
+ WIDTH="16" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img35.gif"
+ ALT="$ \underline u$"> with regard to the N&#233;d&#233;lec dofs: <!-- MATH
+ $\alpha(\underline u) = \alpha(\Pi_h^k \underline u)$
+ -->
+<IMG
+ WIDTH="121" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img328.gif"
+ ALT="$ \alpha(\underline u) = \alpha(\Pi_h^k \underline u)$"> for all dofs <IMG
+ WIDTH="18" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img329.gif"
+ ALT="$ \alpha$">. 
+	 The interpolation operator <IMG
+ WIDTH="28" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img330.gif"
+ ALT="$ \Pi_h^k$"> is defined for sufficiently smooth vector fields, namely for all <!-- MATH
+ $\underline v\in H^r(\mathop{\rm curl})$
+ -->
+<IMG
+ WIDTH="103" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img331.gif"
+ ALT="$ \underline v\in H^r(\mathop{\rm curl})$"> 
+	 for any <!-- MATH
+ $r>\frac{1}{2}$
+ -->
+<IMG
+ WIDTH="49" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img332.gif"
+ ALT="$ r&gt;\frac{1}{2}$"> (see [<A
+ HREF="node4.html#Alonso-Valli">1</A>], Lemma 5.1., [<A
+ HREF="node4.html#Monk">7</A>] and references therein).
+<BR>
+For N&#233;d&#233;lec's FEM of first type we state (without proof) the following optimal estimate in the curl-norm: 
+	</FONT><P>
+<DIV><B>T<SMALL>HEOREM</SMALL>  5</B> &nbsp; 
+If <!-- MATH
+ $\mathcal{T}_h$
+ -->
+<IMG
+ WIDTH="24" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img333.gif"
+ ALT="$ \mathcal{T}_h$">, <IMG
+ WIDTH="48" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img334.gif"
+ ALT="$ h&gt;0$">, is a regular family of triangulations on <IMG
+ WIDTH="19" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img10.gif"
+ ALT="$ \Omega $"> and <!-- MATH
+ $r>\frac{1}{2}$
+ -->
+<IMG
+ WIDTH="49" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img332.gif"
+ ALT="$ r&gt;\frac{1}{2}$">, then there exists a constant <IMG
+ WIDTH="52" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img335.gif"
+ ALT="$ C&gt;0$">, 
+		depending on <IMG
+ WIDTH="15" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img336.gif"
+ ALT="$ r$"> but not on <IMG
+ WIDTH="17" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img337.gif"
+ ALT="$ h$"> or <!-- MATH
+ $\underline v$
+ -->
+<IMG
+ WIDTH="15" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img20.gif"
+ ALT="$ \underline v$">, such that
+		<P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_curl-convergence"></A><!-- MATH
+ \begin{equation}
+\| \underline v - \Pi_h^k \underline v\|_{H(\mathop{\rm curl}; \Omega )} \leq C\,h^{\min\{r,k\}} \|\underline v\|_{H^r(\mathop{\rm curl};\Omega )}\,,
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="348" HEIGHT="44" ALIGN="MIDDLE" BORDER="0"
+ SRC="img338.gif"
+ ALT="$\displaystyle \Vert \underline v - \Pi_h^k \underline v\Vert _{H(\mathop{\rm cu...
+... C\,h^{\min\{r,k\}} \Vert\underline v\Vert _{H^r(\mathop{\rm curl};\Omega )}\,,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(28)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+for all <!-- MATH
+ $\underline v\in H^r(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="123" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img339.gif"
+ ALT="$ \underline v\in H^r(\mathop{\rm curl};\Omega )$">.
+	</DIV><P></P>
+<FONT SIZE="-1">
+	The result in (<A HREF="node2.html#eq:_curl-convergence">28</A>) was obtained by Alonso and Valli in [<A
+ HREF="node4.html#Alonso-Valli">1</A>], extending earlier interpolation  
+	results by N&#233;d&#233;lec in [<A
+ HREF="node4.html#Ned1">8</A>] and Monk in [<A
+ HREF="node4.html#Monk_92">6</A>]. 
+<BR>
+Optimal convergence in the <!-- MATH
+ $H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-norm for the error of the FE-approximation of the model
+	problem (<A HREF="node1.html#eq:_varform">3</A>) by N&#233;d&#233;lec's elements of first type follows from (<A HREF="node2.html#eq:_curl-convergence">28</A>) by C&#233;a's lemma.
+	This result has been verified in numerical experiments with a <TT>MATLAB</TT> code, which uses lowest
+	order N&#233;d&#233;lec elements on affine triangular meshes for 2d problems, as well as with a  <TT>deal.II</TT> code, which uses lowest order
+	N&#233;d&#233;lec elements on bilinear resp. trilinear meshes for 2d resp. 3d problems.
+<BR>
+As for the <!-- MATH
+ $L^2(\Omega )$
+ -->
+<IMG
+ WIDTH="52" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.gif"
+ ALT="$ L^2(\Omega )$">-approximation properties of FE spaces based on <!-- MATH
+ $\mathcal{R}^k$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img102.gif"
+ ALT="$ \mathcal{R}^k$"> or <!-- MATH
+ $\mathcal{P}^k$
+ -->
+<IMG
+ WIDTH="28" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img228.gif"
+ ALT="$ \mathcal{P}^k$">, we could hope for a better order
+	than <!-- MATH
+ $\mathcal{O}(h^k)$
+ -->
+<IMG
+ WIDTH="53" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img340.gif"
+ ALT="$ \mathcal{O}(h^k)$"> at first sight: still, we have  <!-- MATH
+ $[\mathbb{P}^{k-1}(K)]^d \subseteq \mathcal{R}^k(K)$
+ -->
+<IMG
+ WIDTH="165" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img341.gif"
+ ALT="$ [\mathbb{P}^{k-1}(K)]^d \subseteq \mathcal{R}^k(K)$">. However, N&#233;d&#233;lec shows in [<A
+ HREF="node4.html#Ned1">8</A>]
+	that only suboptimality can be expected:
+	</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_L2-approx"></A><!-- MATH
+ \begin{equation}
+\| \underline v - \Pi_h^k \underline v\|_{L^2(\Omega )} \leq C h^k |\underline v|_{H^k(\Omega )}\,.
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="244" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img342.gif"
+ ALT="$\displaystyle \Vert \underline v - \Pi_h^k \underline v\Vert _{L^2(\Omega )} \leq C h^k \vert\underline v\vert _{H^k(\Omega )}\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(29)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">
+	N&#233;d&#233;lec uses a standard scaling and Bramble-Hilbert argument to derive (<A HREF="node2.html#eq:_L2-approx">29</A>). Since 
+	<!-- MATH
+ $[\mathbb{P}^{k-1}(K)]^d \subseteq \mathcal{R}^k(K) \subsetneq [\mathbb{P}^k(K)]^d$
+ -->
+<IMG
+ WIDTH="254" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img343.gif"
+ ALT="$ [\mathbb{P}^{k-1}(K)]^d \subseteq \mathcal{R}^k(K) \subsetneq [\mathbb{P}^k(K)]^d$">, the Bramble-Hilbert argument only guarantees an elementwise
+	approximation of order <IMG
+ WIDTH="16" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img93.gif"
+ ALT="$ k$"> of <IMG
+ WIDTH="60" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img344.gif"
+ ALT="$ H^k(K)$">-functions from the space <!-- MATH
+ $\mathcal{R}^k(K)$
+ -->
+<IMG
+ WIDTH="59" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img345.gif"
+ ALT="$ \mathcal{R}^k(K)$">.
+<BR>
+However, in a recent paper Hiptmair uses a duality technique to state optimal convergence of the
+	<!-- MATH
+ $L^2(\Omega )$
+ -->
+<IMG
+ WIDTH="52" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.gif"
+ ALT="$ L^2(\Omega )$">-error <!-- MATH
+ $\| \underline u - \underline u_h\|_{L^2(\Omega )}$
+ -->
+<IMG
+ WIDTH="111" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img346.gif"
+ ALT="$ \Vert \underline u - \underline u_h\Vert _{L^2(\Omega )}$">
+	for the 3d case and N&#233;d&#233;lec's elements of first type of order <IMG
+ WIDTH="16" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img93.gif"
+ ALT="$ k$"> on tetrahedral meshes 
+	(see Section 5.3, Theorem 5.8 in [<A
+ HREF="node4.html#Hipt">5</A>]): 
+	</FONT><P>
+<DIV><A NAME="th:_Hiptmair"><B>T<SMALL>HEOREM</SMALL>  6</B></A> &nbsp; 
+There is an <!-- MATH
+ $s>\frac{1}{2}$
+ -->
+<IMG
+ WIDTH="48" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img347.gif"
+ ALT="$ s&gt;\frac{1}{2}$"> such that
+		<P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_L2-convergence"></A><!-- MATH
+ \begin{equation}
+\| \underline u -  \underline u_h\|_{L^2(\Omega )} \leq C h^s \| \underline u - \underline u_h\|_{H(\mathop{\rm curl}; \Omega )}\,.
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="299" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img348.gif"
+ ALT="$\displaystyle \Vert \underline u - \underline u_h\Vert _{L^2(\Omega )} \leq C h^s \Vert \underline u - \underline u_h\Vert _{H(\mathop{\rm curl}; \Omega )}\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(30)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+Under the assumption that the boundary <!-- MATH
+ $\partial \Omega$
+ -->
+<IMG
+ WIDTH="29" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.gif"
+ ALT="$ \partial \Omega $"> is smooth or convex, <IMG
+ WIDTH="46" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img349.gif"
+ ALT="$ s=1$"> can be chosen.
+	</DIV><P></P>
+<FONT SIZE="-1">
+	Several key arguments of the proof in [<A
+ HREF="node4.html#Hipt">5</A>] make explicitely use of features that are limited to 3d problems and the 
+	family of finite elements based on tetrahedrons.
+	They cannot be modified trivially to apply to 2d problems or 3d problems on hexahedral meshes. Even worse, it is suggested by the results of
+	numerical experiments that one cannot hope to obtain a result similar to (<A HREF="node2.html#eq:_L2-convergence">30</A>).
+<BR>
+A possibility to overcome this deficiency of convergence is to use N&#233;d&#233;lec elements of second type, where the full <!-- MATH
+ $[\mathbb{P}_k]^d$
+ -->
+<IMG
+ WIDTH="43" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img350.gif"
+ ALT="$ [\mathbb{P}_k]^d$">
+	are used as polynomial spaces (see [<A
+ HREF="node4.html#Ned2">10</A>]).
+</FONT>
+<P>
+<FONT SIZE="-1"></FONT>
+<BR><HR>
+<ADDRESS>
+
+2003-04-30
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,2830 @@
+\batchmode
+
+
+\documentclass[a4paper,11pt]{article}
+\RequirePackage{ifthen}
+
+
+\NeedsTeXFormat{LaTeX2e}
+\usepackage{exscale} 
+\usepackage[dvips]{graphicx}
+\usepackage{shortvrb}  
+\usepackage{amsmath}   
+\usepackage{amssymb}   
+\usepackage{amsfonts}  
+\usepackage{graphicx}	
+
+\addtolength{\topmargin}{-35pt}\addtolength{\headsep}{-2pt}\addtolength{\topskip}{-5pt}\addtolength{\oddsidemargin}{-1.5cm}\addtolength{\evensidemargin}{-1.5cm}\addtolength{\textheight}{45pt}%% less white space at bottom of page
+
+\addtolength{\textwidth}{4cm}%% larger columns
+
+
+%
+\providecommand{\vect}[1]{\underline{#1}}%% vectors%
+\providecommand{\matr}[1]{\mathbf{#1}}%% matrices%
+\providecommand{\ofx}{(\underline{x})}%
+\providecommand{\oftx}{(t,\underline{x})}%
+\providecommand{\R}{\mathbb{R}}%% number sets%
+\providecommand{\Z}{\mathbb{Z}}%
+\providecommand{\C}{\mathbb{C}}%
+\providecommand{\N}{\mathbb{N}}%
+\providecommand{\inR}[1]{\in \mathbb{R}^{#1}}%
+\providecommand{\EE}[1]{\mathbb{E}\,#1}%% mathematical expectation%
+\providecommand{\PP}[1]{\mathbb{P}\,#1}%% mathematical probability%
+\providecommand{\Or}[2]{\mathcal{O}(#1^#2)}%% order%
+\providecommand{\eye}[1]{\,\mathbb{I}_{#1}\,}%% identity matrix%
+\providecommand{\Laplace}{\Delta}%% Laplace operator%
+\providecommand{\Grad}{\underline{\nabla}}%% Gradient operator%
+\providecommand{\ond}[1]{\in \partial#1}%% on (physical domain .. ) boundary%
+\providecommand{\etime}{\tau^D_{\underline{x}}}%
+\providecommand{\twovec}[2]{\left(\begin{array}{c}#1\\#2\end{array}\right)}%
+\providecommand{\threevec}[3]{\left(\begin{array}{c}#1\\#2\\#3\end{array}\right)}
+
+\parindent 0pt
+
+%
+\providecommand{\Title}[1]{\title{\Large{#1}}  \author{\small{Anna Schneebeli, \today}}\date{}}%
+\providecommand{\Abstract}[1]{\noindent \small \textbf{Abstract:} #1}%
+\providecommand{\Section}[1]{\section{\large{#1}}}%
+\providecommand{\SectionS}[1]{\section*{\large{#1}}}%
+\providecommand{\Subsection}[1]{\subsection{\normalsize{#1}}}%
+\providecommand{\SubsectionS}[1]{\subsection*{\normalsize{#1}}}%
+\providecommand{\Subsubsection}[1]{\subsubsection{\normalsize{#1}}}%
+\providecommand{\SubsubsectionS}[1]{\subsubsection*{\normalsize{#1}}}
+\newtheorem{remark}{\mdseries{\textsc{Remark}}}\newtheorem{conjecture}{\mdseries{\textsc{Conjecture}}}
+\bibliographystyle{abbrv}
+
+%
+\providecommand{\proof}{\mdseries{\textsc{Proof. }}}%
+\providecommand{\qed}{\begin{flushright} $\square$\  \end{flushright}}
+\newtheorem{definition}{\mdseries{\textsc{Definition}}}\newtheorem{theorem}{\mdseries{\textsc{Theorem}}}\newtheorem{prop}{\mdseries{\textsc{Proposition}}}\newtheorem{example}{\mdseries{\textsc{Example}}}\newtheorem{corollary}{\mdseries{\textsc{Corollary}}}\newtheorem{lemma}{\mdseries{\textsc{Lemma}}}\newtheorem{convention}{\mdseries{\textsc{Convention}}}
+\title{\Large {An $H(\mathop{\rm curl};\Omega )$-conforming FEM: \\
+		N\'ed\'elec's elements of first type}}  \author{\small{Anna Schneebeli, \today}}\date{}
+
+
+\usepackage[dvips]{color}
+
+
+\pagecolor[gray]{.7}
+
+\usepackage[latin1]{inputenc}
+
+
+
+\makeatletter
+
+\makeatletter
+\count@=\the\catcode`\_ \catcode`\_=8 
+\newenvironment{tex2html_wrap}{}{}%
+\catcode`\<=12\catcode`\_=\count@
+\newcommand{\providedcommand}[1]{\expandafter\providecommand\csname #1\endcsname}%
+\newcommand{\renewedcommand}[1]{\expandafter\providecommand\csname #1\endcsname{}%
+  \expandafter\renewcommand\csname #1\endcsname}%
+\newcommand{\newedenvironment}[1]{\newenvironment{#1}{}{}\renewenvironment{#1}}%
+\let\newedcommand\renewedcommand
+\let\renewedenvironment\newedenvironment
+\makeatother
+\let\mathon=$
+\let\mathoff=$
+\ifx\AtBeginDocument\undefined \newcommand{\AtBeginDocument}[1]{}\fi
+\newbox\sizebox
+\setlength{\hoffset}{0pt}\setlength{\voffset}{0pt}
+\addtolength{\textheight}{\footskip}\setlength{\footskip}{0pt}
+\addtolength{\textheight}{\topmargin}\setlength{\topmargin}{0pt}
+\addtolength{\textheight}{\headheight}\setlength{\headheight}{0pt}
+\addtolength{\textheight}{\headsep}\setlength{\headsep}{0pt}
+\setlength{\textwidth}{349pt}
+\newwrite\lthtmlwrite
+\makeatletter
+\let\realnormalsize=\normalsize
+\global\topskip=2sp
+\def\preveqno{}\let\real@float=\@float \let\realend@float=\end@float
+\def\@float{\let\@savefreelist\@freelist\real@float}
+\def\liih@math{\ifmmode$\else\bad@math\fi}
+\def\end@float{\realend@float\global\let\@freelist\@savefreelist}
+\let\real@dbflt=\@dbflt \let\end@dblfloat=\end@float
+\let\@largefloatcheck=\relax
+\let\if@boxedmulticols=\iftrue
+\def\@dbflt{\let\@savefreelist\@freelist\real@dbflt}
+\def\adjustnormalsize{\def\normalsize{\mathsurround=0pt \realnormalsize
+ \parindent=0pt\abovedisplayskip=0pt\belowdisplayskip=0pt}%
+ \def\phantompar{\csname par\endcsname}\normalsize}%
+\def\lthtmltypeout#1{{\let\protect\string \immediate\write\lthtmlwrite{#1}}}%
+\newcommand\lthtmlhboxmathA{\adjustnormalsize\setbox\sizebox=\hbox\bgroup\kern.05em }%
+\newcommand\lthtmlhboxmathB{\adjustnormalsize\setbox\sizebox=\hbox to\hsize\bgroup\hfill }%
+\newcommand\lthtmlvboxmathA{\adjustnormalsize\setbox\sizebox=\vbox\bgroup %
+ \let\ifinner=\iffalse \let\)\liih@math }%
+\newcommand\lthtmlboxmathZ{\@next\next\@currlist{}{\def\next{\voidb@x}}%
+ \expandafter\box\next\egroup}%
+\newcommand\lthtmlmathtype[1]{\gdef\lthtmlmathenv{#1}}%
+\newcommand\lthtmllogmath{\lthtmltypeout{l2hSize %
+:\lthtmlmathenv:\the\ht\sizebox::\the\dp\sizebox::\the\wd\sizebox.\preveqno}}%
+\newcommand\lthtmlfigureA[1]{\let\@savefreelist\@freelist
+       \lthtmlmathtype{#1}\lthtmlvboxmathA}%
+\newcommand\lthtmlpictureA{\bgroup\catcode`\_=8 \lthtmlpictureB}%
+\newcommand\lthtmlpictureB[1]{\lthtmlmathtype{#1}\egroup
+       \let\@savefreelist\@freelist \lthtmlhboxmathB}%
+\newcommand\lthtmlpictureZ[1]{\hfill\lthtmlfigureZ}%
+\newcommand\lthtmlfigureZ{\lthtmlboxmathZ\lthtmllogmath\copy\sizebox
+       \global\let\@freelist\@savefreelist}%
+\newcommand\lthtmldisplayA{\bgroup\catcode`\_=8 \lthtmldisplayAi}%
+\newcommand\lthtmldisplayAi[1]{\lthtmlmathtype{#1}\egroup\lthtmlvboxmathA}%
+\newcommand\lthtmldisplayB[1]{\edef\preveqno{(\theequation)}%
+  \lthtmldisplayA{#1}\let\@eqnnum\relax}%
+\newcommand\lthtmldisplayZ{\lthtmlboxmathZ\lthtmllogmath\lthtmlsetmath}%
+\newcommand\lthtmlinlinemathA{\bgroup\catcode`\_=8 \lthtmlinlinemathB}
+\newcommand\lthtmlinlinemathB[1]{\lthtmlmathtype{#1}\egroup\lthtmlhboxmathA
+  \vrule height1.5ex width0pt }%
+\newcommand\lthtmlinlineA{\bgroup\catcode`\_=8 \lthtmlinlineB}%
+\newcommand\lthtmlinlineB[1]{\lthtmlmathtype{#1}\egroup\lthtmlhboxmathA}%
+\newcommand\lthtmlinlineZ{\egroup\expandafter\ifdim\dp\sizebox>0pt %
+  \expandafter\centerinlinemath\fi\lthtmllogmath\lthtmlsetinline}
+\newcommand\lthtmlinlinemathZ{\egroup\expandafter\ifdim\dp\sizebox>0pt %
+  \expandafter\centerinlinemath\fi\lthtmllogmath\lthtmlsetmath}
+\newcommand\lthtmlindisplaymathZ{\egroup %
+  \centerinlinemath\lthtmllogmath\lthtmlsetmath}
+\def\lthtmlsetinline{\hbox{\vrule width.1em \vtop{\vbox{%
+  \kern.1em\copy\sizebox}\ifdim\dp\sizebox>0pt\kern.1em\else\kern.3pt\fi
+  \ifdim\hsize>\wd\sizebox \hrule depth1pt\fi}}}
+\def\lthtmlsetmath{\hbox{\vrule width.1em\kern-.05em\vtop{\vbox{%
+  \kern.1em\kern0.8 pt\hbox{\hglue.17em\copy\sizebox\hglue0.8 pt}}\kern.3pt%
+  \ifdim\dp\sizebox>0pt\kern.1em\fi \kern0.8 pt%
+  \ifdim\hsize>\wd\sizebox \hrule depth1pt\fi}}}
+\def\centerinlinemath{%
+  \dimen1=\ifdim\ht\sizebox<\dp\sizebox \dp\sizebox\else\ht\sizebox\fi
+  \advance\dimen1by.5pt \vrule width0pt height\dimen1 depth\dimen1 
+ \dp\sizebox=\dimen1\ht\sizebox=\dimen1\relax}
+
+\def\lthtmlcheckvsize{\ifdim\ht\sizebox<\vsize 
+  \ifdim\wd\sizebox<\hsize\expandafter\hfill\fi \expandafter\vfill
+  \else\expandafter\vss\fi}%
+\providecommand{\selectlanguage}[1]{}%
+\makeatletter \tracingstats = 1 
+\providecommand{\Eta}{\textrm{H}}
+\providecommand{\Mu}{\textrm{M}}
+\providecommand{\Alpha}{\textrm{A}}
+\providecommand{\Iota}{\textrm{J}}
+\providecommand{\Nu}{\textrm{N}}
+\providecommand{\Omicron}{\textrm{O}}
+\providecommand{\omicron}{\textrm{o}}
+\providecommand{\Chi}{\textrm{X}}
+\providecommand{\Beta}{\textrm{B}}
+\providecommand{\Kappa}{\textrm{K}}
+\providecommand{\Tau}{\textrm{T}}
+\providecommand{\Epsilon}{\textrm{E}}
+\providecommand{\Zeta}{\textrm{Z}}
+\providecommand{\Rho}{\textrm{R}}
+
+
+\begin{document}
+\pagestyle{empty}\thispagestyle{empty}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength hsize=\the\hsize}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength vsize=\the\vsize}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength hoffset=\the\hoffset}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength voffset=\the\voffset}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength topmargin=\the\topmargin}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength topskip=\the\topskip}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength headheight=\the\headheight}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength headsep=\the\headsep}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength parskip=\the\parskip}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength oddsidemargin=\the\oddsidemargin}\lthtmltypeout{}%
+\makeatletter
+\if@twoside\lthtmltypeout{latex2htmlLength evensidemargin=\the\evensidemargin}%
+\else\lthtmltypeout{latex2htmlLength evensidemargin=\the\oddsidemargin}\fi%
+\lthtmltypeout{}%
+\makeatother
+\setcounter{page}{1}
+\onecolumn
+
+% !!! IMAGES START HERE !!!
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5220}%
+$ H(\mathop {\rm curl};\Omega )$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5236}%
+$ L^2(\Omega )$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5250}%
+$ H(\mathop {\rm curl};(\Omega ))$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{section}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5451}%
+$ \Omega \in \mathbb{R}^d$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5453}%
+$ d=2,3$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5455}%
+$\displaystyle \mathop{\rm curl}\mathop{\rm curl}\underline u + c(x) \underline u  = \underline f \quad \mathrm{in} \quad \Omega \,,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5457}%
+$ \underline f \in L^2(\Omega )^d$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5459}%
+$\displaystyle \underline u \wedge \underline n  = 0$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5461}%
+$ \partial \Omega $%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5463}%
+$ \Omega $%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5465}%
+$ c(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5469}%
+$ \underline t$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5471}%
+$ d=2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5473}%
+$ \underline v = \left(\begin{array}{c} v_1(x,y) \\   v_2(x,y)\end{array} \right) \in [\mathcal{D}(\overline{\Omega })]^2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5475}%
+$ \varphi \in \mathcal{D}(\overline{\Omega })$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5477}%
+$\displaystyle \mathop{\rm curl}\underline v := \partial _x v_2 - \partial _y v_1   \quad \mathrm{and} \quad \mathop{\underline{\rm curl}}\varphi := \left(\begin{array}{c} \partial _y\varphi \\  -\partial _x\varphi \end{array}
+\right) \,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5479}%
+$ \mathop{\rm curl}\mathop{\rm curl}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5481}%
+$ \mathop{\underline{\rm curl}}\mathop{\rm curl}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5484}%
+$ \mathop{\rm curl}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5486}%
+$ \underline v$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5488}%
+$ \mathop{\underline{\rm curl}}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5490}%
+$ \varphi $%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5492}%
+$\displaystyle \boldsymbol{R} = \left(\begin{array}{cc}
+0 & 1 \\ 
+-1 & 0
+\end{array}\right) \,,
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5494}%
+$\displaystyle \mathop{\rm curl}\underline v = \mathrm{div} \left(\boldsymbol{R} \underline v\right) 
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5496}%
+$\displaystyle \mathop{\underline{\rm curl}}\varphi = \boldsymbol{R} \nabla\varphi \,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5500}%
+$ \underline t = \boldsymbol{R}^T\underline n$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5504}%
+$ d=3$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5506}%
+$ \underline v \in [\mathcal{D}(\overline{\Omega })]^3$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5508}%
+$\displaystyle \mathop{\rm curl}\underline v := \nabla \wedge \underline v := \left(\begin{array}{c} 
+\partial _y v_3 - \partial _z v_2 \\ 
+\partial _z v_1 - \partial _x v_3 \\ 						 
+\partial _x v_2 - \partial _y v_1						 
+\end{array} \right)
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5513}%
+$ \tilde{d}=1$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5517}%
+$ \tilde{d}=3$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5521}%
+$\displaystyle H(\mathop{\rm curl}; \Omega ) := \{ \underline v \in [L^2(\Omega )]^d:  \mathop{\rm curl}\underline v \in [L^2(\Omega )]^{\tilde{d}} \}
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5525}%
+$\displaystyle (\underline v, \underline u)_{H(\mathop{\rm curl};\Omega )} := (\underline v, \underline u)_{L^2(\Omega )} + (\mathop{\rm curl}\underline v, \mathop{\rm curl}\underline u)_{L^2(\Omega )}
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5539}%
+$ [\mathcal{D}(\overline{\Omega })]^d$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5546}%
+$ \underline u$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5548}%
+$ [H(\mathop{\rm curl};\Omega )]^2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5552}%
+$ H^1(\Omega )$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5554}%
+$\displaystyle \int_{\Omega } \mathop{\rm curl}\underline u \,\,\varphi \,dx  = \int_{\Omega } \underline u \cdot \mathop{\underline{\rm curl}}\varphi \,dx  + \int_{\partial \Omega } (\underline u\cdot \underline t) \, \varphi \,ds \:,
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5558}%
+$ [H(\mathop{\rm curl};\Omega )]^3$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5562}%
+$ [H^1(\Omega )]^3$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5564}%
+$\displaystyle \int_{\Omega } \underline v \cdot \mathop{\rm curl}\underline u \,dx  = \int_{\Omega } \underline u \cdot \mathop{\rm curl}\underline v \,dx  + \int_{\partial \Omega } (\underline v\wedge \underline n) \cdot \underline u\,ds \:,
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5566}%
+$ [H^{-\frac{1}{2}}(\partial \Omega )]^{\tilde{d}} \times H^{\frac{1}{2}}(\partial \Omega )$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5568}%
+$\displaystyle \mathrm{div}\, (\underline u \wedge \underline v) = \underline v \cdot \mathop{\rm curl}\underline u - \underline u \cdot \mathop{\rm curl}\underline v 
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5570}%
+$ (\underline a\wedge\underline b)\cdot \underline c$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5572}%
+$\displaystyle \int_{\Omega } \underline v\cdot \mathop{\rm curl}\underline u - \underline u\cdot \mathop{\rm curl}\underline v  \, dx = \int_{\Omega } \mathrm{div}\, (\underline u \wedge \underline v) \, dx
+= \int_{\partial \Omega } (\underline u \wedge \underline v)\cdot \underline n \,ds = \int_{\partial \Omega } (\underline v \wedge \underline n)\cdot \underline u \,ds \,\,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5574}%
+$ H(\mathop{\rm curl})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5581}%
+$ \underline n$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5591}%
+$\displaystyle \gamma: \quad \underline v \mapsto \gamma(\underline v) \cdot \underline t
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5595}%
+$\displaystyle \gamma: \quad \underline v \mapsto \gamma(\underline v) \wedge \underline n
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5599}%
+$ [H^{-\frac{1}{2}}(\partial \Omega )]^{\tilde{d}}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5603}%
+$ [H^1(\Omega )]^{\tilde{d}}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5605}%
+$ [H^{\frac{1}{2}}(\partial \Omega )]^{\tilde{d}}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5610}%
+$\displaystyle H_0(\mathop{\rm curl};\Omega ) := \left\{ \underline v \in H(\mathop{\rm curl};\Omega ): \quad \underline v\wedge \underline n = 0 \:\:\mathrm{on}\:\: \partial \Omega \right\}
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5615}%
+$ [\mathcal{D}(\Omega )]^d$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5617}%
+$ H_0(\mathop{\rm curl};\Omega )$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5622}%
+$ K_-$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5624}%
+$ K_+$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5626}%
+$ \mathbb{R}^d$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5628}%
+$ e = \partial K_-\cap\partial K_+ \neq \emptyset$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5630}%
+$ \Omega = \partial K_-\cup\partial K_+$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5632}%
+$ v$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5636}%
+$ v_-$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5642}%
+$ H(\mathop{\rm curl}; K_-)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5644}%
+$ v_+$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5650}%
+$ H(\mathop{\rm curl}; K_+)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5652}%
+$ e$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5654}%
+$ v_-\wedge n_- + v_+\wedge n_+ = 0$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5658}%
+$ H^{\frac{1}{2}}_{00}(e)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5662}%
+$ H^{\frac{1}{2}}(\partial \Omega )$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5674}%
+$ H^{-\frac{1}{2}}(e)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5676}%
+$ \underline v_-$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5678}%
+$ \underline v_+$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5680}%
+$ L^2(e)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5684}%
+$ H^1$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5694}%
+$ \underline u \in H_0(\mathop{\rm curl};\Omega )$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5696}%
+$ \underline v \in H_0(\mathop{\rm curl};\Omega )$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5698}%
+$\displaystyle \int_{\Omega } \mathop{\rm curl}\underline u\, \mathop{\rm curl}\underline v\,dx + \int_{\Omega } c(x)\, \underline u\, \cdot \underline v\,dx =  \int_{\Omega } \underline f\, \cdot \underline v\,dx$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmldisplayA{displaymath5701}%
+\begin{displaymath}\begin{split} 	a(\underline u,\underline v) &:= \int_{\Omega } \mathop{\rm curl}\underline u\, \mathop{\rm curl}\underline v\,dx + \int_{\Omega } c(x)\, \underline u\, \cdot \underline v\,dx \\  	l(\underline v) & := \int_{\Omega } \underline f\, \cdot \underline v\,dx \end{split}\end{displaymath}%
+\lthtmldisplayZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5703}%
+$ a(\cdot,\cdot)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5705}%
+$ H_0(\mathop{\rm curl};\Omega )\times H_0(\mathop{\rm curl};\Omega )$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{section}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5717}%
+$ \hat{K}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5719}%
+$ F_K(\hat{x})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5721}%
+$ K = F_K(\hat{K})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5723}%
+$ \hat{R}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5727}%
+$ R_K$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5729}%
+$ K$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5731}%
+$ \mathcal{A} = \{\alpha_i(\cdot)\}_{i=1}^N$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5735}%
+$ N < \infty$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5739}%
+$ \mathcal{A}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5741}%
+$ \alpha_i(\cdot)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+\stepcounter{subsubsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5749}%
+$ \hat{R} = \mathcal{R}^k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5751}%
+$ \mathbb{P}_k(\hat{\Sigma})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5753}%
+$ k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5755}%
+$ \hat{\Sigma}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5759}%
+$ \tilde{\mathbb{P}}_k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5765}%
+$ d$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5770}%
+$\displaystyle \mathcal{S}^k := \{\, \underline p \in (\tilde{\mathbb{P}}_k)^d : \underline p \cdot \hat{\underline x} = \sum_{i=1}^{d} p_i\,\hat{x}_i \equiv 0 \,\}\,,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5772}%
+$ \hat{x} \in \hat{K}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5778}%
+$ k(k+2)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5785}%
+$\displaystyle \mathcal{R}^k = \left(\mathbb{P}_{k-1}(\hat{K}) \right)^d \oplus \mathcal{S}^k\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmldisplayA{displaymath5787}%
+\begin{displaymath}\begin{split} 					\mathrm{dim} (\mathcal{R}^k) &= k(k+2) \qquad \textrm{for} \quad d=2\,, \\  					\mathrm{dim} (\mathcal{R}^k) &= \frac{(k+3)(k+2)k}{2} \qquad \textrm{for} \quad d=3\,. 				\end{split}\end{displaymath}%
+\lthtmldisplayZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5789}%
+$ \mathcal{R}^k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5791}%
+$\displaystyle \mathcal{R}^k = \left(\mathbb{P}_{k-1}(\hat{K}) \right)^2 \oplus \tilde{\mathbb{P}}_{k-1}\, \left(\begin{array}{cc} \hat{x}_2 \\  -\hat{x}_1 				\end{array}\right)\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5795}%
+$\displaystyle \tilde{\mathbb{P}}_{k-1}\, \left(\begin{array}{cc} \hat{x}_2 \\  -\hat{x}_1 \end{array}\right) \subseteq \mathcal{S}^k
+%%\left\{\v p\quad \big|\quad \v p = \tilde{p} \left(\begin{array}{cc} x_2 \\-x_1 \end{array}\right)\,,\, \tilde{p}
+				$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5797}%
+$ \tilde{\mathbb{P}}_{k-1}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5799}%
+$ k-1$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5803}%
+$ \mathcal{S}^k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5809}%
+$ k=1$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5811}%
+$ k=2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5814}%
+$\displaystyle \mathcal{R}^1 = \left\langle   								\left(\begin{array}{cc} 1 \\  0 \end{array}\right)\,_, 								\left(\begin{array}{cc} 0 \\  1 \end{array}\right)\,_, 								\left(\begin{array}{cc} \hat{x}_2 \\  -\hat{x}_1 \end{array}\right) \right\rangle$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5816}%
+$\displaystyle \mathcal{R}^2 = \left(\mathbb{P}_{1}(\hat{K}) \right)^2 \oplus 
+\left\langle 
+\left(\begin{array}{cc} \hat{x}_1\,\hat{x}_2 \\  -{\hat{x}_1}^2 \end{array}\right)\,_,
+\left(\begin{array}{cc} {\hat{x}_2}^2 \\  -\hat{x}_1\,\hat{x}_2 \end{array}\right)
+\right\rangle					
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5823}%
+$ \mathcal{S}^1$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5825}%
+$ \underline p$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5827}%
+$ (\mathbb{P}_{1}(\hat{K}))^3$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5829}%
+$\displaystyle p_i = \sum_{j=1}^3 a_{ij} \hat{x}_j\,, \qquad i=1,2,3\,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5835}%
+$\displaystyle \underline p \cdot \hat{\underline x} = 
+\sum_{i=1}^3 a_{ii}\hat{x}_i^2 + \sum_{\substack{i,j=1 \\  j>i}}^3 (a_{ij}+a_{ji})\hat{x}_i \hat{x}_j \equiv 0\,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmldisplayA{displaymath5839}%
+\begin{displaymath}\begin{split} 					&a_{11}=a_{22}=a_{33} = 0 \\  					&a_{12}= - a_{21}\,,\quad a_{13}= - a_{31}\,,\quad a_{23}= - a_{32}\,. 				\end{split}\end{displaymath}%
+\lthtmldisplayZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5843}%
+$ a_{ij} = 1$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5845}%
+$ i=1,2,3$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5847}%
+$ j>i$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5849}%
+$\displaystyle \mathcal{R}^1 = \left(\mathbb{P}_{0}(\hat{K}) \right)^3 \oplus  													 \left\langle  													 	\left(\begin{array}{ccc} 0 \\  \hat{x}_3 \\  \hat{x}_2 \end{array}\right)\,_,\, 														\left(\begin{array}{ccc} \hat{x}_3 \\  0 \\  \hat{x}_1 \end{array}\right)\,_,\, 														\left(\begin{array}{ccc} \hat{x}_2 \\  \hat{x}_1 \\  0 \end{array}\right) 														\right\rangle$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5853}%
+$ (\mathbb{P}_{k}(\hat{K}) )^d$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsubsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5868}%
+$ n$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5870}%
+$ n+k+2 \choose n$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5875}%
+$ \hat{\underline t}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5883}%
+$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{e}} (\hat{\underline t}\cdot \hat{\underline u})\, \hat{\varphi }\,d\hat{s} \quad \forall \hat{\varphi }  						\in \mathbb{P}_{k-1}(\hat{e})\,,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5885}%
+$ \hat{e}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5889}%
+$ 3k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5891}%
+$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{K}} \hat{\underline u}\cdot \hat{\underline \varphi }\,d\hat{x} \quad \forall \hat{\underline \varphi }  						\in (\mathbb{P}_{k-2}(\hat{K}))^2\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5893}%
+$ k(k-1)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5900}%
+$ \hat{\underline n}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5915}%
+$ 6k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5917}%
+$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{f}} (\hat{\underline u}\wedge \hat{\underline n})\cdot \hat{\underline \varphi }\,d\hat{a} \quad  						\forall \hat{\varphi } \in (\mathbb{P}_{k-2}(\hat{f}) )^2\,,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5919}%
+$ \hat{f}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5923}%
+$ 4k(k-1)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5925}%
+$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{K}} \hat{\underline u}\cdot \hat{\underline \varphi }\,d\hat{x} \quad  						\forall \hat{\underline \varphi } \in (\mathbb{P}_{k-3}(\hat{K}))^3\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5927}%
+$ \frac{k(k-1)(k-2)}{2}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5933}%
+$ k\leq3$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5944}%
+$ \hat{\underline u}\in \mathcal{R}^k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5946}%
+$ \hat{\alpha}(\hat{\underline u})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5949}%
+$ \hat{K} = \left\{ (\hat{x},\hat{y})\in\mathbb{R}^2:\quad 0\leq \hat{x}\leq 1\,,\,\, 0\leq \hat{y}\leq 1-\hat{x} \right\}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5951}%
+$ \hat{e}_0 = \overline{(0,0),(1,0)}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5953}%
+$\displaystyle \hat{\underline t}_0 = \left(\begin{array}{cc} 1 \\  0 \end{array}\right)\,,\quad
+\hat{\underline t}_1 = \frac{1}{\sqrt{2}}\left(\begin{array}{cc} -1 \\  1 \end{array}\right)\,,\quad
+\hat{\underline t}_2 = \left(\begin{array}{cc} 0 \\  -1 \end{array}\right)\,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5955}%
+$ \mathcal{R}^1$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5961}%
+$ \int_{\hat{e}_i} (\hat{\underline t}\cdot \hat{\underline u})\, \hat{\varphi }\,d\hat{s}\,, \forall \hat{\varphi } \in \mathbb{P}_{0}(\hat{e}_i)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5963}%
+$ \varphi \equiv 1$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5965}%
+$ \mathbb{P}_{0}(\hat{e}_i)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5967}%
+$\displaystyle \hat{\alpha}_i(\hat{\underline u}) = \int_{\hat{e}_i} (\hat{\underline t}\cdot \hat{\underline u})\,d\hat{s} \quad i=0,1,2\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5969}%
+$ \hat{\underline N}_0,\hat{\underline N}_1,\hat{\underline N}_2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5973}%
+$ \hat{\alpha}_i(\hat{\underline N}_j) = \delta_{ij}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5975}%
+$ \hat{\underline N}_i$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5979}%
+$\displaystyle \hat{\underline N}_0 = \left(\begin{array}{cc} 1-\hat{y} \\  \hat{x} \end{array}\right)\,,\quad 					\hat{\underline N}_1 = \left(\begin{array}{cc} -\hat{y} \\  \hat{x} \end{array}\right)\,,\quad 					\hat{\underline N}_2 = \left(\begin{array}{cc} -\hat{y} \\  \hat{x}-1 \end{array}\right)\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsubsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5984}%
+$\displaystyle K \ni x = F_K(\hat{x}) = B_K \hat{x} + b_K
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5988}%
+$ N_i$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline5992}%
+$ \hat{N}_i$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay5996}%
+$\displaystyle N_i(x) = \left( \hat{N}_i \circ F_K^{-1} \right)(x)$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6000}%
+$ H(\mathop{\rm curl};\hat{K})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6002}%
+$ H(\mathop{\rm curl}; K)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6011}%
+$ \underline N_i(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6015}%
+$\displaystyle \underline N_i(x) = \mathcal{P}_K (\hat{\underline N}_i) =  \left(\hat{D}F_K^{-T} \hat{\underline N}_i\right) \circ F_K^{-1} (x)\,,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6017}%
+$ \hat{D}F_K$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6019}%
+$ \frac{d}{d\hat{x}}F_K(\hat{x})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6022}%
+$ H(\mathop{\rm div}; \Omega )$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6026}%
+$ F_K(\hat{x}) = B_K \hat{x} + b_k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6030}%
+$ B_K$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6032}%
+$\displaystyle \underline v(x) = \mathcal{P}_K (\hat{\underline v}) =  B_K^{-T} \left(\hat{\underline v} \circ F_K^{-1} \right)(x)\,,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsubsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6035}%
+$ \Omega \subset\mathbb{R}^2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6041}%
+$\displaystyle B_K^{-T} = \det B_K^{-1}\,R^T B_K\,R \,,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6043}%
+$ R$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6048}%
+$ \underline v(x) = \mathcal{P}_K(\hat{\underline v})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6050}%
+$ \varphi (x) = \left( \hat{\varphi }\circ F_K^{-1} \right)(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6052}%
+$ \hat{x} = 
+F_K^{-1}(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6054}%
+$ F_K$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6058}%
+$ D\underline v$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6060}%
+$\displaystyle D\underline v = B_K^{-T}\, \hat{D}\hat{\underline v}\, B_K^{-1}\, .$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6062}%
+$\displaystyle \mathop{\rm curl}\underline v = \det B_K^{-1} \widehat{\mathop{\rm curl}} \hat{\underline v}\, .$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6074}%
+$ R\,Dv$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6076}%
+$ B_K^{-T}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6080}%
+$ \det B_K^{-1}\,R\,\hat{D}\hat{v}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6085}%
+$\displaystyle \int_{K} \mathop{\rm curl}\underline v\, \varphi \, dx = \int_{\hat{K}} \widehat{\mathop{\rm curl}}\hat{\underline v}\, \hat{\varphi } \,d\hat{x}\,,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6087}%
+$\displaystyle \int_{K} \mathop{\rm curl}\underline v\, \mathop{\rm curl}\underline u \, dx = | B_K |^{-1}\,\int_{\hat{K}} \widehat{\mathop{\rm curl}}\hat{\underline v}\, 						\widehat{\mathop{\rm curl}}\hat{\underline u}  \,d\hat{x}\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsubsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6092}%
+$ \hat{\underline v}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6096}%
+$ \mathop{\rm Curl}v$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6098}%
+$\displaystyle \left({\mathop{\rm Curl}v}\right)_{ij} = \frac{\partial v_j}{\partial x_i} - \frac{\partial v_i}{\partial x_j}$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6100}%
+$ \mathop{\rm Curl}v = D\underline v^T - D\underline v$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6102}%
+$\displaystyle \mathop{\rm Curl}v = B_K^{-T} \widehat{\mathop{\rm Curl}}\,\hat{v} \,B_K^{-1}$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6109}%
+$ \underline v(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6113}%
+$ \hat{\underline v}(\hat{x})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6115}%
+$\displaystyle \left(\mathop{\rm curl}\underline v\right)_i(x) = \det \mathrm{M_i}(x) \,, \qquad i= 1,2,3\,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6117}%
+$ \mathrm{M_i}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6119}%
+$ D(F_K^{-1}) = B_K^{-1}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6121}%
+$ (\widehat{\mathop{\rm curl}}\,\hat{\underline v}\circ F_K^{-1})(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6123}%
+$\displaystyle \left(\mathrm{M_i}\right)_{kl}(x) := \left\{ \begin{array}{ll}  																(\widehat{\mathop{\rm curl}}\,\hat{v} \circ F_K^{-1})_k (x) & \textrm{if} \quad l=i \\  																(B_K^{-1})_{kl} & \textrm{if} \quad l\neq i 												\end{array} \right.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6125}%
+$\displaystyle \mathop{\rm curl}\underline v = \left( \begin{array}{ccc} ({\mathop{\rm Curl}v})_{23} \\  ({\mathop{\rm Curl}v})_{31}  \\  ({\mathop{\rm Curl}v})_{12} \end{array}\right)\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6127}%
+$ (\mathop{\rm curl}\underline v)_1 = {\mathop{\rm Curl}v}_{23}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6129}%
+$ b_{ij} := (B_K^{-1})_{ij}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6131}%
+$\displaystyle ({\mathop{\rm Curl}v})_{23} = b_{k2}\, (\widehat{\mathop{\rm Curl}}\, \hat{v})_{kl}\,b_{l3}
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6135}%
+$\displaystyle ({\mathop{\rm Curl}v})_{23} = (b_{12}b_{23} - b_{22}b_{13})(\widehat{\mathop{\rm Curl}} \,\hat{v})_{12}
+-(b_{12}b_{33} - b_{32}b_{13})(\widehat{\mathop{\rm Curl}}\, \hat{v})_{31}
++(b_{22}b_{33} - b_{32}b_{23})(\widehat{\mathop{\rm Curl}}\, \hat{v})_{23}\,,
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6137}%
+$\displaystyle \mathrm{M_1} := \left(\begin{array}{ccc} (\widehat{\mathop{\rm curl}}\, v)_1 & b_{12} & b_{13} \\ 
+(\widehat{\mathop{\rm curl}}\, v)_2 & b_{22} & b_{23} \\ 	
+(\widehat{\mathop{\rm curl}}\, v)_3 & b_{32} & b_{33} 
+\end{array}\right) \,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6148}%
+$\displaystyle \mathop{\rm curl}\underline v = \frac{1}{\det B_K}\,B_K\,(\widehat{\mathop{\rm curl}}\,\hat{\underline v} \circ F_K^{-1})\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6150}%
+$ (\mathop{\rm curl}\underline v)_1$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6152}%
+$\displaystyle (\mathop{\rm curl}\underline v)_1 = \frac{1}{\det B_K} (B_K)_{1j} ((\widehat{\mathop{\rm curl}}\,\hat{\underline v})_j \circ F^{-1})\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6154}%
+$ \det \mathrm{M_1}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6158}%
+$\displaystyle \det  \mathrm{M_1} = (\widehat{\mathop{\rm curl}}\, \hat{\underline v})_1 \det\mathcal{B}^{inv}_{11} 
+-(\widehat{\mathop{\rm curl}}\, \hat{\underline v})_2 \det\mathcal{B}^{inv}_{21}
++(\widehat{\mathop{\rm curl}}\, \hat{\underline v})_3 \det\mathcal{B}^{inv}_{31} \,,
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6160}%
+$ \mathcal{B}^{inv}_{ij}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6162}%
+$ 2 \times 2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6164}%
+$ B_K^{-1}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6166}%
+$ A \in \mathbb{R}^{3\times 3}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6168}%
+$\displaystyle (A^{-1})_{ij} = \frac{1}{\det A} (-1)^{i+j} \det \mathcal{A}_{ji} \,,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6170}%
+$ \mathcal{A}_{ij}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6174}%
+$ A$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6178}%
+$ A = B_K^{-1}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6180}%
+$\displaystyle \frac{1}{\det B_K}\,\frac{1}{\det B_K^{-1}} (-1)^{1+j} \det \mathcal{B}^{inv}_{j1} (\widehat{\mathop{\rm curl}}\, \hat{\underline v})_j
+= (\widehat{\mathop{\rm curl}}\, \hat{\underline v})_1 \det \mathcal{B}^{inv}_{11} 
+-(\widehat{\mathop{\rm curl}}\, \hat{\underline v})_2 \det \mathcal{B}^{inv}_{21}
++(\widehat{\mathop{\rm curl}}\, \hat{\underline v})_3 \det \mathcal{B}^{inv}_{31} = \det  \mathrm{M_1}\,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6183}%
+$ C$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6185}%
+$ \hat{C} = [0,1]^d$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6187}%
+$\displaystyle C = F_C(\hat{C}) \quad C \ni x = B_C \hat{x} + \underline b_C \,, \hat{x} \in \hat{C}\,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsubsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6191}%
+$ \mathcal{Q}_{l,m}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6193}%
+$ \hat{C}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6195}%
+$ l$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6197}%
+$ \hat{x}_1$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6199}%
+$ m$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6201}%
+$ \hat{x}_2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6203}%
+$ \mathcal{Q}_{l,m,n}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6217}%
+$ \hat{x}_3$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6221}%
+$\displaystyle \mathcal{P}^k = \left\{ \hat{\underline u} =  			\left(\begin{array}{cc} \hat{u}_1 \\  \hat{u}_2 \end{array}\right): \quad  						 \hat{u}_1 \in \mathcal{Q}_{k-1,k}\,, 								\hat{u}_2 \in \mathcal{Q}_{k,k-1} \right\}\,,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6223}%
+$\displaystyle \mathcal{P}^k = \left\{ \hat{\underline u} = \left(\begin{array}{ccc}  					\hat{u}_1 \\  \hat{u}_2 \\ \hat{u}_3 \end{array}\right):\quad  								\hat{u}_1 \in \mathcal{Q}_{k-1,k,k}\,, 								\hat{u}_2 \in \mathcal{Q}_{k,k-1,k}\,,  								\hat{u}_3 \in \mathcal{Q}_{k,k,k-1}\right\}\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsubsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6228}%
+$ \hat{C}\subset \mathbb{R}^2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6237}%
+$ \mathcal{P}^k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6241}%
+$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{e}} (\hat{\underline t}\cdot \hat{\underline u})\, \hat{\varphi }\,d\hat{s}\,, \quad  			\forall\, \hat{\varphi } \in \mathbb{P}_{k-1}(\hat{e})\,,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6247}%
+$ 4k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6249}%
+$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{C}}  \hat{\underline u}\cdot \hat{\underline \varphi }\,d\hat{x}\,, \quad  			\forall\, \hat{\underline \varphi } = \left(\begin{array}{cc} \hat{\varphi }_1 \\  \hat{\varphi }_2 \end{array}\right) \,, 			\quad\hat{\varphi }_1\in\mathcal{Q}_{k-2,k-1}\,,\quad\hat{\varphi }_2\in\mathcal{Q}_{k-1,k-2}\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6251}%
+$ 2k(k-1)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6273}%
+$ 12k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6275}%
+$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{f}} (\hat{\underline u}\wedge \hat{\underline n})\cdot \hat{\underline \varphi }\,d\hat{a} \,,\quad 			\forall \,\hat{\underline \varphi } = \left(\begin{array}{cc} \hat{\varphi }_1 \\  \hat{\varphi }_2 \end{array}\right) \,, 			\quad\hat{\varphi }_1\in\mathcal{Q}_{k-2,k-1}(\hat{f})\,,\quad\hat{\varphi }_2\in\mathcal{Q}_{k-1,k-2}(\hat{f})\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6281}%
+$ 6\cdot 2k(k-1)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6283}%
+$\displaystyle \hat{\alpha}(\hat{\underline u}) := \int_{\hat{C}}  \hat{\underline u}\cdot \hat{\underline \varphi }\,d\hat{x} \,,\quad  			\forall\, \hat{\underline \varphi } = \left(\begin{array}{ccc} \hat{\varphi }_1 \\  \hat{\varphi }_2 \\   			\hat{\varphi }_3\end{array}\right) \,,\quad\hat{\varphi }_1\in\mathcal{Q}_{k-1,k-2,k-2}\,,\quad\hat{\varphi _2}\in\mathcal{Q}_{k-2,k-1,k-2}\,, 			\quad\hat{\varphi _3}\in\mathcal{Q}_{k-2,k-2,k-1}\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6285}%
+$ 3k(k-1)^2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6288}%
+$ [0,1]^2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6290}%
+$\displaystyle \hat{\underline t}_0 = \left(\begin{array}{cc} 1 \\  0 \end{array}\right)\,,\quad
+\hat{\underline t}_1 = \left(\begin{array}{cc} 0 \\  1 \end{array}\right)\,,\quad
+\hat{\underline t}_2 = \left(\begin{array}{cc} -1 \\  0 \end{array}\right)\,, \quad
+\hat{\underline t}_3 = \left(\begin{array}{cc} 0 \\  -1 \end{array}\right)\,,
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6292}%
+$\displaystyle \hat{\underline N}_0 = \left(\begin{array}{cc} 1-\hat{y} \\  0 \end{array}\right)\,,\quad 		\hat{\underline N}_1 = \left(\begin{array}{cc} 0 \\  \hat{x} \end{array}\right)\,,\quad 		\hat{\underline N}_2 = \left(\begin{array}{cc} -\hat{y} \\  0 \end{array}\right)\,,\quad 		\hat{\underline N}_3 = \left(\begin{array}{cc} 0 \\  \hat{x}-1 \end{array}\right)\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsubsection}
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6296}%
+$ F_C(\hat{C})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6300}%
+$ \hat{D}F_C(\hat{x})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6302}%
+$ F_C$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsubsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6307}%
+$\displaystyle \underline v(x) = (\hat{D}F_C^{-T} \hat{\underline v}_i) \circ F_C^{-1} (x)$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6315}%
+$ \mathop{\rm curl}\underline v$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6317}%
+$ \widehat{\mathop{\rm curl}}\,\hat{\underline v}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6330}%
+$\displaystyle \mathop{\rm curl}\underline v(x) = (\det \hat{D}F)^{-1} \widehat{\mathop{\rm curl}}\, \hat{\underline v}(\hat{x})\,, \qquad  x = F(\hat{x})\,,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6334}%
+$ F$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6338}%
+$ (\hat{D}F(F^{-1}(x)))^{-1} = D(F^{-1})(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6340}%
+$ D(F^{-1})_{ij}(x)=
+\frac{\partial \hat{x}_i}{\partial x_j}(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6342}%
+$\displaystyle v_i(x) = \frac{\partial \hat{x}_j}{\partial x_i}(x) \,\hat{\underline v}_j (F^{-1}(x)) \,, \qquad i=1,2\,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmldisplayA{displaymath6344}%
+\begin{displaymath}\begin{split} 			 \frac{\partial v_2}{\partial x_1} &= \frac{\partial \hat{x}_i}{\partial x_2}(x) \,\frac{\partial }{\partial x_1}\hat{\underline v}_i(F^{-1}(x)) \\  			 \frac{\partial v_1}{\partial x_2} &= \frac{\partial \hat{x}_i}{\partial x_1}(x) \,\frac{\partial }{\partial x_2}\hat{\underline v}_i(F^{-1}(x)) \,, 			\end{split}\end{displaymath}%
+\lthtmldisplayZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmldisplayA{displaymath6346}%
+\begin{displaymath}\begin{split} 			 \frac{\partial v_2}{\partial x_1} &= \frac{\partial ^2 \hat{x}_i}{\partial x_1\partial x_2}(x)\, \hat{\underline v}_i(F^{-1}(x)) +  			 						  \frac{\partial \hat{x}_i}{\partial x_2}(x) \,\frac{\partial }{\partial x_1}\hat{\underline v}_i(F^{-1}(x)) \\  			 \frac{\partial v_1}{\partial x_2} &= \frac{\partial ^2 \hat{x}_i}{\partial x_1\partial x_2}(x) \,\hat{\underline v}_i(F^{-1}(x)) + 			 						  \frac{\partial \hat{x}_i}{\partial x_1}(x) \,\frac{\partial }{\partial x_2}\hat{\underline v}_i(F^{-1}(x)) \,. 			\end{split}\end{displaymath}%
+\lthtmldisplayZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6348}%
+$\displaystyle \mathop{\rm curl}\underline v = \frac{\partial v_2}{\partial x_1} - \frac{\partial v_1}{\partial x_2} = 
+\frac{\partial \hat{x}_i}{\partial x_2}(x) \,\frac{\partial }{\partial x_1}\hat{\underline v}_i(F^{-1}(x)) 
+- \frac{\partial \hat{x}_i}{\partial x_1}(x) \,\frac{\partial }{\partial x_2}\hat{\underline v}_i(F^{-1}(x)) \,
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsubsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6353}%
+$ D(F_C^{-1})(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6355}%
+$ \frac{\partial v_i}{\partial x_j} - \frac{\partial v_j}{\partial x_i}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6357}%
+$ i,j = 1,2,3$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6359}%
+$ \mathop{\rm Curl}v = Dv^T - Dv$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6361}%
+$\displaystyle \mathop{\rm Curl}v (x) = ((\hat{D}F_C^{-T} \widehat{\mathop{\rm Curl}}\,\hat{v} \,\hat{D}F_C^{-1}) \circ F_C^{-1})(x)
+= (DF_C^{-1})^T(x)\, (\widehat{\mathop{\rm Curl}}\,\hat{v}\circ F_C^{-1})(x)\,DF_C^{-1}(x) \,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6363}%
+$ B_C$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6365}%
+$ \hat{D}F_C(\hat(x))$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6370}%
+$ C = F_C(\hat{C})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6376}%
+$\displaystyle \mathop{\rm curl}\underline v =  				\left(\frac{1}{\det \hat{D}F_C}\,\hat{D}F_C\, \widehat{\mathop{\rm curl}}\,\hat{\underline v} \right) \circ F_C^{-1}\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6383}%
+$ \mathcal{Q}^k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6389}%
+$ \mathcal{P}_K$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6393}%
+$ K=F(\hat{K})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6399}%
+$ [0,|e|] \ni s \mapsto \underline x(s) \in e$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6401}%
+$ [0,|\hat{e}|] \ni \hat{s} \mapsto \hat{\underline x}(\hat{s}) \in \hat{e}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6411}%
+$ \frac{d \underline x}{ds}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6413}%
+$ \frac{d \hat{\underline x}}{d\hat{s}}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6422}%
+$\displaystyle \underline v\cdot \underline t = \frac{|\hat{e}|}{|e|} (\hat{\underline v}\cdot \hat{\underline t})\,,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6424}%
+$ |\hat{e}|$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6426}%
+$ |e|$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6432}%
+$\displaystyle (\underline v(x))_i = (D(F^{-1})^T \hat{\underline v})_i = \frac{\partial \hat{x}_j}{\partial x_i}(x) \hat{\underline v}_j(\hat{x})\,
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6434}%
+$ \hat{x}_j = \hat{x}_j(\underline x(s))$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6436}%
+$ \hat{x}_j = \hat{x}_j(\hat{s}(s))$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6438}%
+$\displaystyle \underline v\cdot \underline t= \underline v \cdot \frac{d \underline x}{ds} = \left( \hat{\underline v}_j\frac{\partial \hat{x}_j}{\partial x_i}\right) (x)\frac{dx_i}{ds}
+= \hat{\underline v}_j \frac{d \hat{x}_j}{ds} = \hat{\underline v}_j \frac{d \hat{x}_j}{d\hat{s}} \frac{d\hat{s}}{ds} 
+= (\hat{\underline v}\cdot \hat{\underline t}) \frac{d\hat{s}}{ds} 
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6440}%
+$ \frac{d\hat{s}}{ds}=\frac{|\hat{e}|}{|e|}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6451}%
+$ \alpha^{[K]}(\underline u) := \int_e (\underline v\cdot \underline t)\varphi \,ds$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6453}%
+$\displaystyle \alpha^{[K]}(\underline u) = \int_e (\underline v\cdot \underline t)\varphi \,ds = 
+\int_{\hat{e}} (\hat{\underline v} \cdot \hat{\underline t}) \hat{\varphi } \, d\hat{s}\, = \hat{\alpha}(\hat{\underline u})\,,
+\qquad \forall\, \hat{\varphi } \in
+\mathbb{P}_{k-1}(\hat{e})\,, \quad \varphi = \hat{\varphi } \circ F^{-1} \in \mathbb{P}_{k-1}(e)\,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6455}%
+$ K_- = F_-(\hat{K})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6457}%
+$ K_+ = F_+(\hat{K})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6461}%
+$ \underline N$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6465}%
+$ \underline N_-$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6467}%
+$ \underline N_+$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6475}%
+$ e_+ =F_+(\hat{e}_i)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6477}%
+$ e_- =F_-(\hat{e}_j)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6479}%
+$ \underline t_+ $%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6485}%
+$ \underline t_- = -\underline t_+$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6491}%
+$ \int_{e_+}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6495}%
+$ \int_{e_-}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6499}%
+$ \underline t_-$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6503}%
+$\displaystyle \underline N_+\cdot\underline t_+ + \underline N_-\cdot\underline t_- = 0\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6505}%
+$ \alpha^{[K_+]}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6507}%
+$ \alpha^{[K_-]}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6514}%
+$ \hat{e} \ni \hat{x}(s) := \underline a +
+s\, \hat{\underline t}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6516}%
+$ \hat{\underline p} \in \mathcal{S}^k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6520}%
+$\displaystyle (\hat{\underline p}\cdot \hat{\underline t})|_{\hat{e}} \in \mathbb{P}_{k-1}(\hat{e})\,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6522}%
+$\displaystyle \hat{\underline p} \in \mathcal{S}^k \quad \Longrightarrow \quad \textrm{for } i=1,2,3: 
+\quad \hat{p}_i(\hat{x}) = \prod_{j=1}^3 \hat{x}_j^{k_{ij}}\,, \quad
+\textrm{where } \sum_{j=1}^3 k_{ij} = k\,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6526}%
+$ \hat{x}(s)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6528}%
+$\displaystyle \hat{p}_i(\hat{x}(s)) = \prod_{j=1}^3 (a_j + s\,\hat{t}_j)^{k_{ij}} = s^k\,\prod_{j=1}^3 \hat{t}_j^{k_{ij}} + 
+\hat{\varphi }_{k-1}(s)\,,
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6530}%
+$ \hat{\varphi }_{k-1}(s) \in \mathbb{P}_{k-1}(\hat{e})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6532}%
+$\displaystyle (\hat{\underline p}\cdot \hat{\underline t})|_{\hat{e}} = s^k\,\sum_{i=1}^3\hat{t}_i\left(\prod_{j=1}^3 \hat{t}_j^{k_{ij}}\right) +
+\hat{\varphi }_{k-1}(s)\,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6534}%
+$ s^k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6536}%
+$ \hat{\underline p}(\hat{\underline t}) \cdot \hat{\underline t}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6543}%
+$ \hat{R} = \mathcal{P}^k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6547}%
+$ (\hat{\underline v}\cdot \hat{\underline t})|_{\hat{e}} \in \mathbb{P}_{k-1}(\hat{e})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6560}%
+$\displaystyle \underline N_+ := \mathcal{P}_+(\hat{\underline N}_i) = \hat{D}F_+^{-T} \hat{\underline N}_i \,,  			\qquad \underline N_- := -\,\mathcal{P}_-(\hat{\underline N}_j) = -\hat{D}F_-^{-T}\hat{\underline N}_j\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6566}%
+$ \underline v := \mathcal{P}_K(\hat{\underline v})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6570}%
+$ \hat{\underline v} \in \hat{R}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6584}%
+$ (\underline v\cdot \underline t)|_{e} \in \mathbb{P}_{k-1}(e)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6590}%
+$\displaystyle \int_{e_+} \left((\underline N_+\cdot \underline t_+) + (\underline N_-\cdot \underline t_-)\right)\,\varphi \,ds\,, \qquad \forall\,\varphi \in\mathbb{P}_{k-1}(e)
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6592}%
+$ \int_{e_+}(\underline N_-\cdot \underline t_-)\,\varphi \,ds = -\int_{e_-}(\underline N_-\cdot \underline t_-)\,\varphi \,ds$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6598}%
+$\displaystyle \int_{e_+} (\underline N_+ \cdot \underline t_+)\varphi \,ds = \int_{\hat{e}_i}  (\hat{\underline N}_i\cdot \hat{\underline t}_i)\hat{\varphi }\,d\hat{s} = 1 			\qquad \textrm{and} \qquad 			\int_{e_-} (\underline N_- \cdot \underline t_-)\varphi \,ds = -\int_{\hat{e}_j}  (\hat{\underline N}_j\cdot \hat{\underline t}_j)\hat{\varphi }\,d\hat{s} = -1\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6602}%
+$ \hat{\alpha}_j(\hat{\underline 
+v}) = \int_{\hat{e}_j} \hat{\underline v} \cdot \hat{\underline t}_j\,d\hat{s}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6604}%
+$ \hat{\alpha}_j(\hat{\underline N}_i) = \delta_{ij}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6606}%
+$\displaystyle v_j = \hat{\alpha}_j(\hat{\underline v}) = (\hat{\underline N}_j \cdot \hat{\underline t})\,|\hat{e}_j| = ({\underline N}_j \cdot {\underline t}_j)\, |e_j|\,,
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6608}%
+$ \alpha_j(\underline v)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6610}%
+$ e_j$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6612}%
+$ |e_j|\left(\underline v\cdot \underline t_j\right)|_e$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6615}%
+$ \alpha^{[K]}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6619}%
+$ \underline t = \frac{|\hat{e}|}{|e|}\,(\hat{D}F)\,\hat{\underline t}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6623}%
+$ \tilde{\underline t} = (\hat{D}F)\,\hat{\underline t}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6626}%
+$ V_h \subset H(\mathop{\rm curl};\Omega )$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6628}%
+$\displaystyle \| \underline u - \Pi_h^k \underline u\|_{H(\mathop{\rm curl}; \Omega )} = C\,\inf_{w\in V_h}\| \underline u -  \underline w\|_{H(\mathop{\rm curl}; \Omega )}\,,
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6630}%
+$ \Pi_h^k \underline u \in \mathcal{R}^k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6632}%
+$ \Pi_h^k \underline u \in \mathcal{P}^k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6636}%
+$ \alpha(\underline u) = \alpha(\Pi_h^k \underline u)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6638}%
+$ \alpha$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6640}%
+$ \Pi_h^k$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6642}%
+$ \underline v\in H^r(\mathop{\rm curl})$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6644}%
+$ r>\frac{1}{2}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6647}%
+$ \mathcal{T}_h$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6649}%
+$ h>0$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6655}%
+$ C>0$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6657}%
+$ r$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6659}%
+$ h$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6663}%
+$\displaystyle \| \underline v - \Pi_h^k \underline v\|_{H(\mathop{\rm curl}; \Omega )} \leq C\,h^{\min\{r,k\}} \|\underline v\|_{H^r(\mathop{\rm curl};\Omega )}\,,$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6665}%
+$ \underline v\in H^r(\mathop{\rm curl};\Omega )$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6675}%
+$ \mathcal{O}(h^k)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6677}%
+$ [\mathbb{P}^{k-1}(K)]^d \subseteq \mathcal{R}^k(K)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6679}%
+$\displaystyle \| \underline v - \Pi_h^k \underline v\|_{L^2(\Omega )} \leq C h^k |\underline v|_{H^k(\Omega )}\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6681}%
+$ [\mathbb{P}^{k-1}(K)]^d \subseteq \mathcal{R}^k(K) \subsetneq [\mathbb{P}^k(K)]^d$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6685}%
+$ H^k(K)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6687}%
+$ \mathcal{R}^k(K)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6691}%
+$ \| \underline u - \underline u_h\|_{L^2(\Omega )}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6696}%
+$ s>\frac{1}{2}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6698}%
+$\displaystyle \| \underline u -  \underline u_h\|_{L^2(\Omega )} \leq C h^s \| \underline u - \underline u_h\|_{H(\mathop{\rm curl}; \Omega )}\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6702}%
+$ s=1$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6704}%
+$ [\mathbb{P}_k]^d$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{section}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6711}%
+$ \Omega = [-1,1]^d$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6715}%
+$\displaystyle c\equiv 1 \,, \qquad \underline f(x,y) = \left(\begin{array}{cc} 3 - y^2 \\  3 - x^2 \end{array}\right)\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6717}%
+$\displaystyle c\equiv 1 \,, \qquad  		\underline f(x,y) = (2\pi^2 + 1)\left(\begin{array}{cc} \cos\pi x\sin\pi y \\  -\sin\pi x\cos\pi y \end{array}\right)\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6721}%
+$ 2^5$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6723}%
+$ 2^{13}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6731}%
+$ \mathcal{O}(h)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6733}%
+$ L^2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6735}%
+$ \#$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6818}%
+$ H(\mathop{\rm curl};\Omega )$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlpictureA{tex2html_wrap4265}%
+% latex2html id marker 4265
+\includegraphics[width=9.5cm, height=7cm]{example1_errors.eps}%
+\lthtmlpictureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline6830}%
+$ H(\mathop{\rm curl};(\Omega ))$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlpictureA{tex2html_wrap4271}%
+% latex2html id marker 4271
+\includegraphics[width=9.5cm, height=7cm]{example2_errors.eps}%
+\lthtmlpictureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlpictureA{tex2html_wrap4293}%
+\includegraphics[width=5.5cm, height=5.5cm]{grid.eps}%
+\lthtmlpictureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay6913}%
+$\displaystyle c\equiv 1 \,, \qquad \underline f(x,y,z) = \left(\begin{array}{ccc}   xy(1 - y^2)(1-z^2) + 2xy(1-z^2) \\  																	  y^2(1 - x^2)(1-z^2) + (1-y^2)(2-x^2-z^2) \\  																	  yz(1 - x^2)(1-y^2) + 2yz(1-x^2) 											 \end{array}\right)\,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlpictureA{tex2html_wrap4329}%
+\includegraphics[width=9.5cm, height=7cm]{field1.eps}%
+\lthtmlpictureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlpictureA{tex2html_wrap4335}%
+\includegraphics[width=9.5cm, height=7cm]{field2.eps}%
+\lthtmlpictureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7106}%
+$ \mathbb{R}^3$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+\appendix
+\stepcounter{section}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7119}%
+$ \mathbb{R}^2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7121}%
+$ \varphi (x,y)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7125}%
+$ c>0$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7127}%
+$ w$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmldisplayA{displaymath7129}%
+\begin{displaymath}\begin{split} 			-\Delta w + c\, w &= \varphi \quad \mathrm{in} \quad \Omega \\  			\underline n \cdot \nabla w &= 0 \quad \mathrm{on} \quad \partial \Omega \,. 		\end{split}\end{displaymath}%
+\lthtmldisplayZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7131}%
+$ \underline E := \nabla^{\perp} w$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmldisplayA{displaymath7133}%
+\begin{displaymath}\begin{split} 			\underline \mathop{\rm curl}\mathop{\rm curl}\underline E + c\, \underline E  = \underline f \quad \mathrm{in} \quad \Omega \,, \\  			\underline E \wedge \underline n = 0 \quad \mathrm{on} \quad \partial \Omega \,, 		\end{split}\end{displaymath}%
+\lthtmldisplayZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7135}%
+$ \underline f := \nabla^{\perp} \varphi $%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7137}%
+$ \nabla^{\perp} \varphi := \boldsymbol{R}\nabla\varphi = \left(\begin{array}{cc} \partial _y\varphi \\  -\partial _x\varphi 
+\end{array}\right)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay7141}%
+$\displaystyle \underline E \wedge \underline n = \underline E \cdot \underline t = {\nabla w}^T \boldsymbol{R}^T\boldsymbol{R}\, \underline n = \nabla w \cdot \underline n \,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7143}%
+$ \underline E$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7147}%
+$ \nabla\cdot\nabla^{\perp}w = 0$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7151}%
+$ \underline \mathop{\rm curl}\mathop{\rm curl}\underline E = \nabla(\nabla\cdot\underline E) - \Delta\underline E$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7153}%
+$ \underline \mathop{\rm curl}\mathop{\rm curl}\underline E = - \Delta\underline E$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7155}%
+$ \nabla^{\perp}w$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7157}%
+$ \nabla^{\perp} \varphi $%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmldisplayA{displaymath7162}%
+\begin{displaymath}\begin{split} 			-\Delta w  &= \lambda \, w \quad \mathrm{in} \quad \Omega \\  			\underline n \cdot \nabla w &= 0 \quad \mathrm{on} \quad \partial \Omega \,, 		\end{split}\end{displaymath}%
+\lthtmldisplayZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7164}%
+$ \varphi = (\lambda + c)\,w$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7166}%
+$ \Omega = [-1,1]^2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7168}%
+$ \lambda = 2\pi^2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7170}%
+$ w = \cos\pi x\cos\pi y$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay7172}%
+$\displaystyle \underline f = (2\pi^2 + c)\pi \left(\begin{array}{cc} \cos\pi x\sin\pi y \\  -\sin\pi x\cos\pi y \end{array}\right)\,, \qquad
+\underline E = \pi \left(\begin{array}{cc} \cos\pi x\sin\pi y \\  -\sin\pi x\cos\pi y \end{array}\right)\,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7179}%
+$ w(x,y) = (1-x^2)^2(1-y^2)^2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7181}%
+$ \underline n \cdot \nabla w = 0$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7183}%
+$ \partial [-1,1]^2$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7185}%
+$ \varphi = -\Delta w + c w$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+\appendix
+\stepcounter{section}
+{\newpage\clearpage
+\lthtmldisplayA{displaymath7188}%
+\begin{displaymath}\begin{split} 	\varepsilon \frac{\partial \mathcal{E}}{\partial t} & = \mathop{\rm curl}\mathcal{H} - \sigma \mathcal{E} \,, \\  	\mu \frac{\partial \mathcal{H}}{\partial t} & = -\mathop{\rm curl}\mathcal{E}\,, \end{split}\end{displaymath}%
+\lthtmldisplayZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7190}%
+$ \mathcal{E}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7192}%
+$ \mathcal{H}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7194}%
+$ \varepsilon (x), \mu(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7196}%
+$ \sigma(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7202}%
+$ L^{\infty}(\Omega )^{d\times d}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7204}%
+$ \varepsilon (x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7206}%
+$ \mu(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7211}%
+$ \mathcal{E}(x,t)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7213}%
+$ \mathcal{H}(x,t)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmldisplayA{displaymath7215}%
+\begin{displaymath}\begin{split} 	\mathcal{E}(x,t) &= \mathrm{Re} \left(E(x) \exp(i\omega t)\right) \,, \\  	\mathcal{H}(x,t) &= \mathrm{Re} \left(H(x) \exp(i\omega t)\right) \,. \end{split}\end{displaymath}%
+\lthtmldisplayZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7217}%
+$ E(x), H(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7219}%
+$ \omega\neq 0$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7222}%
+$ E(x) \exp(i\omega t)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7224}%
+$ H(x) \exp(i\omega t)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7226}%
+$ H(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay7228}%
+$\displaystyle \mathop{\rm curl}(\mu^{-1} \mathop{\rm curl}E) - \omega^2\varepsilon E + i\omega\sigma E = 0
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7230}%
+$ |\omega|$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay7232}%
+$\displaystyle \omega^2\varepsilon \ll \mu^{-1} \,,\quad \omega^2\varepsilon \ll \omega\sigma \,.
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7234}%
+$ \omega^2\varepsilon E(x)$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay7236}%
+$\displaystyle \mathop{\rm curl}(\mu^{-1} \mathop{\rm curl}E) + i\omega\sigma E = 0
+$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_indisplay7242}%
+$\displaystyle E \wedge n = \Phi \quad \mathrm{on} \quad \partial \Omega \,.$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7244}%
+$ \tilde{E}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline7246}%
+$ \underline u = E - \tilde{E}$%
+\lthtmlinlinemathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmldisplayA{displaymath7248}%
+\begin{displaymath}\begin{split} 	\mathop{\rm curl}(\mu^{-1} \mathop{\rm curl}u) + i\omega\sigma u &= F \quad \mathrm{in} \quad \Omega \,, \\  	u \wedge n &= 0 \quad \mathrm{on} \quad \partial \Omega \,. \end{split}\end{displaymath}%
+\lthtmldisplayZ
+\lthtmlcheckvsize\clearpage}
+
+
+\end{document}

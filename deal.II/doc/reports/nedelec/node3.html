@@ -1,0 +1,720 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>3 Numerical results</TITLE>
+<META NAME="description" CONTENT="3 Numerical results">
+<META NAME="keywords" CONTENT="main">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="main.css">
+
+</HEAD>
+
+<BODY >
+
+<H1><A NAME="SECTION00030000000000000000">
+3 <FONT SIZE="+1">Numerical results</FONT></A>
+</H1><FONT SIZE="-1">
+	The numerical results in this section provide some samples of the quality of the <!-- MATH
+ $H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-conforming FEM 
+	with N&#233;d&#233;lec elements of first type and lowest order (polynomial degree <IMG
+ WIDTH="48" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img108.gif"
+ ALT="$ k=1$">).
+<BR>
+We considered the model problem (<A HREF="node1.html#eq:model_problem">1</A>) in <!-- MATH
+ $\Omega = [-1,1]^d$
+ -->
+<IMG
+ WIDTH="98" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img351.gif"
+ ALT="$ \Omega = [-1,1]^d$">, <IMG
+ WIDTH="64" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img5.gif"
+ ALT="$ d=2,3$">, 
+	with homogeneous Dirichlet boundary condition (<A HREF="node1.html#eq:_PCB">2</A>).
+<BR>
+The first few results for the two-dimensional problem have been obtained by a <TT>MATLAB</TT> code. 
+	For the first example we used the data 
+	</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_numerical_ex.1"></A><!-- MATH
+ \begin{equation}
+c\equiv 1 \,, \qquad \underline f(x,y) = \left(\begin{array}{cc} 3 - y^2 \\3 - x^2 \end{array}\right)\,.
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="265" HEIGHT="63" ALIGN="MIDDLE" BORDER="0"
+ SRC="img352.gif"
+ ALT="$\displaystyle c\equiv 1 \,, \qquad \underline f(x,y) = \left(\begin{array}{cc} 3 - y^2 \\  3 - x^2 \end{array}\right)\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(31)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">
+	For the second example we have followed the outlines from Appendix A and taken the data from example <A HREF="node5.html#ex:_solutions_from_Laplace">5</A>
+	</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_numerical_ex.2"></A><!-- MATH
+ \begin{equation}
+c\equiv 1 \,, \qquad
+		\underline f(x,y) = (2\pi^2 + 1)\left(\begin{array}{cc} \cos\pi x\sin\pi y \\-\sin\pi x\cos\pi y \end{array}\right)\,.
+	
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="401" HEIGHT="63" ALIGN="MIDDLE" BORDER="0"
+ SRC="img353.gif"
+ ALT="$\displaystyle c\equiv 1 \,, \qquad \underline f(x,y) = (2\pi^2 + 1)\left(\begin{array}{cc} \cos\pi x\sin\pi y \\  -\sin\pi x\cos\pi y \end{array}\right)\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(32)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">
+	The finite element solution has been computed using N&#233;d&#233;lec elements of first type and of polynomial degree <IMG
+ WIDTH="48" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img108.gif"
+ ALT="$ k=1$"> on a family of
+	affine triangular grids.
+	The initial coarse grid consisted of <IMG
+ WIDTH="23" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img354.gif"
+ ALT="$ 2^5$"> triangles. The finest grid with <IMG
+ WIDTH="29" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img355.gif"
+ ALT="$ 2^{13}$"> triangles results after five global refinements.
+<BR>
+In Table <A HREF="#table:_matlab">1</A> we see that for both examples we have 
+	optimal convergence in the <!-- MATH
+ $H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-semiorm, as we would expect from the theoretical results of the
+	previous section. As for the <!-- MATH
+ $L^2(\Omega )$
+ -->
+<IMG
+ WIDTH="52" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.gif"
+ ALT="$ L^2(\Omega )$">-norm, it appears that in both examples the convergence
+	of the numerical solution is not optimal for our choice of finite elements. In the case of N&#233;d&#233;lec elements of first 
+	type and of polynomial degree <IMG
+ WIDTH="48" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img108.gif"
+ ALT="$ k=1$">, we got only <!-- MATH
+ $\mathcal{O}(h)$
+ -->
+<IMG
+ WIDTH="44" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img356.gif"
+ ALT="$ \mathcal{O}(h)$">-convergence of the <IMG
+ WIDTH="26" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img357.gif"
+ ALT="$ L^2$">-error. However, this order of
+	convergence is consistent with the result (<A HREF="node2.html#eq:_L2-approx">29</A>) obtained by N&#233;d&#233;lec in [<A
+ HREF="node4.html#Ned1">8</A>].
+<BR></FONT>
+<P>
+<BR><P></P>
+<DIV ALIGN="CENTER"><A NAME="4142"></A>
+<TABLE>
+<CAPTION><STRONG>Table 1:</STRONG>
+Errors and convergence rates in the <!-- MATH
+ $L^2(\Omega )$
+ -->
+<IMG
+ WIDTH="52" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.gif"
+ ALT="$ L^2(\Omega )$">-norm and <!-- MATH
+ $H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img359.gif"
+ ALT="$ H(\mathop{\rm curl};\Omega )$">-seminorm for the two <TT>MATLAB</TT> examples.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">grid</TD>
+<TD ALIGN="RIGHT"><IMG
+ WIDTH="21" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img358.gif"
+ ALT="$ \char93 $"> cells</TD>
+<TD ALIGN="CENTER" COLSPAN=2><!-- MATH
+ $H(\mathop{\rm curl})$
+ -->
+<IMG
+ WIDTH="65" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img46.gif"
+ ALT="$ H(\mathop{\rm curl})$">-error</TD>
+<TD ALIGN="CENTER" COLSPAN=2><IMG
+ WIDTH="26" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img357.gif"
+ ALT="$ L^2$">-error</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">1</TD>
+<TD ALIGN="RIGHT">32</TD>
+<TD ALIGN="CENTER">6.66e-01</TD>
+<TD ALIGN="CENTER">-</TD>
+<TD ALIGN="CENTER">4.66e-01</TD>
+<TD ALIGN="CENTER">-</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">2</TD>
+<TD ALIGN="RIGHT">128</TD>
+<TD ALIGN="CENTER">3.33e-01</TD>
+<TD ALIGN="CENTER">1.00</TD>
+<TD ALIGN="CENTER">2.35e-01</TD>
+<TD ALIGN="CENTER">0.98</TD>
+</TR>
+<TR><TD ALIGN="CENTER">example 1</TD>
+<TD ALIGN="CENTER">3</TD>
+<TD ALIGN="RIGHT">512</TD>
+<TD ALIGN="CENTER">1.66e-01</TD>
+<TD ALIGN="CENTER">1.00</TD>
+<TD ALIGN="CENTER">1.17e-01</TD>
+<TD ALIGN="CENTER">0.99</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">4</TD>
+<TD ALIGN="RIGHT">2048</TD>
+<TD ALIGN="CENTER">8.33e-02</TD>
+<TD ALIGN="CENTER">1.00</TD>
+<TD ALIGN="CENTER">5.89e-02</TD>
+<TD ALIGN="CENTER">0.99</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">5</TD>
+<TD ALIGN="RIGHT">8192</TD>
+<TD ALIGN="CENTER">4.17e-02</TD>
+<TD ALIGN="CENTER">1.00</TD>
+<TD ALIGN="CENTER">2.95e-02</TD>
+<TD ALIGN="CENTER">0.99</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">1</TD>
+<TD ALIGN="RIGHT">32</TD>
+<TD ALIGN="CENTER">3.05e+00</TD>
+<TD ALIGN="CENTER">-</TD>
+<TD ALIGN="CENTER">6.48e-01</TD>
+<TD ALIGN="CENTER">-</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">2</TD>
+<TD ALIGN="RIGHT">128</TD>
+<TD ALIGN="CENTER">1.61e+00</TD>
+<TD ALIGN="CENTER">0.91</TD>
+<TD ALIGN="CENTER">3.22e-01</TD>
+<TD ALIGN="CENTER">1.00</TD>
+</TR>
+<TR><TD ALIGN="CENTER">example 2</TD>
+<TD ALIGN="CENTER">3</TD>
+<TD ALIGN="RIGHT">512</TD>
+<TD ALIGN="CENTER">0.81e-01</TD>
+<TD ALIGN="CENTER">0.97</TD>
+<TD ALIGN="CENTER">1.60e-01</TD>
+<TD ALIGN="CENTER">1.00</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">4</TD>
+<TD ALIGN="RIGHT">2048</TD>
+<TD ALIGN="CENTER">0.41e-01</TD>
+<TD ALIGN="CENTER">0.99</TD>
+<TD ALIGN="CENTER">8.02e-02</TD>
+<TD ALIGN="CENTER">1.00</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">5</TD>
+<TD ALIGN="RIGHT">8192</TD>
+<TD ALIGN="CENTER">2.05e-01</TD>
+<TD ALIGN="CENTER">0.99</TD>
+<TD ALIGN="CENTER">4.01e-02</TD>
+<TD ALIGN="CENTER">1.00</TD>
+</TR>
+</TABLE>
+</DIV>
+</TD></TR>
+</TABLE>
+</DIV><P></P>
+<BR>
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:conv1"></A><A NAME="4143"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
+Convergence of the FE-approximation to the smooth solution of the <TT>MATLAB</TT> example (<A HREF="node3.html#eq:_numerical_ex.1">31</A>) 
+	in the <!-- MATH
+ $L^2(\Omega )$
+ -->
+<IMG
+ WIDTH="52" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.gif"
+ ALT="$ L^2(\Omega )$">-norm and the <!-- MATH
+ $H(\mathop{\rm curl};(\Omega ))$
+ -->
+<IMG
+ WIDTH="99" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img361.gif"
+ ALT="$ H(\mathop{\rm curl};(\Omega ))$">-seminorm</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ $\includegraphics[width=9.5cm, height=7cm]{example1_errors.eps}$
+ -->
+<IMG
+ WIDTH="431" HEIGHT="318" ALIGN="BOTTOM" BORDER="0"
+ SRC="img360.gif"
+ ALT="% latex2html id marker 4265
+\includegraphics[width=9.5cm, height=7cm]{example1_errors.eps}">
+    
+</DIV></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:conv2"></A><A NAME="4144"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 2:</STRONG>
+Convergence of the FE-approximation to the smooth solution of the <TT>MATLAB</TT> example (<A HREF="node3.html#eq:_numerical_ex.2">32</A>) 
+	in the <!-- MATH
+ $L^2(\Omega )$
+ -->
+<IMG
+ WIDTH="52" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.gif"
+ ALT="$ L^2(\Omega )$">-norm and the <!-- MATH
+ $H(\mathop{\rm curl};(\Omega ))$
+ -->
+<IMG
+ WIDTH="99" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img361.gif"
+ ALT="$ H(\mathop{\rm curl};(\Omega ))$">-seminorm</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ $\includegraphics[width=9.5cm, height=7cm]{example2_errors.eps}$
+ -->
+<IMG
+ WIDTH="431" HEIGHT="318" ALIGN="BOTTOM" BORDER="0"
+ SRC="img362.gif"
+ ALT="% latex2html id marker 4271
+\includegraphics[width=9.5cm, height=7cm]{example2_errors.eps}">
+    
+</DIV></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+<P>
+<DIV><B>R<SMALL>EMARK</SMALL>  7</B> &nbsp; 
+The mesh generation and refinement was done by <TT>PDE-toolbox</TT> commands. Since the <TT>PDE-toolbox</TT> does not support three
+		dimensional grids, we restricted ourselves to 2d problems, and we have so far no numerical results for the case of
+		tetrahedral grids in 3d.
+	</DIV><P></P>
+
+<P>
+<FONT SIZE="-1">As for meshes with quadrilateral cells, numerical results were obtained with a <TT>deal.II</TT> code,  
+	using the finite element class <TT>fe/fenedelec.cc</TT>. This class provides 
+	N&#233;d&#233;lec's <!-- MATH
+ $H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-conforming element of first type and lowest order in two and three space dimensions, on 
+	bilinear quadrilateral, resp. trilinear hexahedral grids. For details about <TT>deal.II</TT>, see [<A
+ HREF="node4.html#Deal">2</A>].
+	In the following results were obtained for the model problem (<A HREF="node1.html#eq:model_problem">1</A>) in two dimensions using the 
+	data (<A HREF="node3.html#eq:_numerical_ex.2">32</A>).  
+	We computed the solution on five successive
+	non-affine bilinear grids ( figure <A HREF="node3.html#fig:grid">3</A>), each of which was obtained by global refinement of the previous one.
+</FONT>
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:grid"></A><A NAME="4146"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 3:</STRONG>
+Non-affine bilinear grid used in the <TT>deal.II</TT> code, after one refinement step.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ $\includegraphics[width=5.5cm, height=5.5cm]{grid.eps}$
+ -->
+<IMG
+ WIDTH="249" HEIGHT="249" ALIGN="BOTTOM" BORDER="0"
+ SRC="img363.gif"
+ ALT="\includegraphics[width=5.5cm, height=5.5cm]{grid.eps}">
+    
+</DIV></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+<FONT SIZE="-1">Again, in Table <A HREF="#table:_2d-deal">2</A> we can observe optimal convergence of order <!-- MATH
+ $\mathcal{O}(h)$
+ -->
+<IMG
+ WIDTH="44" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img356.gif"
+ ALT="$ \mathcal{O}(h)$"> in the <!-- MATH
+ $H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-norm. 
+The same order of convergence is obtained for the error in the <!-- MATH
+ $L^2(\Omega )$
+ -->
+<IMG
+ WIDTH="52" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.gif"
+ ALT="$ L^2(\Omega )$">-norm.
+<BR></FONT>
+<P>
+<BR><P></P>
+<DIV ALIGN="CENTER"><A NAME="4147"></A>
+<TABLE>
+<CAPTION><STRONG>Table 2:</STRONG>
+Errors and convergence rates in the <!-- MATH
+ $H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img359.gif"
+ ALT="$ H(\mathop{\rm curl};\Omega )$">- and <!-- MATH
+ $L^2(\Omega )$
+ -->
+<IMG
+ WIDTH="52" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.gif"
+ ALT="$ L^2(\Omega )$">-norm for the 2d-example solved with <TT>deal.II</TT>.
+</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
+<TR><TD ALIGN="CENTER">grid</TD>
+<TD ALIGN="RIGHT"><IMG
+ WIDTH="21" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img358.gif"
+ ALT="$ \char93 $"> cells</TD>
+<TD ALIGN="CENTER" COLSPAN=2><!-- MATH
+ $H(\mathop{\rm curl})$
+ -->
+<IMG
+ WIDTH="65" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img46.gif"
+ ALT="$ H(\mathop{\rm curl})$">-error</TD>
+<TD ALIGN="CENTER" COLSPAN=2><IMG
+ WIDTH="26" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img357.gif"
+ ALT="$ L^2$">-error</TD>
+</TR>
+<TR><TD ALIGN="CENTER">1</TD>
+<TD ALIGN="RIGHT">4</TD>
+<TD ALIGN="CENTER">6.112e+00</TD>
+<TD ALIGN="CENTER">-</TD>
+<TD ALIGN="CENTER">1.442e+00</TD>
+<TD ALIGN="CENTER">-</TD>
+</TR>
+<TR><TD ALIGN="CENTER">2</TD>
+<TD ALIGN="RIGHT">16</TD>
+<TD ALIGN="CENTER">3.688e+00</TD>
+<TD ALIGN="CENTER">0.73</TD>
+<TD ALIGN="CENTER">6.765e-01</TD>
+<TD ALIGN="CENTER">1.09</TD>
+</TR>
+<TR><TD ALIGN="CENTER">3</TD>
+<TD ALIGN="RIGHT">64</TD>
+<TD ALIGN="CENTER">1.991e+00</TD>
+<TD ALIGN="CENTER">0.89</TD>
+<TD ALIGN="CENTER">3.280e-01</TD>
+<TD ALIGN="CENTER">1.04</TD>
+</TR>
+<TR><TD ALIGN="CENTER">4</TD>
+<TD ALIGN="RIGHT">256</TD>
+<TD ALIGN="CENTER">1.015e+00</TD>
+<TD ALIGN="CENTER">0.97</TD>
+<TD ALIGN="CENTER">1.617e-01</TD>
+<TD ALIGN="CENTER">1.02</TD>
+</TR>
+<TR><TD ALIGN="CENTER">5</TD>
+<TD ALIGN="RIGHT">1024</TD>
+<TD ALIGN="CENTER">5.098e-01</TD>
+<TD ALIGN="CENTER">0.99</TD>
+<TD ALIGN="CENTER">8.049e-02</TD>
+<TD ALIGN="CENTER">1.01</TD>
+</TR>
+</TABLE>
+</DIV>
+</TD></TR>
+</TABLE>
+</DIV><P></P>
+<BR>
+<P>
+<FONT SIZE="-1">With <TT>deal.II</TT>, we are also able to treat 3d problems on hexahedral grids. For our type of problem, 
+N&#233;d&#233;lec's <!-- MATH
+ $H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">-conforming elements of first type and lowest order, based on a cubic reference element, are available. 
+<BR>
+We computed an approximation to the model problem (<A HREF="node1.html#eq:model_problem">1</A>) in 3d using the data
+	</FONT><P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation}
+c\equiv 1 \,, \qquad \underline f(x,y,z) = \left(\begin{array}{ccc}   xy(1 - y^2)(1-z^2) + 2xy(1-z^2) \\
+																	  y^2(1 - x^2)(1-z^2) + (1-y^2)(2-x^2-z^2) \\
+																	  yz(1 - x^2)(1-y^2) + 2yz(1-x^2)
+											 \end{array}\right)\,.
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="557" HEIGHT="84" ALIGN="MIDDLE" BORDER="0"
+ SRC="img364.gif"
+ ALT="$\displaystyle c\equiv 1 \,, \qquad \underline f(x,y,z) = \left(\begin{array}{cc...
+... + (1-y^2)(2-x^2-z^2) \\  yz(1 - x^2)(1-y^2) + 2yz(1-x^2) \end{array}\right)\,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(33)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">
+In a first experiment, the finite element solution was computed on five successive globally refined affine grids. In a second 
+computation, we approximated the solution of the same problem on five successive globally refined non-affine trilinear grids.
+<BR>
+We see in Table <A HREF="#table:_3d-deal">3</A> that in both cases we observe again convergence of order <!-- MATH
+ $\mathcal{O}(h)$
+ -->
+<IMG
+ WIDTH="44" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img356.gif"
+ ALT="$ \mathcal{O}(h)$"> in the  
+<!-- MATH
+ $H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$ H(\mathop {\rm curl};\Omega )$">- and the <!-- MATH
+ $L^2(\Omega )$
+ -->
+<IMG
+ WIDTH="52" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.gif"
+ ALT="$ L^2(\Omega )$">-norm.
+<BR></FONT>
+<P>
+<BR><P></P>
+<DIV ALIGN="CENTER"><A NAME="4148"></A>
+<TABLE>
+<CAPTION><STRONG>Table 3:</STRONG>
+Errors and convergence rates in the <!-- MATH
+ $H(\mathop{\rm curl};\Omega )$
+ -->
+<IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img359.gif"
+ ALT="$ H(\mathop{\rm curl};\Omega )$">- and <!-- MATH
+ $L^2(\Omega )$
+ -->
+<IMG
+ WIDTH="52" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img2.gif"
+ ALT="$ L^2(\Omega )$">-norm for the 3d-example solved with <TT>deal.II</TT>. The first data
+set is for the computation on a family of affine grids, the second set of data is for non-affine trilinear grids.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">grid</TD>
+<TD ALIGN="RIGHT"><IMG
+ WIDTH="21" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img358.gif"
+ ALT="$ \char93 $"> cells</TD>
+<TD ALIGN="CENTER" COLSPAN=2><!-- MATH
+ $H(\mathop{\rm curl})$
+ -->
+<IMG
+ WIDTH="65" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img46.gif"
+ ALT="$ H(\mathop{\rm curl})$">-error</TD>
+<TD ALIGN="CENTER" COLSPAN=2><IMG
+ WIDTH="26" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img357.gif"
+ ALT="$ L^2$">-error</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">1</TD>
+<TD ALIGN="RIGHT">8</TD>
+<TD ALIGN="CENTER">7.696e-01</TD>
+<TD ALIGN="CENTER">-</TD>
+<TD ALIGN="CENTER">6.609e-01</TD>
+<TD ALIGN="CENTER">-</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">2</TD>
+<TD ALIGN="RIGHT">64</TD>
+<TD ALIGN="CENTER">4.088e-01</TD>
+<TD ALIGN="CENTER">0.91</TD>
+<TD ALIGN="CENTER">2.943e-01</TD>
+<TD ALIGN="CENTER">1.17</TD>
+</TR>
+<TR><TD ALIGN="CENTER">affine grids</TD>
+<TD ALIGN="CENTER">3</TD>
+<TD ALIGN="RIGHT">512</TD>
+<TD ALIGN="CENTER">2.075e-01</TD>
+<TD ALIGN="CENTER">0.98</TD>
+<TD ALIGN="CENTER">1.408e-01</TD>
+<TD ALIGN="CENTER">1.06</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">4</TD>
+<TD ALIGN="RIGHT">4096</TD>
+<TD ALIGN="CENTER">1.041e-01</TD>
+<TD ALIGN="CENTER">0.99</TD>
+<TD ALIGN="CENTER">6.955e-02</TD>
+<TD ALIGN="CENTER">1.02</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">5</TD>
+<TD ALIGN="RIGHT">32768</TD>
+<TD ALIGN="CENTER">5.210e-02</TD>
+<TD ALIGN="CENTER">1.00</TD>
+<TD ALIGN="CENTER">3.467e-02</TD>
+<TD ALIGN="CENTER">1.00</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">1</TD>
+<TD ALIGN="RIGHT">8</TD>
+<TD ALIGN="CENTER">7.716e-01</TD>
+<TD ALIGN="CENTER">-</TD>
+<TD ALIGN="CENTER">6.611e-01</TD>
+<TD ALIGN="CENTER">-</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">2</TD>
+<TD ALIGN="RIGHT">64</TD>
+<TD ALIGN="CENTER">4.108e-01</TD>
+<TD ALIGN="CENTER">0.91</TD>
+<TD ALIGN="CENTER">2.955e-01</TD>
+<TD ALIGN="CENTER">1.16</TD>
+</TR>
+<TR><TD ALIGN="CENTER">non-affine grids</TD>
+<TD ALIGN="CENTER">3</TD>
+<TD ALIGN="RIGHT">512</TD>
+<TD ALIGN="CENTER">2.085e-01</TD>
+<TD ALIGN="CENTER">0.98</TD>
+<TD ALIGN="CENTER">1.413e-01</TD>
+<TD ALIGN="CENTER">1.06</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">4</TD>
+<TD ALIGN="RIGHT">4096</TD>
+<TD ALIGN="CENTER">1.046e-01</TD>
+<TD ALIGN="CENTER">0.99</TD>
+<TD ALIGN="CENTER">6.982e-02</TD>
+<TD ALIGN="CENTER">1.02</TD>
+</TR>
+<TR><TD ALIGN="CENTER">&nbsp;</TD>
+<TD ALIGN="CENTER">5</TD>
+<TD ALIGN="RIGHT">32768</TD>
+<TD ALIGN="CENTER">5.237e-02</TD>
+<TD ALIGN="CENTER">1.00</TD>
+<TD ALIGN="CENTER">3.480e-02</TD>
+<TD ALIGN="CENTER">1.00</TD>
+</TR>
+</TABLE>
+</DIV>
+</TD></TR>
+</TABLE>
+</DIV><P></P>
+<BR><FONT SIZE="-1">
+The conclusion that can be drawn from these numerical experiments is, that the restriction to three-dimensional tetrahedral grids 
+of Hiptmair's result on the <IMG
+ WIDTH="26" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img357.gif"
+ ALT="$ L^2$">-convergence of the error (<A HREF="node2.html#th:_Hiptmair">6</A>) cannot be relaxed. 
+<BR></FONT>
+<P>
+<FONT SIZE="-1">Finally, here are some pretty pictures: the vector field plots from the <TT>MATLAB</TT> computations. 
+</FONT>
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:field1"></A><A NAME="4149"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 4:</STRONG>
+Vector-field plot of the FE-solution of example (<A HREF="node3.html#eq:_numerical_ex.1">31</A>).</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ $\includegraphics[width=9.5cm, height=7cm]{field1.eps}$
+ -->
+<IMG
+ WIDTH="432" HEIGHT="318" ALIGN="BOTTOM" BORDER="0"
+ SRC="img365.gif"
+ ALT="\includegraphics[width=9.5cm, height=7cm]{field1.eps}">
+    
+</DIV></TD></TR>
+</TABLE>
+</DIV><P></P>
+
+<P>
+
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="fig:field2"></A><A NAME="4150"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 5:</STRONG>
+Vector-field plot of the FE-solution of example (<A HREF="node3.html#eq:_numerical_ex.2">32</A>).</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ $\includegraphics[width=9.5cm, height=7cm]{field2.eps}$
+ -->
+<IMG
+ WIDTH="432" HEIGHT="318" ALIGN="BOTTOM" BORDER="0"
+ SRC="img366.gif"
+ ALT="\includegraphics[width=9.5cm, height=7cm]{field2.eps}">
+    
+</DIV></TD></TR>
+</TABLE>
+</DIV><P></P>
+<FONT SIZE="-1">
+</FONT>
+<P>
+
+<P>
+<BR><HR>
+<ADDRESS>
+
+2003-04-30
+</ADDRESS>
+</BODY>
+</HTML>

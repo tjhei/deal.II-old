@@ -1,0 +1,310 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.47)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>A. Time-harmonic Maxwell's equations with low-frequency approximation</TITLE>
+<META NAME="description" CONTENT="A. Time-harmonic Maxwell's equations with low-frequency approximation">
+<META NAME="keywords" CONTENT="main">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="main.css">
+
+</HEAD>
+
+<BODY >
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html110"
+  HREF="#SECTION00061000000000000000">Time-harmonic, low-frequency case</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00060000000000000000"></A> 
+<A NAME="appendix:_Maxwell_s_Eq."></A>
+<BR>
+A. <FONT SIZE="+1">Time-harmonic Maxwell's equations with low-frequency approximation</FONT>
+</H1><FONT SIZE="-1">
+We show, how the model problem can be derived from the time-harmonic Maxwell's equations in the low-frequency case.
+We follow the outline of [<A
+ HREF="node4.html#Alonso-Valli">1</A>]:
+<BR>
+We consider the following primal formulation of Maxwell's equations: 
+</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_maxwell"></A><!-- MATH
+ \begin{equation}
+\begin{split}
+\varepsilon \frac{\partial \mathcal{E}}{\partial t} & = \mathop{\rm curl}\mathcal{H} - \sigma \mathcal{E} \,, \\
+	\mu \frac{\partial \mathcal{H}}{\partial t} & = -\mathop{\rm curl}\mathcal{E}\,,
+\end{split}
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="361" HEIGHT="85" BORDER="0"
+ SRC="img394.gif"
+ ALT="\begin{displaymath}\begin{split}\varepsilon \frac{\partial \mathcal{E}}{\partial...
+...}}{\partial t} &amp; = -\mathop{\rm curl}\mathcal{E}\,, \end{split}\end{displaymath}"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(35)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">
+where <!-- MATH
+ $\mathcal{E}$
+ -->
+<IMG
+ WIDTH="17" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img395.gif"
+ ALT="$ \mathcal{E}$"> and <!-- MATH
+ $\mathcal{H}$
+ -->
+<IMG
+ WIDTH="21" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img396.gif"
+ ALT="$ \mathcal{H}$"> are the electric and magnetic field. 
+<!-- MATH
+ $\varepsilon (x), \mu(x)$
+ -->
+<IMG
+ WIDTH="80" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img397.gif"
+ ALT="$ \varepsilon (x), \mu(x)$"> are the dielectric and magnetic permeability coefficients, and <IMG
+ WIDTH="41" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img398.gif"
+ ALT="$ \sigma(x)$"> denotes the electric conductivity.
+<!-- MATH
+ $\varepsilon (x), \mu(x)$
+ -->
+<IMG
+ WIDTH="80" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img397.gif"
+ ALT="$ \varepsilon (x), \mu(x)$"> and <IMG
+ WIDTH="41" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img398.gif"
+ ALT="$ \sigma(x)$"> are assumed to be symmetric matrices in <!-- MATH
+ $L^{\infty}(\Omega )^{d\times d}$
+ -->
+<IMG
+ WIDTH="84" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img399.gif"
+ ALT="$ L^{\infty}(\Omega )^{d\times d}$">, and <!-- MATH
+ $\varepsilon (x)$
+ -->
+<IMG
+ WIDTH="38" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img400.gif"
+ ALT="$ \varepsilon (x)$"> and <IMG
+ WIDTH="41" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img401.gif"
+ ALT="$ \mu(x)$"> are
+positive definite. <IMG
+ WIDTH="41" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img398.gif"
+ ALT="$ \sigma(x)$"> is positive definite in a conductor and vanishes in an insulator.
+</FONT>
+<P>
+
+<H2><A NAME="SECTION00061000000000000000">
+Time-harmonic, low-frequency case</A>
+</H2><FONT SIZE="-1">
+We assume that <!-- MATH
+ $\mathcal{E}(x,t)$
+ -->
+<IMG
+ WIDTH="55" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img402.gif"
+ ALT="$ \mathcal{E}(x,t)$"> and <!-- MATH
+ $\mathcal{H}(x,t)$
+ -->
+<IMG
+ WIDTH="59" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img403.gif"
+ ALT="$ \mathcal{H}(x,t)$"> are <I>time-harmonic</I>, i.&nbsp;e.&nbsp;they can be represented as
+</FONT><P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+\begin{split}
+	\mathcal{E}(x,t) &= \mathrm{Re} \left(E(x) \exp(i\omega t)\right) \,, \\
+	\mathcal{H}(x,t) &= \mathrm{Re} \left(H(x) \exp(i\omega t)\right) \,.
+\end{split}
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="396" HEIGHT="55" BORDER="0"
+ SRC="img404.gif"
+ ALT="\begin{displaymath}\begin{split}\mathcal{E}(x,t) &amp;= \mathrm{Re} \left(E(x) \exp(...
+...= \mathrm{Re} \left(H(x) \exp(i\omega t)\right) \,. \end{split}\end{displaymath}"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">
+Here, <!-- MATH
+ $E(x), H(x)$
+ -->
+<IMG
+ WIDTH="91" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img405.gif"
+ ALT="$ E(x), H(x)$"> are complex-valued vector fields and <!-- MATH
+ $\omega\neq 0$
+ -->
+<IMG
+ WIDTH="50" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img406.gif"
+ ALT="$ \omega\neq 0$"> is a given angular frequency. 
+</FONT><P>
+<DIV><B>R<SMALL>EMARK</SMALL>  8</B> &nbsp; 
+For example, a monofrequent laser can be described by the time-harmonic Maxwell's equations.</DIV><P></P>
+
+<P>
+<FONT SIZE="-1">In the time-harmonic case the space and time variables decouple and we can eliminate the time dependency. For this, we ask 
+<!-- MATH
+ $E(x) \exp(i\omega t)$
+ -->
+<IMG
+ WIDTH="111" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img407.gif"
+ ALT="$ E(x) \exp(i\omega t)$"> and <!-- MATH
+ $H(x) \exp(i\omega t)$
+ -->
+<IMG
+ WIDTH="113" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img408.gif"
+ ALT="$ H(x) \exp(i\omega t)$"> to satiesfy (<A HREF="node6.html#eq:_maxwell">35</A>).
+By then inserting the second equation of (<A HREF="node6.html#eq:_maxwell">35</A>) into the first one, we can eliminate the magnetic field <IMG
+ WIDTH="46" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img409.gif"
+ ALT="$ H(x)$">. This yields
+</FONT><!-- MATH
+ \begin{displaymath}
+\mathop{\rm curl}(\mu^{-1} \mathop{\rm curl}E) - \omega^2\varepsilon E + i\omega\sigma E = 0
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="284" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img410.gif"
+ ALT="$\displaystyle \mathop{\rm curl}(\mu^{-1} \mathop{\rm curl}E) - \omega^2\varepsilon E + i\omega\sigma E = 0
+$">
+</DIV><P></P><FONT SIZE="-1">
+In the <I>low-frequency case</I> where <IMG
+ WIDTH="28" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img411.gif"
+ ALT="$ \vert\omega\vert$"> is small, it is known that for general materials the material parameters are such that
+</FONT><!-- MATH
+ \begin{displaymath}
+\omega^2\varepsilon \ll \mu^{-1} \,,\quad \omega^2\varepsilon \ll \omega\sigma \,.
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="201" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img412.gif"
+ ALT="$\displaystyle \omega^2\varepsilon \ll \mu^{-1} \,,\quad \omega^2\varepsilon \ll \omega\sigma \,.
+$">
+</DIV><P></P><FONT SIZE="-1">
+Hence, neglecting the expression <!-- MATH
+ $\omega^2\varepsilon E(x)$
+ -->
+<IMG
+ WIDTH="71" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="img413.gif"
+ ALT="$ \omega^2\varepsilon E(x)$"> is reasonable and it brings us to the low-frequency approximation of the
+time-harmonic Maxwell's equations:
+</FONT><!-- MATH
+ \begin{displaymath}
+\mathop{\rm curl}(\mu^{-1} \mathop{\rm curl}E) + i\omega\sigma E = 0
+\end{displaymath}
+ -->
+<P></P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="222" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="img414.gif"
+ ALT="$\displaystyle \mathop{\rm curl}(\mu^{-1} \mathop{\rm curl}E) + i\omega\sigma E = 0
+$">
+</DIV><P></P>
+<P>
+<FONT SIZE="-1">We consider this equation in a conductor <IMG
+ WIDTH="19" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img10.gif"
+ ALT="$ \Omega $"> (<IMG
+ WIDTH="41" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img398.gif"
+ ALT="$ \sigma(x)$"> pos.&nbsp;def.) and a impose Dirichlet boundary condition on the tangential trace
+of the field:
+</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_non-hom._bc"></A><!-- MATH
+ \begin{equation}
+E \wedge n = \Phi \quad \mathrm{on} \quad \partial \Omega \,.
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="170" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="img415.gif"
+ ALT="$\displaystyle E \wedge n = \Phi \quad \mathrm{on} \quad \partial \Omega \,.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(36)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">
+Proceeding as in [<A
+ HREF="node4.html#Alonso-Valli">1</A>], we assume that a vector funciton <IMG
+ WIDTH="20" HEIGHT="23" ALIGN="BOTTOM" BORDER="0"
+ SRC="img416.gif"
+ ALT="$ \tilde{E}$"> is known, 
+satiesfying (<A HREF="node6.html#eq:_non-hom._bc">36</A>), and we end up with the following boundary value problem for <!-- MATH
+ $\underline u = E - \tilde{E}$
+ -->
+<IMG
+ WIDTH="89" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img417.gif"
+ ALT="$ \underline u = E - \tilde{E}$">
+</FONT><P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:_real_problem"></A><!-- MATH
+ \begin{equation}
+\begin{split}
+\mathop{\rm curl}(\mu^{-1} \mathop{\rm curl}u) + i\omega\sigma u &= F \quad \mathrm{in} \quad \Omega \,, \\
+	u \wedge n &= 0 \quad \mathrm{on} \quad \partial \Omega \,.
+\end{split}
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="426" HEIGHT="55" BORDER="0"
+ SRC="img418.gif"
+ ALT="\begin{displaymath}\begin{split}\mathop{\rm curl}(\mu^{-1} \mathop{\rm curl}u) +...
+... n &amp;= 0 \quad \mathrm{on} \quad \partial \Omega \,. \end{split}\end{displaymath}"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(37)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P><FONT SIZE="-1">
+Although problem (<A HREF="node6.html#eq:_real_problem">37</A>) is complex-valued, finding a finite element method to approximate (<A HREF="node6.html#eq:_real_problem">37</A>)
+basically boils down to finding a finite element method for the real valued model problem (<A HREF="node1.html#eq:model_problem">1</A>).
+</FONT>
+<P>
+<BR><HR>
+<ADDRESS>
+
+2003-04-30
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Iterative solvers</TITLE>
+<META NAME="description" CONTENT="Iterative solvers">
+<META NAME="keywords" CONTENT="main">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="screen.css" media="screen">
+<LINK REL="next" HREF="node5.html">
+<LINK REL="previous" HREF="node3.html">
+<LINK REL="up" HREF="main.html">
+<LINK REL="next" HREF="node5.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html85"
+ HREF="node5.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/data/allarch/usr/latex2html/icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html83"
+ HREF="main.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/data/allarch/usr/latex2html/icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html77"
+ HREF="node3.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/data/allarch/usr/latex2html/icons.gif/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html86"
+ HREF="node5.html">Example applications</A>
+<B> Up:</B> <A NAME="tex2html84"
+ HREF="main.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html78"
+ HREF="node3.html">Finite element spaces</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><strong>Subsections</strong></A>
+<UL>
+<LI><A NAME="tex2html87"
+ HREF="node4.html#SECTION00041000000000000000">Iterative linear solvers of <I>LAC</I></A>
+<UL>
+<LI><A NAME="tex2html88"
+ HREF="node4.html#SECTION00041100000000000000">Requirements on template parameters</A>
+<LI><A NAME="tex2html89"
+ HREF="node4.html#SECTION00041200000000000000">Administrative classes</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00040000000000000000">&#160;</A>
+<A NAME="sec:solver">&#160;</A>
+<BR>
+Iterative solvers
+</H1>
+
+Solution methods for finite equations are quite generally
+iterative. This is true for non-linear equations, where we use
+different variations of Newton's method, and linear equations. Even
+time-stepping methods fit into this framework.
+
+<P>
+Since solution methods are used in many different contexts, but are
+usually time-critical, they should be implemented as general as is
+possible without loosing efficiency. Therefore, linear solvers and
+matrix classes are extracted into a separate library called
+<I>LAC</I>, short for <I>L</I>inear <I>A</I>lgebra <I>C</I>lasses.
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000">
+Iterative linear solvers of <I>LAC</I></A>
+</H2>
+
+<P>
+Solvers  in <TT>LAC</TT>  are  supposed  to be  basic multi-purpose  tools. In
+particular, the requirements for matrix and  vector classes involved should be
+as low as possible. In <I>LAC</I>  we chose to  not use abstract base classes
+to state these interface requirements. Instead, matrix and vector are template
+arguments to the solvers, e.g. <code>SolverCG&lt;Matrix, Vector&gt;</code>.
+
+<P>
+
+<H3><A NAME="SECTION00041100000000000000">
+Requirements on template parameters</A>
+</H3>
+A minimal interface for a matrix class used for <TT>LAC</TT> Solvers
+is
+<PRE>
+class Matrix
+{
+  public:
+    void   vmult    (Vector&amp; dst, const Vector&amp; src) const;
+
+    double residual (Vector&amp; dst, const Vector&amp; src,
+                     const Vector&amp; right_hand_side) const;
+};
+</PRE>Here, <TT>vmult</TT> for a matrix <I>A</I> should perform 
+<!-- MATH: $v_{dst} = A
+v_{src}$ -->
+<I>v</I><SUB><I>dst</I></SUB> = <I>A</I>
+<I>v</I><SUB><I>src</I></SUB>, while <TT>residual</TT> performs 
+<!-- MATH: $v_{dst} = v_{rhs} - A
+v_{src}$ -->
+<I>v</I><SUB><I>dst</I></SUB> = <I>v</I><SUB><I>rhs</I></SUB> - <I>A</I>
+<I>v</I><SUB><I>src</I></SUB> and returns the Euclidean norm of the result.
+
+<P>
+The requirements for a preconditioner are even simpler:
+<PRE>
+class Precondition
+{
+  public:
+    void operator() (Vector&amp; dst, const Vector&amp; src) const;
+};
+</PRE>
+<P>
+Unfortunately, the interface of the vector class is more complex. To
+avoid a lot of unnecessary loops, there are different redundant scaled vector
+additions used in the iterative methods.
+
+<P>
+
+<H3><A NAME="SECTION00041200000000000000">
+Administrative classes</A>
+</H3>
+The <I>LAC</I>-solvers do not check for the stopping criterion
+themselves. Instead, they compute the value used by this
+criterion, e.g. the norm of the residual, and hand it over to an
+object of a class called <TT>SolverControl</TT>. This class now decides,
+whether the iteration
+<UL>
+<LI>failed, because for example the maximum number of iteration steps is
+  exceeded;
+<LI>terminates successfully, because the aimed stopping criterion
+  was reached;
+<LI>continues, until one of the first two conditions is reached.
+</UL>The provided class <TT>SolverControl</TT> has a standard version of
+this virtual function <TT>check</TT> built in. It can be replaced by a
+derived class, for instance to balance convergence of the linear
+solver with some outer iteration.
+
+<P>
+Most solvers need auxiliary vectors. Since it might be advisable in
+many cases that these vectors are pre-allocated and retrieved from a
+special memory, the class <TT>VectorMemory</TT> was introduced. It is
+an abstract base class for a memory handler. If more sophisticated
+allocation methods are needed, a derived class can implement a vector
+pool, where vectors are not deallocated after use, e.g. to avoid
+fragmentation of heap memory or to speed up allocation.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html85"
+ HREF="node5.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/data/allarch/usr/latex2html/icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html83"
+ HREF="main.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/data/allarch/usr/latex2html/icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html77"
+ HREF="node3.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/data/allarch/usr/latex2html/icons.gif/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html86"
+ HREF="node5.html">Example applications</A>
+<B> Up:</B> <A NAME="tex2html84"
+ HREF="main.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html78"
+ HREF="node3.html">Finite element spaces</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>1999-12-22</I>
+</ADDRESS>
+</BODY>
+</HTML>

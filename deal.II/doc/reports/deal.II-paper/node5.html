@@ -1,0 +1,433 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Example applications</TITLE>
+<META NAME="description" CONTENT="Example applications">
+<META NAME="keywords" CONTENT="main">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="screen.css" media="screen">
+<LINK REL="next" HREF="node6.html">
+<LINK REL="previous" HREF="node4.html">
+<LINK REL="up" HREF="main.html">
+<LINK REL="next" HREF="node6.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html98"
+ HREF="node6.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/data/allarch/usr/latex2html/icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html96"
+ HREF="main.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/data/allarch/usr/latex2html/icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html90"
+ HREF="node4.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/data/allarch/usr/latex2html/icons.gif/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html99"
+ HREF="node6.html">Bibliography</A>
+<B> Up:</B> <A NAME="tex2html97"
+ HREF="main.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html91"
+ HREF="node4.html">Iterative solvers</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><strong>Subsections</strong></A>
+<UL>
+<LI><A NAME="tex2html100"
+ HREF="node5.html#SECTION00051000000000000000">Conservation Laws</A>
+<LI><A NAME="tex2html101"
+ HREF="node5.html#SECTION00052000000000000000">Parameter estimation</A>
+<LI><A NAME="tex2html102"
+ HREF="node5.html#SECTION00053000000000000000">Wave equation</A>
+<LI><A NAME="tex2html103"
+ HREF="node5.html#SECTION00054000000000000000">Boundary approximation</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00050000000000000000">&#160;</A>
+<A NAME="sec:examples">&#160;</A>
+<BR>
+Example applications
+</H1>
+
+<P>
+In this section, we give a brief overview of some applications already implemented
+with <TT>deal.II</TT>, to show the range of applicability and to give an idea
+of what our motives were to write such a library.
+
+<P>
+
+<H2><A NAME="SECTION00051000000000000000">
+Conservation Laws</A>
+</H2>
+
+<P>
+The solution of the nonlinear Burgers equation
+<BR>
+<IMG
+ WIDTH="103" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
+ SRC="img34.gif"
+ ALT="\begin{align*}u_t + u u_x = 0
+\end{align*}">
+<BR>
+with  given initial  and  boundary conditions in   space and time often yields
+discontinuous  solutions, usually  even if the   data are  smooth. Resolving
+these  discontinuities without recourse to a globally refined  grid is a major
+challenge,    especially in view   of  the fact  that   the same problems with
+discontinuous solutions occur with other and more important equations as well,
+such as the Euler equations of inviscid, eventually transonic flow.
+
+<P>
+<BR>
+<DIV ALIGN="CENTER"><A NAME="fig:conservation">&#160;</A><A NAME="819">&#160;</A>
+<TABLE WIDTH="50%">
+<CAPTION><STRONG>Figure:</STRONG>
+<I>Examples of solutions of conservation laws. Computation: R. Hartmann.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+<!-- MATH: $\includegraphics[width=0.4\textwidth]
+{pictures/conservation/burgers1.eps}$ -->
+<IMG
+ WIDTH="138" HEIGHT="112" ALIGN="BOTTOM" BORDER="0"
+ SRC="img35.gif"
+ ALT="\includegraphics[width=0.4\textwidth]
+{pictures/conservation/burgers1.eps}">
+    
+    
+<!-- MATH: $\includegraphics[width=0.4\textwidth]
+{pictures/conservation/burgers2.eps}$ -->
+<IMG
+ WIDTH="138" HEIGHT="109" ALIGN="BOTTOM" BORDER="0"
+ SRC="img36.gif"
+ ALT="\includegraphics[width=0.4\textwidth]
+{pictures/conservation/burgers2.eps}">
+    
+    
+<!-- MATH: $\includegraphics[width=0.4\textwidth]
+{pictures/conservation/euler.eps}$ -->
+<IMG
+ WIDTH="164" HEIGHT="133" ALIGN="BOTTOM" BORDER="0"
+ SRC="img37.gif"
+ ALT="\includegraphics[width=0.4\textwidth]
+{pictures/conservation/euler.eps}">
+</I></I></DIV></TD></TR>
+</TABLE>
+</DIV>
+<BR>
+<P>
+The examples  in  Figure <A HREF="node5.html#fig:conservation"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="/data/allarch/usr/latex2html/icons.gif/cross_ref_motif.gif"></A>  of computations  with locally
+refined grids  for these equations  were  done by  R.  Hartmann. The  left and
+middle picture  show solutions  of the  nonlinear   Burgers equation  with two
+merging  shocks  on a coarse grid  and  a refined one;  bilinear discontinuous
+elements were used for  these computations. On  the right, the Euler equations
+for the  shock tube  problem were  solved;  shock,  contact discontinuity  and
+rarefaction wave can clearly be seen.
+
+<P>
+
+<H2><A NAME="SECTION00052000000000000000">
+Parameter estimation</A>
+</H2>
+
+<P>
+In many  applications in engineering,  one wants to determine   the value of a
+parameter  from measurements.  One  example would  be  the estimation  of  the
+elasticity parameters within  a  body  from measurements of   the displacement
+under a specified load. Another similar problem would be the estimation of the
+conductivity in  a porous  medium from  measurements of the  hydraulic
+head. A prototypic elliptic equation would be
+<BR>
+<IMG
+ WIDTH="130" HEIGHT="20" ALIGN="BOTTOM" BORDER="0"
+ SRC="img38.gif"
+ ALT="\begin{gather*}-\nabla\cdot (q \nabla u) = f
+\end{gather*}">
+<BR>
+with some boundary conditions. The coefficient <I>q</I>(<I>x</I>) is to be determined
+by minimizing the difference between the solution of this equation for a given
+coefficient, <I>u</I><SUB><I>q</I></SUB>(<I>x</I>), and a measurement <I>u</I><SUB><I>meas</I></SUB>, by variation of <I>q</I>.
+
+<P>
+Problems of   this kind usually  are  ill-posed,  i.e. they  do  not possess a
+continuous dependence of the optimal  parameter <IMG
+ WIDTH="21" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img39.gif"
+ ALT="$q^\ast$">
+from the  measurement
+<I>u</I><SUB><I>meas</I></SUB>, which makes them rather difficult  to solve. Furthermore, they are
+strongly  nonlinear and usually require many  solutions of the forward problem
+(i.e. the  elliptic  equation for   a  fixed coefficient)   to determine   the
+coefficient itself, which makes the efficient solution  of the forward problem
+indispensable.
+
+<P>
+<BR>
+<DIV ALIGN="CENTER"><A NAME="fig:parameter">&#160;</A><A NAME="841">&#160;</A>
+<TABLE WIDTH="50%">
+<CAPTION><STRONG>Figure:</STRONG>
+<I>Estimated (left) and true coefficients (middle) in a
+      parameter estimation problem. The state variable approximating the
+      measurement is shown in the right column. Top: smooth true
+    coefficient, bottom: discontinuous true coefficient.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+<!-- MATH: $\includegraphics[width=0.34\textwidth]
+{pictures/parameter/continuous_est.eps}$ -->
+<IMG
+ WIDTH="139" HEIGHT="104" ALIGN="BOTTOM" BORDER="0"
+ SRC="img40.gif"
+ ALT="\includegraphics[width=0.34\textwidth]
+{pictures/parameter/continuous_est.eps}">
+    
+<!-- MATH: $\includegraphics[width=0.34\textwidth]
+{pictures/parameter/continuous_exact.eps}$ -->
+<IMG
+ WIDTH="139" HEIGHT="105" ALIGN="BOTTOM" BORDER="0"
+ SRC="img41.gif"
+ ALT="\includegraphics[width=0.34\textwidth]
+{pictures/parameter/continuous_exact.eps}">
+    
+<!-- MATH: $\includegraphics[width=0.34\textwidth]
+{pictures/parameter/continuous_state.eps}$ -->
+<IMG
+ WIDTH="139" HEIGHT="105" ALIGN="BOTTOM" BORDER="0"
+ SRC="img42.gif"
+ ALT="\includegraphics[width=0.34\textwidth]
+{pictures/parameter/continuous_state.eps}">
+
+<!-- MATH: $\includegraphics[width=0.34\textwidth]
+{pictures/parameter/discontinuous_est.eps}$ -->
+<IMG
+ WIDTH="139" HEIGHT="89" ALIGN="BOTTOM" BORDER="0"
+ SRC="img43.gif"
+ ALT="\includegraphics[width=0.34\textwidth]
+{pictures/parameter/discontinuous_est.eps}">
+    
+<!-- MATH: $\includegraphics[width=0.34\textwidth]
+{pictures/parameter/discontinuous_exact.eps}$ -->
+<IMG
+ WIDTH="139" HEIGHT="93" ALIGN="BOTTOM" BORDER="0"
+ SRC="img44.gif"
+ ALT="\includegraphics[width=0.34\textwidth]
+{pictures/parameter/discontinuous_exact.eps}">
+    
+<!-- MATH: $\includegraphics[width=0.34\textwidth]
+{pictures/parameter/discontinuous_state.eps}$ -->
+<IMG
+ WIDTH="139" HEIGHT="93" ALIGN="BOTTOM" BORDER="0"
+ SRC="img45.gif"
+ ALT="\includegraphics[width=0.34\textwidth]
+{pictures/parameter/discontinuous_state.eps}">
+</I></I></DIV></TD></TR>
+</TABLE>
+</DIV>
+<BR>
+<P>
+In Figure  <A HREF="node5.html#fig:parameter"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="/data/allarch/usr/latex2html/icons.gif/cross_ref_motif.gif"></A>  we show  two  examples of estimated parameters
+along with the exact values.  In order to reduce  the degree of  ill-posedness
+and to reduce the number of unknowns,  the discretization of the parameter <I>q</I>was performed on a  coarser grid than the  state  variable <I>u</I>.  In fact,  the
+discretization was done on  the same grid but  we posed additional constraints
+such that each patch of four cells  can be written as a  shape function on the
+next  coarser grid;  these constraints can  then  be inserted  into the system
+matrix just as was done for hanging nodes. The discretization of the parameter
+was done  with discontinuous elements of one  degree lower than the polynomial
+degree with which the state variable was discretized.
+
+<P>
+The top row of the picture shows the approximation of a continuous coefficient
+on a square domain; the state variable was discretized with bilinear elements,
+while the parameter was discretized with  discontinuous constant elements.  In
+the bottom row, a discontinuous coefficient was to be  estimated on a circular
+domain  of which one quarter  is shown; state and parameter variables
+used bi-quadratic  continuous  elements and   discontinuous bilinear  elements,
+respectively. No adaptive grid refinement was performed for the second case.
+
+<P>
+
+<H2><A NAME="SECTION00053000000000000000">
+Wave equation</A>
+</H2>
+
+<P>
+The acoustic wave equation
+<BR>
+<IMG
+ WIDTH="173" HEIGHT="20" ALIGN="BOTTOM" BORDER="0"
+ SRC="img46.gif"
+ ALT="\begin{align*}\rho u_{t t} - \nabla\cdot (a\nabla u) = 0,
+\end{align*}">
+<BR>
+associated with suitable initial and boundary  conditions occurs in a variety of
+places in physics, among which are water waves, acoustic sound waves in gaseous media,
+electro-magnetics  and many other fields.  Usually,  <I>u</I> is the deviation from
+the  state of   rest  and <IMG
+ WIDTH="14" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img47.gif"
+ ALT="$\rho$">
+and <I>a</I> denote  density and stiffness
+coefficient.  The solutions of this equation often share the feature that they
+form  waves   traveling through  the domain.  Often  the  region  where waves
+presently  are is significantly  smaller than the  whole domain, so adaptivity
+should be able to reduce  the number of cells needed  for the solution of this
+equation by a noticeable amount, because coarse grids can  be used wherever no
+waves are presently.
+
+<P>
+On the other hand, if we are not interested in the  whole solution but only in
+parts of it  (say that part traveling in  one direction, or an  integral over
+part of  the domain at  the end time), the  domain of influence of  the region
+where we  evaluate itself also  often is significantly  smaller than the whole
+region,  due  to  the finite speed  with  which  waves  spread.  Here  again a
+reasonable reduction of the required number of cells can be obtained.
+
+<P>
+Typical  grids showing   this  are  presented  in   the following. They were
+obtained using the program described in [<A
+ HREF="node6.html#Ban98">1</A>,<A
+ HREF="node6.html#BR99b">3</A>].  In  Figure
+<A HREF="node5.html#fig:wave3d"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="/data/allarch/usr/latex2html/icons.gif/cross_ref_motif.gif"></A>, a wave traveling outward from the  lower left corner of the
+domain is  shown. We used  a simple error  indicator to track the spreading of
+the wave to adjust  the computational meshes accordingly; it  can be seen that
+rather coarse cells were used where the solution is smooth.
+
+<P>
+<BR>
+<DIV ALIGN="CENTER"><A NAME="fig:wave3d">&#160;</A><A NAME="861">&#160;</A>
+<TABLE WIDTH="50%">
+<CAPTION><STRONG>Figure:</STRONG>
+<I>Automatically generated grids tracking an acoustic wave
+    traveling outwards in a three-dimensional domain.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+<!-- MATH: $\includegraphics[width=0.3\textwidth]
+{pictures/wave3d/grid.0000.eps}$ -->
+<IMG
+ WIDTH="123" HEIGHT="93" ALIGN="BOTTOM" BORDER="0"
+ SRC="img48.gif"
+ ALT="\includegraphics[width=0.3\textwidth]
+{pictures/wave3d/grid.0000.eps}">
+    
+    
+<!-- MATH: $\includegraphics[width=0.3\textwidth]
+{pictures/wave3d/grid.0020.eps}$ -->
+<IMG
+ WIDTH="123" HEIGHT="93" ALIGN="BOTTOM" BORDER="0"
+ SRC="img49.gif"
+ ALT="\includegraphics[width=0.3\textwidth]
+{pictures/wave3d/grid.0020.eps}">
+    
+    
+<!-- MATH: $\includegraphics[width=0.3\textwidth]
+{pictures/wave3d/grid.0040.eps}$ -->
+<IMG
+ WIDTH="123" HEIGHT="93" ALIGN="BOTTOM" BORDER="0"
+ SRC="img50.gif"
+ ALT="\includegraphics[width=0.3\textwidth]
+{pictures/wave3d/grid.0040.eps}">
+    
+    
+<!-- MATH: $\includegraphics[width=0.3\textwidth]
+{pictures/wave3d/grid.0060.eps}$ -->
+<IMG
+ WIDTH="123" HEIGHT="93" ALIGN="BOTTOM" BORDER="0"
+ SRC="img51.gif"
+ ALT="\includegraphics[width=0.3\textwidth]
+{pictures/wave3d/grid.0060.eps}">
+</I></I></DIV></TD></TR>
+</TABLE>
+</DIV>
+<BR>
+<P>
+
+<H2><A NAME="SECTION00054000000000000000">
+Boundary approximation</A>
+</H2>
+
+<P>
+In real-life applications such as air flow around a plane or
+scattering of waves by objects, the computational boundaries
+often are rather complex.  In particular, a coarse grid that already
+mostly features the contours of the objects usually has many more
+cells than is acceptable for a coarse grid. One way to avoid this
+problem is to not approximate the boundary with the grid and pose
+the boundary values on the boundary of the grid, but to use a mesh
+that is not necessarily adapted to the physical boundaries and pose
+boundary values in the weak form of the equation. This allows, among
+other advantages, to use more regular meshes and a coarse grid with
+less cells, which enables us to use efficient multigrid algorithms.
+
+<P>
+Figure <A HREF="node5.html#fig:helmholtz"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="/data/allarch/usr/latex2html/icons.gif/cross_ref_motif.gif"></A> shows examples of solutions to Poisson's
+equation using Neumann boundary conditions on an embedded boundary
+curve. The interior of the circle is not part of the domain on which
+the problem is posed and the solution is set to zero there.
+
+<P>
+<BR>
+<DIV ALIGN="CENTER"><A NAME="fig:helmholtz">&#160;</A><A NAME="870">&#160;</A>
+<TABLE WIDTH="50%">
+<CAPTION><STRONG>Figure:</STRONG>
+<I>Approximation of a circular domain by inclusion of boundary
+      values into the weak formulation of the equation.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+
+<!-- MATH: $\includegraphics[width=0.5\textwidth]{pictures/helmholtz/helmholtz.eps}$ -->
+<IMG
+ WIDTH="229" HEIGHT="155" ALIGN="BOTTOM" BORDER="0"
+ SRC="img52.gif"
+ ALT="\includegraphics[width=0.5\textwidth]{pictures/helmholtz/helmholtz.eps}">
+</I></I></DIV></TD></TR>
+</TABLE>
+</DIV>
+<BR>
+<P>
+
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html98"
+ HREF="node6.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/data/allarch/usr/latex2html/icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html96"
+ HREF="main.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/data/allarch/usr/latex2html/icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html90"
+ HREF="node4.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/data/allarch/usr/latex2html/icons.gif/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html99"
+ HREF="node6.html">Bibliography</A>
+<B> Up:</B> <A NAME="tex2html97"
+ HREF="main.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html91"
+ HREF="node4.html">Iterative solvers</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>1999-12-22</I>
+</ADDRESS>
+</BODY>
+</HTML>

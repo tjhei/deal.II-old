@@ -1,0 +1,508 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Design and evolution of deal.II</TITLE>
+<META NAME="description" CONTENT="Design and evolution of deal.II">
+<META NAME="keywords" CONTENT="main">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="screen.css" media="screen">
+<LINK REL="next" HREF="node2.html">
+<LINK REL="previous" HREF="main.html">
+<LINK REL="up" HREF="main.html">
+<LINK REL="next" HREF="node2.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html44"
+ HREF="node2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/data/allarch/usr/latex2html/icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html42"
+ HREF="main.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/data/allarch/usr/latex2html/icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html36"
+ HREF="main.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/data/allarch/usr/latex2html/icons.gif/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html45"
+ HREF="node2.html">Grid handling</A>
+<B> Up:</B> <A NAME="tex2html43"
+ HREF="main.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html37"
+ HREF="main.html">No Title</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><strong>Subsections</strong></A>
+<UL>
+<LI><A NAME="tex2html46"
+ HREF="node1.html#SECTION00011000000000000000">Design criteria</A>
+<LI><A NAME="tex2html47"
+ HREF="node1.html#SECTION00012000000000000000">Programming model</A>
+<UL>
+<LI><A NAME="tex2html48"
+ HREF="node1.html#SECTION00012010000000000000">Iterators and accessors.</A>
+<LI><A NAME="tex2html49"
+ HREF="node1.html#SECTION00012020000000000000">Logical addressing of objects.</A>
+<LI><A NAME="tex2html50"
+ HREF="node1.html#SECTION00012030000000000000">Dimension independent programming.</A>
+</UL>
+<LI><A NAME="tex2html51"
+ HREF="node1.html#SECTION00013000000000000000">History</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00010000000000000000">&#160;</A>
+<A NAME="sec:general">&#160;</A>
+<BR>
+Design and evolution of <TT>deal.II</TT>
+</H1>
+
+The <I>DEAL</I> project, short for <I>D</I>ifferential
+<I>E</I>quations <I>A</I>nalysis <I>L</I>ibrary, was started to
+provide means for the implementation of adaptive finite element
+methods. In fact, the development of <I>DEAL</I> and adaptive
+methods at the Institute of Applied Mathematics in Heidelberg are
+closely linked. From this starting point, a finite element library was
+needed, that is able to handle grids with strongly varying mesh width
+and supports strategies for the computation of error estimates based
+on dual problems.
+
+<P>
+While <I>DEAL</I> was a library developed since 1993, this article gives an
+overview of the design criteria, programming models and fields of application
+of its successor library, <TT>deal.II</TT>.
+
+<P>
+
+<H2><A NAME="SECTION00011000000000000000">
+Design criteria</A>
+</H2>
+
+<P>
+<TT>deal.II</TT> was written with the following aims in mind:
+<UL>
+<LI><I>Flexibility:</I> Our aim was to produce a library which
+  enables us to try and test our ideas in a way as quick as possible.
+  The library should thus be easily extendible with respect to the
+  most common approaches in numerical analysis, i.e., different variational formulations, different space dimensions, different finite
+  element spaces, different linear solvers.
+<LI><I>High level interfaces:</I> The library should be as simple
+  to use as possible. Quite complex data structures are necessary for
+  using different finite elements on locally refined grids. The
+  interface is designed to hide and shield these structures from the
+  user. This way, programmers applying the library do not have to know
+  about the grid handling details and - more important - cannot interfere
+  with essential data needed by the library functions.
+<LI><I>Efficiency:</I> The computations involved in finite element
+  calculations are often highly time-consuming. Furthermore, the
+  memory requirements are enormous and they will fill up any machine we have.
+  Therefore, efficiency has to be considered as well.
+</UL>Obviously, some of these criteria are contradictory and must be traded against
+each other. In almost all cases, we traded efficiency in favor of
+safety and flexibility. However, some decisions were also made with
+the performance aspect in mind. 
+These do not so much affect the
+complicated grid handling, which is not overly time-critical, but are
+especially found in the use of finite element objects and in the linear algebra
+sub-library.
+
+<P>
+Another important decision for simplicity against flexibility was the
+reduction to hypercube (line, quadrilateral, hexahedron) cells and
+their transformations to the physical space only.
+The previous <I>DEAL</I> library featured the possibility of
+combining simplicial (triangle, tetrahedron) and hypercube elements and in the
+end this
+additional flexibility caused very complicated data structures and violations
+of type safety. Since
+in all our experiments hypercube cells proved superior to simplicial ones,
+the decision was made against the latter. An immediate result of this
+decision is the absence of closure cells. Treatment of hanging nodes
+is much better done in the numerical than in the geometrical context
+(cf. Section <A HREF="node3.html#sub:hnodes"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="/data/allarch/usr/latex2html/icons.gif/cross_ref_motif.gif"></A>).
+
+<P>
+Two other important criteria in the design of the library, unfortunately not
+widely followed in the academic world, were:
+<UL>
+<LI><I>Safety:</I> Run-time checks of function parameters and the internal
+  consistency of the library have proven an invaluable means of finding
+  programming errors as early as possible. Even for experienced users of a
+  library, at least 90% of errors are violations of constraints on
+  parameters and variables, and similar problems. A library that does not
+  accept such parameters during development makes programming much faster
+  and significantly less tedious; in a non-debug mode, the error checking
+  assertions are taken out of the code before compilation, so no performance
+  penalty is imposed for production computations.
+
+<P>
+<LI><I>Documentation:</I> Within the academic sector, too many projects
+  still fail in the long term due to insufficient documentation; at the latest
+  when the initial developers leave the institute, i.e. usually after about
+  five years, a program is destined to die if not properly documented.
+</UL>
+<P>
+The design goals described above need a programming language with a
+high level of abstraction.  We chose <TT>C++</TT> for implementing the
+library. The main reasons for this were:
+<UL>
+<LI><I>Availability:</I> <TT>C++</TT> is widely available and with
+  <TT>gcc</TT> there is a compiler that runs on almost any platform,
+  including personal computers for home use, workstations and
+  supercomputers. Besides this, <TT>C++</TT> is a popular language in
+  nearly all fields of computing, so acquiring skilled programmers
+  is less difficult than with other programming languages.
+
+<P>
+<LI><I>Standardization:</I>  <TT>C++</TT> is a  standardized language, so
+  the programmer is able  to rely on language features  and can write portable
+  programs that are guaranteed to run in the  future as well. Furthermore, the
+  standard includes a large library  of generic data containers and algorithms
+  which  allow  to program significantly   faster than using most other
+  languages.
+
+<P>
+<LI><I>Data   encapsulation:</I> The   complex data  structures
+  required by locally  refined meshes need to be  encapsulated and be made
+  visible in a more  structured and readily available  form than using the raw
+  data. This is done  using wrapper classes that  distribute the access to the
+  different parts of the data structures providing a  uniform interface to the
+  user. These classes have the advantage to  shield the user from the actual
+  data structures  as well as  from changes therein, allowing optimizations to
+  be implemented without the need to change application programs.
+<LI><I>Flexible and strong data typing:</I> <TT>C++</TT> provides, through
+  the concept of templates, the  use of generic data  types for algorithms and
+  data  structures.  Still, neither speed   nor  strong   data  typing is  
+  sacrificed for  this.  This  is   an important   advantage over  many  other
+  languages where either no genericity is available, leading to duplication of
+  code (including more   possibilities for data type errors   and additional
+  effort for coding) or where  the type system is  relaxed in order to allow
+  genericity, leading to errors which are harder to track down, and
+  slower programs. Genericity is an
+  important part of complex numerical software  since the choice of data types
+  often  involves a trade-off  between accuracy and  computing time or memory;
+  this  choice has often  to be made for each  case again, so a library should
+  not settle on one data type (say, double precision) beforehand.
+<LI><I>Speed:</I> As opposed to teaching focused languages like
+  <TT>Pascal</TT> and languages for network and interactive
+  applications like <TT>Java</TT>, <TT>C++</TT> was developed with the
+  aim of allowing highly structured software that still is fast.
+  Therefore, it offers features like templates and inline functions,
+  that enable a good compiler to mostly eliminate structural overhead.
+<LI><I>In-code documentation:</I> In practice, for a rather small
+  group of developers it is impossible to keep a good technical documentation up
+  to date unless this can happen within the source code itself. With
+  the advent of a standard for the documentation of <TT>Java</TT>
+  programs, there have also appeared several programs to extract
+  documentation directly from <TT>C++</TT> source code. Using these
+  programs, documentation is written directly at the point where
+  modifications occur, making it much easier to keep program and
+  documentation in a matching state.
+  
+  At present, if  printed  the <TT>deal.II</TT> documentation  comprises about
+  800 pages of  function and class  references, along  with several dozens  of
+  pages of technical documentation. All information  is available on the World
+  Wide Web as well and is updated every night (cf. [<A
+ HREF="node6.html#DEAL">2</A>]).
+</UL>
+<P>
+These ingredients  of   the programming language have   enabled  us  to use  a
+programming  model that resembles  the    style of the <TT>C++</TT>   standard
+library and makes  use of  templates to  support several space  dimensions  at
+once.  These  points will be explained in detail below.
+
+<P>
+
+<H2><A NAME="SECTION00012000000000000000">
+Programming model</A>
+</H2> 
+
+<P>
+
+<H4><A NAME="SECTION00012010000000000000">
+Iterators and accessors.</A>
+</H4>
+The  standard template   library (STL)   introduced  the  notion of    iterators  to
+<TT>C++</TT>  from  1993 on. This  model, abstracting  pointers  and, in general,
+elements of containers has since then gained  wide support in the <TT>C++</TT>
+world. For a library making heavy use of the standard container classes, it is
+therefore natural   to offer its data   structures  in a   similar way. In the
+present context, a triangulation can be considered a container holding points,
+lines, quadrilaterals, etc. accessible like  the elements of a
+list.
+
+<P>
+In  fact, this  mode  of addressing  elements  of  a triangulation is  a major
+abstraction, since  the data elements making up  one  of the objects mentioned
+above are  distributed  over  a number of    different arrays and  other
+containers.
+By providing classes called  iterators, programs can be written as
+if data collections were  arrays of data;  in particular, these  classes offer
+operators <TT>++</TT>  and <TT>-</TT> that  move the pointer-like variable to
+the next  or previous element, respectively, just  like a pointer would behave,
+and as do the iterator classes of the standard library.
+
+<P>
+While pointers in the original sense pointed to actual data which is organized
+in a linear fashion in memory, iterators need not do so. For example iterators
+may  point to the elements  of a linked list, which  need not have any special
+order  in  physical memory  apart  from the  pointers  that  link the
+different elements.
+
+<P>
+In the  <TT>deal.II</TT> library, iterators actually point  to no data at all. 
+Dereferenced, they return an  object called <I>accessor</I> having
+no  data elements  itself apart   from some  numbers identifying   the line or
+quadrilateral it is to  represent; it is a  collection of functions knowing
+how to obtain and manipulate data related  to that  object.
+A typical function, setting a bit for a
+quadrilateral in the triangulation that might be used by application programs
+would then look like the following extract:
+<PRE>
+  void QuadAccessor::set_user_flag () const
+  {
+    tria-&gt;levels[level]-&gt;quads.user_flags[index] = true;
+  }
+</PRE><TT>level</TT> and <TT>index</TT> denote the address of
+the quadrilateral represented by this accessor object within the
+hierarchical triangulation. It is obvious that shielding this multiple
+dereferencing from the user makes the library much more robust with
+regard to changes in the internal data structures. Furthermore, it
+allows us to write programs in a much simpler way than by using the
+internals directly. They will be much better readable, too.
+
+<P>
+Using this  concept of offering data  centralized  in an accessor  class while
+still storing it decentralized in many complex data structures, it is possible
+to  use the  advantages  of more
+flexible  data structures while  still  having  the simplicity of  programming
+applications on  top of these;  in addition, the user  needs not know anything
+about the actual representation of the data, which may thus  be changed at any
+time  as  long as the  accessor  classes  are changed  accordingly. The actual
+knowledge of the data   structures is restricted to  very  small parts of  the
+library (a  few hundred statements),  the rest of  the library and all user
+programs use iterators and accessors to address these data.
+
+<P>
+
+<H4><A NAME="SECTION00012020000000000000">
+Logical addressing of objects.</A>
+</H4>
+The most often used  operation in finite  element programs is looping over all
+quadrilaterals  within  a  triangulation of   a  two dimensional   domain  and
+performing  some operations  on  each of   them; an example would be to
+compute the contributions of each quadrilateral to the global system matrix.
+From this point of view,  a
+triangulation is composed of vertices, lines, quadrilaterals, etc.
+
+<P>
+Alternatively, it can be regarded as a collection of cells, faces, etc.;
+we call this the
+<I>dual topology</I>. This view, which depends on the dimension (a cell
+is a line in one  space dimension, a quadrilateral  in 2d and a hexahedron  in
+3d) is  more natural  to  the programming of  numerical software   since
+assembling of matrices, computation of error estimators, and so on are done on cells
+and their faces.
+
+<P>
+A typical loop, in this case marking all cells for some future operation,
+therefore looks like this:
+<PRE>
+  Triangulation&lt;dim&gt; triangulation;
+  ...                           // triangulate a domain
+  Triangulation&lt;dim&gt;::cell_iterator cell;
+  for (cell=triangulation.begin();
+       cell != triangulation.end();
+       ++cell)
+    {
+      cell-&gt;set_user_flag ();
+    };
+</PRE>Remember that if <TT>cell</TT> is dereferenced, we obtain an accessor which
+has the member function shown above to perform the wanted operation.
+
+<P>
+The <TT>deal.II</TT>  library offers  both  ways  of  addressing elements   of
+triangulations. While the first one centered on the dimension  of an object is
+most often used in the interior of the library, the second way, focused on the
+dimension of an object relative to what a cell constitutes, is most helpful for
+numerical algorithms and in fact allows to  write programs and algorithms
+in a dimension independent  way. Operations work cell by cell, choosing 
+finite element shape functions, quadrature rules and the like according to the dimension of the cell. All the application programs presently implemented with
+<TT>deal.II</TT> exclusively use the dual topology instead of the primal one.
+
+<P>
+
+<H4><A NAME="SECTION00012030000000000000">
+Dimension independent programming.</A>
+</H4>
+In this approach to programming, the  program is actually formed when
+the   compiler   associates     a  concrete    data     type, such   as      a
+<I>quadrilateral</I>, to an abstract data type like a <I>cell</I>. This is
+done using template  manipulations as provided by <TT>C++</TT>. It
+allows to write a function or algorithm in a  way that does  not depend on the
+dimension by using <I>logical</I> data types like cells  or faces, which are
+parameterized  aliases (i.e.  <TT>typedef</TT>s)  to concrete  data types; the
+mapping between these data types depends on the dimension (which is a template
+parameter) for which a program is presently compiled. For example, in the
+piece of code shown above, if the template parameter <TT>dim</TT> equals one,
+two, or three, the objects marked are lines, quadrilaterals, and cells,
+respectively. The code to switch these data types looks roughly like this:
+<PRE>
+  class TriaDimensionInfo&lt;2&gt;
+  {
+    typedef quad_iterator                       cell_iterator;
+    typedef line_iterator                       face_iterator;
+    //...
+  };
+
+  class TriaDimensionInfo&lt;3&gt;
+  {
+    typedef hex_iterator                        cell_iterator;
+    typedef quad_iterator                       face_iterator;
+    //...
+  };
+
+
+  template &lt;int dim&gt;
+  class Triangulation : public TriaDimensionInfo&lt;dim&gt;
+  {
+    typedef TriaDimensionInfo&lt;dim&gt;::cell_iterator cell_iterator;
+    typedef TriaDimensionInfo&lt;dim&gt;::face_iterator face_iterator;
+    //...
+  };
+</PRE>By preferring a template
+parameter over preprocessor  variables, it   is possible  to retain  a  greater
+amount of type safety as well as the possibility to use parts of programs with
+different space dimensions together at the same time.
+
+<P>
+If an algorithm is not dimension independent, it is possible to specialize
+it for  some  or  all dimensions where its   form  deviates from   the general
+template. This is typically the case in  one space dimension, where algorithms
+often   work a bit  different, since  no  proper   faces exist (we do not
+consider points proper objects in the same sense  as lines, quadrilaterals, etc.
+since their lack of extension in any direction does not permit to define shape
+functions on them).
+
+<P>
+Being called from some dimension independent part of the code, the
+compiler automatically figures out which version of a function to
+call; dimension independent and dimension dependent code therefore
+work together smoothly without the intervention of the programmer.
+This approach has proven useful when several programs originally
+written for two-dimensional computations ran by mere recompilation in
+three space dimension as well when the three dimensional support
+within the library became available.
+
+<P>
+
+<H2><A NAME="SECTION00013000000000000000">
+History</A>
+</H2>
+
+<P>
+As a last note before we start with the actual description  of the library, we
+want to give a brief historical overview of  the evolution of the project. The
+following are some of the more important milestones that should be mentioned:
+
+<P>
+<I>1991-1992:</I> Needing finite element software for their diploma
+theses, Guido Kanschat and Franz-Theo Suttmeier start to develop
+finite element codes, first in P<SMALL>ASCAL</SMALL>, later in <TT>C++</TT>. Working
+on quasi-regular solutions to variational systems, the need for grid
+adaption becomes obvious. A finite element code for solving
+two-dimensional problems in plasticity and quasi-linear elliptic
+systems evolves [<A
+ HREF="node6.html#KS92">10</A>].
+
+<P>
+<I>Since 1993:</I> <I>DEAL</I>, short for <I>D</I>ifferential
+<I>E</I>quations <I>A</I>nalysis <I>L</I>ibrary, is developed by
+Guido Kanschat and Franz-Theo Suttmeier. <TT>C++</TT> becomes the
+language of choice for the reasons mentioned in the introduction and
+because it is the only advanced programming language portable to a
+T805 parallel computer.
+
+<P>
+<I>1995-1996:</I> Roland Becker joins and the implementation of the
+multigrid method allows fast solution of PDE problems. The concept of
+a posteriori error estimates based on dual solutions is developed and
+used in the theses of the three programmers [<A
+ HREF="node6.html#Bec95">4</A>,<A
+ HREF="node6.html#Kan96">9</A>,<A
+ HREF="node6.html#Sut96">16</A>]
+and the article [<A
+ HREF="node6.html#BR95">5</A>]. By this time, the library had grown quite
+complex and no documentation was available. Also, some of the
+structures had turned out too complicated to allow further
+development.
+
+<P>
+<I>End of 1997:</I> At the time that the first author of this paper
+was about to start working on his thesis, it was decided that it was
+in time to do a major redesign of the library. The urge for other than
+<I>Q</I><SUB>1</SUB> finite element spaces and the code reduplication in error
+estimators demanded for a more flexible structure, while mixed
+triangular/quadrilateral grids were not used anymore. We decided to
+rewrite the library from scratch, then called <TT>deal.II</TT>.
+
+<P>
+Design and implementation of the core of the library, i.e. handling of grids
+and degrees of freedom, was done entirely by W. Bangerth, applying the
+knowledge accumulated in the use of the predecessor library, <I>DEAL</I>.
+
+<P>
+<I>Since 1998:</I> Many tools for numerical simulations are added. This
+includes, among others, output for different visualization tools,
+discontinuous elements, finite elements for systems and mixed discretizations,
+and grid transfer operators for time-dependent problems.  Multi-level
+algorithms are about to be finished by now.
+
+<P>
+At present, the  <TT>deal.II</TT> library is maintained by  W. Bangerth and G. 
+Kanschat. It is used by several postdoctoral scientists and graduate students
+at the Institute of Applied Mathematics and several undergraduate students; it
+is also used in teaching at the universities of Heidelberg and Minnesota.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html44"
+ HREF="node2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/data/allarch/usr/latex2html/icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html42"
+ HREF="main.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/data/allarch/usr/latex2html/icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html36"
+ HREF="main.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/data/allarch/usr/latex2html/icons.gif/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html45"
+ HREF="node2.html">Grid handling</A>
+<B> Up:</B> <A NAME="tex2html43"
+ HREF="main.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html37"
+ HREF="main.html">No Title</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>1999-12-22</I>
+</ADDRESS>
+</BODY>
+</HTML>

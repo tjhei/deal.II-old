@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Grid handling</TITLE>
+<META NAME="description" CONTENT="Grid handling">
+<META NAME="keywords" CONTENT="main">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="screen.css" media="screen">
+<LINK REL="next" HREF="node3.html">
+<LINK REL="previous" HREF="node1.html">
+<LINK REL="up" HREF="main.html">
+<LINK REL="next" HREF="node3.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html60"
+ HREF="node3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/data/allarch/usr/latex2html/icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html58"
+ HREF="main.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/data/allarch/usr/latex2html/icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html52"
+ HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/data/allarch/usr/latex2html/icons.gif/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html61"
+ HREF="node3.html">Finite element spaces</A>
+<B> Up:</B> <A NAME="tex2html59"
+ HREF="main.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html53"
+ HREF="node1.html">Design and evolution of</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><strong>Subsections</strong></A>
+<UL>
+<LI><A NAME="tex2html62"
+ HREF="node2.html#SECTION00021000000000000000">Hierarchical cell representation</A>
+<LI><A NAME="tex2html63"
+ HREF="node2.html#SECTION00022000000000000000">Hierarchical grid refinement</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00020000000000000000">&#160;</A>
+<A NAME="sec:grid">&#160;</A>
+<BR>
+Grid handling
+</H1>
+
+Since the stated goals of  the library included  adaptive grids that are easy
+to program and should still be fast, hierarchical grids were the only choice
+possible. By hierarchical  we here  mean that  the structures  of  the grid  are
+described   hierarchically   (points,  lines, quadrilaterals,    ...) and that
+refinement  has to be made hierarchically  as well, as opposed to unstructured
+grids. The first   point, hierarchical description,  serves the  simplicity of
+programming,  while  the second,  hierarchical refinement,  allows to use fast
+algorithms for grid refinement and in the numerics, such as multigrid solvers.
+These two concepts are outlined in the following subsections.
+
+<P>
+
+<H2><A NAME="SECTION00021000000000000000">
+Hierarchical cell representation</A>
+</H2>
+
+<P>
+As  has  been outlined above,   one of  the  design  criteria  was to focus on
+quadrilaterals    in   two, and  hexahedra   in    three space  dimensions.  A
+triangulation is therefore made up of the objects in Figure
+<A HREF="node2.html#fig:topology"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="/data/allarch/usr/latex2html/icons.gif/cross_ref_motif.gif"></A>.
+<BR>
+<DIV ALIGN="CENTER"><A NAME="fig:topology">&#160;</A><A NAME="262">&#160;</A>
+<TABLE WIDTH="50%">
+<CAPTION><STRONG>Figure:</STRONG>
+<I>Topological constituents of a mesh</CAPTION>
+<TR><TD><IMG
+ WIDTH="510" HEIGHT="147"
+ SRC="img2.gif"
+ ALT="\begin{figure}
+\begin{center}
+\unitlength.08\textwidth
+\begin{picture}
+(12,4)...
+...}}
+\put(9,-.2){\makebox(0,0)[t]{3. Hex}}
+\end{picture} \end{center}\end{figure}"></I></I></TD></TR>
+</TABLE>
+</DIV>
+<BR>
+If the  space dimension is  lower than  three, this sequence  is truncated; if
+anyone chooses  to  implement a finite element  code  in more  than  three space
+dimensions (e.g. for general relativity), the sequence may be prolonged.
+
+<P>
+Each  of the objects  can be made up of a
+number of objects of lower level. They are  thus hierarchic and one  only
+needs to  store pointers to four  lines to characterize a quadrilateral, which
+are   themselves   characterized by   two   vertices   each.  A  hexahedron is
+characterized by six quadrilaterals which are themselves characterized by four
+lines each and so on.
+
+<P>
+Storing  objects  this way has  advantages  over the  other  possibility, i.e. 
+storing the vertices only, because it is  possible to do computations on faces
+if they exist as  independent objects. This, though obviously also
+possible if only  vertices are stored, makes the  evaluation of jump terms (in
+error estimators or using discontinuous finite elements), the handling of
+hanging nodes and many more things much simpler, at the  expense of a slightly
+increased memory consumption.
+
+<P>
+
+<H2><A NAME="SECTION00022000000000000000">
+Hierarchical grid refinement</A>
+</H2>
+
+<P>
+The other hierarchical property of grids that is applied in <TT>deal.II</TT>
+is hierarchical refinement.  At present, there are two concurrent approaches
+to adaptive meshes:
+<UL>
+<LI><I>Unstructured  meshes:</I> Using   this  approach,  after
+  computing a refinement indicator, a mesh is created according to this criterion
+  that is not based on the previous grid at all. This can, for example, be done
+  by  scattering points   onto  the domain   where the  density  of points  is
+  determined by the error indicator  or other criteria. The   new grid is  now
+  generated using, for example, the Voronoi cells of the point cloud.
+  
+  It  should  be   noted that    this   approach suffers from  the   expensive
+  computations required for the generation of totally unrelated grids, but is
+  able to produce meshes with smooth transitions of the mesh size parameter
+  <I>h</I>(<I>x</I>).
+<LI><I>Structured meshes:</I> Refining those cells in an existing
+  triangulation with  the largest
+  refinement indicator, yields meshes that are hierarchical because every
+  cell, unless belonging  to the coarsest mesh, has  a mother cell and  may be
+  refined further. Usually, the refinement  of a cell is  done  in a way  that
+  does not deteriorate  the aspect ratio of  the cells, i.e.  refinement into
+  four  congruent   triangles for triangular meshes     or splitting quadrilaterals into four
+  children. In three space  dimensions, the subdivision of
+  tetrahedra  may  be done  using several  different  possibilities, while the
+  subdivision of  a hexahedron is canonical, if no anisotropic refinement is
+  required. This way of constructing adaptive grids was considered already in [<A
+ HREF="node6.html#RM80">15</A>].
+  
+  The problem  with this  approach  is that,  refining one cell,  there
+  remains an unbalanced vertex on each side if  the respective neighbor is not
+  refined as well. There  are basically two  strategies to handle these:
+  Using  special  refinement rules for the  neighbor  to eliminate  these
+  hanging nodes  (e.g. red-green  refinement  of  triangles) or allowing  for
+  hanging nodes and treat them in a special way to ensure continuity of finite
+  element  functions  at  these points  (e.g.  by   formulating the continuity
+  requirement  as  a constraint   and inserting  this  into  the matrices  and
+  vectors).
+  
+  It should be noted that the grids  produced using this approach usually have
+  relatively    steep  gradients at the   boundaries  between  two  regions of
+  different refinement depths, but refinement can be made very fast. Furthermore, transfer of data between meshes is highly accurate and fast.
+</UL>Since the additional information in structured meshes can be favorably
+used in multigrid algorithms as well as in the fast generation of new
+meshes from a given one, we chose the second approach. Furthermore,
+because the generation of red-green-like refinement rules for
+quadrilaterals is relatively complex without recourse to triangles and
+because any of these special refinements of some elements destroys the
+regularity in the data structures, we chose to impose the
+compatibility conditions at interfaces of cells of different
+refinement depths as constraints to the system of equations. It should
+be noted that these constraints need not be incorporated using a
+Lagrangian multiplier (which would lead to saddle point problems), but
+can be inserted into the matrix and right hand side, thus retaining
+the properties of the matrices (cf. Section <A HREF="node3.html#sub:hnodes"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="/data/allarch/usr/latex2html/icons.gif/cross_ref_motif.gif"></A>). In
+particular, symmetric and positive definite matrices retain these properties.
+
+<P>
+Using the described approach, all lines, quadrilaterals,  etc. are refined in a
+uniform fashion thus allowing for fast algorithms exploiting this structure.
+For  these,  multigrid algorithms based on   hierarchical bases come to  mind. 
+However, the structure is also particularly suited for time dependent problems
+with grids that may differ between  any two time  steps and where the transfer
+of the old solution to the  new grid can  only be done  efficiently if the two
+grids  are related in some  way; such a  relationship can be obtained by using
+the same coarse  grid with different refinement depths  on  the different time
+steps.  In that   case,  integration of  the  old  solution with the  new test
+functions  can  even be  done  exactly, leading to  both   higher accuracy and
+dramatic speed improvements compared with unstructured mesh approaches.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html60"
+ HREF="node3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/data/allarch/usr/latex2html/icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html58"
+ HREF="main.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/data/allarch/usr/latex2html/icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html52"
+ HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/data/allarch/usr/latex2html/icons.gif/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html61"
+ HREF="node3.html">Finite element spaces</A>
+<B> Up:</B> <A NAME="tex2html59"
+ HREF="main.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html53"
+ HREF="node1.html">Design and evolution of</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>1999-12-22</I>
+</ADDRESS>
+</BODY>
+</HTML>

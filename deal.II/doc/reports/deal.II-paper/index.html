@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>No Title</TITLE>
+<META NAME="description" CONTENT="No Title">
+<META NAME="keywords" CONTENT="main">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="screen.css" media="screen">
+<LINK REL="next" HREF="node1.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html9"
+ HREF="node1.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/data/allarch/usr/latex2html/icons.gif/next_motif.gif"></A> 
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/data/allarch/usr/latex2html/icons.gif/up_motif_gr.gif"> 
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/data/allarch/usr/latex2html/icons.gif/previous_motif_gr.gif">   
+<BR>
+<B> Next:</B> <A NAME="tex2html10"
+ HREF="node1.html">Design and evolution of</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<P>
+<DIV ALIGN="CENTER">
+<FONT SIZE="+3"><B>Concepts for Object-Oriented</B></FONT>
+
+<P>
+<FONT SIZE="+3"><B>Finite Element Software - the</B></FONT>
+
+<P>
+<FONT SIZE="+3"><B><TT>deal.II</TT> Library</B></FONT>
+  
+
+<P>
+<BR>
+<BR>
+
+<P>
+<FONT SIZE="+1">Wolfgang Bangerth and Guido Kanschat</FONT>
+
+<P>
+<BR>
+<BR>
+<BR>
+
+<P>
+Institute of Applied Mathematics
+<BR>
+University of Heidelberg
+<BR>
+Germany
+
+<P>
+Email: 
+  <TT>wolfgang.bangerth@iwr.uni-heidelberg.de, kanschat@iwr.uni-heidelberg.de</TT>
+</DIV>
+<P>
+
+<H3>Abstract:</H3>
+<DIV>
+An overview of the <TT>deal.II</TT>  library is given. This library provides
+  the functionality  needed  by modern  numerical software  used in the finite
+  element solution  of  partial  differential  equations,  offering adaptively
+  refined meshes,  different  finite element   classes, multigrid solvers  and
+  support for one, two and three spatial dimensions.
+  
+  We  give a  description of  the basic  design criteria  used  in the
+  development of the library and how they were transformed into actual
+  code,  and some  examples of  the use  of the  library  in numerical
+  analysis.
+</DIV>
+<P>
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS">&#160;</A>
+<UL>
+<LI><A NAME="tex2html11"
+ HREF="node1.html">Design and evolution of <TT>deal.II</TT></A>
+<UL>
+<LI><A NAME="tex2html12"
+ HREF="node1.html#SECTION00011000000000000000">Design criteria</A>
+<LI><A NAME="tex2html13"
+ HREF="node1.html#SECTION00012000000000000000">Programming model</A>
+<UL>
+<LI><A NAME="tex2html14"
+ HREF="node1.html#SECTION00012010000000000000">Iterators and accessors.</A>
+<LI><A NAME="tex2html15"
+ HREF="node1.html#SECTION00012020000000000000">Logical addressing of objects.</A>
+<LI><A NAME="tex2html16"
+ HREF="node1.html#SECTION00012030000000000000">Dimension independent programming.</A>
+</UL>
+<LI><A NAME="tex2html17"
+ HREF="node1.html#SECTION00013000000000000000">History</A>
+</UL>
+<LI><A NAME="tex2html18"
+ HREF="node2.html">Grid handling</A>
+<UL>
+<LI><A NAME="tex2html19"
+ HREF="node2.html#SECTION00021000000000000000">Hierarchical cell representation</A>
+<LI><A NAME="tex2html20"
+ HREF="node2.html#SECTION00022000000000000000">Hierarchical grid refinement</A>
+</UL>
+<LI><A NAME="tex2html21"
+ HREF="node3.html">Finite element spaces</A>
+<UL>
+<LI><A NAME="tex2html22"
+ HREF="node3.html#SECTION00031000000000000000">Finite element objects</A>
+<LI><A NAME="tex2html23"
+ HREF="node3.html#SECTION00032000000000000000">Computation of shape function values</A>
+<LI><A NAME="tex2html24"
+ HREF="node3.html#SECTION00033000000000000000">Hanging nodes</A>
+</UL>
+<LI><A NAME="tex2html25"
+ HREF="node4.html">Iterative solvers</A>
+<UL>
+<LI><A NAME="tex2html26"
+ HREF="node4.html#SECTION00041000000000000000">Iterative linear solvers of <I>LAC</I></A>
+<UL>
+<LI><A NAME="tex2html27"
+ HREF="node4.html#SECTION00041100000000000000">Requirements on template parameters</A>
+<LI><A NAME="tex2html28"
+ HREF="node4.html#SECTION00041200000000000000">Administrative classes</A>
+</UL>
+</UL>
+<LI><A NAME="tex2html29"
+ HREF="node5.html">Example applications</A>
+<UL>
+<LI><A NAME="tex2html30"
+ HREF="node5.html#SECTION00051000000000000000">Conservation Laws</A>
+<LI><A NAME="tex2html31"
+ HREF="node5.html#SECTION00052000000000000000">Parameter estimation</A>
+<LI><A NAME="tex2html32"
+ HREF="node5.html#SECTION00053000000000000000">Wave equation</A>
+<LI><A NAME="tex2html33"
+ HREF="node5.html#SECTION00054000000000000000">Boundary approximation</A>
+</UL>
+<LI><A NAME="tex2html34"
+ HREF="node6.html">Bibliography</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>1999-12-22</I>
+</ADDRESS>
+</BODY>
+</HTML>

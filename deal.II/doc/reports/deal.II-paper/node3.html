@@ -1,0 +1,653 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Finite element spaces</TITLE>
+<META NAME="description" CONTENT="Finite element spaces">
+<META NAME="keywords" CONTENT="main">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="screen.css" media="screen">
+<LINK REL="next" HREF="node4.html">
+<LINK REL="previous" HREF="node2.html">
+<LINK REL="up" HREF="main.html">
+<LINK REL="next" HREF="node4.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html72"
+ HREF="node4.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/data/allarch/usr/latex2html/icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html70"
+ HREF="main.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/data/allarch/usr/latex2html/icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html64"
+ HREF="node2.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/data/allarch/usr/latex2html/icons.gif/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html73"
+ HREF="node4.html">Iterative solvers</A>
+<B> Up:</B> <A NAME="tex2html71"
+ HREF="main.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html65"
+ HREF="node2.html">Grid handling</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><strong>Subsections</strong></A>
+<UL>
+<LI><A NAME="tex2html74"
+ HREF="node3.html#SECTION00031000000000000000">Finite element objects</A>
+<LI><A NAME="tex2html75"
+ HREF="node3.html#SECTION00032000000000000000">Computation of shape function values</A>
+<LI><A NAME="tex2html76"
+ HREF="node3.html#SECTION00033000000000000000">Hanging nodes</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00030000000000000000">&#160;</A>
+<A NAME="sec:fe">&#160;</A>
+<BR>
+Finite element spaces
+</H1>
+
+In finite element theory, the discrete function spaces are represented by the
+vector space of node values. Each node value denotes one degree of freedom in
+this vector space. The functionals defining the degrees of freedom, for
+example the interpolation points of Lagrangian elements or face integrals for
+some nonconforming elements, may be associated with any of the basic topological
+objects of a mesh, as shown in Figure <A HREF="node2.html#fig:topology"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="/data/allarch/usr/latex2html/icons.gif/cross_ref_motif.gif"></A>. The <TT>FiniteElement</TT>
+class describing a certain finite element states the objects on which these
+functionals are defined.  For neighboring cells, these nodes may coincide, in
+which case they are identified. 
+
+<P>
+In case of local refinement (<I>h</I> or <I>p</I>), an interface between two cells might
+carry different node values, which we call <EM>hanging nodes</EM>. Then,
+additional compatibility conditions have to be imposed numerically, as we will
+explain below in Section <A HREF="node3.html#sub:hnodes"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="/data/allarch/usr/latex2html/icons.gif/cross_ref_motif.gif"></A>.
+
+<P>
+
+<H2><A NAME="SECTION00031000000000000000">
+Finite element objects</A>
+</H2>
+
+<P>
+A finite element space can be viewed as the function space spanned by a
+number of relatively simple basis functions. These basis functions are chosen
+such that they have a small support, in general at most as many cells as may
+be adjacent at any one vertex in the triangulation. Furthermore, they are
+usually defined on each cell within their domain of support separately, with
+some compatibility condition for the interfaces between these subdomains;
+compatibility conditions may be e.g. continuity along a face between two cells (for
+<I>H</I><SUP>1</SUP>-conforming elements), equality of the mean value of the shape function on both
+sides of a face (Crouzeix-Raviart [<A
+ HREF="node6.html#CR73">8</A>], Rannacher-Turek [<A
+ HREF="node6.html#RT92">13</A>])
+or its normal component (Raviart-Thomas [<A
+ HREF="node6.html#RT77">14</A>], Brezzi-Douglas-Marini [<A
+ HREF="node6.html#BF91">7</A>]).
+
+<P>
+Due to these properties, it is convenient for the implementation to consider a
+finite element  space as consisting of  a set of shape  functions defined on a
+cell  and compatibility  conditions   at  the boundaries  of  the  cell;  this
+viewpoint stresses a purely local description of the space which enables us to
+do computations on   each cell separately in  most
+cases. A   further  abstraction is possible  in  some  cases,  where the shape
+functions can be computed   on the unit cell  and  only afterwards need to  be
+transformed  to  the actual grid cell;   this  is possible   for interpolation
+elements,   but  not  for  all elements    involving  line   integrals, normal
+derivatives, etc.
+
+<P>
+With these considerations  in mind, the representation  of a finite element in
+<TT>deal.II</TT> is   a   class that provides  the   shape  functions and  its
+derivatives on the unit cell (if possible,  otherwise on the actual grid cell),
+and  the  transformation from   unit  to real  cell and   its  derivatives. Furthermore,
+it provides necessary information to the class managing global degrees of freedom.
+This includes the kind of topological object
+ (i.e. on vertices, line,
+quadrilaterals, etc.) a degree of freedom is associated with and the type of
+compatibility conditions between adjacent elements.
+
+<P>
+However, looking at actual finite element programs, one notes that most of the
+information listed  above is not    necessary to application  programs.  While
+compatibility and transformations are of interest to the internal functions of
+the library, application programs   almost always are  only interested  in the
+restriction of a finite element field or shape function to a grid cell. 
+Here, however, it is  important to note that one  usually is not interested in
+the finite element  as a continuous function, but  only at a  specified set of
+points, for example in quadrature points located on a cell or a face. Since
+codes for finite element applications usually do not use the analytical representation of
+the shape functions (which can be rather complicated on the cells), but
+computations are done using quadrature formul&#230;.
+
+<P>
+In   order  to make  access  to  actual  finite  elements   more efficient and
+structured, <TT>deal.II</TT>  offers  an abstraction of   a  finite
+element restricted to a set of points on a cell. This interface is provided by
+the <TT>FEValues</TT> class described in  the next subsection. The actual finite
+element class  is hardly  ever accessed  directly by application  programs and
+indeed by none of the existing applications built upon <TT>deal.II</TT>.
+
+<P>
+
+<H2><A NAME="SECTION00032000000000000000">
+Computation of shape function values</A>
+</H2>
+Integrating and assembling matrices and right hand sides can consume a
+considerable amount of time during the execution of a finite element
+program. This is especially true in non-linear applications, where the
+process of solving the linear system is not necessarily predominant anymore.
+Therefore, the access to finite element shape functions is not only a
+question of defining a well structured interface, it is also
+a matter of run-time efficiency.
+
+<P>
+Analyzing finite element software, we observe that shape functions are
+always used in the same context: integration on a grid cell. This
+means, that shape functions are always used in combination with a
+quadrature rule. We exploit this relationship by introducing a special
+class <TT>FEValues</TT> combining quadrature and shape functions; in
+fact it can be considered to be the restriction of the trial space on
+the whole mesh to the quadrature points of a given quadrature rule
+applied to a single element of the triangulation. An object of this
+class will compute all values of the shape functions at the
+appropriate time and store them in arrays.
+These  values come basically in two categories:
+<DL COMPACT>
+<DT>1.
+<DD>Values only depending on the quadrature point on the unit
+cell. These are for instance the function values of standard
+  Lagrangian elements.
+<DT>2.
+<DD>Values depending on the actual grid cell. In this class are for example
+   values of derivatives, since they have to be transformed by
+  the tangent mapping of the transformation between unit cell and
+  actual cell, but also the actual locations of the quadrature points in physical
+  space.
+</DL>It should be remarked here that the category a certain value belongs
+to is dependent on the type of finite element. While for standard
+Lagrangian elements, values of the shape functions belong to the
+first, in the case of Raviart-Thomas type elements e.g. they are of the
+second kind.
+
+<P>
+The two kinds of  behavior  are reflected in  the  fact that the tables   of
+<TT>FEValues</TT>  are built at different times.  Tables  of the first
+category are already filled  upon construction, where <TT>FEValues</TT> objects
+obtain
+information  about quadrature points  and finite element shape functions. This
+is usually  done before  a loop over  all cells  starts.  The second   type of
+values is computed in a function that has to be
+called within the loop for each grid cell before any evaluations are done.
+
+<P>
+It is up to the interaction of <TT>FiniteElement</TT>  and <TT>FEValues</TT> to do
+these computations as  efficiently as  possible.   The user  should give  some
+hints though: <TT>FEValues</TT> takes  a group of flags, telling it
+which  fields need to be  computed on each cell;  if second derivatives  are
+not used in a loop, they will not be computed on each element.
+
+<P>
+
+<H2><A NAME="SECTION00033000000000000000">&#160;</A>
+<A NAME="sub:hnodes">&#160;</A>
+<BR>
+Hanging nodes
+</H2>
+
+<P>
+As mentioned briefly above, we obtain hanging nodes at interfaces between
+cells of differing refinement,
+<A NAME="tex2html3"
+ HREF="footnode.html#foot400"><SUP>1</SUP></A>  
+see Figure <A HREF="node3.html#fig:hanging-nodes"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="/data/allarch/usr/latex2html/icons.gif/cross_ref_motif.gif"></A>.  The
+degrees of freedom on the refined side of a face (for example the left side of
+the face with end points <I>P</I><SUB>1</SUB> and <I>P</I><SUB>2</SUB> in the figure) are not all matched by
+degrees of freedom on the coarse side, so  in order to guarantee continuity
+<A NAME="tex2html4"
+ HREF="footnode.html#foot479"><SUP>2</SUP></A>  
+of the finite element space along
+this face we need to impose additional constraints. In order to
+illustrate the process, let <I>V</I><SUB><I>h</I></SUB> be
+the original trial space including the continuity requirement on its
+members, while 
+<!-- MATH: $\tilde V_h$ -->
+<IMG
+ WIDTH="24" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$\tilde V_h$">
+be a finite element space that is
+constructed from the union of the same shape functions as in <I>V</I><SUB><I>h</I></SUB>, but
+restricted to each cell separately; 
+<!-- MATH: $\tilde V_h$ -->
+<IMG
+ WIDTH="24" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$\tilde V_h$">
+therefore may contain
+functions that are discontinuous along refined faces. While hanging
+nodes carry degrees of freedom in 
+<!-- MATH: $\tilde V_h$ -->
+<IMG
+ WIDTH="24" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$\tilde V_h$">,
+they do not do so in <I>V</I><SUB><I>h</I></SUB>.
+
+<P>
+<BR>
+<DIV ALIGN="CENTER"><A NAME="fig:hanging-nodes">&#160;</A><A NAME="439">&#160;</A>
+<TABLE WIDTH="50%">
+<CAPTION><STRONG>Figure:</STRONG>
+<I>A simple grid with a hanging node.</CAPTION>
+<TR><TD><IMG
+ WIDTH="321" HEIGHT="173"
+ SRC="img4.gif"
+ ALT="\begin{figure}\unitlength1.5cm
+\begin{center}
+\begin{picture}
+(4,2.5)
+\thinlines...
+...{$Q_4$ }}
+\put(0,0){\makebox(1,1){$Q_1$ }}
+\end{picture}\end{center}\end{figure}"></I></I></TD></TR>
+</TABLE>
+</DIV>
+<BR>
+<P>
+Since  doing  computations  with functions from   
+<!-- MATH: $\tilde  V_h$ -->
+<IMG
+ WIDTH="24" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$\tilde V_h$">
+is much  simpler
+(because it can be  done locally on  each cell without  taking care that there
+may be coarser or finer cells around,  and because we  would like to associate
+degrees  of freedom    to  all vertices and    lines,  irrespective  of  their
+neighborhood), we would like to use 
+<!-- MATH: $\tilde V_h$ -->
+<IMG
+ WIDTH="24" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$\tilde V_h$">
+as long as possible and use the
+constraints that <I>V</I><SUB><I>h</I></SUB> has  over 
+<!-- MATH: $\tilde V_h$ -->
+<IMG
+ WIDTH="24" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$\tilde V_h$">
+as  late as possible in the solution
+of the problem. This can be done in the following way (cf. [<A
+ HREF="node6.html#Kan96">9</A>,<A
+ HREF="node6.html#Koz94">12</A>];
+[<A
+ HREF="node6.html#RM80">15</A>] also shows how to do this, but the algorithms are significantly
+more complex since more than one irregular node is allowed per face).
+
+<P>
+Assume we had to solve the problem: <I>find <IMG
+ WIDTH="58" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img5.gif"
+ ALT="$u\in V_h$">,
+such that for all
+  <IMG
+ WIDTH="57" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img6.gif"
+ ALT="$v\in V_h$"></I>
+<BR>
+<IMG
+ WIDTH="121" HEIGHT="20" ALIGN="BOTTOM" BORDER="0"
+ SRC="img7.gif"
+ ALT="\begin{gather*}a(v, u) = (v,f)
+\end{gather*}">
+<BR>
+with a bilinear form 
+<!-- MATH: $a(\cdot,\cdot)$ -->
+<IMG
+ WIDTH="48" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img8.gif"
+ ALT="$a(\cdot,\cdot)$">
+and the <I>L</I><SUB>2</SUB> scalar product
+
+<!-- MATH: $(\cdot,\cdot)$ -->
+<IMG
+ WIDTH="38" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img9.gif"
+ ALT="$(\cdot,\cdot)$">.
+We would like to state this problem in 
+<!-- MATH: $\tilde V_h$ -->
+<IMG
+ WIDTH="24" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$\tilde V_h$">
+instead of
+<I>V</I><SUB><I>h</I></SUB>. We take the standard finite element bases 
+<!-- MATH: $\{\varphi_i\}$ -->
+<IMG
+ WIDTH="41" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img10.gif"
+ ALT="$\{\varphi_i\}$">
+of <I>V</I><SUB><I>h</I></SUB> and 
+<!-- MATH: $\{\tilde\varphi_i\}$ -->
+<IMG
+ WIDTH="41" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img11.gif"
+ ALT="$\{\tilde\varphi_i\}$">
+of 
+<!-- MATH: $\tilde V_h$ -->
+<IMG
+ WIDTH="24" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$\tilde V_h$">.
+Now, because <I>V</I><SUB><I>h</I></SUB> is a subspace of 
+<!-- MATH: $\tilde V_h$ -->
+<IMG
+ WIDTH="24" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$\tilde V_h$">(it is 
+<!-- MATH: $\tilde V_h$ -->
+<IMG
+ WIDTH="24" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$\tilde V_h$">
+with some constraints) every function <IMG
+ WIDTH="22" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img12.gif"
+ ALT="$\varphi_i$">
+can be
+written as a linear combination of basis functions of 
+<!-- MATH: $\tilde V_h$ -->
+<IMG
+ WIDTH="24" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$\tilde V_h$">:
+
+<!-- MATH: $\varphi_i = \sum_{j=1}^{\tilde
+N}C_{ij}\tilde\varphi_i$ -->
+<IMG
+ WIDTH="138" HEIGHT="50" ALIGN="MIDDLE" BORDER="0"
+ SRC="img13.gif"
+ ALT="$\varphi_i = \sum_{j=1}^{\tilde
+N}C_{ij}\tilde\varphi_i$">.
+This defines a matrix <I>C</I><SUB><I>ij</I></SUB>. For example, for
+bilinear shape functions the function <IMG
+ WIDTH="25" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img14.gif"
+ ALT="$\varphi_1$">
+associated with node <I>P</I><SUB>1</SUB>in Figure <A HREF="node3.html#fig:hanging-nodes"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="/data/allarch/usr/latex2html/icons.gif/cross_ref_motif.gif"></A> can be written as
+
+<!-- MATH: $\varphi_1=\tilde\varphi_1+\tfrac 12\tilde\varphi_{10}$ -->
+<IMG
+ WIDTH="130" HEIGHT="39" ALIGN="MIDDLE" BORDER="0"
+ SRC="img15.gif"
+ ALT="$\varphi_1=\tilde\varphi_1+\tfrac 12\tilde\varphi_{10}$">;
+the support of these
+three shape functions are 
+<!-- MATH: $\mathrm{supp}(\varphi_1)=Q_0\cup Q_2\cup Q_2$ -->
+<IMG
+ WIDTH="212" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img16.gif"
+ ALT="$\mathrm{supp}(\varphi_1)=Q_0\cup Q_2\cup Q_2$">,
+
+<!-- MATH: $\mathrm{supp}(\tilde \varphi_1)=Q_0\cup Q_2$ -->
+<IMG
+ WIDTH="169" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img17.gif"
+ ALT="$\mathrm{supp}(\tilde \varphi_1)=Q_0\cup Q_2$">,
+and
+
+<!-- MATH: $\mathrm{supp}(\tilde\varphi_{10})=Q_2\cup Q_3$ -->
+<IMG
+ WIDTH="176" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img18.gif"
+ ALT="$\mathrm{supp}(\tilde\varphi_{10})=Q_2\cup Q_3$">,
+respectively. 
+<!-- MATH: $\tilde\varphi_1$ -->
+<IMG
+ WIDTH="25" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img19.gif"
+ ALT="$\tilde\varphi_1$">
+is
+discontinuous along the line <I>P</I><SUB>1</SUB>-<I>P</I><SUB>10</SUB>, while 
+<!-- MATH: $\tilde\varphi_{10}$ -->
+<IMG
+ WIDTH="31" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+ SRC="img20.gif"
+ ALT="$\tilde\varphi_{10}$">
+is
+discontinuous along the whole line <I>P</I><SUB>1</SUB>-<I>P</I><SUB>2</SUB>, because
+
+<!-- MATH: $\tilde\varphi_{10}|_{Q_0}\equiv 0$ -->
+<IMG
+ WIDTH="90" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="img21.gif"
+ ALT="$\tilde\varphi_{10}\vert _{Q_0}\equiv 0$">.
+
+<P>
+This representation of basis functions
+implies that  a function <IMG
+ WIDTH="58" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="img5.gif"
+ ALT="$u\in V_h$">
+must  be representable as 
+<!-- MATH: $u=C\tilde u$ -->
+<IMG
+ WIDTH="66" HEIGHT="18" ALIGN="BOTTOM" BORDER="0"
+ SRC="img22.gif"
+ ALT="$u=C\tilde u$">
+with
+some  function 
+<!-- MATH: $\tilde u\in\tilde  V_h$ -->
+<IMG
+ WIDTH="58" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img23.gif"
+ ALT="$\tilde u\in\tilde V_h$">,
+where in  the  latter representation we
+identified   the  function <I>u</I> by  the  vector   of   its    nodal
+values. For the grid in Figure <A HREF="node3.html#fig:hanging-nodes"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+ SRC="/data/allarch/usr/latex2html/icons.gif/cross_ref_motif.gif"></A> and bilinear elements,
+the matrix <I>C</I> has the following form:
+<BR><P></P>
+<DIV ALIGN="CENTER">
+<!-- MATH: \begin{equation*}
+C \in R^{10 \times 11}, \qquad
+C_{ii}=1, \qquad
+  C_{1,10} = C_{2,10} = \tfrac 12.
+\end{equation*} -->
+
+
+<IMG
+ WIDTH="382" HEIGHT="35"
+ SRC="img24.gif"
+ ALT="\begin{displaymath}C \in R^{10 \times 11}, \qquad
+C_{ii}=1, \qquad
+C_{1,10} = C_{2,10} = \tfrac 12.
+\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+All other entries are zero. Since most of the columns (notably those belonging to
+non-constrained nodes) consist only of the diagonal entry, we only need store
+those columns that deviate from this form. Note that for simplicity we have here
+numbered the only constrained node such that it is the last one. This way,
+nodal numbers for <I>V</I><SUB><I>h</I></SUB> can be chosen to be the same as for 
+<!-- MATH: $\tilde V_h$ -->
+<IMG
+ WIDTH="24" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img3.gif"
+ ALT="$\tilde V_h$">,
+simply
+dropping the numbers of constrained nodes following those of unconstrained
+ones. If we had not chosen this numbering, we would need to permute the rows
+in <I>C</I>, which would move the entries in rows of unconstrained nodes to
+nondiagonal places.
+
+<P>
+We can now restate the problem as follows: <I>find 
+<!-- MATH: $\tilde u\in \tilde V_h$ -->
+<IMG
+ WIDTH="58" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img23.gif"
+ ALT="$\tilde u\in\tilde V_h$">
+such that for all 
+<!-- MATH: $\tilde v\in \tilde V_h$ -->
+<IMG
+ WIDTH="57" HEIGHT="43" ALIGN="MIDDLE" BORDER="0"
+ SRC="img25.gif"
+ ALT="$\tilde v\in \tilde V_h$"></I>
+<BR>
+<IMG
+ WIDTH="279" HEIGHT="21" ALIGN="BOTTOM" BORDER="0"
+ SRC="img26.gif"
+ ALT="\begin{gather*}\tilde v_i C_{i j} a(\tilde\varphi_j,\tilde\varphi_k) C_{l k}\tilde u_k
+=
+\tilde v_i C_{i j} (\varphi_j,f),
+\end{gather*}">
+<BR>
+which amounts to solving the linear system of equations
+<BR>
+<IMG
+ WIDTH="120" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img27.gif"
+ ALT="\begin{gather*}C\tilde A C^T \tilde u = C \tilde f.
+\end{gather*}">
+<BR>
+It  should  be noted that  <IMG
+ WIDTH="19" HEIGHT="21" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$\tilde A$">
+is assembled   as  usual, i.e. cell-wise
+without the need to  look at the neighboring  cells, and that it is relatively
+simple to generate 
+<!-- MATH: $C\tilde A C^T$ -->
+<IMG
+ WIDTH="59" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img29.gif"
+ ALT="$C\tilde A C^T$">
+in-place, i.e. without the need for another
+matrix where we copy the  result into. In particular,  the sparsity pattern of
+<IMG
+ WIDTH="19" HEIGHT="21" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$\tilde A$">
+can be obtained   from that of <I>A</I> by filling in some  additional
+places  that can  be computed beforehand.  The  same holds for the  right hand
+side. These properties result from the fact that each hanging node may only be
+constrained once, which however limits the difference in refinement to one
+level of cells in three space dimensions that are adjacent at one edge only.
+  
+In order to see how this property-conservation can be obtained, we use another
+matrix <IMG
+ WIDTH="20" HEIGHT="23" ALIGN="BOTTOM" BORDER="0"
+ SRC="img30.gif"
+ ALT="$\hat C$">
+instead of <I>C</I>, where we add additional rows for each
+constrained node such that it becomes square. In doing so, there is no need to
+renumber the degrees of freedom in a way as to order constrained nodes to the
+end. The additional rows in <IMG
+ WIDTH="20" HEIGHT="22" ALIGN="BOTTOM" BORDER="0"
+ SRC="img31.gif"
+ ALT="$\tilde C$">
+are set to zero only and the diagonal
+elements of all rows apart from the newly added ones are equal to one, which
+allows for very efficient storage mechanisms. Multiplying <IMG
+ WIDTH="19" HEIGHT="21" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$\tilde A$">by <IMG
+ WIDTH="30" HEIGHT="23" ALIGN="BOTTOM" BORDER="0"
+ SRC="img32.gif"
+ ALT="$\hat C^T$">
+from the right, only multiplication with rows in <IMG
+ WIDTH="20" HEIGHT="23" ALIGN="BOTTOM" BORDER="0"
+ SRC="img30.gif"
+ ALT="$\hat C$">
+have
+to be taken care of that contain either only zeroes (resulting in a blanked
+out column in 
+<!-- MATH: $\tilde A\hat C^T$ -->
+<IMG
+ WIDTH="44" HEIGHT="23" ALIGN="BOTTOM" BORDER="0"
+ SRC="img33.gif"
+ ALT="$\tilde A\hat C^T$">
+for each constrained node) or that contain
+entries other than only the diagonal entry, which are nodes that constrain
+another one (resulting in multiples of some columns being added to other
+columns).  The multiplication with <IMG
+ WIDTH="20" HEIGHT="23" ALIGN="BOTTOM" BORDER="0"
+ SRC="img30.gif"
+ ALT="$\hat C$">
+from the left can be done along
+the same lines.
+
+<P>
+In practice, due to the special structure of <IMG
+ WIDTH="20" HEIGHT="23" ALIGN="BOTTOM" BORDER="0"
+ SRC="img30.gif"
+ ALT="$\hat C$">,
+multiplication by <IMG
+ WIDTH="20" HEIGHT="23" ALIGN="BOTTOM" BORDER="0"
+ SRC="img30.gif"
+ ALT="$\hat C$">
+from the left and <IMG
+ WIDTH="30" HEIGHT="23" ALIGN="BOTTOM" BORDER="0"
+ SRC="img32.gif"
+ ALT="$\hat C^T$">
+from the right can be done at the same time
+and with writing the results into the same matrix where previously <IMG
+ WIDTH="19" HEIGHT="21" ALIGN="BOTTOM" BORDER="0"
+ SRC="img28.gif"
+ ALT="$\tilde A$">was stored. We call this process <I>condensation</I>. Lines and columns
+belonging to constrained nodes are filled with zeroes, effectively eliminating
+these degrees of freedom from the system of equations in the same way as if we
+used the original matrix <I>C</I>.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html72"
+ HREF="node4.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/data/allarch/usr/latex2html/icons.gif/next_motif.gif"></A> 
+<A NAME="tex2html70"
+ HREF="main.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/data/allarch/usr/latex2html/icons.gif/up_motif.gif"></A> 
+<A NAME="tex2html64"
+ HREF="node2.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/data/allarch/usr/latex2html/icons.gif/previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html73"
+ HREF="node4.html">Iterative solvers</A>
+<B> Up:</B> <A NAME="tex2html71"
+ HREF="main.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html65"
+ HREF="node2.html">Grid handling</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Wolfgang Bangerth</I>
+<BR><I>1999-12-22</I>
+</ADDRESS>
+</BODY>
+</HTML>

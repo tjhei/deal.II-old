@@ -41,8 +41,6 @@
 #include <sys/errno.h>
 
 
-pid_t master_pid;
-
 
 namespace CommunicationsLog
 {
@@ -134,7 +132,7 @@ void die (const std::string &text, const T1 t1, const T2 t2)
  * about the parent process, so it is apparently gone
  */
 extern "C"
-void monitor_parent_liveness () 
+void monitor_parent_liveness (const pid_t master_pid) 
 {
 #ifdef HAVE_STD_STRINGSTREAM
   std::ostringstream s;
@@ -223,13 +221,14 @@ int main ()
                                    // of the master process, so that
                                    // we can check whether it is still
                                    // alive or not...
+  pid_t master_pid;
   get (&master_pid, 1, "master_pid");
                                    // ...and start off a thread that
                                    // actually checks that
   Threads::ThreadManager thread_manager;
   Threads::spawn (thread_manager,
                   Threads::encapsulate (&monitor_parent_liveness)
-                  .collect_args());
+                  .collect_args(master_pid));
   
                                    // then go into the action loop...
   unsigned int N, NZ, NSTEPS, LA, MAXFRT, LIW;

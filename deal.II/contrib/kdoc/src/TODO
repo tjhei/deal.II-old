@@ -24,6 +24,11 @@ check namespaces
 
 HTML: links are screwed (multiple escapes somewhere).
 
+If a member function is defined inline outside of the class, then it
+is listed again in the class docs as a separate method; it is not
+identified with the preexisting one, which was declared in the class.
+
+
 General
 -------
 Running kdoc in-place

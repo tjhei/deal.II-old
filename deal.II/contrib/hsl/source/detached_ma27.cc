@@ -74,7 +74,7 @@ namespace CommunicationsLog
     
     for (std::list<Record>::const_iterator i=communication_log.begin();
          i!=communication_log.end(); ++i)
-      std::cerr << "-- "
+      std::cerr << "-- " << getpid() << ' '
                 << (i->direction == put ? "put" : "get")
                 << " "
                 << i->count << " objects of type "
@@ -93,9 +93,10 @@ namespace CommunicationsLog
 /**
  * Output an error message and terminate the program.
  */
-void die (const std::string &text)
+void die (const std::string &text, const pid_t pid)
 {
-  std::cerr << "----- detached_ma27: " << text
+  sleep (rand()%5 + getpid()%5);
+  std::cerr << "----- detached_ma27(" << pid << "): " << text
             << std::endl;
   CommunicationsLog::list_communication ();
   abort ();
@@ -107,9 +108,10 @@ void die (const std::string &text)
  * codes.
  */
 template <typename T1, typename T2>
-void die (const std::string &text, const T1 t1, const T2 t2)
+void die (const std::string &text, const T1 t1, const T2 t2, const pid_t pid)
 {
-  std::cerr << "----- detached_ma27: " << text
+  sleep (rand()%5 + getpid()%5);
+  std::cerr << "----- detached_ma27(" << pid << "): " << text
             << " code1=" << t1 << ", code2=" << t2
             << std::endl;
   CommunicationsLog::list_communication ();
@@ -128,21 +130,21 @@ void die (const std::string &text, const T1 t1, const T2 t2)
  * about the parent process, so it is apparently gone
  */
 extern "C"
-void monitor_parent_liveness (const pid_t master_pid) 
+void monitor_parent_liveness (const pid_t master_pid, const pid_t primary_pid) 
 {
   while (true)
     {
       int ret = kill (master_pid, 0);
       if (ret != 0)
         if ((ret == -1) && (errno == ESRCH))
-          die ("Master process seems to have died!");
+          die ("Master process seems to have died!", primary_pid);
         else
-          die ("Unspecified error while checking for other process!", ret, errno);
+          die ("Unspecified error while checking for other process!", ret, errno, primary_pid);
 
                                        // ok, master still running,
                                        // take a little rest and then
                                        // ask again
-      sleep (20);
+      sleep (10);
     };
 };
 
@@ -166,7 +168,7 @@ void put (const T *t, const size_t N, const char *debug_info)
                      sizeof(T) * N - count);
       while ((ret<0) && (errno==EINTR));
       if (ret < 0)
-        die ("error on client side in 'put'", ret, errno);
+        die ("error on client side in 'put'", ret, errno, getpid());
 
       count += ret;
     };
@@ -194,7 +196,7 @@ void get (T *t, const size_t N, const char *debug_info)
       while ((ret<0) && (errno==EINTR));
       
       if (ret < 0)
-        die ("error on client side in 'get'", ret, errno);
+        die ("error on client side in 'get'", ret, errno, getpid());
       else
         count += ret;
     };
@@ -218,7 +220,7 @@ int main ()
   Threads::ThreadManager thread_manager;
   Threads::spawn (thread_manager,
                   Threads::encapsulate (&monitor_parent_liveness)
-                  .collect_args(master_pid));
+                  .collect_args(master_pid, getpid()));
   
                                    // then go into the action loop...
   unsigned int N, NZ, NSTEPS, LA, MAXFRT, LIW;
@@ -340,7 +342,8 @@ int main ()
           
           default:
                 die ("Invalid action key", action,
-                     static_cast<unsigned short int>(action));
+                     static_cast<unsigned short int>(action),
+		     getpid());
         };
     };
                                    // exit here explicitly, without

@@ -1,7 +1,10 @@
 <a name="Results"></a>
 <h1>Results</h1>
 
-The output of the program looks as follows:
+The output of the program looks as follows (the number of iterations
+may vary by one or two, depending on your computer, since this is
+often dependent on the round-off accuracy of floating point
+operations, which differs between micro-processors):
 <pre>
 <code>
 Solving problem in 2 space dimensions.

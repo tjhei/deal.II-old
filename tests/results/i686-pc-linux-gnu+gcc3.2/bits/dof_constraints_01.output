@@ -4,16 +4,16 @@ DEAL::Number of cells: 115
 DEAL::Number of dofs: 116
 DEAL::Number of constraints: 0
 DEAL::|A|=0.00000
-DEAL::|B|=17.0000
+DEAL::|B|=364377.
 DEAL::2D
 DEAL::Number of cells: 1009
 DEAL::Number of dofs: 1301
 DEAL::Number of constraints: 459
 DEAL::|A|=0.00000
-DEAL::|B|=354.048
+DEAL::|B|=1.01084e+09
 DEAL::3D
 DEAL::Number of cells: 1023
 DEAL::Number of dofs: 1745
 DEAL::Number of constraints: 881
 DEAL::|A|=0.00000
-DEAL::|B|=8773.27
+DEAL::|B|=1.74728e+10

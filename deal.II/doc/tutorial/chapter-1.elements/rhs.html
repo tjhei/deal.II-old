@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+<!-- deal.II tutorial template
+     Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de> 1999 
+-->
+
+<title>The Problem Matrix and the Right Hand Side</title>
+    <link href="../dealtut.css" rel="StyleSheet" title="deal.II Tutorial">
+    <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+    <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
+</head>
+
+<!-- Page Body -->
+<body lang="en">
+
+<h1>The Problem Matrix and the Right Hand Side</h1>
+
+<p>
+Having talked a lot about the initialization of matrices and vectors
+we shall now discuss how to fill them. You have to:
+</p>
+<ol>
+  <li>Define a quadrature used for approximations. </li>
+  <li><a href="#calcfe">Calculate the trial functions</a> for the
+	finite elements and their faces. 
+  </li>
+  <li><a href="#integrate">Integrate the problem locally.</a></li>
+  <li>Insert your local matrix into the global one.</li>
+</ol>
+
+<h2><a name="calcfe">Calculating finite element trial functions</a></h3>
+
+<p>
+</p>
+
+<p class="Example">
+<span class="example">Example:</span>
+The two lines below calculate trial functions for the two-dimensional finite element <code>fe</code> and
+for its faces using Gaussian quadrature. The first line calculates the trial
+function for the finite element associated with the degree of freedom <code>dof</code>,
+updating the values of the gradients and of the Jacobi determinant multiplied by a
+weight function given by the quadrature <code>qc</code>. The second line 
+does the same for the faces of the finite element, updating the <code>JxW</code>
+values and the quadrature points.
+</p>
+<pre class="example">
+<code>
+// Calculate the trial functions on the cell faces.
+FEValues&lt;2&gt; fevalues(fe, qc, UpdateFlags(update_gradients |
+					   update_JxW_values));
+FEFaceValues&lt;2&gt; ffvalues(fe, qf,
+	UpdateFlags(update_JxW_values | update_q_points));
+</code>
+</pre>
+
+<h2><a name="integrate">Integrating the problem</a></h2>
+
+<p>
+Integration of a problem is performed locally, i.e. you have to traverse all
+the cells and integrate the problem on the cell. This implies that you need a local
+matrix to store your results. This local matrix must then be inserted 
+into the global problem matrix. 
+</p>
+
+<p class="example">
+<span class="example">Example: Integration of the two-dimensional Laplace-problem:</span>
+Integration is done locally. Therefore we need appropriate definitions for
+</p>
+<ul>
+<li>
+an index vector that will allow us to reassemble the global matrix later on
+</li>
+<li>a vector of doubles with the dimension of the number of degrees of freedom per cell
+</li>
+<li>and a square matrix of doubles with the same dimension</li>
+</ul>
+
+<pre class="example">
+<code>
+  vector&lt;int&gt; indices(fe.total_dofs);
+  Vector&lt;double&gt; elvec(fe.total_dofs);
+  
+  FullMatrix&lt;double&gt; elmat(fe.total_dofs);
+</code>
+</pre>
+
+<p class="example">
+Next we traverse all the cells and integrate the Laplace problem using the
+discretized Laplace operator. <tt>qc</tt> is a Gaussian
+<code>Quadrature&lt;dim&gt;</code>.
+</p>
+
+<p class="example">
+The outer loop traverses all the points of the quadrature <code>qc</code>.
+The inner two loops traverse the degrees of freedom of the finite element
+<code>fe</code> where <code>du</code> and <code>dv</code> are the gradients
+with respect to the quadrature points. <code>fevalues.JxW(k)</code> gives
+the Jacobi determinant multiplied by the weight of the quadrature point 
+<code>k</code>. Taken together the line <br>
+<code>
+elmat(i,j) += fevalues.JxW(k) * du * dv;
+</code>
+<br>
+gives the discretized Laplace operator.
+</p>
+
+<pre class="example">
+<code>
+// Integrate the problem locally...
+vector&lt;int&gt; indices(fe.total_dofs);
+Vector&lt;double&gt; elvec(fe.total_dofs);
+  
+FullMatrix&lt;double&gt; elmat(fe.total_dofs);
+  
+for (DoFHandler&lt;2&gt;::active_cell_iterator c = dof.begin_active()
+               				; c != dof.end() ; ++c)
+{
+  fevalues.reinit(c, stb);
+  elmat.clear();
+  elvec.clear();
+  c->get_dof_indices(indices);
+    
+  for (unsigned k=0;k<qc.n_quadrature_points;++k)
+  {
+    for (unsigned i=0;i<fe.total_dofs;++i)
+    {
+      const Point&lt;2&gt; dv = fevalues.shape_grad(i,k);
+
+	
+      for (unsigned j=0;j<fe.total_dofs;++j)
+      {
+	const Point&lt;2&gt; du = fevalues.shape_grad(j,k);
+	  
+	elmat(i,j) += fevalues.JxW(k)
+                      * du * dv
+		      ;
+	  
+      }
+    }
+  }
+  // ...and insert the local matrix into the global one.
+  for (unsigned i=0;i<fe.total_dofs;++i)
+  {
+    f(indices[i]) += elvec(i);
+            
+    for (unsigned j=0;j<fe.total_dofs;++j)
+    {
+      A.add(indices[i], indices[j], elmat(i,j));
+    }
+  }
+}    
+
+</code>
+</pre>
+
+
+
+<!-- Page Foot -->
+<hr>
+<table class="navbar">      
+<tr>
+  <td>
+    <a href="boundary.html">Next Chapter: Boundary Conditions</a>
+  </td>
+  <td>
+    <a href="toc.html">Back to this chapter's index</a>
+  </td>
+  <td>
+    <a href="../index.html" target="_top">Back to the tutorial index</a>
+  </td>
+</tr>
+</table>
+<hr>
+<address>
+<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<p>
+Last modified: $Date$ 
+</p>
+</body>
+</html>
+
+

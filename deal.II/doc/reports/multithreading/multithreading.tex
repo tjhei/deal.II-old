@@ -417,25 +417,6 @@ message (using gcc 2.95.2):
   er.h:486:                 ThreadManager::MemFunData2<DoFHandler<2>,Fin
   iteElement<2> &,unsigned int>::MemFunData2(const ThreadManager::Mem_Fu
   n_Data2<DoFHandler<2>,FiniteElement<2> &,unsigned int> &)
-  test.cc:683:   instantiated from here
-  test.cc:190: no matching function for call to `ThreadManager::Mem_Fun_Da
-  ta2<DoFHandler<2>,FiniteElement<2> &,unsigned int>::MemFunData2 (Smart
-  Pointer<DoFHandler<2> > &, const FiniteElement<2> &, int, void (DoFHandl
-  er<2>::*)(const FiniteElement<2> &, unsigned int))'
-  /home/atlas1/wolf/program/newdeal/deal.II/base/include/base/thread_manag
-  er.h:470: candidates are: ThreadManager::MemFunData2<DoFHandler<2>,Fin
-  iteElement<2> &,unsigned int>::MemFunData2(DoFHandler<2> *, FiniteElem
-  ent<2> &, unsigned int, void * (DoFHandler<2>::*)(FiniteElement<2> &, un
-  signed int))
-  /home/atlas1/wolf/program/newdeal/deal.II/base/include/base/thread_manag
-  er.h:480:                 ThreadManager::MemFunData2<DoFHandler<2>,Fin
-  iteElement<2> &,unsigned int>::MemFunData2(DoFHandler<2> *, FiniteElem
-  ent<2> &, unsigned int, void (DoFHandler<2>::*)(FiniteElement<2> &, unsi
-  gned int))
-  /home/atlas1/wolf/program/newdeal/deal.II/base/include/base/thread_manag
-  er.h:486:                 ThreadManager::MemFunData2<DoFHandler<2>,Fin
-  iteElement<2> &,unsigned int>::MemFunData2(const ThreadManager::Mem_Fu
-  n_Data2<DoFHandler<2>,FiniteElement<2> &,unsigned int> &)
 \end{verbatim}
 
 While the compiler is certainly right to complain, the message is not very

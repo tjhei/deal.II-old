@@ -47,7 +47,7 @@ Create the constraints on the hanging nodes using
 <li>Close the constraints matrix using <code>void DoFHandler&lt;dim&gt;::constraints::close()</code>.
 This method is needed because you might wish to implement additional constraints
 (apart from those for the hanging nodes). This would have to be done before
-closing the object. So you can't have it closed automatically somewhere.
+closing the object; therefore you can't have it closed automatically somewhere.
 </li>
 <li>Finally, condense the hanging nodes into the matrix structure
 using <code>ConstraintMatrix::condense(SparseMatrixStruct &amp;)</code>.

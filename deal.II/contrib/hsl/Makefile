@@ -26,11 +26,7 @@ $(LIBDIR)/contrib/hsl/%.$(OBJEXT) :
 
 
 # rules
-ifeq ($(enable-shared),yes)
-  lib: $(LIBDIR)/libhsl.so $(LIBDIR)/bin/detached_ma27$(EXEEXT)
-else
-  lib: $(LIBDIR)/libhsl.a $(LIBDIR)/bin/detached_ma27$(EXEEXT)
-endif
+lib: $(LIBDIR)/libhsl.s $(LIBDIR)/bin/detached_ma27$(EXEEXT)
 
 
 $(LIBDIR)/libhsl.a: $(forward-declarations) $(o-files)

@@ -1,0 +1,235 @@
+%% $Id$
+
+\documentclass[a4paper]{report}
+\usepackage[latin1]{inputenc}
+\usepackage{vref}
+
+\newcommand{\dealii}{{\em deal.II\/}}
+
+\title{Report on the \dealii tutorial}
+\author{Jan Schrage\footnote{Universität Heidelberg, Institut für theoretische Astrophysik \& SFB 359}}
+
+\begin{abstract}
+We will describe the \dealii tutorial, its purpose
+its state at the time of this writing, the standards employed
+in writing it and the means to extend it.
+\end{abstract}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{\dealii}
+\label{sec:dealii}
+
+\dealii{} is a C++ class library for the solution of systems 
+of differential equations with finite element methods.
+
+\section{Purpose of the tutorial}
+\label{sec:purpose}
+There are about one thousand pages of documentation of the \dealii{}
+classes. However, there was not introductory documentation
+nor instructions on the use of \dealii{} before the start of this
+project. The purpose of this tutorial is to enable students or
+other persons interested in \dealii{} to get an overview of the
+methods employed and the use of the C++ classes. One should also
+be able to use it as a quick reference to look up concepts of \dealii{}.
+It should provide a background for a closer inspection
+of the existing class documentation. Its purpose is not to replace
+the class documentation but to complement it.
+
+We have chosen to write the tutorial for viewing on the world wide web
+in order to make it easily usable and
+easily adaptable to the rapid changes in \dealii{}. 
+
+\section{State of the tutorial}
+\label{sec:state}
+
+There are at the time of this writing two main parts of the tutorial:
+\begin{itemize}
+\item A general overview of the structure of a finite element program.
+  This is the most crucial part laying the background for working with
+  \dealii{}; it explains how and when to use what methods in a finite
+  element program. This part is up--to--date.
+\item The Laplace problem. This part gives a detailed explanation of
+  the source code of a program solving the stationary Laplace problem 
+  with \dealii{}. Due to the  rapid changes in \dealii{} the source
+  code of this part is not compatible with the current
+  version of \dealii{} any more.
+\end{itemize}
+Other parts can easily be added as needed.
+
+
+\section{Standards employed}
+\label{sec:standards}
+
+The \dealii{} tutorial makes use of HTML4 including frames and CSS1.
+None of its pages contain dynamic content, in particular they do not
+contain JavaScript\footnote{JavaScript is a registered trademark 
+of Sun Microsystems, inc.}
+and they do not require server--side preprocessing.
+
+\subsection{HTML4 and CSS}
+\label{sec:html4}
+
+The tutorial makes use of HTML4\footnote{c.f. \cite{html4,htmlhelp4,niederst:webdesign}}
+including frames
+and Cascading Style Sheets (CSS) Level 1.
+\footnote{c.f. \cite{css1,htmlhelpcss,niederst:webdesign}}
+Not all web browsers currently support CSS, we expect this technology
+to gain more widespread support in the near future. The browsers
+currently at use in the IWR support CSS and HTML 4.
+
+All the web pages has been validated against the HTML4 Document Type
+Definition (DTD)\footnote{c.f. \cite{html4dtd}} and is guaranteed to be
+correct. 
+
+
+\subsection{Practical implications}
+\label{sec:standards:implications}
+
+
+\subsubsection{Usability by third parties}
+
+\begin{list}{Frames}{}
+\item[Frames] Frames are supported by most web browsers, even older versions.
+  It is possible to view the tutorial without frames if a browser does not
+  support them.
+\item[HTML4] HTML4 to its full extent is supported by almost no browser; 
+  Netscape Navigator 4 (NN4) and Microsoft Internet Explorer 4 (MSIE4)
+  support a large
+  subset of HTML4 and even older browsers can render most of it. We have
+  taken care to use a subset of HTML4 mostly 
+  compatible with older versions of HTML. Browsers that do not 
+  support HTML4 will render small parts of the web pages incorrectly.
+\item[CSS] Cascading Style Sheets Level 1 to their full extent are not 
+  supported
+  by any browser currently available. Again, NN4 and MSIE4 support a large 
+  subset of CSS1. Browsers that do not support CSS1 will render the 
+  web pages differently but still in a way that leaves them usable.
+\end{list}
+The browsers in use at the IWR render all the web pages correctly.
+
+The use of CSS makes it possible to use different style sheets
+for different media types, i.e. paper or audio for the 
+blind. In the long and even medium run the usability of the tutorial
+is therefore very much increased. 
+
+\subsubsection{Writers}
+
+The practical implications for writers are more eminent:
+The use of CSS allows the separation of the page design from its content.
+Any writer extending the tutorial only needs to include the
+appropriate CSSs in order to produce a web page with the same
+design as the rest of the tutorial suitable for use with 
+different media. 
+
+At the time of this writing there is one style sheet in use, suitable
+for both screen and print media. The \dealii{} tutorial does not yet 
+use audio style sheets.
+
+\section{Use of templates}
+\label{sec:templates}
+
+In order to facilitate the extension of the tutorial there
+are a number of template files for recurring elements.
+Anybody who wishes to use such an element only need to include
+and adapt the appropriate template. Where replacements
+are needed in a template they are prefixed with ``INSERT_''
+to ease the adaption to any specific case.
+
+A more detailed explanation is provided in \vref{steps}.
+
+
+\section{A question of style}
+\label{sec:style}
+
+Within the \dealii{} tutorial style and content are (with very few 
+exceptions) strictly separated. This makes the design easily changeable
+and adaptable to different needs. It also helps to keep the design 
+and style consistent throughout the tutorial. 
+We have used abstract HTML markup, defining classes for different
+element types. The visual markup of each class for different media
+is defined in the style sheets. 
+
+We have taken care to ensure easy and consistent means of navigation
+throughout the tutorial; we have also tried to suit the needs of 
+users and not those of programmers of \dealii{}.
+
+
+\section{Feedback so far}
+\label{sec:feedback}
+
+Feedback on the tutorial so far has been little, but positive.
+The methods of navigation and the general look and feel of the
+\dealii{} tutorial have met with agreement.
+
+The most eminent wish by students was that more examples in the 
+way of working programs should be provided to complement the
+tutorial. At the time of this writing the examples provided
+are stripped of program code that is not strictly necessary 
+to develop an understanding of the principles. In particular,
+there are usually no compilable and runnable programs provided. 
+
+\appendix
+
+\section{Directory structure}
+\label{sec:directories}
+
+All the relevant files and directories are contained in the directory 
+{\tt doc/tutorial} in the \dealii{} directory structure.
+At the moment the following subdirectories and files exist on the top
+level:
+
+\begin{tabular}[H]{l|r|r|p{6cm}}
+Name & Revision number & Description \\
+\hline
+index.html & & tutorial entry page \\
+dealtut.css & & CSS1 style sheet, media: screen \\
+templates/ & --- & template directory \\
+figures/ & --- & figures in {\tt eps} or {\tt fig} format\\
+images/ & --- & figures in {\tt gif} format for the web pages\\
+glossary/ & --- & glossary explaining the terms used \\
+scripts/ & --- & scripts for maintenance and validation\\
+tex/ & --- & reports \\
+00.fe_structure/ & --- & Chapter 0: Structure of a finite element program \\
+01.laplace/ & --- & Chapter 1: The Laplace problem\\
+\end{tabular}
+
+
+\section{Extending the tutorial -- step by step}
+\label{steps}
+
+\begin{enumerate}
+\item Create a directory with the number and name of the new
+  chapter like ``02.newchapter''.
+\item Copy the following files from the directory ``templates''
+  into your new directory: 
+  {\tt
+  \begin{itemize}
+  \item toc.html
+  \item index.html
+  \item navbar.html
+  \item title.html
+  \item logo.html
+  \end{itemize}
+  }
+\item Adapt these files according to your needs. {\tt toc.html} contains
+  the long table of contents with explanations, {\tt navbar.html} the 
+  brief table of contents that can be seen on the left, {\tt index.html}
+  puts the layout of the frameset together and {\tt title.html} contains
+  the large chapter title on top.
+\item Create your web pages using {\tt body.html} from the template
+  directory. 
+\item For code examples use {\tt example.html} from the template
+  directory. This particular template can be inserted into any
+  web page.
+\item Create a link to your {\tt index.html} from the tutorial's 
+  entry page.
+\end{enumerate}
+
+\bibliography{tutorial}
+
+\end{document}

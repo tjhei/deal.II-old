@@ -14,6 +14,7 @@ $(example-htmls):
 	@cat ../../../deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc) \
 	  | perl program2html \
 	  >> $@
+	@cat $(@:.html=.results) >> $@
 	@cat ../../../deal.II/examples/step-by-step/$(@:.html=)/$(@:.html=.cc) \
 	  | perl program2plain \
 	  >> $@

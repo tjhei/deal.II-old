@@ -214,12 +214,12 @@ equation \eqref{eq:equation}, we may be tempted to consider the following
 expression for refinement of cell $K$:
 \begin{eqnarray}
   \label{eq:error-estimate}
-  \eta_K^2 =&
+  \eta_K^2 &=&
   h^2 \left\|
     (x-u_h^3) (u_h')^4 \left\{ u_h^2 (u_h')^2 + 5(x-u_h^3)u_h'' + 2u_h'(1-3u_h^2u_h') \right\}
   \right\|^2_K
   \notag \\
-  & +
+  && +
   h \left| (x-u_h^3)^2 [(u_h')^5] \right|^2_{\partial K},
 \end{eqnarray}
 where $[\cdot]$ is the jump of a quantity across an intercell boundary, and 

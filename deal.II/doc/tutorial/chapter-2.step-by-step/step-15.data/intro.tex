@@ -231,11 +231,12 @@ out of the jump operator.
 All these details actually matter -- while writing the program I have played
 around with many settings and different versions of the code, and the result
 is that if you don't have a good line search, good stopping criteria, the
-right metric (scalar product) for the gradient method, and a good refinement
-criterion, then the nonlinear solver gets stuck quite readily for this highly
-nonlinear problem. Initially, I was hardly able to find solutions for which
-the energy dropped below 0.005, while the energy after the final iteration of
-the program as it is is usually around 0.0003, and down to 3.5e-5.
+right metric (scalar product) for the gradient method, good initial values,
+and a good refinement criterion, then the nonlinear solver gets stuck quite
+readily for this highly nonlinear problem. Initially, I was hardly able to
+find solutions for which the energy dropped below 0.005, while the energy
+after the final iteration of the program as it is is usually around 0.0003,
+and occasionally down to 3.5e-5.
 
 However, this is not enough. In the program, we start the solver on the coarse
 mesh many times, with randomly perturbed starting values, and while it

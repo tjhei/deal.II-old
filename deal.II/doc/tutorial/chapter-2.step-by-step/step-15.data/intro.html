@@ -1,2 +1,795 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
+
+<H3><A NAME="SECTION00010000000000000000">
+Foreword</A>
+</H3>
+
+<P>
+This program demonstrates a number of techniques that have not been shown in
+previous example programs. In particular, it shows how to program for
+one-dimensional problems, and some aspects of what to do with nonlinear
+problems, in particular how to transfer the solution from one grid to the next
+finer one. Apart from this, however, the program does not attempt to do much
+more than to entertain those who sometimes like to play with maths.
+
+<P>
+The application we chose is, as you will see, not even very well suited for
+anything, since it is rather impossible to solve. When I started to write the
+program, I was not aware of this, and it only turned out later that the
+optimization problem we are looking at here is severely plagued by many,
+likely even degenerate minima, and that we cannot really hope to find a global
+one. What we do instead is to rather start the optimization from many initial
+guesses (which is cheap since the problem is 1d), and hope that we can get a
+reasonable best solution for some of them. While the whole thing, as an
+application, is not very satisfactory, keep in mind that solving particular
+applications is not the goal of the tutorial programs; rather, we would like
+to demonstrate techniques of programming with deal.II, which is indeed the
+focus here.
+
+<P>
+
+<H3><A NAME="SECTION00020000000000000000">
+The problem</A>
+</H3>
+
+<P>
+Now for a description of the problem.  In the book by Dacorogna on the
+Calculus of Variations, I found the following statement, which confused me
+tremendously at first (see Section 3.4.3, ``Lavrentiev Phenomenon'', very
+slightly edited):
+
+<P>
+<BLOCKQUOTE>
+<B>Theorem 4.6:</B> Let 
+  </BLOCKQUOTE><P><!-- MATH
+ \begin{displaymath}
+I(u)=\int_0^1 (x-u^3)^2 (u')^6\; dx.
+\end{displaymath}
+ -->
+</P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="201" HEIGHT="58" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img1.png"
+ ALT="$\displaystyle I(u)=\int_0^1 (x-u^3)^2 (u')^6\; dx.$">
+</DIV><P>
+</P><BLOCKQUOTE>
+  Let
+  </BLOCKQUOTE><P><!-- MATH
+ \begin{displaymath}
+{\cal W}_1 = \{ u\in W^{1,\infty}(0,1) : u(0)=0, u(1)=1 \}
+\end{displaymath}
+ -->
+</P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="305" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img2.png"
+ ALT="$\displaystyle {\cal W}_1 = \{ u\in W^{1,\infty}(0,1) : u(0)=0, u(1)=1 \}
+$">
+</DIV><P>
+</P><P><!-- MATH
+ \begin{displaymath}
+{\cal W}_2 = \{ u\in W^{1,1}(0,1) : u(0)=0, u(1)=1 \}
+\end{displaymath}
+ -->
+</P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="299" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img3.png"
+ ALT="$\displaystyle {\cal W}_2 = \{ u\in W^{1,1}(0,1) : u(0)=0, u(1)=1 \}
+$">
+</DIV><P>
+</P>
+<P>
+<BLOCKQUOTE>Then
+  </BLOCKQUOTE><P><!-- MATH
+ \begin{displaymath}
+\inf_{u\in {\cal W}_1} I(u) \ge c_0 > 0 = \inf_{u\in {\cal W}_2} I(u).
+\end{displaymath}
+ -->
+</P>
+<DIV ALIGN="CENTER">
+<IMG
+ WIDTH="228" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img4.png"
+ ALT="$\displaystyle \inf_{u\in {\cal W}_1} I(u) \ge c_0 &gt; 0 = \inf_{u\in {\cal W}_2} I(u).
+$">
+</DIV><P>
+</P><BLOCKQUOTE>
+  Moreover the minimum of <IMG
+ WIDTH="33" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img5.png"
+ ALT="$ I(u)$">
+ over <!-- MATH
+ ${\cal W}_2$
+ -->
+<IMG
+ WIDTH="26" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img6.png"
+ ALT="$ {\cal W}_2$">
+ is attained by
+  <!-- MATH
+ $u(x)=x^{1/3}$
+ -->
+<IMG
+ WIDTH="84" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img7.png"
+ ALT="$ u(x)=x^{1/3}$">
+. 
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>R<SMALL>EMARKS.</SMALL>
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>[...]
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>ii) it is interesting to note that if one uses the usual finite element
+  methods (by taking piecewise affine functions, which are in <!-- MATH
+ $W^{1,\infty}$
+ -->
+<IMG
+ WIDTH="44" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img8.png"
+ ALT="$ W^{1,\infty}$">
+)
+  one will not be able to detect the minimum of some integrals such as the one
+  in the theorem.
+
+</BLOCKQUOTE>
+In other words: minimizing the energy functional over one space
+(<!-- MATH
+ $W^{1,\infty}$
+ -->
+<IMG
+ WIDTH="44" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img8.png"
+ ALT="$ W^{1,\infty}$">
+) does not give the same value as when minimizing over a larger
+space (<IMG
+ WIDTH="38" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img9.png"
+ ALT="$ W^{1,1}$">
+). Furthermore, they give a rough estimate of the value of the
+constant <IMG
+ WIDTH="17" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img10.png"
+ ALT="$ c_0$">
+, which is <!-- MATH
+ $c_0=\tfrac{7^23^5}{2^{18}5^5}\approx 1.61\cdot
+10^{-6}$
+ -->
+<IMG
+ WIDTH="167" HEIGHT="41" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img11.png"
+ ALT="$ c_0=\tfrac{7^23^5}{2^{18}5^5}\approx 1.61\cdot
+10^{-6}$">
+ (although by their calculation it is obvious that this estimate is
+far too small, but the point of course is just to show that it is strictly
+larger than zero).
+
+<P>
+While the theorem was not surprising, the remark stunned me at first. After
+all, we know that we can approximate functions in <IMG
+ WIDTH="38" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img9.png"
+ ALT="$ W^{1,1}$">
+ to arbitrary
+accuracy.  Also, although it is true that finite element functions are in
+<!-- MATH
+ $W^{1,\infty}$
+ -->
+<IMG
+ WIDTH="44" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img8.png"
+ ALT="$ W^{1,\infty}$">
+, this statement is not really accurate: if the function itself
+is bounded pointwise by, say, a constant <IMG
+ WIDTH="16" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img12.png"
+ ALT="$ C$">
+, then its gradient is bounded by
+<IMG
+ WIDTH="40" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img13.png"
+ ALT="$ 2C/h$">
+, and thus <!-- MATH
+ $\|u_h\|_{1,\infty} \le 2C/h$
+ -->
+<IMG
+ WIDTH="118" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img14.png"
+ ALT="$ \Vert u_h\Vert _{1,\infty} \le 2C/h$">
+. That means that we should be
+able to lift this limit just by mesh refinement. Finite element functions are
+therefore only in <!-- MATH
+ $W^{1,\infty}$
+ -->
+<IMG
+ WIDTH="44" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img8.png"
+ ALT="$ W^{1,\infty}$">
+ if one considers them on a fixed grid, not on
+a sequence of successively finer grids. (Note, we can only lift the
+boundedness in <IMG
+ WIDTH="38" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img9.png"
+ ALT="$ W^{1,1}$">
+ in the same way by considering functions that
+oscillate at cell frequency; these, however, do not converge in any reasonable
+measure.)
+
+<P>
+So it took me a while to see where the problem lies. Here it is: While we are
+able to approximate functions to arbitrary accuracies in <I>Sobolev
+  norms</I>, this does not necessarily also hold with respect to the functional
+<IMG
+ WIDTH="33" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img5.png"
+ ALT="$ I(u)$">
+!  After all, this functional was made to show exactly these
+pathologies.
+
+<P>
+What happens in this case is actually not so difficult to understand. Let us
+look at what happens if we plug the lowest-order (piecewise linear)
+interpolant <IMG
+ WIDTH="26" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img15.png"
+ ALT="$ i_hu$">
+ of the optimal solution <IMG
+ WIDTH="62" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img16.png"
+ ALT="$ u=x^{1/3}$">
+ into the functional
+<IMG
+ WIDTH="33" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img5.png"
+ ALT="$ I(u)$">
+: on the leftmost cell, the left end of <IMG
+ WIDTH="26" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img15.png"
+ ALT="$ i_hu$">
+ is tagged to zero by the
+boundary condition, and the right end has the value <!-- MATH
+ $i_hu(h)=u(h)=h^{1/3}$
+ -->
+<IMG
+ WIDTH="150" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img17.png"
+ ALT="$ i_hu(h)=u(h)=h^{1/3}$">
+. So
+let us only consider the contribution of this single cell to <IMG
+ WIDTH="33" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img5.png"
+ ALT="$ I(u)$">
+:
+<BR>
+<DIV ALIGN="CENTER">
+<!-- MATH
+ \begin{eqnarray*}
+\int_0^h (x-(i_hu)^3)^2 ((i_hu)')^6 dx
+  &=&
+  \int_0^h (x-(h^{1/3}x)^3)^2 ((h^{1/3}/h)')^6 dx
+  \\
+  &=&
+  h^{-4} \int_0^h (x^2-2hx^4+h^2x^6) dx
+  \\
+  &=&
+  h^{-4} (h^3/3-2h^5/5+h^9/7)
+  \\
+  &=& {\cal O}(h^{-1}).
+\end{eqnarray*}
+ -->
+<TABLE CELLPADDING="0" ALIGN="CENTER" WIDTH="100%">
+<TR VALIGN="MIDDLE"><TD NOWRAP ALIGN="RIGHT"><IMG
+ WIDTH="194" HEIGHT="59" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img18.png"
+ ALT="$\displaystyle \int_0^h (x-(i_hu)^3)^2 ((i_hu)')^6 dx$"></TD>
+<TD WIDTH="10" ALIGN="CENTER" NOWRAP><IMG
+ WIDTH="15" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img19.png"
+ ALT="$\displaystyle =$"></TD>
+<TD ALIGN="LEFT" NOWRAP><IMG
+ WIDTH="233" HEIGHT="59" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img20.png"
+ ALT="$\displaystyle \int_0^h (x-(h^{1/3}x)^3)^2 ((h^{1/3}/h)')^6 dx$"></TD>
+<TD WIDTH=10 ALIGN="RIGHT">
+&nbsp;</TD></TR>
+<TR VALIGN="MIDDLE"><TD NOWRAP ALIGN="RIGHT">&nbsp;</TD>
+<TD WIDTH="10" ALIGN="CENTER" NOWRAP><IMG
+ WIDTH="15" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img19.png"
+ ALT="$\displaystyle =$"></TD>
+<TD ALIGN="LEFT" NOWRAP><IMG
+ WIDTH="207" HEIGHT="59" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img21.png"
+ ALT="$\displaystyle h^{-4} \int_0^h (x^2-2hx^4+h^2x^6) dx$"></TD>
+<TD WIDTH=10 ALIGN="RIGHT">
+&nbsp;</TD></TR>
+<TR VALIGN="MIDDLE"><TD NOWRAP ALIGN="RIGHT">&nbsp;</TD>
+<TD WIDTH="10" ALIGN="CENTER" NOWRAP><IMG
+ WIDTH="15" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img19.png"
+ ALT="$\displaystyle =$"></TD>
+<TD ALIGN="LEFT" NOWRAP><IMG
+ WIDTH="185" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img22.png"
+ ALT="$\displaystyle h^{-4} (h^3/3-2h^5/5+h^9/7)$"></TD>
+<TD WIDTH=10 ALIGN="RIGHT">
+&nbsp;</TD></TR>
+<TR VALIGN="MIDDLE"><TD NOWRAP ALIGN="RIGHT">&nbsp;</TD>
+<TD WIDTH="10" ALIGN="CENTER" NOWRAP><IMG
+ WIDTH="15" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img19.png"
+ ALT="$\displaystyle =$"></TD>
+<TD ALIGN="LEFT" NOWRAP><IMG
+ WIDTH="59" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img23.png"
+ ALT="$\displaystyle {\cal O}(h^{-1}).$"></TD>
+<TD WIDTH=10 ALIGN="RIGHT">
+&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL">
+
+Ups, even the contribution of the first cell blows up under mesh refinement,
+and we have not even summed up the contributions of the other cells!
+
+<P>
+It turns out, that the other cells are not really problematic (since the
+gradient is bounded there by a constant independent of <IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img24.png"
+ ALT="$ h$">
+), but we cannot
+really avoid the trouble with the first cell: if instead of the interpolant we
+choose some other finite element function that is closer on average to
+<IMG
+ WIDTH="32" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img25.png"
+ ALT="$ x^{1/3}$">
+ than the interpolant above, then we have to increase the slope of
+this function, since we have to obey the boundary condition at the left
+end. But then we are hit by the weight <IMG
+ WIDTH="36" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img26.png"
+ ALT="$ (u')^6$">
+. This weight is simply too
+strong!
+
+<P>
+On the other hand, the interpolation of the linear function <!-- MATH
+ $\varphi(x)=x$
+ -->
+<IMG
+ WIDTH="65" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img27.png"
+ ALT="$ \varphi(x)=x$">
+
+connecting the boundary values has the finite energy <!-- MATH
+ $I(i_h\varphi)=1/10$
+ -->
+<IMG
+ WIDTH="101" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img28.png"
+ ALT="$ I(i_h\varphi)=1/10$">
+,
+independent of the mesh size. Thus, <!-- MATH
+ $i_hx^{1/3}$
+ -->
+<IMG
+ WIDTH="46" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img29.png"
+ ALT="$ i_hx^{1/3}$">
+ cannot be the minimizer of the
+energy as <!-- MATH
+ $h\rightarrow 0$
+ -->
+<IMG
+ WIDTH="45" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img30.png"
+ ALT="$ h\rightarrow 0$">
+. This is also easy to see by noting that 
+the minimal value of <IMG
+ WIDTH="11" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img31.png"
+ ALT="$ I$">
+ cannot increase under mesh
+refinement: if it is finite for some function on some mesh, then it must be
+smaller or equal to that value on a finer mesh, since the original function is
+still in the space spanned by the shape functions on the finer grid, as finite
+element spaces are nested. However, the computation above shows that we should
+not be surprised if the value of the functional does not converge to zero, but
+rather some finite value.
+
+<P>
+There is one more conclusion to be drawn from the blow-up lesson above: we
+cannot expect the finite dimensional approximation to be close to the root
+function at the left end of the domain, for any mesh we choose! Because, if it
+would, then its energy would have to blow up. And we will see exactly this
+in the results section below.
+
+<P>
+
+<H3><A NAME="SECTION00030000000000000000">
+What to do?</A>
+</H3>
+
+<P>
+After this somewhat theoretical introduction, let us just once in our life
+have fun with pure mathematics, and actually see what happens in this problem
+when we run the finite element method on it. So here it goes: to find the
+minimum of <IMG
+ WIDTH="33" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img5.png"
+ ALT="$ I(u)$">
+, we have to find its stationary point. The condition for
+this reads
+<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+I'(u,\varphi)
+  = 
+  \int_0^1 6 (x-u^3) (u')^5 \{ (x-u^3)\varphi' - u^2 u' \varphi\}\ dx,
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="375" HEIGHT="58" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img32.png"
+ ALT="$\displaystyle I'(u,\varphi) = \int_0^1 6 (x-u^3) (u')^5 \{ (x-u^3)\varphi' - u^2 u' \varphi\}\ dx,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+for all test functions <IMG
+ WIDTH="13" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img33.png"
+ ALT="$ \varphi$">
+ from the same space as that from which we
+take <IMG
+ WIDTH="12" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img34.png"
+ ALT="$ u$">
+, but with zero boundary conditions. If this space allows us to
+integrate by parts, then we could associate this with a two point boundary
+value problem
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:equation"></A><!-- MATH
+ \begin{equation}
+-(x-u^3) u^2(u')^6
+  - \frac{d}{dx} \left\{(x-u^3)^2 (u')^5\right\} = 0,
+  \qquad\qquad u(0)=0,
+  \quad u(1)=1.
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="526" HEIGHT="52" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img35.png"
+ ALT="$\displaystyle -(x-u^3) u^2(u')^6 - \frac{d}{dx} \left\{(x-u^3)^2 (u')^5\right\} = 0, \qquad\qquad u(0)=0, \quad u(1)=1.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(1)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+Note that this equation degenerates wherever <IMG
+ WIDTH="50" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img36.png"
+ ALT="$ u^3=x$">
+, which is at least the
+case at <!-- MATH
+ $x\in\{0,1\}$
+ -->
+<IMG
+ WIDTH="70" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img37.png"
+ ALT="$ x\in\{0,1\}$">
+ due to the prescribed boundary values for <IMG
+ WIDTH="12" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img34.png"
+ ALT="$ u$">
+, but
+possibly at other places as well.  However, for finite elements, we will want
+to have the equation in weak form anyway.  Since the equation is still
+nonlinear, one may be tempted to we compute iterates
+<!-- MATH
+ $u_{k+1}=u_k+\alpha_k\delta u_k$
+ -->
+<IMG
+ WIDTH="136" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img38.png"
+ ALT="$ u_{k+1}=u_k+\alpha_k\delta u_k$">
+ using a Newton method for updates <!-- MATH
+ $\delta
+u_k$
+ -->
+<IMG
+ WIDTH="28" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img39.png"
+ ALT="$ \delta
+u_k$">
+, like in
+<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation*}
+I''(u_k,\delta u_k,\varphi)
+  = 
+  -I'(u_k, \varphi).
+\end{equation*}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="195" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img40.png"
+ ALT="$\displaystyle I''(u_k,\delta u_k,\varphi) = -I'(u_k, \varphi).$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+However, since <!-- MATH
+ $I''(u_k,\cdot,\cdot)$
+ -->
+<IMG
+ WIDTH="72" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img41.png"
+ ALT="$ I''(u_k,\cdot,\cdot)$">
+ may be an indefinite operator (and, as
+numerical experiments indicate, is in fact during typical computations), we
+don't want to use this. Instead, we use a gradient method, for which we
+compute updates according to the following scheme:
+<P></P>
+<DIV ALIGN="CENTER"><!-- MATH
+ \begin{equation}
+\left<\delta u_k,\varphi\right>
+  =
+  -I'(u_k, \varphi).
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="155" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img42.png"
+ ALT="$\displaystyle \left&lt;\delta u_k,\varphi\right&gt; = -I'(u_k, \varphi).$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(2)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+For the scalar product on the left hand side, there are multiple valid ways;
+we choose the mesh dependent definition <!-- MATH
+ $\left<u,v\right> = \int_\Omega (uv +
+h(x)^2 \nabla u\cdot \nabla v)\; dx$
+ -->
+<IMG
+ WIDTH="243" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img43.png"
+ ALT="$ \left&lt;u,v\right&gt; = \int_\Omega (uv +
+h(x)^2 \nabla u\cdot \nabla v)\; dx$">
+, where the weight <IMG
+ WIDTH="41" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img44.png"
+ ALT="$ h(x)^2$">
+, i.e. using
+the local mesh width, is chosen so that the definition is dimensionally
+consistent. It also yields a matrix on the left hand side that is simple to
+invert, as it is the sum of the well-conditioned mass matrix, and a Laplace
+matrix times a factor that counters the growth of condition number of the
+Laplace matrix.
+
+<P>
+The step length <IMG
+ WIDTH="21" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img45.png"
+ ALT="$ \alpha_k$">
+ is then computed using a one-dimensional line search
+finding
+<P></P>
+<DIV ALIGN="CENTER"><A NAME="eq:linesearch"></A><!-- MATH
+ \begin{equation}
+\alpha_k = \arg\min_\alpha I(u_k+\alpha\delta u_k),
+\end{equation}
+ -->
+<TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="193" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img46.png"
+ ALT="$\displaystyle \alpha_k = \arg\min_\alpha I(u_k+\alpha\delta u_k),$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+(3)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+or at least an approximation to this using a one-dimensional Newton method
+which itself has a line search. The details of this can be found in the code.
+We iterate the updates and line searches until the change in energy <IMG
+ WIDTH="41" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img47.png"
+ ALT="$ I(u_k)$">
+
+becomes too small to warrant any further iterations.
+
+<P>
+The basic idea that you should get in all this is that we formulate the
+optimization method in a function space, and will only discretize each step
+separately. A number of subsequent steps will be done on the same mesh, before
+we refine it and go on to do the same on the next finer mesh.
+
+<P>
+As for mesh refinement, it is instructional to recall how residual based error
+estimates like the one used in the Kelly et al.&nbsp;error estimator are usually
+derived (the Kelly estimator is the one that we have used in most of the
+previous example programs). In a similar way, by looking at the residual of
+the strong form of the nonlinear equation we attempt here to solve, see
+equation (<A HREF="#eq:equation">1</A>), we may be tempted to consider the following
+expression for refinement of cell <IMG
+ WIDTH="18" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img48.png"
+ ALT="$ K$">
+:
+<BR>
+<DIV ALIGN="CENTER"><A NAME="eq:error-estimate"></A><!-- MATH
+ \begin{eqnarray}
+\eta_K^2 &=&
+  h^2 \left\|
+    (x-u_h^3) (u_h')^4 \left\{ u_h^2 (u_h')^2 + 5(x-u_h^3)u_h'' + 2u_h'(1-3u_h^2u_h') \right\}
+  \right\|^2_K
+  \notag \\
+  && +
+  h \left| (x-u_h^3)^2 [(u_h')^5] \right|^2_{\partial K},
+\end{eqnarray}
+ -->
+<TABLE CELLPADDING="0" ALIGN="CENTER" WIDTH="100%">
+<TR VALIGN="MIDDLE"><TD NOWRAP ALIGN="RIGHT"><IMG
+ WIDTH="23" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img49.png"
+ ALT="$\displaystyle \eta_K^2$"></TD>
+<TD WIDTH="10" ALIGN="CENTER" NOWRAP><IMG
+ WIDTH="15" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img19.png"
+ ALT="$\displaystyle =$"></TD>
+<TD ALIGN="LEFT" NOWRAP><IMG
+ WIDTH="453" HEIGHT="42" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img50.png"
+ ALT="$\displaystyle h^2 \left\Vert
+(x-u_h^3) (u_h')^4 \left\{ u_h^2 (u_h')^2 + 5(x-u_h^3)u_h'' + 2u_h'(1-3u_h^2u_h') \right\}
+\right\Vert^2_K
+\notag$"></TD>
+<TD WIDTH=10 ALIGN="RIGHT">
+(4)</TD></TR>
+<TR VALIGN="MIDDLE"><TD NOWRAP ALIGN="RIGHT">&nbsp;</TD>
+<TD>&nbsp;</TD>
+<TD ALIGN="LEFT" NOWRAP><IMG
+ WIDTH="176" HEIGHT="42" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img51.png"
+ ALT="$\displaystyle +
+h \left\vert (x-u_h^3)^2 [(u_h')^5] \right\vert^2_{\partial K},$"></TD>
+<TD WIDTH=10 ALIGN="RIGHT">
+(5)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL">
+
+where <IMG
+ WIDTH="16" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img52.png"
+ ALT="$ [\cdot]$">
+ is the jump of a quantity across an intercell boundary, and 
+<!-- MATH
+ $|\cdot|_{\partial K}$
+ -->
+<IMG
+ WIDTH="43" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img53.png"
+ ALT="$ \vert\cdot\vert _{\partial K}$">
+ is the sum of the quantity evaluated at the two end
+points of a cell. Note that in the evaluation of the jump, we have made use of
+the fact that <IMG
+ WIDTH="49" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img54.png"
+ ALT="$ x-u_h^3$">
+ is a continuous quantity, and can therefore be taken
+out of the jump operator.
+
+<P>
+All these details actually matter - while writing the program I have played
+around with many settings and different versions of the code, and the result
+is that if you don't have a good line search, good stopping criteria, the
+right metric (scalar product) for the gradient method, good initial values,
+and a good refinement criterion, then the nonlinear solver gets stuck quite
+readily for this highly nonlinear problem. Initially, I was hardly able to
+find solutions for which the energy dropped below 0.005, while the energy
+after the final iteration of the program as it is is usually around 0.0003,
+and occasionally down to less than 3e-5.
+
+<P>
+However, this is not enough. In the program, we start the solver on the coarse
+mesh many times, with randomly perturbed starting values, and while it
+converges it yields a different solution, with a different energy every
+time. One can therefore not say that the solver converges to a certain energy,
+and we can't answer the question what the smallest value of <IMG
+ WIDTH="33" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img5.png"
+ ALT="$ I(u)$">
+ might be in
+<!-- MATH
+ $W^{1,\infty}$
+ -->
+<IMG
+ WIDTH="44" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-15.data/img8.png"
+ ALT="$ W^{1,\infty}$">
+. This is unsatisfactory, but maybe to be expected for such a
+contrived and pathological problem. Consider it an example in programming with
+deal.II then, and not an example in solving this particular problem.
+
+<P>
+
+<H3><A NAME="SECTION00040000000000000000">
+Implementation</A>
+</H3>
+
+<P>
+The program implements all the steps mentioned above, and we will discuss them
+in the commented code below. In general, however, note that formulating the
+Newton method in function spaces, and only discretizing afterwards has
+consequences: we have to linearize around <IMG
+ WIDTH="20" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img55.png"
+ ALT="$ u_k$">
+ when we want to compute
+<!-- MATH
+ $\delta u_k$
+ -->
+<IMG
+ WIDTH="28" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-15.data/img39.png"
+ ALT="$ \delta
+u_k$">
+, and we have to sum up these two functions afterwards.  However,
+they may be living on different grids, if we have refined the grid before this
+step, so we will have to present a way to actually get a function from one
+grid to another. The  SolutionTransfer class will help us here. On the
+other hand, discretizing every nonlinear step separately has the advantage
+that we can do the initial steps, when we are still far away from the
+solution, on a coarse mesh, and only go on to more expensive computations when
+we home in on an solution. We will use a
+very simplistic strategy for when we refine the mesh (every fifth nonlinear
+step), though. Realistic programs solving nonlinear problems will have to be more
+clever in this respect, but it suffices for the purposes of this program.
+
+<P>
+We will show some of the things that are really simple in 1d (but sometimes
+different from what we are used to in 2d or 3d). Apart from this, the program
+does not contain much new stuff, but if it explains a few of the techniques
+that are available for nonlinear problems and in particular 1d problems, then
+this is not so bad, after all.
+
+<P>
+<B>Note:</B> As shown below, the program starts the nonlinear solver from 10 different
+initial values, and outputs the results. This is not actually too many, but we
+did so to keep run-time short (around 1:30 minutes on my laptop). If you want to
+increase the number of realizations, you may want to switch to optimized mode
+(by setting the ``debug-mode'' flag in the Makefile to ``off''), and increase
+the number of realizations to a larger value. On the same machine as above, I
+can compute 100 realizations in optimized mode in about 2 minutes. For
+this particular program, the difference between debug and optimized mode is
+thus about a factor of 7-8, which can be explained by the fact that we ask the
+compiler to do optimizations on the code only in the latter mode, but in most
+part due to the fact that in optimized mode all the ``Assert'' checks are
+thrown out that make sure that function arguments are correct, and that check
+the internal consistency of the library. The library contains several
+thousands of these checks, and they significantly slow down debug
+computations, but we feel that the benefit of finding programming errors
+earlier and including where the problem exactly appeared to be of significantly
+greater value than faster run-time. After all, all production runs of programs
+should be done in optimized mode anyway.
+
+<P>
+A slowdown of a factor of 7-8 is unusual, however. For 2d and 3d applications,
+a typical value is around 4. 
+

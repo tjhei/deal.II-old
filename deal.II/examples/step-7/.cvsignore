@@ -1,3 +1,5 @@
 *.o *.go Makefile.dep *.gnuplot *.gmv *.eps
 step-7
 *.tex
+*.ii
+*.ti

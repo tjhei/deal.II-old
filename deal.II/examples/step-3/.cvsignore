@@ -1,3 +1,5 @@
 *.o *.go Makefile.dep *.gnuplot *.gmv *.eps
 step-3
 solution.gpl
+*.ii
+*.ti

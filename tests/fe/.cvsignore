@@ -1,7 +1,4 @@
 Makefile Makefile.depend
-*.dat
-fe_data_test
-mapping
-shapes
+*.output *.testcase
 *.go
 *.check

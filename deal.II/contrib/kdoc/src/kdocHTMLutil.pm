@@ -653,7 +653,7 @@ sub deref
 			# @url -- crosslink into the web. present the crosslink in
 			# the whole window, rather than in the present frame (i.e. "_top")
 			elsif ( $command eq "url" ) {
-			    $out .= "<a href=\"$content\" target="_top">$content</a>";
+			    $out .= "<a href=\"$content\" target=\"_top\">$content</a>";
 			}
 
 			# @begin{...} -- start environment

@@ -2,3 +2,4 @@ Make.depend
 *.go
 *.testcase
 *.output
+T

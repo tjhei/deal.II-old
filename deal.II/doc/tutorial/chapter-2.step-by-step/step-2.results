@@ -35,3 +35,7 @@ the main diagonal of the matrix after renumbering. Although this might
 not be apparent, the number of nonzero entries is the same in both
 pictures, of course.
 
+<p>
+
+A common observation is that the more refined the grid is, the better
+the clustering around the diagonal will get.

@@ -3,9 +3,9 @@
 
 <p>
 This example shows the basic usage of the multilevel functions in
-<tt>deal.II</tt>. It solves Helmholtz equation with Neumann boundary conditions
+<tt>deal.II</tt>. It solves the Helmholtz equation with Neumann boundary conditions
 to avoid additional complications due to Dirichlet boundary conditions (there,
-some library functionsare missing). In all other respects, it is similar to
+some library functions are missing). In all other respects, it is similar to
 step 5.
 </p>
 
@@ -16,14 +16,15 @@ have to be created before starting the multilevel method. These are
 <li>MGTransfer, the object handling transfer between grids
 <li>MGCoarse, the solver on the coarsest level
 <li>MGSmoother, the smoother on all other levels
-<li>MGMatrix, the matrix object having a special level multipplication.
+<li>MGMatrix, the matrix object having a special level multiplication, i.e. we
+basically store one matrix per grid level and allow multiplication with it.
 </ul>
 </p>
 
 <p>
 These objects are combined in an object of type Multigrid, containing the
 implementation of the V-cycle, which is in turn used by the preconditioner
-PreconditionMG, ready for plug-in into a linear slver of the LAC library.
+PreconditionMG, ready for plug-in into a linear solver of the LAC library.
 </p>
 
 <p>

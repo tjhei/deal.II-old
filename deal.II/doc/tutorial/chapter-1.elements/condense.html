@@ -41,7 +41,7 @@ You will have to:
 Create a global sparsity pattern (as described in the chapter on
 <a href="matrix_structure.html">matrix structure</a>) using 
 <code>void DoFTools::make_sparsity_pattern(const DoFHandler&lt;dim&gt; &amp;,
-                                           SparseMatrixStruct &amp;)</code></a>.
+                                           SparsityPattern &amp;)</code></a>.
 </li>
 <li>
 Create the constraints on the hanging nodes using 
@@ -56,7 +56,7 @@ This method is needed because you might wish to implement additional constraints
 closing the object; therefore you can't have it closed automatically somewhere.
 </li>
 <li>Finally, condense the hanging nodes into the matrix structure
-using <code>ConstraintMatrix::condense(SparseMatrixStruct &amp;)</code>.
+using <code>ConstraintMatrix::condense(SparsityPattern &amp;)</code>.
 </li>
 </ol>
 
@@ -74,7 +74,7 @@ function calls needed. Be sure to use them in their appropriate places.
 #include &lt;dofs/dof_tools.h&gt;
 
 const unsigned int dim=2; // Work in two dimensions, could also be three
-SparseMatrixStruct sparsity_pattern;
+SparsityPattern sparsity_pattern;
 DoFHandler&lt;dim&gt; dof_handler;
 ConstraintMatrix hanging_nodes; 
 

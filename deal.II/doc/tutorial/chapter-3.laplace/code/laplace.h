@@ -28,7 +28,7 @@ protected:
   Triangulation<2> tr;
   DoFHandler<2> dof;
 
-  SparseMatrixStruct matrix_structure;
+  SparsityPattern matrix_structure;
   AdvMatrix A;
   
   Vector<float> u;

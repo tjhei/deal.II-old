@@ -64,7 +64,7 @@ tell the matrix for which elements to allocate memory.
 <h3>The Standard Sparse Matrix</h3>
 <p>
 The <acronym>deal.II</acronym> function initializing a standard sparse matrix
-structure is <code>void SparseMatrixStruct::reinit(const unsigned int m, const unsigned int n, const unsigned int max_per_row)</code>. It takes as its arguments
+structure is <code>void SparsityPattern::reinit(const unsigned int m, const unsigned int n, const unsigned int max_per_row)</code>. It takes as its arguments
 the size of the matrix in question and the maximum number of non-zero elements
 in one row. This first sets up a blank sparsity pattern which,
 however, has as yet no information which entries are non-zero.
@@ -102,8 +102,8 @@ next subsection.
 <p>
 This matrix structure can then be used to serve as sparsity pattern to
 one or several matrices using 
-<code>void SparseMatrix::reinit(const SparseMatrixStruct&sparsity)</code>.
-We note the distinction that the <code>SparseMatrixStruct</code> only
+<code>void SparseMatrix::reinit(const SparsityPattern &amp;sparsity)</code>.
+We note the distinction that the <code>SparsityPattern</code> only
 stores the places of the non-zero elements, while the
 <code>SparseMatrix</code> actually stores the values of these
 elements. The separation was made since often several matrices are
@@ -124,7 +124,7 @@ appropriate places. This example initializes a sparse square matrix structure.
 
 
 const unsigned int dim=2; // For example
-SparseMatrixStruct sparsity_pattern;
+SparsityPattern sparsity_pattern;
 DoFHandler&lt;dim&gt; dof_handler;
 
 // set up a triangulation, refine it, associate the DoFHandler object
@@ -173,7 +173,7 @@ data. The reason for this is the way matrix structures and matrices are generate
       </li>
 </ul>
 
-The appropriate function is <code>void SparseMatrixStruct::compress()</code>.
+The appropriate function is <code>void SparsityPattern::compress()</code>.
 </p>
 
 <p class="Example">
@@ -194,7 +194,7 @@ partial differential equations couple to each other, or that the
 operators have a special structure. For this reason, there are more
 specialized version of the
 <code>DoFTools::make_sparsity_pattern</code> and 
-<code>SparseMatrixStruct::reinit</code> functions, which allow you to
+<code>SparsityPattern::reinit</code> functions, which allow you to
 more flexibly determine the actual number of non-zero elements of all
 or individual rows. See the documentation of the respective classes
 for more information.

@@ -586,7 +586,7 @@ struct swallow_assign {
 
 // "ignore" allows tuple positions to be ignored when using "tie". 
 namespace {
- detail::swallow_assign ignore;
+// detail::swallow_assign ignore;
 }
 
 // ---------------------------------------------------------------------------

@@ -592,6 +592,14 @@ sub identifyDecl
 		$newNode = newEnum( $enumname );
 	}
 
+	# friend class declaration
+	elsif ( $decl =~ /\s*((?:template\s*<.*>)?)
+		          \s*friend
+		          \s+((?:class|struct)\s+.*);/xs ) {
+	    print "Friend class: [$1] [$2]\n" if $debug;
+	    $newNode = newFriendClass ($2, $1);
+	}
+
 	# Class/Struct
 	elsif ( $decl =~ /^\s*((?:template\s*<.*>)?)      # 1 template
 					\s*(class|struct|union|namespace) # 2 struct type
@@ -1119,6 +1127,26 @@ sub newTypedef
 
 	return $node;
 }
+
+
+
+# note: at present we add nodes for friends, but we don't output them
+sub newFriendClass
+{
+	my ( $className, $templates ) = @_;
+
+	my ( $node ) = Ast::New( $name );
+
+	$node->AddProp( "NodeType", "friend class" );
+	$node->AddProp( "Name", $className );
+	$node->AddProp( "Templates", $templates );
+
+	kdocAstUtil::attachChild( $cNode, $node );
+
+	return $node;
+}
+
+
 
 =head2 newTypedefComp
 

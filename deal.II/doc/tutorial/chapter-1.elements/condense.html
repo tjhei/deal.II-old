@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+<!-- deal.II tutorial template
+     Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de> 1999 
+-->
+
+<title>Condensing the Hanging Nodes</title>
+    <link href="../dealtut.css" rel="StyleSheet" title="deal.II Tutorial">
+    <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+    <meta name="keywords" content="deal.II,deal.II tutorial,deal II">
+</head>
+
+<!-- Page Body -->
+<body lang="en">
+
+<h1>Condensing the Hanging Nodes</h1>
+
+<p>
+On locally refined grids you get <a href="hanging_nodes.html">hanging nodes</a>
+that need to be integrated into your problem matrix, and before that, into
+the <a href="matrix_Structure.html">matrix structure</a>. Hanging nodes are
+constrained degrees of freedom; these constraints need to be taken into
+account when dealing with them. 
+</p>
+<p>
+The <acronym>deal.II</acronym> class 
+that has the ability to handle constraint matrices is called 
+<a href="http://gaia.iwr.uni-heidelberg.de/~deal/doc/auto/kdoc/dof/ConstraintMatrix.html"><code>ConstraintMatrix</code></a>. It provides all functions
+necessary to condense hanging nodes into a matrix structure. 
+You will have to:
+<ol>
+<li>Clear the hanging nodes so there is no mess left from previous use.
+    Clearing them if they are already cleared doesn't hurt. This is
+    accomplished with the function <code>void ConstraintMatrix::clear()</code>.
+</li>
+<li>
+Create a global sparsity pattern (as described in the chapter on
+<a href="matrix_structure.html">matrix structure</a>) using 
+<code>void DoFHandler::make_sparsity_pattern(SparseMatrixStruct &amp;)</code></a>.
+</li>
+<li>
+Create the constraints on the hanging nodes using 
+<code>void DoFHandler::make_constraint_matrix(ConstraintMatrix &amp;)</code>. 
+</li>   
+<li>Close the constraints matrix using <code>void DoFHandler&lt;dim&gt;::constraints::close()</code>.
+This method is needed because you might wish to implement additional constraints
+(apart from those for the hanging nodes). This would have to be done before
+closing the object. So you can't have it closed automatically somewhere.
+</li>
+<li>Finally, condense the hanging nodes into the matrix structure
+using <code>ConstraintMatrix::condense(SparseMatrixStruct &amp;)</code>.
+</li>
+</ol>
+
+<p class="Example">
+<span class="example">Example:</span> We will create a
+constraint matrix for hanging nodes and condense the hanging nodes into our matrix structure. Below we show the includes,
+definitions and
+function calls needed. Be sure to use them in their appropriate places.
+</p>
+<pre class="example">
+<code>
+#include &lt;grid/dof.h&gt;
+#include &lt;lac/sparsematrix.h&gt;
+#include &lt;grid/dof_constraints.h&gt;
+
+int dim=2; // Work in two dimensions, could also be three
+SparseMatrixStruct&lt;double&gt; smstruct;
+DoFHandler&lt;dim&gt; dof;
+ConstraintMatrix&lt;dim&gt; hanging_nodes; 
+
+
+hanging_nodes.clear();
+dof.make_sparsity_pattern(smstruct);
+dof.make_hanging_nodes_constraints(hanging_nodes);
+dof.constraints.close();
+hanging_nodes.condense(matrix_structure);
+
+</code>
+</pre>
+
+<!-- Page Foot -->
+<hr>
+<table class="navbar">      
+<tr>
+  <td>
+    <a href="solve.html">Next Chapter: Solving the Problem</a>
+  </td>
+  <td>
+    <a href="toc.html">Back to this chapter's index</a>
+  </td>
+  <td>
+    <a href="../index.html" target="_top">Back to the tutorial index</a>
+  </td>
+</tr>
+</table>
+<hr>
+<address>
+<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<p>
+Last modified: $Date$ 
+</p>
+</body>
+</html>

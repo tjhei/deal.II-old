@@ -148,10 +148,10 @@ void monitor_parent_liveness (const pid_t master_pid)
     {
       int ret = std::system (command);
       if (ret < 0)
-        die ("detached_ma27: Monitor process couldn't start 'ps'!");
+        die ("Monitor process couldn't start 'ps'!");
       else
         if (ret != 0)
-          die ("---- detached_ma27: Master process seems to have died!");
+          die ("Master process seems to have died!");
 
                                        // ok, master still running,
                                        // take a little rest and then

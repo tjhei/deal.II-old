@@ -449,13 +449,13 @@ as above, and a function
 \begin{verbatim}
     template <typename Class, typename Arg1, typename Arg2>
     MemFunData<Class,Arg1,Arg2>
-    deduce_args (void (Class::*mem_fun_ptr)(Arg1, Arg2)) {
+    deduce_types (void (Class::*mem_fun_ptr)(Arg1, Arg2)) {
       return MemFunData<Class,Arg1,Arg2> (mem_fun_ptr);
     };
 \end{verbatim}
 If we call this function like this:
 \begin{verbatim}
-    deduce_args (&TestClass::test_function);
+    deduce_types (&TestClass::test_function);
 \end{verbatim}
 then it can unambiguously determine the template parameters to be
 \texttt{Class=TestClass}, \texttt{Arg1=int}, \texttt{Arg2=double}. 
@@ -463,23 +463,23 @@ then it can unambiguously determine the template parameters to be
 \paragraph{Encapsulating the parameters.}
 We should
 not try to include the arguments right away, for example by declaring
-\texttt{deduce\_args}
+\texttt{deduce\_types}
 \begin{verbatim}
     template <typename Class, typename Arg1, typename Arg2>
     MemFunData<Class,Arg1,Arg2>
-    deduce_args (void (Class::*mem_fun_ptr)(Arg1, Arg2),
-                 Arg1  arg1,
-                 Arg2  arg2,
-                 Class object) {
+    deduce_types (void (Class::*mem_fun_ptr)(Arg1, Arg2),
+                  Arg1  arg1,
+                  Arg2  arg2,
+                  Class object) {
       return MemFunData<Class,Arg1,Arg2> (mem_fun_ptr, object, arg1, arg2);
     };
 \end{verbatim}
 The reason is that for template functions, no parameter promotion is
 performed. Thus, if we called this function as in
 \begin{verbatim}
-    deduce_args (&TestClass::test_function,
-                 1, 3,
-                 test_object);
+    deduce_types (&TestClass::test_function,
+                  1, 3,
+                  test_object);
 \end{verbatim}
 then the compiler would refuse this since from the function pointer it must
 deduce that \texttt{Arg2=double}, but from the parameter ``3'' it must assume
@@ -514,8 +514,8 @@ One could instead write \texttt{MemFunData} like this:
 One would then create an object of this type including the parameters to be
 passed as follows:
 \begin{verbatim}
-    deduce_args (&TestClass::test_function).collect_args(1, 3,
-                                                         test_object);
+    deduce_types (&TestClass::test_function).collect_args(1, 3,
+                                                          test_object);
 \end{verbatim}
 Here, the first function call creates an object with the right template
 parameters, and the second one, calling a member function, fills in the
@@ -574,22 +574,22 @@ indirection, which indeed will be the last one:
 
     template <typename Class, typename Arg1, typename Arg2>
     Intermediate<Class,Arg1,Arg2>
-    deduce_args (void (Class::*mem_fun_ptr)(Arg1, Arg2)) {
+    deduce_types (void (Class::*mem_fun_ptr)(Arg1, Arg2)) {
       return Intermediate<Class,Arg1,Arg2> (mem_fun_ptr);
     };
 \end{verbatim}
 
 Now we can indeed write
 \begin{verbatim}
-    deduce_args (&TestClass::test_function).collect_args(1, 3,
-                                                         test_object);
+    deduce_types (&TestClass::test_function).collect_args(1, 3,
+                                                          test_object);
 \end{verbatim}
 The first call creates an object of type \texttt{Intermediate<...>} with the
 right parameters, while the second call, a call to a member function of that
 intermediate class, generates the final object we are interested in, including
 the member function pointer and all necessary parameters. Since
 \texttt{collect\_args} already has its template parameters fixed from
-\texttt{deduce\_args}, it can convert between data types.
+\texttt{deduce\_types}, it can convert between data types.
 
 
 \paragraph{Using these objects.} Now we have an object of the correct type
@@ -629,14 +629,14 @@ What can we do here? Assume we have the following structure in the library:
     };
 \end{verbatim}
 
-Now, the call to \texttt{deduce\_args(...).collect\_args(...)} generates an
+Now, the call to \texttt{deduce\_types(...).collect\_args(...)} generates an
 object of type \texttt{MemFunEncapsulation}, which in turn stores a pointer to
 an object of type \texttt{MemFunBase}, here to \texttt{MemFunData<...>} with
 the correct template parameters. We can assigne the result to a variable the
 type of which does not contain any template parameters any more, as desired:
 \begin{verbatim}
     MemFunEncapsulation 
-        mem_fun_encapsulation = deduce_args (&TestClass::test_function)
+        mem_fun_encapsulation = deduce_types (&TestClass::test_function)
                                           .collect_args(1, 3, test_object);
 \end{verbatim}
 
@@ -675,7 +675,7 @@ which knows that the parameter it gets has the right data type to which it can
 be casted. Thus, we can now write the whole sequence of function calls:
 \begin{verbatim}
     MemFunEncapsulation 
-        mem_fun_encapsulation = deduce_args (&TestClass::test_function)
+        mem_fun_encapsulation = deduce_types (&TestClass::test_function)
                                           .collect_args(1, 3, test_object);
     spawn (mem_fun_encapsulation);
 \end{verbatim}

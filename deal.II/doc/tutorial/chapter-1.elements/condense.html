@@ -40,7 +40,8 @@ You will have to:
 <li>
 Create a global sparsity pattern (as described in the chapter on
 <a href="matrix_structure.html">matrix structure</a>) using 
-<code>void DoFHandler::make_sparsity_pattern(SparseMatrixStruct &amp;)</code></a>.
+<code>void DoFTools::make_sparsity_pattern(const DoFHandler&lt;dim&gt; &amp;,
+                                           SparseMatrixStruct &amp;)</code></a>.
 </li>
 <li>
 Create the constraints on the hanging nodes using 
@@ -70,6 +71,7 @@ function calls needed. Be sure to use them in their appropriate places.
 #include &lt;grid/dof.h&gt;
 #include &lt;lac/sparsematrix.h&gt;
 #include &lt;grid/dof_constraints.h&gt;
+#include &lt;basic/dof_tools.h&gt;
 
 const unsigned int dim=2; // Work in two dimensions, could also be three
 SparseMatrixStruct sparsity_pattern;
@@ -77,7 +79,7 @@ DoFHandler&lt;dim&gt; dof_handler;
 ConstraintMatrix hanging_nodes; 
 
 hanging_nodes.clear();
-dof_handler.make_sparsity_pattern(sparsity_pattern);
+DoFTools::make_sparsity_pattern(dof_handler, sparsity_pattern);
 dof_handler.make_hanging_nodes_constraints(hanging_nodes);
 hanging_nodes.close();
 hanging_nodes.condense(matrix_structure);

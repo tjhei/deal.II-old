@@ -89,7 +89,7 @@ number of non-zero entries per row.
 After having fixed the basic properties of the sparsity structure, we
 can tell it which entries actually are non-zero. This is again done
 using a library function,
-<code>DoFHandler::make_sparsity_pattern</code>. Then we have to take
+<code>DoFTools::make_sparsity_pattern</code>. Then we have to take
 into account that constraints due to hanging nodes (see the previous
 chapter) add some more non-zero entries, which is again done using 
 some library functions (see the example below). After this, we can
@@ -120,6 +120,7 @@ appropriate places. This example initializes a sparse square matrix structure.
 <code>
 #include &lt;grid/dof.h&gt;
 #include &lt;lac/sparsematrix.h&gt;
+#include &lt;basic/dof_tools.h&gt;
 
 
 const unsigned int dim=2; // For example
@@ -137,7 +138,7 @@ sparsity_pattern.reinit (dof_handler.n_dofs(),
                          dof_handler.max_couplings_between_dofs());
 
 // tell the sparsity pattern which entries are non-zero:
-dof_handler.make_sparsity_pattern (sparsity_pattern); 
+make_sparsity_pattern (dof_handler, sparsity_pattern); 
 
 // Condense the <a href="hanging_nodes.html">hanging nodes</a> into
 // the matrix structure, taking into account the constraints due to
@@ -192,7 +193,7 @@ Finally, we note that in some cases not all variables in a system of
 partial differential equations couple to each other, or that the
 operators have a special structure. For this reason, there are more
 specialized version of the
-<code>DoFHandler::make_sparsity_pattern</code> and 
+<code>DoFTools::make_sparsity_pattern</code> and 
 <code>SparseMatrixStruct::reinit</code> functions, which allow you to
 more flexibly determine the actual number of non-zero elements of all
 or individual rows. See the documentation of the respective classes

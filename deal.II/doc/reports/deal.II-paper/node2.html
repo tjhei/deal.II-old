@@ -168,7 +168,17 @@ to adaptive meshes:
   
   It should be noted that the grids  produced using this approach usually have
   relatively    steep  gradients at the   boundaries  between  two  regions of
-  different refinement depths, but refinement can be made very fast. Furthermore, transfer of data between meshes is highly accurate and fast.
+  different refinement depths, but refinement can be made very
+  fast. Furthermore, transfer of data between meshes is highly
+  accurate and fast. 
+  <p>
+  (Note: in parts of the literature, the term "structure mesh" is used
+  to indicate that the mesh is actually aligned along coordinate axes,
+  is equispaced, and so on. Sometimes, this is referred to as
+  ijk-meshes, because each grid point is identified with three
+  indices, i, j, and k. Everything else would then be an unstructured
+  grid. We use the weaker definition of "structured" as given above.)
+
 </UL>Since the additional information in structured meshes can be favorably
 used in multigrid algorithms as well as in the fast generation of new
 meshes from a given one, we chose the second approach. Furthermore,

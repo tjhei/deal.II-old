@@ -3,9 +3,10 @@
 print "<a name=\"CommProg\"></a>\n";
 print "<h1> The commented program</h1>\n";
 
-# ignore cvs tag
+# ignore comments at the start of the program. this includes CVS
+# tags and copyright notices.
 $_ = <>;
-while ( m!^/[/\*]+\s*.Id:!) {
+while ( m!^/[/\*]!) {
     $_ = <>;
 }
 
@@ -18,9 +19,6 @@ $state =  $comment_mode;
 print "<p>\n";
 
 while (<>) {
-    # ignore cvs tag
-    next if m!^/[/\*]+\s*.Id:!;
-
     # substitute special characters
     s/&/&amp;/g;
     s/</&lt;/g;

@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+<title>The Laplace Problem</title>
+    <link href="../dealtut.css" rel="StyleSheet" title="DEAL Tutorial">
+    <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de
+>">
+    <meta name="keywords" content="DEAL,DEAL tutorial">
+</head>
+<body lang="en">
+
+<h1>The Laplace Problem</h1>
+<p>
+We will start with a simple example for a differential equation to be solved
+with <strong>DEAL</strong>: the Laplace problem. We will try to solve the
+Laplace equation on a square where one of the four boundaries has a constant
+and the other three zero potential.</p>
+<p>
+In order to solve this problem we will need to:</p>
+<ul>
+<li>
+generate a triangulation, i.e. describe the grid on which the equation will be
+solved
+</li>
+<li>
+assemble the problem matrix, i.e. generate the matrix structure describing the
+laplace problem
+</li>
+<li>
+assemble matrices describing the boundary conditions
+</li>
+<li>
+let DEAL solve the problem
+</li>
+<li>
+take care of the data output
+</li>
+</ul>
+<p>
+</p>
+<p>
+This tutorial will accordingly be split into several chapters:</p>
+<ol>
+<li>
+<strong><a href="structure.html">Program structure</a></strong>
+<p>
+where the overall design of the program and its classes are discussed</p>
+</li>
+<li>
+<strong><a href="main.html">The main program</a></strong>
+<p>
+where we take a look at how DEAL is used</p>
+</li>
+<li>
+<strong><a href="laplace.html">The class Laplace</a></strong>
+<p>
+where some of the details of the problem generation and solution are
+discussed</p>
+</li>
+<li><p>
+<strong><a href="triangulation.html">Generating a
+triangulation</a></strong></p>
+<p>
+where a triangulation is generated and degrees of freedom are discussed</p>
+</li>
+<li>
+<strong><a href="assemble.html">Assembling the problem</a></strong>
+<p>
+where the matrices describing the problem and the boundary conditions are
+built</p>
+</li>
+<li>
+<strong><a href="solution.html">Solving the problem</a></strong>
+<p>
+where the problem is solved</p>
+</li>
+</ol>
+<hr>
+
+<p>
+<a href="../../index.html">Back to the tutorial index</a></p>
+<hr>
+<address>
+<a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<!-- Created: Tue Jan  5 12:50:29 MET 1999 -->
+<!-- hhmts start -->
+<p>
+Last modified: Tue 5 Jan 1999 <!-- hhmts end-->
+</p>
+</body>
+</html>

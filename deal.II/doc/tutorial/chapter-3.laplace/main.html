@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+   "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+  <title>DEAL tutorial: the Laplace problem</title>
+  <meta name="keyword" content="DEAL,DEAL tutorial">
+  <link href="../dealtut.css" rel="StyleSheet" media="screen" type="text/css" title="DEAL tutorial">
+  <meta name="author" content="Jan Schrage <schrage@gaia.iwr.uni-heidelberg.de>">
+  <meta name="keywords" content="DEAL,DEAL tutorial">
+</head>
+<body>
+
+<h1>The Laplace Problem</h1>
+  
+<h2>Main Program: <a href="../../../examples/01.laplace/main.cc">main.cc</a></h2>
+<p>
+The main program has several functions:
+</p>
+
+<ol>
+   <li> <a href="#program">Inclusion of the necessary headers and variable
+	definitions.</a>
+   </li>
+   <li>
+	<a href="#Data">Creation of a logfile and data logging.</a>
+   </li>
+   <li>
+	<a href="#Instantiation">Instantiation of  the C++ class <em>Laplace</em>
+	  dealing with the problem</a>.
+   </li>
+   <li>Calling the <em>Laplace</em> methods for assemblage and solution of the
+       problem.
+   </li>
+   <li>
+        Writing out of the output data and termination.
+   </li>
+</ol>
+    
+<p>
+We shall look at this in detail now:
+</p>
+    
+<h4><a name="Program">Program Header and Definitions</a></h4>
+    
+<p>
+First the header files containing the <em>Laplace</em> class definition and
+the function definition for our solution function are included:
+</p>
+
+<pre>
+<code>
+#include "<a href="../../../examples/01.laplace/laplace.h">laplace.h</a>"
+#include "<a href="../../../examples/01.laplace/functions.h">functions.h</a>"
+</code>
+</pre>
+    
+<p>
+Next, we need some standard include files
+</p>
+
+<pre>
+<code>
+#include &lt;iostream.h&rt;
+#include &lt;fstream.h&rt;
+#include &lt;stdlib.h&rt;
+</code>
+</pre>
+    
+<p>
+and some DEAL specific include files that enable us to do runtime logging and
+nicely identify our program:</p>
+<pre>
+<code>
+#include &lt;base/logstream.h&rt;
+#include &lt;base/jobidentifier.h&rt;
+</code>
+</pre>
+
+<p>
+and some more stuff which will be discussed when appropriate:
+</p>
+
+<pre>
+<code>
+ZeroFunction&lt;2> zero;
+char fname[30];
+extern const char* funcversion;
+extern const char* laplaceversion;
+char versioninfo[500];
+
+const char* JobIdentifier::program_id() 
+{ 
+  sprintf(versioninfo,"%s\n%s", funcversion, laplaceversion);	    
+  return versioninfo;
+}
+</code>
+</pre>
+<p>
+Our main program starts here. It will take the initial number of global grid
+refinements as its argument. That means that the number 3 as argument will
+lead to the initial grid being globally refined three times, no questions
+asked.
+</p>
+
+<pre>
+<code>
+main(int argc, char** argv) 
+{
+</code>
+</pre>
+
+<h4><a name="Data">Data logging</a></h4>
+<p>
+We want to log info about the program run to a file. Logfiles are streams,
+which behave like stacks in several ways. How to make use of the stack concept
+will be apparent later.
+</p>
+<pre>
+<code>
+ofstream logfile("T");
+deallog.attach(logfile);
+</code>
+</pre>
+
+<h4><a name="Instantiation">Instantiation of needed classes</a></h4>
+<p>
+We need a solution function and an instance of the class dealing with the
+Laplace problem:
+</p>
+
+<pre>
+<code>
+PureTransportSolution exact;
+Laplace lap(exact);
+</code>
+</pre>
+
+<p>
+In addition we need to do some refinement (the command line argument was
+previously stored in the variable <var>firstgrid</var>.Please note that every
+log entry will now be preceeded by "Adaptive: " and that the stack height is
+increased by one.  Only entries with a stack height of two or less will we
+written to the console.
+</p>
+<pre><code>
+deallog.push("Adaptive");
+deallog.depth_console(2);
+
+for (unsigned step = 0; step &lt; 3 ; ++step)   
+{     
+  deallog &lt;&lt; "Step " &lt;&lt; step &lt;&lt; endl;
+  if (!step) 
+     lap.remesh(firstgrid);
+  else
+  {
+     lap.remesh(1);
+  }
+</code></pre>
+
+<p>
+Now we have our log entries preceded by "Primal" since we solve the primal problem,
+our class assembles and solves the problem; the solution is exact (as defined above) 
+and the right hand side of the equation is zero (as defined above). If the right
+hand side were not zero we would solve the Poisson equation instead. Afterwards
+"Primal" is removed from all the following log entries.
+</p>
+<pre><code>
+  deallog.push("Primal"); 
+  lap.assemble_primal(exact, zero); 
+  lap.solve_primal();          
+  deallog.pop();
+</code></pre>
+<p>
+Finally the solution is written to a file and the logfile is closed.
+</p>
+<pre>
+<code>
+  sprintf(fname,"T%02d",step);    
+  lap.write_data(fname);   
+ }   
+ deallog.pop();   
+ deallog.detach();
+}
+</code></pre>
+<hr>
+<p>
+<a href="../../index.html">Back to the tutorial index</a>
+</p>
+<hr>
+<address>
+  <a href="mailto:schrage@gaia.iwr.uni-heidelberg.de">Jan Schrage</a></address>
+<p>
+Last modified: Wed 6 Jan 1999
+</p>
+
+</body>
+</html>

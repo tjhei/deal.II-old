@@ -20,5 +20,5 @@ WeightFunction::operator() (const Point<2>& p) const
 double 
 BoundaryFct::operator ()(const Point<2> &p) const
 { 
-  return sin(4*M_PI*p(0))*sin(4*M_PI*p(1));
+  return cos(2*M_PI*p(0))*cos(2*M_PI*p(1));
 }

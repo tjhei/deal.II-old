@@ -46,7 +46,8 @@ $(LIBDIR)/libhsl.so: $(forward-declarations) $(o-files)
 
 
 # rule to make the program that runs an MA27 solver detached from the
-# main program, and communicates through a pipe
+# main program, and communicates through a pipe. since this program
+# has actually nothing much to do, compile it in debug mode
 $(LIBDIR)/bin/detached_ma27: source/detached_ma27.cc include/hsl/hsl.h 
 	@echo =====hsl=========================$(MT)== Making   $(@F)
 	@$(CXX) $(CXXFLAGS.g) $< -o $@ $(lib-contrib-hsl) $(F77LIBS)

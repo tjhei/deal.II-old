@@ -443,6 +443,7 @@ refinement process should have taken care that these places are not
 important for computing the point value.
 </p>
 
+
 <p>
 The next point is to compare the new (duality based) mesh refinement
 criterion with the old ones. These are the results:
@@ -458,11 +459,41 @@ TODO
 </p>
 
 
-<h2>Outlook</h2>
+
+<h2>Conclusions and outlook</h2>
 
 <p>
-As stated, the program is quite modular, and implementing another test
-case, or another evaluation and dual functional is simple. You are
-encouraged to take the program as a basis for your own experiments,
-and to play a little.
+The results here are not too clearly indicating the superiority of the
+dual weighted error estimation approach for mesh refinement over other
+mesh refinement criteria, such as the Kelly indicator. This is due to
+the relative simplicity of the shown application. If you are not
+convinced yet that this approach is indeed superior, you are invited
+to browse through the literature indicated in the introduction, where
+plenty of examples are provided where the dual weighted approach can
+reduce the necessary numerical work by orders of magnitude, making
+this the only way to compute certain quantities to reasonable
+accuracies at all.
 </p>
+
+<p>
+Besides the objections you may raise against its use as a mesh
+refinement criterion, consider that accurate knowledge of the error in
+the quantity one might want to compute is of great use, since we can
+stop computations when we are satisfied with the accuracy. Using more
+traditional approaches, it is very difficult to get accurate estimates
+for arbitrary quantities, except for, maybe, the error in the energy
+norm, and we will then have no guarantee that the result we computed
+satisfies any requirements on its accuracy.
+</p>
+
+<p>
+Leaving these mathematical considerations, we tried to write the
+program in a modular way, such that implementing another test case, or
+another evaluation and dual functional is simple. You are encouraged
+to take the program as a basis for your own experiments, and to play a
+little.
+</p>
+
+
+
+

@@ -77,7 +77,7 @@ DEAL:5-SparseMatrix<double>:Richardson::Failure step 10 value 0.0059
 DEAL:5-SparseMatrix<double>:Richardson::Starting value 0.0059
 DEAL:5-SparseMatrix<double>:Richardson::Failure step 10 value 0.00052
 DEAL:5-SparseMatrix<double>:Richardson::Starting value 0.00052
-DEAL:5-SparseMatrix<double>:Richardson::Failure step 10 value 6.0e-11
+DEAL:5-SparseMatrix<double>:Richardson::Failure step 10 value 0
 DEAL:5-SparseMatrix<double>::Transpose
 DEAL:5-SparseMatrix<double>:RichardsonT::Starting value 4.0
 DEAL:5-SparseMatrix<double>:RichardsonT::Failure step 10 value 3.6
@@ -264,7 +264,7 @@ DEAL:5-SparseMatrixEZ<double>:Richardson::Failure step 10 value 0.0059
 DEAL:5-SparseMatrixEZ<double>:Richardson::Starting value 0.0059
 DEAL:5-SparseMatrixEZ<double>:Richardson::Failure step 10 value 0.00052
 DEAL:5-SparseMatrixEZ<double>:Richardson::Starting value 0.00052
-DEAL:5-SparseMatrixEZ<double>:Richardson::Failure step 10 value 6.0e-11
+DEAL:5-SparseMatrixEZ<double>:Richardson::Failure step 10 value 0
 DEAL:5-SparseMatrixEZ<double>::Transpose
 DEAL:5-SparseMatrixEZ<double>:RichardsonT::Starting value 4.0
 DEAL:5-SparseMatrixEZ<double>:RichardsonT::Failure step 10 value 3.6
@@ -373,7 +373,7 @@ DEAL:9-SparseMatrix<double>:Richardson::Failure step 10 value 0.025
 DEAL:9-SparseMatrix<double>:Richardson::Starting value 0.025
 DEAL:9-SparseMatrix<double>:Richardson::Failure step 10 value 0.0021
 DEAL:9-SparseMatrix<double>:Richardson::Starting value 0.0021
-DEAL:9-SparseMatrix<double>:Richardson::Failure step 10 value 4.3e-11
+DEAL:9-SparseMatrix<double>:Richardson::Failure step 10 value 0
 DEAL:9-SparseMatrix<double>::Transpose
 DEAL:9-SparseMatrix<double>:RichardsonT::Starting value 4.0
 DEAL:9-SparseMatrix<double>:RichardsonT::Failure step 10 value 2.4
@@ -388,7 +388,7 @@ DEAL:9-SparseMatrix<double>:RichardsonT::Failure step 10 value 0.025
 DEAL:9-SparseMatrix<double>:RichardsonT::Starting value 0.025
 DEAL:9-SparseMatrix<double>:RichardsonT::Failure step 10 value 0.0021
 DEAL:9-SparseMatrix<double>:RichardsonT::Starting value 0.0021
-DEAL:9-SparseMatrix<double>:RichardsonT::Failure step 10 value 4.3e-11
+DEAL:9-SparseMatrix<double>:RichardsonT::Failure step 10 value 0
 DEAL::GrowingVectorMemory:Overall allocated vectors: 28
 DEAL::GrowingVectorMemory:Maximum allocated vectors: 2
 DEAL::Assemble
@@ -405,7 +405,7 @@ DEAL:9-SparseMatrixEZ<double>:Richardson::Failure step 10 value 0.025
 DEAL:9-SparseMatrixEZ<double>:Richardson::Starting value 0.025
 DEAL:9-SparseMatrixEZ<double>:Richardson::Failure step 10 value 0.0021
 DEAL:9-SparseMatrixEZ<double>:Richardson::Starting value 0.0021
-DEAL:9-SparseMatrixEZ<double>:Richardson::Failure step 10 value 4.3e-11
+DEAL:9-SparseMatrixEZ<double>:Richardson::Failure step 10 value 0
 DEAL:9-SparseMatrixEZ<double>::Transpose
 DEAL:9-SparseMatrixEZ<double>:RichardsonT::Starting value 4.0
 DEAL:9-SparseMatrixEZ<double>:RichardsonT::Failure step 10 value 2.4
@@ -420,7 +420,7 @@ DEAL:9-SparseMatrixEZ<double>:RichardsonT::Failure step 10 value 0.025
 DEAL:9-SparseMatrixEZ<double>:RichardsonT::Starting value 0.025
 DEAL:9-SparseMatrixEZ<double>:RichardsonT::Failure step 10 value 0.0021
 DEAL:9-SparseMatrixEZ<double>:RichardsonT::Starting value 0.0021
-DEAL:9-SparseMatrixEZ<double>:RichardsonT::Failure step 10 value 4.3e-11
+DEAL:9-SparseMatrixEZ<double>:RichardsonT::Failure step 10 value 0
 DEAL::GrowingVectorMemory:Overall allocated vectors: 28
 DEAL::GrowingVectorMemory:Maximum allocated vectors: 2
 DEAL::SparseMatrixEZ:used      entries:100

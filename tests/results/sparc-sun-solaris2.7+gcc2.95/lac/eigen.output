@@ -13,6 +13,6 @@ DEAL:Wielandt::Convergence step 10 value 1.661e-06
 DEAL::Eigenvalue 7.078 Error -0.7265
 DEAL:Wielandt::Starting value 0.7500
 DEAL:Wielandt::Convergence step 18 value 2.795e-06
-DEAL::Eigenvalue 7.804 Error 0.000
+DEAL::Eigenvalue 7.804 Error 0
 DEAL::GrowingVectorMemory:Overall allocated vectors: 422
 DEAL::GrowingVectorMemory:Maximum allocated vectors: 17

@@ -3,17 +3,17 @@ DEAL::1D
 DEAL::Number of cells: 115
 DEAL::Number of dofs: 116
 DEAL::Number of constraints: 0
-DEAL::|A|=0.00000
+DEAL::|A|=0
 DEAL::|B|=2154.26
 DEAL::2D
 DEAL::Number of cells: 1009
 DEAL::Number of dofs: 1301
 DEAL::Number of constraints: 459
-DEAL::|A|=0.00000
+DEAL::|A|=0
 DEAL::|B|=246388.
 DEAL::3D
 DEAL::Number of cells: 1023
 DEAL::Number of dofs: 1745
 DEAL::Number of constraints: 881
-DEAL::|A|=0.00000
+DEAL::|A|=0
 DEAL::|B|=1.30692e+06

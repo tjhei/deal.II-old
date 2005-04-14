@@ -70,7 +70,17 @@ that belongs to this computation (in the sequential case, this will simply be
 a single file). They may then later be read in and merged so that we can
 output a single file in whatever graphical format is requested.
 
-The way to do this is to first instruct the ``DataOutBase'' class to write intermediate format rather than in gmv or any other graphical format. This is simple: just use ``data_out.write_deal_II_intermediate''.
+The way to do this is to first instruct the ``DataOutBase'' class to
+write intermediate format rather than in gmv or any other graphical
+format. This is simple: just use
+``data_out.write_deal_II_intermediate''. This will generate one file
+called ``solution-TTTT.TTTT.d2'' if there is only one processor, or
+files ``solution-TTTT.TTTT.NNN.d2'' if this is really a parallel
+job. Here, ``TTTT.TTTT'' denotes the time for which this output has
+been generated, and ``NNN'' the MPI process that did this.
+
+The next step is to convert this file or these files into whatever
+format you like. For this, there is a program
 
 HOW??
 

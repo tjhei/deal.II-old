@@ -70,6 +70,8 @@ that belongs to this computation (in the sequential case, this will simply be
 a single file). They may then later be read in and merged so that we can
 output a single file in whatever graphical format is requested.
 
+The way to do this is to first instruct the ``DataOutBase'' class to write intermediate format rather than in gmv or any other graphical format. This is simple: just use ``data_out.write_deal_II_intermediate''.
+
 HOW??
 
 

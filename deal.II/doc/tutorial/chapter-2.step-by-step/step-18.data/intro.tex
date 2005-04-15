@@ -26,6 +26,8 @@ webpage \texttt{http://www.dealii.org/}.
 
 \subsection*{Quasistatic elastic deformation}
 
+\subsubsection*{Motivation of the model}
+
 In general, small elastic deformations are described by the elastic wave
 equation
 \begin{gather*}
@@ -106,9 +108,68 @@ terms of the stress:
   \qquad
   &&\text{on $\Gamma_N=\partial\Omega(t)\backslash\Gamma_D$}.
 \end{align*}
-Note that these equations are posed on a domain $\Omega(t)$ that changes with
-time.
+Note that these equations are posed on a domain $\Omega(t)$ that
+changes with time, with the boundary moving according to the
+displacements $\vec u(\vec x,t)$ of the points on the boundary. To
+complete this system, we have to specify the relationship between the
+stress and the strain, as follows:
+\begin{align*}
+  \dot\sigma = C \varepsilon (\dot{\vec u}),
+\end{align*}
+where a dot indicates a time derivative.
 
+
+\subsubsection*{Time discretization}
+
+Numerically, this system is solved as follows: first, we discretize
+the time component using a backward Euler scheme. This leads to a
+discrete equilibrium of force at time step $n$:
+\begin{align*}
+  \div \sigma^n &= f^n,
+\intertext{where}
+  \sigma^n &= \sigma^{n-1} + C \varepsilon (\Delta \vec u^n),
+\end{align*}
+and $\Delta \vec u^n$ the incremental displacement for time step
+$n$. This way, if we want to solve for the displacement increment, we
+have to solve the following system:
+\begin{align*}
+  - \div  C \varepsilon(\Delta\vec u^n) &= \vec f - \div \sigma^{n-1}
+  &&\text{in $\Omega(t_{n-1})$},
+  \\
+  \Delta \vec u^n(\vec x,t) &= d(\vec x,t_n) - d(\vec x,t_{n-1})
+  \qquad
+  &&\text{on $\Gamma_D\subset\partial\Omega(t_{n-1})$},
+  \\
+  \vec n \ C \varepsilon(\Delta \vec u^n(\vec x,t)) &= b(\vec x,t_{1})-b(\vec x,t_{n-1})
+  \qquad
+  &&\text{on $\Gamma_N=\partial\Omega(t_{n-1})\backslash\Gamma_D$}.
+\end{align*}
+This system at time step $n$, to be solved on the old domain
+$\Omega(t_{n-1})$, has exactly the form of a stationary elastic
+problem, and is therefore similar to what we have already implemented
+in previous example programs. We will therefore not comment on the
+space discretization beyond saying that we again use lowest order
+continuous finite elements.
+
+There are differences, however:
+\begin{enumerate}
+  \item We have to move the mesh after each time step, in order to be
+  able to solve the next time step on a new domain;
+
+  \item We need to know $\sigma^{n-1}$ to compute the next incremental
+  displacement, i.e. we need to compute it at the end of the time step
+  to make sure it is available for the next time step. Essentially,
+  the stress variable is our window to the history of deformation of
+  the body.
+\end{enumerate}
+These two operations are done in the functions ``move\_mesh'' and
+``update\_\-quadrature\_\-point\_history'' in the program. While moving
+the mesh is only a technicality, updating the stress is a little more
+complicated and will be discussed in the next section.
+
+
+\subsubsection*{Updating the stress variable}
+x
 
 \subsection*{Parallel graphical output}
 

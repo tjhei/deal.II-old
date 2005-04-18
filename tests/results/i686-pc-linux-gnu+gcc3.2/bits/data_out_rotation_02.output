@@ -675,6 +675,7 @@ LOOKUP_TABLE default
 0.50 -1.2e-16 0.0 2.0 
 
 
+2 2
 [deal.II intermediate format graphics data]
 [written by deal.II version 5.2]
 2
@@ -4813,6 +4814,7 @@ LOOKUP_TABLE default
 0.25000 -6.1230e-17 0.50000 13.000 6.0000
 
 
+3 3
 [deal.II intermediate format graphics data]
 [written by deal.II version 5.2]
 2
@@ -5721,6 +5723,7 @@ LOOKUP_TABLE default
 0.50000 -1.2246e-16 0.0000 2.0000 
 
 
+2 2
 [deal.II intermediate format graphics data]
 [written by deal.II version 5.2]
 2
@@ -9859,6 +9862,7 @@ LOOKUP_TABLE default
 0.25000 -6.1230e-17 0.50000 35.000 6.0000
 
 
+3 3
 [deal.II intermediate format graphics data]
 [written by deal.II version 5.2]
 2
@@ -10767,6 +10771,7 @@ LOOKUP_TABLE default
 0.50000 -1.2246e-16 0.0000 2.0000 
 
 
+2 2
 [deal.II intermediate format graphics data]
 [written by deal.II version 5.2]
 2
@@ -14905,6 +14910,7 @@ LOOKUP_TABLE default
 0.25000 -6.1230e-17 0.50000 67.000 6.0000
 
 
+3 3
 [deal.II intermediate format graphics data]
 [written by deal.II version 5.2]
 2
@@ -15813,6 +15819,7 @@ LOOKUP_TABLE default
 0.50000 -1.2246e-16 2.0000 2.0000 
 
 
+2 2
 [deal.II intermediate format graphics data]
 [written by deal.II version 5.2]
 2
@@ -19951,6 +19958,7 @@ LOOKUP_TABLE default
 0.25000 -6.1230e-17 0.50000 6.0000 6.0000
 
 
+3 3
 [deal.II intermediate format graphics data]
 [written by deal.II version 5.2]
 2
@@ -20859,6 +20867,7 @@ LOOKUP_TABLE default
 0.50000 -1.2246e-16 5.0000 2.0000 
 
 
+2 2
 [deal.II intermediate format graphics data]
 [written by deal.II version 5.2]
 2
@@ -24997,6 +25006,7 @@ LOOKUP_TABLE default
 0.25000 -6.1230e-17 0.50000 27.000 6.0000
 
 
+3 3
 [deal.II intermediate format graphics data]
 [written by deal.II version 5.2]
 2
@@ -25905,6 +25915,7 @@ LOOKUP_TABLE default
 0.50000 -1.2246e-16 8.0000 2.0000 
 
 
+2 2
 [deal.II intermediate format graphics data]
 [written by deal.II version 5.2]
 2
@@ -30043,6 +30054,7 @@ LOOKUP_TABLE default
 0.25000 -6.1230e-17 0.50000 62.000 6.0000
 
 
+3 3
 [deal.II intermediate format graphics data]
 [written by deal.II version 5.2]
 2
@@ -34364,6 +34376,7 @@ LOOKUP_TABLE default
 0.25000 -6.1230e-17 0.50000 80.000 76.000 6.0000
 
 
+3 3
 [deal.II intermediate format graphics data]
 [written by deal.II version 5.2]
 3

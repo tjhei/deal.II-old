@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage{amsmath}
+\usepackage{amsfonts}
 \renewcommand{\vec}[1]{\mathbf{#1}}
 \renewcommand{\div}{\mathrm{div}\ }
 \begin{document}
@@ -52,7 +53,7 @@ to be specified for a unique solution:
   \qquad
   &&\text{on $\Gamma_D\subset\partial\Omega$},  
   \\
-  \vec n \ C \varepsilon(\vec u(\vec x,t)) &= b(\vec x,t)
+  \vec n \ C \varepsilon(\vec u(\vec x,t)) &= \vec b\vec x,t)
   \qquad
   &&\text{on $\Gamma_N=\partial\Omega\backslash\Gamma_D$}.
 \end{align*}
@@ -84,7 +85,7 @@ i.e. we can assume that at all times the body satisfies
   \qquad
   &&\text{on $\Gamma_D$},
   \\
-  \vec n \ C \varepsilon(\vec u(\vec x,t)) &= b(\vec x,t)
+  \vec n \ C \varepsilon(\vec u(\vec x,t)) &= \vec b\vec x,t)
   \qquad
   &&\text{on $\Gamma_N$}.
 \end{align*}
@@ -104,7 +105,7 @@ terms of the stress:
   \qquad
   &&\text{on $\Gamma_D\subset\partial\Omega(t)$},
   \\
-  \vec n \ C \varepsilon(\vec u(\vec x,t)) &= b(\vec x,t)
+  \vec n \ C \varepsilon(\vec u(\vec x,t)) &= \vec b\vec x,t)
   \qquad
   &&\text{on $\Gamma_N=\partial\Omega(t)\backslash\Gamma_D$}.
 \end{align*}
@@ -140,11 +141,36 @@ have to solve the following system:
   \qquad
   &&\text{on $\Gamma_D\subset\partial\Omega(t_{n-1})$},
   \\
-  \vec n \ C \varepsilon(\Delta \vec u^n(\vec x,t)) &= b(\vec x,t_{1})-b(\vec x,t_{n-1})
+  \vec n \ C \varepsilon(\Delta \vec u^n(\vec x,t)) &= \vec b\vec x,t_{1})-\vec b\vec x,t_{n-1})
   \qquad
   &&\text{on $\Gamma_N=\partial\Omega(t_{n-1})\backslash\Gamma_D$}.
 \end{align*}
-This system at time step $n$, to be solved on the old domain
+The weak form of this set of equations, which as usual is the basis for the
+finite element formulation, reads as follows: find $\Delta \vec u^n \in
+\{v\in H^1(\Omega(t_{n-1}))^d: v|_{\Gamma_D}=d(\cdot,t_n) - d(\cdot,t_{n-1})\}$
+such that
+\begin{multline*}
+  (C \varepsilon(\Delta\vec u^n), \varepsilon(\varphi) )_{\Omega(t_{n-1})}
+  = 
+  (\vec f, \varphi)_{\Omega(t_{n-1})}
+  +(\sigma^{n-1},\varepsilon(\varphi))_{\Omega(t_{n-1})}
+  \\
+  +(\vec b\vec x,t_{1})-\vec b\vec x,t_{n-1}, \varphi)_{\Gamma_N}
+  \\
+  \forall \varphi \in \{v\in H^1(\Omega(t_{n-1}))^d: v|_{\Gamma_D}=0\}.
+\end{multline*}
+We note that in the program we will always assume that there are no boundary
+forces, i.e. $\vec b = 0$, and that the deformation of the body is driven by
+body forces $\vec f$ and prescribed boundary displacements $\vec d$ alone. It
+is also worth noting that when intregrating by parts, we would get terms of
+the form
+$(C \varepsilon(\Delta\vec u^n), \nabla \varphi )_{\Omega(t_{n-1})}$,
+but that we replace it with the term involving the symmetric gradient
+$\varepsilon(\varphi)$ instead of $\nabla\varphi$. Due to the symmetry of $C$
+the two terms are equivalent, but the symmetric version avoids a potential for
+round-off to render the resulting matrix slightly nonsymmetric.
+
+The system at time step $n$, to be solved on the old domain
 $\Omega(t_{n-1})$, has exactly the form of a stationary elastic
 problem, and is therefore similar to what we have already implemented
 in previous example programs. We will therefore not comment on the
@@ -169,7 +195,76 @@ complicated and will be discussed in the next section.
 
 
 \subsubsection*{Updating the stress variable}
-x
+
+As indicated above, we need to have the stress variable $\sigma^n$ available
+when computing time step $n+1$, and we can compute it using
+\begin{gather*}
+  \sigma^n = \sigma^{n-1} + C \varepsilon (\Delta \vec u^n).  
+\end{gather*}
+There are, despite the apparent simplicity of this equation, two questions
+that we need to discuss. The first concerns the way we store $\sigma^n$: even
+if we compute the incremental updates $\Delta\vec u^n$ using lowest-order
+finite elements, then its symmetric gradient $\varepsilon(\Delta\vec u^n)$ is
+in general still a function that is not easy to describe. In particular, it is
+not a piecewise constant function, and on general meshes (with cells that are
+not rectangles parallel to the coordinate axes) or with nonconstant
+stress-strain tensors $C$ it is not even a bi- or trilinear function. Thus, it
+is a priori not clear how to store $\sigma^n$ in a computer program.
+
+To decide this, we have to see where it is used. The only place where we
+require the stress is in the term
+$(\sigma^n,\varepsilon(\varphi))_{\Omega(t_n)}$. In practice, we of
+course replace this term by numerical quadrature
+\begin{gather*}
+  (\sigma^n,\varepsilon(\varphi))_{\Omega(t_n)}
+  =
+  \sum_{K\subset {\mathbb T}}
+  (\sigma^n,\varepsilon(\varphi))_K
+  \approx
+  \sum_{K\subset {\mathbb T}}
+  \sum_q
+  w_q \ \sigma^n(\vec x_q) \ \varepsilon(\varphi(\vec x_q)),
+\end{gather*}
+where $w_q$ are the quadrature weights and $\vec x_q$ the quadrature points on
+cell $K$. This should make clear that what we really need is not the stress
+$\sigma^n$ in itself, but only the values of the stress in the quadrature
+points on all cells. This, however, is a simpler task: we only have to provide
+a data structure that is able to hold one symmetric tensor of rank 2 for each
+quadrature point on all cells (or, since we compute in parallel, all
+quadrature points of all cells that the present MPI process ``owns''). At the
+end of each time step we then only have to evaluate $\varepsilon(\Delta \vec
+u^n(\vec x_q))$, multiply it by the stress-strain tensor $C$, and use the
+result to update the stress $\sigma^n(\vec x_q)$ at quadrature point $q$.
+
+The second complication is not visible in our notation as chosen above. It is
+due to the fact that we compute $\Delta u^n$ on the domain $\Omega(t_{n-1})$,
+and then use this displacement increment to both update the stress as well as
+move the mesh nodes around to get to $\Omega(t_n)$ on which the next increment
+is computed. What we have to make sure, in this context, is that moving the
+mesh does not only involve moving around the nodes, but also making
+corresponding changes to the stress variable: the updated stress is a variable
+that is defined with respect to the coordinate system of the old mesh, and has
+to be transferred to the new mesh. While the updating procedure has already
+taken care of the case where the material is compressed or dilated, it has to
+be explicitly extended to account for the case that a cell is rotated. To this
+end, we have to define a rotation matrix $R(\Delta \vec u^n)$ that describes,
+in each point the rotation due to the displacement increments. It is not hard
+to see that the actual dependence of $R$ on $\Delta \vec u^n$ can only be
+through the curl of the displacement, rather than the displacement itself or
+its gradient (the constant components of the increment describe translations,
+its divergence the dilational modes, and the curl the rotational modes). Since
+the exact form of $R$ is cumbersome, we only state it in the program code, and
+note that the correct updating formula for the stress variable is then
+\begin{gather*}
+  \sigma^n
+  = 
+  R(\Delta \vec u^n)^T 
+  [\sigma^{n-1} + C \varepsilon (\Delta \vec u^n)]
+  R(\Delta \vec u^n).
+\end{gather*}
+This is all implemented in the function
+``update\_\-quadrature\_\-point\_history'' of the example program.
+
 
 \subsection*{Parallel graphical output}
 
@@ -228,5 +323,12 @@ format you like. For this, there is a program
 
 HOW??
 
+
+\subsection*{Overall structure of the program}
+\subsection*{Possible directions for extensions}
+
+Refinement during timesteps
+
+Plasticity
 
 \end{document}

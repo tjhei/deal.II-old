@@ -10,6 +10,9 @@ while (<>) {
 	$text =~ s!``!&#8220;!g;
 	$text =~ s!''!&#8221;!g;
 
+        # replace double dashes in comments by &mdash;
+	$text =~ s!--!&mdash;!g;
+
 	# only allow header levels 3 and 4, since higher ones are
 	# reserved for top-level document headers
 	if (! ($newlevel =~ /[34]/)) {

@@ -1,0 +1,484 @@
+
+DEAL:BDM::Point 1. 0.
+DEAL:BDM::p[0] value 1. 0. first 0. 0. 0. 1.
+DEAL:BDM::p[1] value 2. 0. first -0. -0. 0. 0.
+DEAL:BDM::p[2] value -2. 0. first -0. 3. 0. 0.
+DEAL:BDM::p[3] value 0. 1. first 0. 0. 0. 0.
+DEAL:RT::Point 2. 3.
+DEAL:RT::p[0] value -1. 0. first -1. -0. 0. 0.
+DEAL:RT::p[1] value 2. 0. first 1. 0. 0. 0.
+DEAL:RT::p[2] value 0. -2. first 0. 0. -1. -0.
+DEAL:RT::p[3] value 0. 3. first 0. 0. 1. 0.
+DEAL:RT::Point 2. 3.
+DEAL:RT::p[0] value -6. 0. first -1.e+01 -3. 0. 0.
+DEAL:RT::p[1] value 2.e+01 0. first 2.e+01 8. 0. 0.
+DEAL:RT::p[2] value -1.e+01 0. first -1.e+01 -6. 0. 0.
+DEAL:RT::p[3] value 9. 0. first 2.e+01 3. 0. 0.
+DEAL:RT::p[4] value -2.e+01 0. first -4.e+01 -8. 0. 0.
+DEAL:RT::p[5] value 2.e+01 0. first 2.e+01 6. 0. 0.
+DEAL:RT::p[6] value 0. -1.e+01 first 0. 0. -9. -1.e+01
+DEAL:RT::p[7] value 0. 2.e+01 first 0. 0. 2.e+01 2.e+01
+DEAL:RT::p[8] value 0. -2.e+01 first 0. 0. -1.e+01 -2.e+01
+DEAL:RT::p[9] value 0. 2.e+01 first 0. 0. 2.e+01 1.e+01
+DEAL:RT::p[10] value 0. -5.e+01 first 0. 0. -4.e+01 -2.e+01
+DEAL:RT::p[11] value 0. 3.e+01 first 0. 0. 2.e+01 2.e+01
+DEAL:RT::Point 2. 3.
+DEAL:RT::p[0] value -1.e+02 0. first -2.e+02 -9.e+01 0. 0.
+DEAL:RT::p[1] value 4.e+02 0. first 8.e+02 3.e+02 0. 0.
+DEAL:RT::p[2] value -4.e+02 0. first -9.e+02 -4.e+02 0. 0.
+DEAL:RT::p[3] value 2.e+02 0. first 4.e+02 2.e+02 0. 0.
+DEAL:RT::p[4] value 2.e+02 0. first 6.e+02 2.e+02 0. 0.
+DEAL:RT::p[5] value -9.e+02 0. first -2.e+03 -7.e+02 0. 0.
+DEAL:RT::p[6] value 1.e+03 0. first 2.e+03 9.e+02 0. 0.
+DEAL:RT::p[7] value -5.e+02 0. first -9.e+02 -4.e+02 0. 0.
+DEAL:RT::p[8] value -2.e+02 0. first -4.e+02 -1.e+02 0. 0.
+DEAL:RT::p[9] value 5.e+02 0. first 1.e+03 4.e+02 0. 0.
+DEAL:RT::p[10] value -7.e+02 0. first -1.e+03 -5.e+02 0. 0.
+DEAL:RT::p[11] value 3.e+02 0. first 6.e+02 2.e+02 0. 0.
+DEAL:RT::p[12] value 0. -2.e+02 first 0. 0. -2.e+02 -3.e+02
+DEAL:RT::p[13] value 0. 6.e+02 first 0. 0. 7.e+02 9.e+02
+DEAL:RT::p[14] value 0. -6.e+02 first 0. 0. -8.e+02 -1.e+03
+DEAL:RT::p[15] value 0. 3.e+02 first 0. 0. 3.e+02 4.e+02
+DEAL:RT::p[16] value 0. 4.e+02 first 0. 0. 6.e+02 7.e+02
+DEAL:RT::p[17] value 0. -2.e+03 first 0. 0. -2.e+03 -2.e+03
+DEAL:RT::p[18] value 0. 2.e+03 first 0. 0. 2.e+03 3.e+03
+DEAL:RT::p[19] value 0. -7.e+02 first 0. 0. -8.e+02 -1.e+03
+DEAL:RT::p[20] value 0. -3.e+02 first 0. 0. -4.e+02 -4.e+02
+DEAL:RT::p[21] value 0. 1.e+03 first 0. 0. 1.e+03 1.e+03
+DEAL:RT::p[22] value 0. -1.e+03 first 0. 0. -2.e+03 -2.e+03
+DEAL:RT::p[23] value 0. 5.e+02 first 0. 0. 6.e+02 6.e+02
+DEAL:RT::Point 2. 3.
+DEAL:RT::p[0] value -2.e+03 0. first -6.e+03 -3.e+03 0. 0.
+DEAL:RT::p[1] value 9.e+03 0. first 3.e+04 1.e+04 0. 0.
+DEAL:RT::p[2] value -2.e+04 0. first -5.e+04 -2.e+04 0. 0.
+DEAL:RT::p[3] value 1.e+04 0. first 3.e+04 2.e+04 0. 0.
+DEAL:RT::p[4] value -4.e+03 0. first -1.e+04 -5.e+03 0. 0.
+DEAL:RT::p[5] value 7.e+03 0. first 2.e+04 8.e+03 0. 0.
+DEAL:RT::p[6] value -3.e+04 0. first -9.e+04 -4.e+04 0. 0.
+DEAL:RT::p[7] value 5.e+04 0. first 2.e+05 7.e+04 0. 0.
+DEAL:RT::p[8] value -4.e+04 0. first -1.e+05 -5.e+04 0. 0.
+DEAL:RT::p[9] value 1.e+04 0. first 3.e+04 2.e+04 0. 0.
+DEAL:RT::p[10] value -8.e+03 0. first -2.e+04 -9.e+03 0. 0.
+DEAL:RT::p[11] value 3.e+04 0. first 1.e+05 4.e+04 0. 0.
+DEAL:RT::p[12] value -6.e+04 0. first -2.e+05 -7.e+04 0. 0.
+DEAL:RT::p[13] value 5.e+04 0. first 1.e+05 6.e+04 0. 0.
+DEAL:RT::p[14] value -2.e+04 0. first -4.e+04 -2.e+04 0. 0.
+DEAL:RT::p[15] value 3.e+03 0. first 9.e+03 3.e+03 0. 0.
+DEAL:RT::p[16] value -1.e+04 0. first -4.e+04 -2.e+04 0. 0.
+DEAL:RT::p[17] value 2.e+04 0. first 7.e+04 3.e+04 0. 0.
+DEAL:RT::p[18] value -2.e+04 0. first -5.e+04 -2.e+04 0. 0.
+DEAL:RT::p[19] value 6.e+03 0. first 1.e+04 7.e+03 0. 0.
+DEAL:RT::p[20] value 0. -3.e+03 first 0. 0. -6.e+03 -8.e+03
+DEAL:RT::p[21] value 0. 1.e+04 first 0. 0. 2.e+04 3.e+04
+DEAL:RT::p[22] value 0. -2.e+04 first 0. 0. -4.e+04 -6.e+04
+DEAL:RT::p[23] value 0. 2.e+04 first 0. 0. 3.e+04 4.e+04
+DEAL:RT::p[24] value 0. -5.e+03 first 0. 0. -8.e+03 -1.e+04
+DEAL:RT::p[25] value 0. 1.e+04 first 0. 0. 2.e+04 3.e+04
+DEAL:RT::p[26] value 0. -5.e+04 first 0. 0. -9.e+04 -1.e+05
+DEAL:RT::p[27] value 0. 9.e+04 first 0. 0. 1.e+05 2.e+05
+DEAL:RT::p[28] value 0. -6.e+04 first 0. 0. -1.e+05 -1.e+05
+DEAL:RT::p[29] value 0. 2.e+04 first 0. 0. 3.e+04 4.e+04
+DEAL:RT::p[30] value 0. -1.e+04 first 0. 0. -3.e+04 -3.e+04
+DEAL:RT::p[31] value 0. 6.e+04 first 0. 0. 1.e+05 1.e+05
+DEAL:RT::p[32] value 0. -1.e+05 first 0. 0. -2.e+05 -2.e+05
+DEAL:RT::p[33] value 0. 8.e+04 first 0. 0. 1.e+05 2.e+05
+DEAL:RT::p[34] value 0. -2.e+04 first 0. 0. -3.e+04 -5.e+04
+DEAL:RT::p[35] value 0. 7.e+03 first 0. 0. 1.e+04 1.e+04
+DEAL:RT::p[36] value 0. -3.e+04 first 0. 0. -5.e+04 -5.e+04
+DEAL:RT::p[37] value 0. 5.e+04 first 0. 0. 8.e+04 9.e+04
+DEAL:RT::p[38] value 0. -4.e+04 first 0. 0. -6.e+04 -7.e+04
+DEAL:RT::p[39] value 0. 1.e+04 first 0. 0. 2.e+04 2.e+04
+DEAL:RT::Point 2. 3. 4.
+DEAL:RT::p[0] value -1. 0. 0. first -1. -0. -0. 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[1] value 2. 0. 0. first 1. 0. 0. 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[2] value 0. -2. 0. first 0. 0. 0. -1. -0. -0. 0. 0. 0.
+DEAL:RT::p[3] value 0. 3. 0. first 0. 0. 0. 1. 0. 0. 0. 0. 0.
+DEAL:RT::p[4] value 0. 0. -3. first 0. 0. 0. 0. 0. 0. -1. -0. -0.
+DEAL:RT::p[5] value 0. 0. 4. first 0. 0. 0. 0. 0. 0. 1. 0. 0.
+DEAL:RT::Point 2. 3. 4.
+DEAL:RT::p[0] value 2.e+01 0. 0. first 3.e+01 9. 6. 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[1] value -5.e+01 0. 0. first -7.e+01 -2.e+01 -2.e+01 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[2] value 4.e+01 0. 0. first 4.e+01 2.e+01 1.e+01 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[3] value -3.e+01 0. 0. first -4.e+01 -9. -9. 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[4] value 7.e+01 0. 0. first 1.e+02 2.e+01 2.e+01 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[5] value -5.e+01 0. 0. first -6.e+01 -2.e+01 -2.e+01 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[6] value -2.e+01 0. 0. first -4.e+01 -1.e+01 -6. 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[7] value 6.e+01 0. 0. first 1.e+02 3.e+01 2.e+01 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[8] value -5.e+01 0. 0. first -6.e+01 -2.e+01 -1.e+01 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[9] value 4.e+01 0. 0. first 6.e+01 1.e+01 9. 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[10] value -1.e+02 0. 0. first -1.e+02 -3.e+01 -2.e+01 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[11] value 7.e+01 0. 0. first 8.e+01 2.e+01 2.e+01 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[12] value 0. 3.e+01 0. first 0. 0. 0. 3.e+01 1.e+01 3.e+01 0. 0. 0.
+DEAL:RT::p[13] value 0. -7.e+01 0. first 0. 0. 0. -6.e+01 -2.e+01 -7.e+01 0. 0. 0.
+DEAL:RT::p[14] value 0. 4.e+01 0. first 0. 0. 0. 3.e+01 2.e+01 4.e+01 0. 0. 0.
+DEAL:RT::p[15] value 0. -4.e+01 0. first 0. 0. 0. -4.e+01 -1.e+01 -4.e+01 0. 0. 0.
+DEAL:RT::p[16] value 0. 1.e+02 0. first 0. 0. 0. 8.e+01 2.e+01 1.e+02 0. 0. 0.
+DEAL:RT::p[17] value 0. -6.e+01 0. first 0. 0. 0. -4.e+01 -2.e+01 -6.e+01 0. 0. 0.
+DEAL:RT::p[18] value 0. -6.e+01 0. first 0. 0. 0. -5.e+01 -2.e+01 -3.e+01 0. 0. 0.
+DEAL:RT::p[19] value 0. 1.e+02 0. first 0. 0. 0. 1.e+02 5.e+01 7.e+01 0. 0. 0.
+DEAL:RT::p[20] value 0. -9.e+01 0. first 0. 0. 0. -7.e+01 -3.e+01 -4.e+01 0. 0. 0.
+DEAL:RT::p[21] value 0. 8.e+01 0. first 0. 0. 0. 7.e+01 2.e+01 4.e+01 0. 0. 0.
+DEAL:RT::p[22] value 0. -2.e+02 0. first 0. 0. 0. -2.e+02 -5.e+01 -1.e+02 0. 0. 0.
+DEAL:RT::p[23] value 0. 1.e+02 0. first 0. 0. 0. 9.e+01 3.e+01 6.e+01 0. 0. 0.
+DEAL:RT::p[24] value 0. 0. 4.e+01 first 0. 0. 0. 0. 0. 0. 3.e+01 4.e+01 2.e+01
+DEAL:RT::p[25] value 0. 0. -1.e+02 first 0. 0. 0. 0. 0. 0. -6.e+01 -1.e+02 -5.e+01
+DEAL:RT::p[26] value 0. 0. 6.e+01 first 0. 0. 0. 0. 0. 0. 3.e+01 6.e+01 3.e+01
+DEAL:RT::p[27] value 0. 0. -8.e+01 first 0. 0. 0. 0. 0. 0. -5.e+01 -4.e+01 -4.e+01
+DEAL:RT::p[28] value 0. 0. 2.e+02 first 0. 0. 0. 0. 0. 0. 1.e+02 1.e+02 1.e+02
+DEAL:RT::p[29] value 0. 0. -1.e+02 first 0. 0. 0. 0. 0. 0. -6.e+01 -6.e+01 -6.e+01
+DEAL:RT::p[30] value 0. 0. -6.e+01 first 0. 0. 0. 0. 0. 0. -4.e+01 -6.e+01 -2.e+01
+DEAL:RT::p[31] value 0. 0. 1.e+02 first 0. 0. 0. 0. 0. 0. 8.e+01 1.e+02 5.e+01
+DEAL:RT::p[32] value 0. 0. -8.e+01 first 0. 0. 0. 0. 0. 0. -4.e+01 -8.e+01 -3.e+01
+DEAL:RT::p[33] value 0. 0. 1.e+02 first 0. 0. 0. 0. 0. 0. 8.e+01 6.e+01 4.e+01
+DEAL:RT::p[34] value 0. 0. -3.e+02 first 0. 0. 0. 0. 0. 0. -2.e+02 -1.e+02 -1.e+02
+DEAL:RT::p[35] value 0. 0. 2.e+02 first 0. 0. 0. 0. 0. 0. 9.e+01 8.e+01 6.e+01
+DEAL:RT::Point 2. 3. 4.
+DEAL:RT::p[0] value -2.e+03 0. 0. first -5.e+03 -2.e+03 -1.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[1] value 8.e+03 0. 0. first 2.e+04 7.e+03 5.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[2] value -9.e+03 0. 0. first -2.e+04 -9.e+03 -6.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[3] value 4.e+03 0. 0. first 8.e+03 4.e+03 3.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[4] value 5.e+03 0. 0. first 1.e+04 4.e+03 3.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[5] value -2.e+04 0. 0. first -4.e+04 -2.e+04 -1.e+04 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[6] value 2.e+04 0. 0. first 5.e+04 2.e+04 1.e+04 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[7] value -1.e+04 0. 0. first -2.e+04 -8.e+03 -6.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[8] value -3.e+03 0. 0. first -7.e+03 -2.e+03 -2.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[9] value 1.e+04 0. 0. first 3.e+04 8.e+03 7.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[10] value -1.e+04 0. 0. first -3.e+04 -1.e+04 -9.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[11] value 6.e+03 0. 0. first 1.e+04 5.e+03 4.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[12] value 5.e+03 0. 0. first 1.e+04 4.e+03 3.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[13] value -2.e+04 0. 0. first -4.e+04 -2.e+04 -1.e+04 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[14] value 2.e+04 0. 0. first 5.e+04 2.e+04 1.e+04 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[15] value -1.e+04 0. 0. first -2.e+04 -9.e+03 -6.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[16] value -1.e+04 0. 0. first -3.e+04 -1.e+04 -7.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[17] value 4.e+04 0. 0. first 9.e+04 3.e+04 2.e+04 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[18] value -5.e+04 0. 0. first -1.e+05 -4.e+04 -3.e+04 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[19] value 2.e+04 0. 0. first 4.e+04 2.e+04 1.e+04 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[20] value 7.e+03 0. 0. first 2.e+04 5.e+03 4.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[21] value -3.e+04 0. 0. first -6.e+04 -2.e+04 -2.e+04 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[22] value 3.e+04 0. 0. first 7.e+04 2.e+04 2.e+04 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[23] value -1.e+04 0. 0. first -3.e+04 -1.e+04 -8.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[24] value -3.e+03 0. 0. first -7.e+03 -3.e+03 -2.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[25] value 1.e+04 0. 0. first 2.e+04 9.e+03 5.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[26] value -1.e+04 0. 0. first -3.e+04 -1.e+04 -7.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[27] value 6.e+03 0. 0. first 1.e+04 5.e+03 3.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[28] value 7.e+03 0. 0. first 2.e+04 6.e+03 4.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[29] value -2.e+04 0. 0. first -5.e+04 -2.e+04 -1.e+04 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[30] value 3.e+04 0. 0. first 6.e+04 3.e+04 2.e+04 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[31] value -1.e+04 0. 0. first -2.e+04 -1.e+04 -7.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[32] value -4.e+03 0. 0. first -1.e+04 -3.e+03 -2.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[33] value 2.e+04 0. 0. first 3.e+04 1.e+04 8.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[34] value -2.e+04 0. 0. first -4.e+04 -1.e+04 -1.e+04 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[35] value 8.e+03 0. 0. first 2.e+04 6.e+03 4.e+03 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[36] value 0. -4.e+03 0. first 0. 0. 0. -5.e+03 -2.e+03 -6.e+03 0. 0. 0.
+DEAL:RT::p[37] value 0. 1.e+04 0. first 0. 0. 0. 2.e+04 7.e+03 2.e+04 0. 0. 0.
+DEAL:RT::p[38] value 0. -1.e+04 0. first 0. 0. 0. -2.e+04 -8.e+03 -2.e+04 0. 0. 0.
+DEAL:RT::p[39] value 0. 5.e+03 0. first 0. 0. 0. 6.e+03 3.e+03 9.e+03 0. 0. 0.
+DEAL:RT::p[40] value 0. 8.e+03 0. first 0. 0. 0. 1.e+04 5.e+03 1.e+04 0. 0. 0.
+DEAL:RT::p[41] value 0. -3.e+04 0. first 0. 0. 0. -3.e+04 -2.e+04 -5.e+04 0. 0. 0.
+DEAL:RT::p[42] value 0. 3.e+04 0. first 0. 0. 0. 4.e+04 2.e+04 5.e+04 0. 0. 0.
+DEAL:RT::p[43] value 0. -1.e+04 0. first 0. 0. 0. -1.e+04 -7.e+03 -2.e+04 0. 0. 0.
+DEAL:RT::p[44] value 0. -5.e+03 0. first 0. 0. 0. -6.e+03 -3.e+03 -8.e+03 0. 0. 0.
+DEAL:RT::p[45] value 0. 2.e+04 0. first 0. 0. 0. 2.e+04 9.e+03 3.e+04 0. 0. 0.
+DEAL:RT::p[46] value 0. -2.e+04 0. first 0. 0. 0. -2.e+04 -1.e+04 -3.e+04 0. 0. 0.
+DEAL:RT::p[47] value 0. 7.e+03 0. first 0. 0. 0. 8.e+03 4.e+03 1.e+04 0. 0. 0.
+DEAL:RT::p[48] value 0. 9.e+03 0. first 0. 0. 0. 1.e+04 6.e+03 1.e+04 0. 0. 0.
+DEAL:RT::p[49] value 0. -3.e+04 0. first 0. 0. 0. -4.e+04 -2.e+04 -5.e+04 0. 0. 0.
+DEAL:RT::p[50] value 0. 4.e+04 0. first 0. 0. 0. 4.e+04 2.e+04 5.e+04 0. 0. 0.
+DEAL:RT::p[51] value 0. -1.e+04 0. first 0. 0. 0. -2.e+04 -9.e+03 -2.e+04 0. 0. 0.
+DEAL:RT::p[52] value 0. -2.e+04 0. first 0. 0. 0. -3.e+04 -1.e+04 -3.e+04 0. 0. 0.
+DEAL:RT::p[53] value 0. 7.e+04 0. first 0. 0. 0. 9.e+04 4.e+04 1.e+05 0. 0. 0.
+DEAL:RT::p[54] value 0. -8.e+04 0. first 0. 0. 0. -1.e+05 -5.e+04 -1.e+05 0. 0. 0.
+DEAL:RT::p[55] value 0. 3.e+04 0. first 0. 0. 0. 4.e+04 2.e+04 5.e+04 0. 0. 0.
+DEAL:RT::p[56] value 0. 1.e+04 0. first 0. 0. 0. 2.e+04 7.e+03 2.e+04 0. 0. 0.
+DEAL:RT::p[57] value 0. -4.e+04 0. first 0. 0. 0. -5.e+04 -2.e+04 -6.e+04 0. 0. 0.
+DEAL:RT::p[58] value 0. 5.e+04 0. first 0. 0. 0. 6.e+04 3.e+04 7.e+04 0. 0. 0.
+DEAL:RT::p[59] value 0. -2.e+04 0. first 0. 0. 0. -2.e+04 -1.e+04 -3.e+04 0. 0. 0.
+DEAL:RT::p[60] value 0. -7.e+03 0. first 0. 0. 0. -9.e+03 -4.e+03 -8.e+03 0. 0. 0.
+DEAL:RT::p[61] value 0. 2.e+04 0. first 0. 0. 0. 3.e+04 1.e+04 3.e+04 0. 0. 0.
+DEAL:RT::p[62] value 0. -3.e+04 0. first 0. 0. 0. -3.e+04 -2.e+04 -3.e+04 0. 0. 0.
+DEAL:RT::p[63] value 0. 1.e+04 0. first 0. 0. 0. 1.e+04 7.e+03 1.e+04 0. 0. 0.
+DEAL:RT::p[64] value 0. 2.e+04 0. first 0. 0. 0. 2.e+04 9.e+03 2.e+04 0. 0. 0.
+DEAL:RT::p[65] value 0. -5.e+04 0. first 0. 0. 0. -7.e+04 -3.e+04 -6.e+04 0. 0. 0.
+DEAL:RT::p[66] value 0. 6.e+04 0. first 0. 0. 0. 8.e+04 4.e+04 7.e+04 0. 0. 0.
+DEAL:RT::p[67] value 0. -2.e+04 0. first 0. 0. 0. -3.e+04 -1.e+04 -3.e+04 0. 0. 0.
+DEAL:RT::p[68] value 0. -9.e+03 0. first 0. 0. 0. -1.e+04 -5.e+03 -1.e+04 0. 0. 0.
+DEAL:RT::p[69] value 0. 3.e+04 0. first 0. 0. 0. 4.e+04 2.e+04 4.e+04 0. 0. 0.
+DEAL:RT::p[70] value 0. -4.e+04 0. first 0. 0. 0. -4.e+04 -2.e+04 -4.e+04 0. 0. 0.
+DEAL:RT::p[71] value 0. 1.e+04 0. first 0. 0. 0. 2.e+04 8.e+03 2.e+04 0. 0. 0.
+DEAL:RT::p[72] value 0. 0. -5.e+03 first 0. 0. 0. 0. 0. 0. -4.e+03 -8.e+03 -4.e+03
+DEAL:RT::p[73] value 0. 0. 2.e+04 first 0. 0. 0. 0. 0. 0. 1.e+04 3.e+04 1.e+04
+DEAL:RT::p[74] value 0. 0. -2.e+04 first 0. 0. 0. 0. 0. 0. -2.e+04 -3.e+04 -2.e+04
+DEAL:RT::p[75] value 0. 0. 7.e+03 first 0. 0. 0. 0. 0. 0. 5.e+03 1.e+04 6.e+03
+DEAL:RT::p[76] value 0. 0. 1.e+04 first 0. 0. 0. 0. 0. 0. 1.e+04 2.e+04 1.e+04
+DEAL:RT::p[77] value 0. 0. -4.e+04 first 0. 0. 0. 0. 0. 0. -4.e+04 -6.e+04 -4.e+04
+DEAL:RT::p[78] value 0. 0. 5.e+04 first 0. 0. 0. 0. 0. 0. 4.e+04 7.e+04 4.e+04
+DEAL:RT::p[79] value 0. 0. -2.e+04 first 0. 0. 0. 0. 0. 0. -1.e+04 -3.e+04 -2.e+04
+DEAL:RT::p[80] value 0. 0. -1.e+04 first 0. 0. 0. 0. 0. 0. -9.e+03 -1.e+04 -9.e+03
+DEAL:RT::p[81] value 0. 0. 3.e+04 first 0. 0. 0. 0. 0. 0. 3.e+04 4.e+04 3.e+04
+DEAL:RT::p[82] value 0. 0. -4.e+04 first 0. 0. 0. 0. 0. 0. -3.e+04 -4.e+04 -3.e+04
+DEAL:RT::p[83] value 0. 0. 1.e+04 first 0. 0. 0. 0. 0. 0. 1.e+04 2.e+04 1.e+04
+DEAL:RT::p[84] value 0. 0. 1.e+04 first 0. 0. 0. 0. 0. 0. 1.e+04 2.e+04 1.e+04
+DEAL:RT::p[85] value 0. 0. -4.e+04 first 0. 0. 0. 0. 0. 0. -3.e+04 -6.e+04 -3.e+04
+DEAL:RT::p[86] value 0. 0. 4.e+04 first 0. 0. 0. 0. 0. 0. 4.e+04 7.e+04 4.e+04
+DEAL:RT::p[87] value 0. 0. -2.e+04 first 0. 0. 0. 0. 0. 0. -1.e+04 -3.e+04 -1.e+04
+DEAL:RT::p[88] value 0. 0. -3.e+04 first 0. 0. 0. 0. 0. 0. -3.e+04 -5.e+04 -3.e+04
+DEAL:RT::p[89] value 0. 0. 1.e+05 first 0. 0. 0. 0. 0. 0. 9.e+04 2.e+05 9.e+04
+DEAL:RT::p[90] value 0. 0. -1.e+05 first 0. 0. 0. 0. 0. 0. -1.e+05 -2.e+05 -1.e+05
+DEAL:RT::p[91] value 0. 0. 4.e+04 first 0. 0. 0. 0. 0. 0. 3.e+04 6.e+04 4.e+04
+DEAL:RT::p[92] value 0. 0. 2.e+04 first 0. 0. 0. 0. 0. 0. 2.e+04 3.e+04 2.e+04
+DEAL:RT::p[93] value 0. 0. -8.e+04 first 0. 0. 0. 0. 0. 0. -7.e+04 -9.e+04 -6.e+04
+DEAL:RT::p[94] value 0. 0. 9.e+04 first 0. 0. 0. 0. 0. 0. 7.e+04 1.e+05 7.e+04
+DEAL:RT::p[95] value 0. 0. -3.e+04 first 0. 0. 0. 0. 0. 0. -3.e+04 -4.e+04 -3.e+04
+DEAL:RT::p[96] value 0. 0. -7.e+03 first 0. 0. 0. 0. 0. 0. -7.e+03 -1.e+04 -5.e+03
+DEAL:RT::p[97] value 0. 0. 2.e+04 first 0. 0. 0. 0. 0. 0. 2.e+04 4.e+04 2.e+04
+DEAL:RT::p[98] value 0. 0. -3.e+04 first 0. 0. 0. 0. 0. 0. -2.e+04 -4.e+04 -2.e+04
+DEAL:RT::p[99] value 0. 0. 1.e+04 first 0. 0. 0. 0. 0. 0. 8.e+03 2.e+04 7.e+03
+DEAL:RT::p[100] value 0. 0. 2.e+04 first 0. 0. 0. 0. 0. 0. 2.e+04 3.e+04 1.e+04
+DEAL:RT::p[101] value 0. 0. -6.e+04 first 0. 0. 0. 0. 0. 0. -6.e+04 -1.e+05 -5.e+04
+DEAL:RT::p[102] value 0. 0. 7.e+04 first 0. 0. 0. 0. 0. 0. 6.e+04 1.e+05 5.e+04
+DEAL:RT::p[103] value 0. 0. -3.e+04 first 0. 0. 0. 0. 0. 0. -2.e+04 -4.e+04 -2.e+04
+DEAL:RT::p[104] value 0. 0. -1.e+04 first 0. 0. 0. 0. 0. 0. -1.e+04 -2.e+04 -1.e+04
+DEAL:RT::p[105] value 0. 0. 5.e+04 first 0. 0. 0. 0. 0. 0. 4.e+04 6.e+04 4.e+04
+DEAL:RT::p[106] value 0. 0. -5.e+04 first 0. 0. 0. 0. 0. 0. -5.e+04 -6.e+04 -4.e+04
+DEAL:RT::p[107] value 0. 0. 2.e+04 first 0. 0. 0. 0. 0. 0. 2.e+04 2.e+04 1.e+04
+DEAL:RT::Point 2. 3. 4.
+DEAL:RT::p[0] value 3.e+05 0. 0. first 1.e+06 4.e+05 3.e+05 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[1] value -1.e+06 0. 0. first -4.e+06 -2.e+06 -1.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[2] value 3.e+06 0. 0. first 7.e+06 3.e+06 2.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[3] value -2.e+06 0. 0. first -6.e+06 -3.e+06 -2.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[4] value 6.e+05 0. 0. first 2.e+06 8.e+05 6.e+05 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[5] value -1.e+06 0. 0. first -3.e+06 -1.e+06 -1.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[6] value 5.e+06 0. 0. first 1.e+07 6.e+06 5.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[7] value -9.e+06 0. 0. first -3.e+07 -1.e+07 -8.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[8] value 7.e+06 0. 0. first 2.e+07 9.e+06 6.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[9] value -2.e+06 0. 0. first -6.e+06 -3.e+06 -2.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[10] value 1.e+06 0. 0. first 4.e+06 2.e+06 1.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[11] value -6.e+06 0. 0. first -2.e+07 -7.e+06 -5.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[12] value 1.e+07 0. 0. first 3.e+07 1.e+07 9.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[13] value -8.e+06 0. 0. first -2.e+07 -1.e+07 -7.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[14] value 2.e+06 0. 0. first 6.e+06 3.e+06 2.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[15] value -5.e+05 0. 0. first -1.e+06 -6.e+05 -4.e+05 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[16] value 2.e+06 0. 0. first 7.e+06 3.e+06 2.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[17] value -4.e+06 0. 0. first -1.e+07 -4.e+06 -4.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[18] value 3.e+06 0. 0. first 9.e+06 4.e+06 3.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[19] value -1.e+06 0. 0. first -2.e+06 -1.e+06 -9.e+05 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[20] value -1.e+06 0. 0. first -3.e+06 -1.e+06 -9.e+05 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[21] value 5.e+06 0. 0. first 1.e+07 6.e+06 4.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[22] value -8.e+06 0. 0. first -2.e+07 -1.e+07 -7.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[23] value 7.e+06 0. 0. first 2.e+07 9.e+06 6.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[24] value -2.e+06 0. 0. first -5.e+06 -3.e+06 -2.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[25] value 4.e+06 0. 0. first 1.e+07 5.e+06 3.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[26] value -2.e+07 0. 0. first -5.e+07 -2.e+07 -1.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[27] value 3.e+07 0. 0. first 8.e+07 4.e+07 3.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[28] value -2.e+07 0. 0. first -6.e+07 -3.e+07 -2.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[29] value 7.e+06 0. 0. first 2.e+07 9.e+06 6.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[30] value -4.e+06 0. 0. first -1.e+07 -5.e+06 -4.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[31] value 2.e+07 0. 0. first 6.e+07 2.e+07 2.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[32] value -3.e+07 0. 0. first -9.e+07 -4.e+07 -3.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[33] value 3.e+07 0. 0. first 7.e+07 3.e+07 2.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[34] value -8.e+06 0. 0. first -2.e+07 -1.e+07 -7.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[35] value 2.e+06 0. 0. first 5.e+06 2.e+06 1.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[36] value -7.e+06 0. 0. first -2.e+07 -8.e+06 -6.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[37] value 1.e+07 0. 0. first 4.e+07 1.e+07 1.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[38] value -1.e+07 0. 0. first -3.e+07 -1.e+07 -9.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[39] value 3.e+06 0. 0. first 8.e+06 4.e+06 3.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[40] value 1.e+06 0. 0. first 4.e+06 2.e+06 1.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[41] value -5.e+06 0. 0. first -2.e+07 -7.e+06 -5.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[42] value 9.e+06 0. 0. first 3.e+07 1.e+07 8.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[43] value -7.e+06 0. 0. first -2.e+07 -1.e+07 -6.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[44] value 2.e+06 0. 0. first 6.e+06 3.e+06 2.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[45] value -4.e+06 0. 0. first -1.e+07 -5.e+06 -3.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[46] value 2.e+07 0. 0. first 5.e+07 2.e+07 2.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[47] value -3.e+07 0. 0. first -9.e+07 -4.e+07 -3.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[48] value 3.e+07 0. 0. first 7.e+07 3.e+07 2.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[49] value -8.e+06 0. 0. first -2.e+07 -1.e+07 -7.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[50] value 4.e+06 0. 0. first 1.e+07 5.e+06 4.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[51] value -2.e+07 0. 0. first -6.e+07 -2.e+07 -2.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[52] value 4.e+07 0. 0. first 1.e+08 4.e+07 3.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[53] value -3.e+07 0. 0. first -8.e+07 -3.e+07 -2.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[54] value 9.e+06 0. 0. first 2.e+07 1.e+07 8.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[55] value -2.e+06 0. 0. first -5.e+06 -2.e+06 -1.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[56] value 8.e+06 0. 0. first 2.e+07 9.e+06 7.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[57] value -1.e+07 0. 0. first -4.e+07 -2.e+07 -1.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[58] value 1.e+07 0. 0. first 3.e+07 1.e+07 1.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[59] value -3.e+06 0. 0. first -9.e+06 -4.e+06 -3.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[60] value -4.e+05 0. 0. first -1.e+06 -6.e+05 -4.e+05 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[61] value 2.e+06 0. 0. first 6.e+06 3.e+06 2.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[62] value -3.e+06 0. 0. first -1.e+07 -4.e+06 -3.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[63] value 3.e+06 0. 0. first 8.e+06 4.e+06 2.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[64] value -9.e+05 0. 0. first -2.e+06 -1.e+06 -7.e+05 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[65] value 1.e+06 0. 0. first 4.e+06 2.e+06 1.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[66] value -7.e+06 0. 0. first -2.e+07 -8.e+06 -5.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[67] value 1.e+07 0. 0. first 3.e+07 1.e+07 1.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[68] value -9.e+06 0. 0. first -3.e+07 -1.e+07 -8.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[69] value 3.e+06 0. 0. first 7.e+06 4.e+06 2.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[70] value -2.e+06 0. 0. first -5.e+06 -2.e+06 -1.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[71] value 8.e+06 0. 0. first 2.e+07 9.e+06 6.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[72] value -1.e+07 0. 0. first -4.e+07 -2.e+07 -1.e+07 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[73] value 1.e+07 0. 0. first 3.e+07 1.e+07 9.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[74] value -3.e+06 0. 0. first -8.e+06 -4.e+06 -3.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[75] value 6.e+05 0. 0. first 2.e+06 7.e+05 5.e+05 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[76] value -3.e+06 0. 0. first -9.e+06 -3.e+06 -2.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[77] value 5.e+06 0. 0. first 1.e+07 6.e+06 4.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[78] value -4.e+06 0. 0. first -1.e+07 -5.e+06 -3.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[79] value 1.e+06 0. 0. first 3.e+06 1.e+06 1.e+06 0. 0. 0. 0. 0. 0.
+DEAL:RT::p[80] value 0. 5.e+05 0. first 0. 0. 0. 9.e+05 5.e+05 1.e+06 0. 0. 0.
+DEAL:RT::p[81] value 0. -2.e+06 0. first 0. 0. 0. -4.e+06 -2.e+06 -6.e+06 0. 0. 0.
+DEAL:RT::p[82] value 0. 4.e+06 0. first 0. 0. 0. 6.e+06 4.e+06 9.e+06 0. 0. 0.
+DEAL:RT::p[83] value 0. -3.e+06 0. first 0. 0. 0. -5.e+06 -3.e+06 -7.e+06 0. 0. 0.
+DEAL:RT::p[84] value 0. 8.e+05 0. first 0. 0. 0. 1.e+06 7.e+05 2.e+06 0. 0. 0.
+DEAL:RT::p[85] value 0. -2.e+06 0. first 0. 0. 0. -3.e+06 -2.e+06 -4.e+06 0. 0. 0.
+DEAL:RT::p[86] value 0. 8.e+06 0. first 0. 0. 0. 1.e+07 7.e+06 2.e+07 0. 0. 0.
+DEAL:RT::p[87] value 0. -1.e+07 0. first 0. 0. 0. -2.e+07 -1.e+07 -3.e+07 0. 0. 0.
+DEAL:RT::p[88] value 0. 1.e+07 0. first 0. 0. 0. 2.e+07 8.e+06 2.e+07 0. 0. 0.
+DEAL:RT::p[89] value 0. -3.e+06 0. first 0. 0. 0. -4.e+06 -2.e+06 -6.e+06 0. 0. 0.
+DEAL:RT::p[90] value 0. 2.e+06 0. first 0. 0. 0. 3.e+06 2.e+06 5.e+06 0. 0. 0.
+DEAL:RT::p[91] value 0. -9.e+06 0. first 0. 0. 0. -1.e+07 -7.e+06 -2.e+07 0. 0. 0.
+DEAL:RT::p[92] value 0. 1.e+07 0. first 0. 0. 0. 2.e+07 1.e+07 3.e+07 0. 0. 0.
+DEAL:RT::p[93] value 0. -1.e+07 0. first 0. 0. 0. -2.e+07 -9.e+06 -2.e+07 0. 0. 0.
+DEAL:RT::p[94] value 0. 3.e+06 0. first 0. 0. 0. 5.e+06 3.e+06 7.e+06 0. 0. 0.
+DEAL:RT::p[95] value 0. -7.e+05 0. first 0. 0. 0. -1.e+06 -6.e+05 -2.e+06 0. 0. 0.
+DEAL:RT::p[96] value 0. 3.e+06 0. first 0. 0. 0. 5.e+06 3.e+06 7.e+06 0. 0. 0.
+DEAL:RT::p[97] value 0. -5.e+06 0. first 0. 0. 0. -9.e+06 -4.e+06 -1.e+07 0. 0. 0.
+DEAL:RT::p[98] value 0. 4.e+06 0. first 0. 0. 0. 6.e+06 3.e+06 9.e+06 0. 0. 0.
+DEAL:RT::p[99] value 0. -1.e+06 0. first 0. 0. 0. -2.e+06 -9.e+05 -3.e+06 0. 0. 0.
+DEAL:RT::p[100] value 0. -2.e+06 0. first 0. 0. 0. -3.e+06 -2.e+06 -4.e+06 0. 0. 0.
+DEAL:RT::p[101] value 0. 9.e+06 0. first 0. 0. 0. 1.e+07 8.e+06 2.e+07 0. 0. 0.
+DEAL:RT::p[102] value 0. -1.e+07 0. first 0. 0. 0. -2.e+07 -1.e+07 -3.e+07 0. 0. 0.
+DEAL:RT::p[103] value 0. 1.e+07 0. first 0. 0. 0. 2.e+07 9.e+06 2.e+07 0. 0. 0.
+DEAL:RT::p[104] value 0. -3.e+06 0. first 0. 0. 0. -5.e+06 -3.e+06 -7.e+06 0. 0. 0.
+DEAL:RT::p[105] value 0. 6.e+06 0. first 0. 0. 0. 1.e+07 6.e+06 1.e+07 0. 0. 0.
+DEAL:RT::p[106] value 0. -3.e+07 0. first 0. 0. 0. -5.e+07 -2.e+07 -6.e+07 0. 0. 0.
+DEAL:RT::p[107] value 0. 5.e+07 0. first 0. 0. 0. 8.e+07 4.e+07 1.e+08 0. 0. 0.
+DEAL:RT::p[108] value 0. -3.e+07 0. first 0. 0. 0. -5.e+07 -3.e+07 -8.e+07 0. 0. 0.
+DEAL:RT::p[109] value 0. 1.e+07 0. first 0. 0. 0. 1.e+07 9.e+06 2.e+07 0. 0. 0.
+DEAL:RT::p[110] value 0. -7.e+06 0. first 0. 0. 0. -1.e+07 -6.e+06 -2.e+07 0. 0. 0.
+DEAL:RT::p[111] value 0. 3.e+07 0. first 0. 0. 0. 5.e+07 3.e+07 7.e+07 0. 0. 0.
+DEAL:RT::p[112] value 0. -5.e+07 0. first 0. 0. 0. -8.e+07 -4.e+07 -1.e+08 0. 0. 0.
+DEAL:RT::p[113] value 0. 4.e+07 0. first 0. 0. 0. 6.e+07 3.e+07 8.e+07 0. 0. 0.
+DEAL:RT::p[114] value 0. -1.e+07 0. first 0. 0. 0. -2.e+07 -9.e+06 -2.e+07 0. 0. 0.
+DEAL:RT::p[115] value 0. 3.e+06 0. first 0. 0. 0. 4.e+06 2.e+06 6.e+06 0. 0. 0.
+DEAL:RT::p[116] value 0. -1.e+07 0. first 0. 0. 0. -2.e+07 -9.e+06 -3.e+07 0. 0. 0.
+DEAL:RT::p[117] value 0. 2.e+07 0. first 0. 0. 0. 3.e+07 2.e+07 4.e+07 0. 0. 0.
+DEAL:RT::p[118] value 0. -1.e+07 0. first 0. 0. 0. -2.e+07 -1.e+07 -3.e+07 0. 0. 0.
+DEAL:RT::p[119] value 0. 4.e+06 0. first 0. 0. 0. 6.e+06 3.e+06 9.e+06 0. 0. 0.
+DEAL:RT::p[120] value 0. 2.e+06 0. first 0. 0. 0. 4.e+06 2.e+06 5.e+06 0. 0. 0.
+DEAL:RT::p[121] value 0. -1.e+07 0. first 0. 0. 0. -2.e+07 -1.e+07 -2.e+07 0. 0. 0.
+DEAL:RT::p[122] value 0. 2.e+07 0. first 0. 0. 0. 3.e+07 2.e+07 4.e+07 0. 0. 0.
+DEAL:RT::p[123] value 0. -1.e+07 0. first 0. 0. 0. -2.e+07 -1.e+07 -3.e+07 0. 0. 0.
+DEAL:RT::p[124] value 0. 4.e+06 0. first 0. 0. 0. 6.e+06 3.e+06 8.e+06 0. 0. 0.
+DEAL:RT::p[125] value 0. -8.e+06 0. first 0. 0. 0. -1.e+07 -7.e+06 -2.e+07 0. 0. 0.
+DEAL:RT::p[126] value 0. 3.e+07 0. first 0. 0. 0. 6.e+07 3.e+07 7.e+07 0. 0. 0.
+DEAL:RT::p[127] value 0. -6.e+07 0. first 0. 0. 0. -9.e+07 -5.e+07 -1.e+08 0. 0. 0.
+DEAL:RT::p[128] value 0. 4.e+07 0. first 0. 0. 0. 7.e+07 4.e+07 9.e+07 0. 0. 0.
+DEAL:RT::p[129] value 0. -1.e+07 0. first 0. 0. 0. -2.e+07 -1.e+07 -3.e+07 0. 0. 0.
+DEAL:RT::p[130] value 0. 9.e+06 0. first 0. 0. 0. 2.e+07 8.e+06 2.e+07 0. 0. 0.
+DEAL:RT::p[131] value 0. -4.e+07 0. first 0. 0. 0. -6.e+07 -3.e+07 -8.e+07 0. 0. 0.
+DEAL:RT::p[132] value 0. 6.e+07 0. first 0. 0. 0. 1.e+08 5.e+07 1.e+08 0. 0. 0.
+DEAL:RT::p[133] value 0. -5.e+07 0. first 0. 0. 0. -8.e+07 -4.e+07 -1.e+08 0. 0. 0.
+DEAL:RT::p[134] value 0. 1.e+07 0. first 0. 0. 0. 2.e+07 1.e+07 3.e+07 0. 0. 0.
+DEAL:RT::p[135] value 0. -3.e+06 0. first 0. 0. 0. -6.e+06 -3.e+06 -7.e+06 0. 0. 0.
+DEAL:RT::p[136] value 0. 1.e+07 0. first 0. 0. 0. 2.e+07 1.e+07 3.e+07 0. 0. 0.
+DEAL:RT::p[137] value 0. -2.e+07 0. first 0. 0. 0. -4.e+07 -2.e+07 -5.e+07 0. 0. 0.
+DEAL:RT::p[138] value 0. 2.e+07 0. first 0. 0. 0. 3.e+07 1.e+07 4.e+07 0. 0. 0.
+DEAL:RT::p[139] value 0. -5.e+06 0. first 0. 0. 0. -8.e+06 -4.e+06 -1.e+07 0. 0. 0.
+DEAL:RT::p[140] value 0. -1.e+06 0. first 0. 0. 0. -2.e+06 -1.e+06 -2.e+06 0. 0. 0.
+DEAL:RT::p[141] value 0. 5.e+06 0. first 0. 0. 0. 8.e+06 4.e+06 9.e+06 0. 0. 0.
+DEAL:RT::p[142] value 0. -8.e+06 0. first 0. 0. 0. -1.e+07 -7.e+06 -1.e+07 0. 0. 0.
+DEAL:RT::p[143] value 0. 6.e+06 0. first 0. 0. 0. 9.e+06 5.e+06 1.e+07 0. 0. 0.
+DEAL:RT::p[144] value 0. -2.e+06 0. first 0. 0. 0. -3.e+06 -1.e+06 -3.e+06 0. 0. 0.
+DEAL:RT::p[145] value 0. 4.e+06 0. first 0. 0. 0. 6.e+06 3.e+06 7.e+06 0. 0. 0.
+DEAL:RT::p[146] value 0. -2.e+07 0. first 0. 0. 0. -3.e+07 -1.e+07 -3.e+07 0. 0. 0.
+DEAL:RT::p[147] value 0. 3.e+07 0. first 0. 0. 0. 4.e+07 2.e+07 5.e+07 0. 0. 0.
+DEAL:RT::p[148] value 0. -2.e+07 0. first 0. 0. 0. -3.e+07 -2.e+07 -4.e+07 0. 0. 0.
+DEAL:RT::p[149] value 0. 5.e+06 0. first 0. 0. 0. 8.e+06 5.e+06 1.e+07 0. 0. 0.
+DEAL:RT::p[150] value 0. -4.e+06 0. first 0. 0. 0. -7.e+06 -3.e+06 -7.e+06 0. 0. 0.
+DEAL:RT::p[151] value 0. 2.e+07 0. first 0. 0. 0. 3.e+07 1.e+07 3.e+07 0. 0. 0.
+DEAL:RT::p[152] value 0. -3.e+07 0. first 0. 0. 0. -5.e+07 -2.e+07 -5.e+07 0. 0. 0.
+DEAL:RT::p[153] value 0. 2.e+07 0. first 0. 0. 0. 3.e+07 2.e+07 4.e+07 0. 0. 0.
+DEAL:RT::p[154] value 0. -6.e+06 0. first 0. 0. 0. -9.e+06 -5.e+06 -1.e+07 0. 0. 0.
+DEAL:RT::p[155] value 0. 1.e+06 0. first 0. 0. 0. 2.e+06 1.e+06 3.e+06 0. 0. 0.
+DEAL:RT::p[156] value 0. -6.e+06 0. first 0. 0. 0. -1.e+07 -5.e+06 -1.e+07 0. 0. 0.
+DEAL:RT::p[157] value 0. 1.e+07 0. first 0. 0. 0. 2.e+07 9.e+06 2.e+07 0. 0. 0.
+DEAL:RT::p[158] value 0. -8.e+06 0. first 0. 0. 0. -1.e+07 -6.e+06 -1.e+07 0. 0. 0.
+DEAL:RT::p[159] value 0. 2.e+06 0. first 0. 0. 0. 3.e+06 2.e+06 4.e+06 0. 0. 0.
+DEAL:RT::p[160] value 0. 0. 8.e+05 first 0. 0. 0. 0. 0. 0. 9.e+05 2.e+06 1.e+06
+DEAL:RT::p[161] value 0. 0. -3.e+06 first 0. 0. 0. 0. 0. 0. -4.e+06 -8.e+06 -4.e+06
+DEAL:RT::p[162] value 0. 0. 5.e+06 first 0. 0. 0. 0. 0. 0. 6.e+06 1.e+07 7.e+06
+DEAL:RT::p[163] value 0. 0. -4.e+06 first 0. 0. 0. 0. 0. 0. -4.e+06 -9.e+06 -5.e+06
+DEAL:RT::p[164] value 0. 0. 1.e+06 first 0. 0. 0. 0. 0. 0. 1.e+06 2.e+06 1.e+06
+DEAL:RT::p[165] value 0. 0. -3.e+06 first 0. 0. 0. 0. 0. 0. -3.e+06 -6.e+06 -4.e+06
+DEAL:RT::p[166] value 0. 0. 1.e+07 first 0. 0. 0. 0. 0. 0. 1.e+07 3.e+07 2.e+07
+DEAL:RT::p[167] value 0. 0. -2.e+07 first 0. 0. 0. 0. 0. 0. -2.e+07 -4.e+07 -2.e+07
+DEAL:RT::p[168] value 0. 0. 1.e+07 first 0. 0. 0. 0. 0. 0. 2.e+07 3.e+07 2.e+07
+DEAL:RT::p[169] value 0. 0. -4.e+06 first 0. 0. 0. 0. 0. 0. -4.e+06 -8.e+06 -5.e+06
+DEAL:RT::p[170] value 0. 0. 3.e+06 first 0. 0. 0. 0. 0. 0. 4.e+06 7.e+06 4.e+06
+DEAL:RT::p[171] value 0. 0. -1.e+07 first 0. 0. 0. 0. 0. 0. -2.e+07 -3.e+07 -2.e+07
+DEAL:RT::p[172] value 0. 0. 2.e+07 first 0. 0. 0. 0. 0. 0. 3.e+07 5.e+07 3.e+07
+DEAL:RT::p[173] value 0. 0. -2.e+07 first 0. 0. 0. 0. 0. 0. -2.e+07 -4.e+07 -2.e+07
+DEAL:RT::p[174] value 0. 0. 5.e+06 first 0. 0. 0. 0. 0. 0. 5.e+06 1.e+07 6.e+06
+DEAL:RT::p[175] value 0. 0. -2.e+06 first 0. 0. 0. 0. 0. 0. -2.e+06 -3.e+06 -2.e+06
+DEAL:RT::p[176] value 0. 0. 7.e+06 first 0. 0. 0. 0. 0. 0. 8.e+06 1.e+07 9.e+06
+DEAL:RT::p[177] value 0. 0. -1.e+07 first 0. 0. 0. 0. 0. 0. -1.e+07 -2.e+07 -1.e+07
+DEAL:RT::p[178] value 0. 0. 8.e+06 first 0. 0. 0. 0. 0. 0. 9.e+06 1.e+07 1.e+07
+DEAL:RT::p[179] value 0. 0. -2.e+06 first 0. 0. 0. 0. 0. 0. -2.e+06 -4.e+06 -3.e+06
+DEAL:RT::p[180] value 0. 0. -3.e+06 first 0. 0. 0. 0. 0. 0. -3.e+06 -6.e+06 -3.e+06
+DEAL:RT::p[181] value 0. 0. 1.e+07 first 0. 0. 0. 0. 0. 0. 1.e+07 3.e+07 1.e+07
+DEAL:RT::p[182] value 0. 0. -2.e+07 first 0. 0. 0. 0. 0. 0. -2.e+07 -4.e+07 -2.e+07
+DEAL:RT::p[183] value 0. 0. 1.e+07 first 0. 0. 0. 0. 0. 0. 1.e+07 3.e+07 2.e+07
+DEAL:RT::p[184] value 0. 0. -3.e+06 first 0. 0. 0. 0. 0. 0. -4.e+06 -8.e+06 -4.e+06
+DEAL:RT::p[185] value 0. 0. 9.e+06 first 0. 0. 0. 0. 0. 0. 1.e+07 2.e+07 1.e+07
+DEAL:RT::p[186] value 0. 0. -4.e+07 first 0. 0. 0. 0. 0. 0. -5.e+07 -9.e+07 -5.e+07
+DEAL:RT::p[187] value 0. 0. 6.e+07 first 0. 0. 0. 0. 0. 0. 7.e+07 1.e+08 8.e+07
+DEAL:RT::p[188] value 0. 0. -5.e+07 first 0. 0. 0. 0. 0. 0. -5.e+07 -1.e+08 -6.e+07
+DEAL:RT::p[189] value 0. 0. 1.e+07 first 0. 0. 0. 0. 0. 0. 1.e+07 3.e+07 2.e+07
+DEAL:RT::p[190] value 0. 0. -1.e+07 first 0. 0. 0. 0. 0. 0. -1.e+07 -2.e+07 -1.e+07
+DEAL:RT::p[191] value 0. 0. 5.e+07 first 0. 0. 0. 0. 0. 0. 6.e+07 1.e+08 6.e+07
+DEAL:RT::p[192] value 0. 0. -8.e+07 first 0. 0. 0. 0. 0. 0. -9.e+07 -2.e+08 -1.e+08
+DEAL:RT::p[193] value 0. 0. 6.e+07 first 0. 0. 0. 0. 0. 0. 6.e+07 1.e+08 7.e+07
+DEAL:RT::p[194] value 0. 0. -2.e+07 first 0. 0. 0. 0. 0. 0. -2.e+07 -3.e+07 -2.e+07
+DEAL:RT::p[195] value 0. 0. 5.e+06 first 0. 0. 0. 0. 0. 0. 6.e+06 1.e+07 7.e+06
+DEAL:RT::p[196] value 0. 0. -2.e+07 first 0. 0. 0. 0. 0. 0. -3.e+07 -4.e+07 -3.e+07
+DEAL:RT::p[197] value 0. 0. 4.e+07 first 0. 0. 0. 0. 0. 0. 4.e+07 7.e+07 4.e+07
+DEAL:RT::p[198] value 0. 0. -3.e+07 first 0. 0. 0. 0. 0. 0. -3.e+07 -5.e+07 -3.e+07
+DEAL:RT::p[199] value 0. 0. 7.e+06 first 0. 0. 0. 0. 0. 0. 8.e+06 1.e+07 9.e+06
+DEAL:RT::p[200] value 0. 0. 3.e+06 first 0. 0. 0. 0. 0. 0. 4.e+06 7.e+06 4.e+06
+DEAL:RT::p[201] value 0. 0. -1.e+07 first 0. 0. 0. 0. 0. 0. -1.e+07 -3.e+07 -2.e+07
+DEAL:RT::p[202] value 0. 0. 2.e+07 first 0. 0. 0. 0. 0. 0. 2.e+07 5.e+07 2.e+07
+DEAL:RT::p[203] value 0. 0. -1.e+07 first 0. 0. 0. 0. 0. 0. -2.e+07 -3.e+07 -2.e+07
+DEAL:RT::p[204] value 0. 0. 4.e+06 first 0. 0. 0. 0. 0. 0. 4.e+06 9.e+06 5.e+06
+DEAL:RT::p[205] value 0. 0. -1.e+07 first 0. 0. 0. 0. 0. 0. -1.e+07 -2.e+07 -1.e+07
+DEAL:RT::p[206] value 0. 0. 5.e+07 first 0. 0. 0. 0. 0. 0. 5.e+07 1.e+08 5.e+07
+DEAL:RT::p[207] value 0. 0. -7.e+07 first 0. 0. 0. 0. 0. 0. -8.e+07 -2.e+08 -9.e+07
+DEAL:RT::p[208] value 0. 0. 5.e+07 first 0. 0. 0. 0. 0. 0. 6.e+07 1.e+08 6.e+07
+DEAL:RT::p[209] value 0. 0. -1.e+07 first 0. 0. 0. 0. 0. 0. -2.e+07 -3.e+07 -2.e+07
+DEAL:RT::p[210] value 0. 0. 1.e+07 first 0. 0. 0. 0. 0. 0. 2.e+07 3.e+07 2.e+07
+DEAL:RT::p[211] value 0. 0. -6.e+07 first 0. 0. 0. 0. 0. 0. -7.e+07 -1.e+08 -7.e+07
+DEAL:RT::p[212] value 0. 0. 9.e+07 first 0. 0. 0. 0. 0. 0. 1.e+08 2.e+08 1.e+08
+DEAL:RT::p[213] value 0. 0. -7.e+07 first 0. 0. 0. 0. 0. 0. -7.e+07 -1.e+08 -8.e+07
+DEAL:RT::p[214] value 0. 0. 2.e+07 first 0. 0. 0. 0. 0. 0. 2.e+07 4.e+07 2.e+07
+DEAL:RT::p[215] value 0. 0. -6.e+06 first 0. 0. 0. 0. 0. 0. -7.e+06 -1.e+07 -7.e+06
+DEAL:RT::p[216] value 0. 0. 3.e+07 first 0. 0. 0. 0. 0. 0. 3.e+07 5.e+07 3.e+07
+DEAL:RT::p[217] value 0. 0. -4.e+07 first 0. 0. 0. 0. 0. 0. -5.e+07 -7.e+07 -5.e+07
+DEAL:RT::p[218] value 0. 0. 3.e+07 first 0. 0. 0. 0. 0. 0. 3.e+07 5.e+07 4.e+07
+DEAL:RT::p[219] value 0. 0. -8.e+06 first 0. 0. 0. 0. 0. 0. -9.e+06 -1.e+07 -1.e+07
+DEAL:RT::p[220] value 0. 0. -1.e+06 first 0. 0. 0. 0. 0. 0. -1.e+06 -3.e+06 -1.e+06
+DEAL:RT::p[221] value 0. 0. 5.e+06 first 0. 0. 0. 0. 0. 0. 6.e+06 1.e+07 6.e+06
+DEAL:RT::p[222] value 0. 0. -8.e+06 first 0. 0. 0. 0. 0. 0. -9.e+06 -2.e+07 -9.e+06
+DEAL:RT::p[223] value 0. 0. 6.e+06 first 0. 0. 0. 0. 0. 0. 6.e+06 1.e+07 6.e+06
+DEAL:RT::p[224] value 0. 0. -2.e+06 first 0. 0. 0. 0. 0. 0. -2.e+06 -4.e+06 -2.e+06
+DEAL:RT::p[225] value 0. 0. 4.e+06 first 0. 0. 0. 0. 0. 0. 5.e+06 9.e+06 5.e+06
+DEAL:RT::p[226] value 0. 0. -2.e+07 first 0. 0. 0. 0. 0. 0. -2.e+07 -4.e+07 -2.e+07
+DEAL:RT::p[227] value 0. 0. 3.e+07 first 0. 0. 0. 0. 0. 0. 3.e+07 6.e+07 3.e+07
+DEAL:RT::p[228] value 0. 0. -2.e+07 first 0. 0. 0. 0. 0. 0. -2.e+07 -5.e+07 -2.e+07
+DEAL:RT::p[229] value 0. 0. 6.e+06 first 0. 0. 0. 0. 0. 0. 6.e+06 1.e+07 6.e+06
+DEAL:RT::p[230] value 0. 0. -5.e+06 first 0. 0. 0. 0. 0. 0. -6.e+06 -1.e+07 -6.e+06
+DEAL:RT::p[231] value 0. 0. 2.e+07 first 0. 0. 0. 0. 0. 0. 3.e+07 5.e+07 3.e+07
+DEAL:RT::p[232] value 0. 0. -4.e+07 first 0. 0. 0. 0. 0. 0. -4.e+07 -7.e+07 -4.e+07
+DEAL:RT::p[233] value 0. 0. 3.e+07 first 0. 0. 0. 0. 0. 0. 3.e+07 5.e+07 3.e+07
+DEAL:RT::p[234] value 0. 0. -7.e+06 first 0. 0. 0. 0. 0. 0. -8.e+06 -1.e+07 -8.e+06
+DEAL:RT::p[235] value 0. 0. 2.e+06 first 0. 0. 0. 0. 0. 0. 3.e+06 4.e+06 3.e+06
+DEAL:RT::p[236] value 0. 0. -1.e+07 first 0. 0. 0. 0. 0. 0. -1.e+07 -2.e+07 -1.e+07
+DEAL:RT::p[237] value 0. 0. 2.e+07 first 0. 0. 0. 0. 0. 0. 2.e+07 3.e+07 2.e+07
+DEAL:RT::p[238] value 0. 0. -1.e+07 first 0. 0. 0. 0. 0. 0. -1.e+07 -2.e+07 -1.e+07
+DEAL:RT::p[239] value 0. 0. 3.e+06 first 0. 0. 0. 0. 0. 0. 3.e+06 6.e+06 3.e+06

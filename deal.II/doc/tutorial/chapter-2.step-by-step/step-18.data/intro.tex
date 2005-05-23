@@ -11,8 +11,8 @@ different directions: first, it solves the quasistatic but time dependent
 elasticity problem for large deformations with a Lagrangian mesh movement
 approach. Secondly, it shows some more techniques for solving such problems
 using parallel processing with PETSc's linear algebra. In addition to this, we
-show how to work around the main bottleneck of step-17, namely there that we
-only generated graphical output from one process, and that this scaled very
+show how to work around the main bottleneck of step-17, namely that we
+generated graphical output from only one process, and that this scaled very
 badly with larger numbers of processes and on large problems. Finally, a good
 number of assorted improvements and techniques are demonstrated that have not
 been shown yet in previous programs.
@@ -29,8 +29,8 @@ webpage \texttt{http://www.dealii.org/}.
 
 \subsubsection*{Motivation of the model}
 
-In general, small elastic deformations are described by the elastic wave
-equation
+In general, time-dependent small elastic deformations are described by the
+elastic wave equation
 \begin{gather*}
   \rho \frac{\partial^2 \vec u}{\partial t^2} 
   + c \frac{\partial \vec u}{\partial t}
@@ -38,9 +38,9 @@ equation
   \qquad
   \text{in $\Omega$},
 \end{gather*}
-where $\vec u=\vec u (\vec x,t)$ is the deformation of the body, $\rho$ and
-$c$ the density and attenuation coefficient, and $\vec f$ external forces. In
-addition, initial conditions
+where $\vec u=\vec u (\vec x,t)$ is the deformation of the body, $\rho$
+and $c$ the density and attenuation coefficient, and $\vec f$ external forces.
+In addition, initial conditions
 \begin{align*}
   \vec u(\cdot, 0) = \vec u_0(\cdot)
   \qquad
@@ -49,7 +49,7 @@ addition, initial conditions
 and Dirichlet (displacement) or Neumann (force) boundary conditions need
 to be specified for a unique solution:
 \begin{align*}
-  \vec u(\vec x,t) &= d(\vec x,t)
+  \vec u(\vec x,t) &= \vec d(\vec x,t)
   \qquad
   &&\text{on $\Gamma_D\subset\partial\Omega$},  
   \\
@@ -60,12 +60,14 @@ to be specified for a unique solution:
 In above formulation, $\varepsilon(\vec u)= \tfrac 12 (\nabla \vec u + \nabla
 \vec u^T)$ is the symmetric gradient of the displacement, also called the
 \textit{strain}. $C$ is a tensor of rank 4, called the \textit{stress-strain
-  tensor} that contains knowledge of the elastic strength of the material. We
-will comment on the roles of the strain and stress tensors more below. For the
-moment it suffices to say that we interpret the term $\div ( C
-\varepsilon(\vec u))$ as the vector with components $\tfrac \partial{\partial
-  x_j} C_{ijkl} \varepsilon(\vec u)_{kl}$, where summation over indices
-$j,k,l$ is implied.
+  tensor} that contains knowledge of the elastic strength of the material; its
+symmetry properties make sure that it maps symmetric tensors of rank 2
+(``matrices'' of dimension $d$, where $d$ is the spatial dimensionality) onto
+symmetric tensors of same rank. We will comment on the roles of the strain and
+stress tensors more below. For the moment it suffices to say that we interpret
+the term $\div ( C \varepsilon(\vec u))$ as the vector with components $\tfrac
+\partial{\partial x_j} C_{ijkl} \varepsilon(\vec u)_{kl}$, where summation
+over indices $j,k,l$ is implied.
 
 The quasistatic limit of this equation is motivated as follows: each small
 perturbation of the body, for example by changes in boundary condition or the
@@ -76,16 +78,16 @@ these waves will be attenuated on a time scale of, say, $\tau$. Now, assume
 that all changes in external configuration happen on times scales that are
 much larger than $\tau$. In that case, the dynamic nature of the change is
 unimportant: we can consider the body to always be in static equilibrium,
-i.e. we can assume that at all times the body satisfies
+i.e.~we can assume that at all times the body satisfies
 \begin{align*}
   - \div ( C \varepsilon(\vec u)) &= \vec f
   &&\text{in $\Omega$},
   \\
-  \vec u(\vec x,t) &= d(\vec x,t)
+  \vec u(\vec x,t) &= \vec d(\vec x,t)
   \qquad
   &&\text{on $\Gamma_D$},
   \\
-  \vec n \ C \varepsilon(\vec u(\vec x,t)) &= \vec b\vec x,t)
+  \vec n \ C \varepsilon(\vec u(\vec x,t)) &= \vec b(\vec x,t)
   \qquad
   &&\text{on $\Gamma_N$}.
 \end{align*}
@@ -101,11 +103,11 @@ terms of the stress:
   - \div \sigma &= \vec f
   &&\text{in $\Omega(t)$},
   \\
-  \vec u(\vec x,t) &= d(\vec x,t)
+  \vec u(\vec x,t) &= \vec d(\vec x,t)
   \qquad
   &&\text{on $\Gamma_D\subset\partial\Omega(t)$},
   \\
-  \vec n \ C \varepsilon(\vec u(\vec x,t)) &= \vec b\vec x,t)
+  \vec n \ C \varepsilon(\vec u(\vec x,t)) &= \vec b(\vec x,t)
   \qquad
   &&\text{on $\Gamma_N=\partial\Omega(t)\backslash\Gamma_D$}.
 \end{align*}
@@ -117,7 +119,8 @@ stress and the strain, as follows:
 \begin{align*}
   \dot\sigma = C \varepsilon (\dot{\vec u}),
 \end{align*}
-where a dot indicates a time derivative.
+where a dot indicates a time derivative. Both the stress $\sigma$ and the
+strain $\varepsilon(\vec u)$ are symmetric tensors of rank 2.
 
 
 \subsubsection*{Time discretization}
@@ -126,7 +129,7 @@ Numerically, this system is solved as follows: first, we discretize
 the time component using a backward Euler scheme. This leads to a
 discrete equilibrium of force at time step $n$:
 \begin{align*}
-  \div \sigma^n &= f^n,
+  -\div \sigma^n &= f^n,
 \intertext{where}
   \sigma^n &= \sigma^{n-1} + C \varepsilon (\Delta \vec u^n),
 \end{align*}
@@ -137,17 +140,17 @@ have to solve the following system:
   - \div  C \varepsilon(\Delta\vec u^n) &= \vec f - \div \sigma^{n-1}
   &&\text{in $\Omega(t_{n-1})$},
   \\
-  \Delta \vec u^n(\vec x,t) &= d(\vec x,t_n) - d(\vec x,t_{n-1})
+  \Delta \vec u^n(\vec x,t) &= \vec d(\vec x,t_n) - \vec d(\vec x,t_{n-1})
   \qquad
   &&\text{on $\Gamma_D\subset\partial\Omega(t_{n-1})$},
   \\
-  \vec n \ C \varepsilon(\Delta \vec u^n(\vec x,t)) &= \vec b\vec x,t_{1})-\vec b\vec x,t_{n-1})
+  \vec n \ C \varepsilon(\Delta \vec u^n(\vec x,t)) &= \vec b(\vec x,t_n)-\vec b(\vec x,t_{n-1})
   \qquad
   &&\text{on $\Gamma_N=\partial\Omega(t_{n-1})\backslash\Gamma_D$}.
 \end{align*}
 The weak form of this set of equations, which as usual is the basis for the
 finite element formulation, reads as follows: find $\Delta \vec u^n \in
-\{v\in H^1(\Omega(t_{n-1}))^d: v|_{\Gamma_D}=d(\cdot,t_n) - d(\cdot,t_{n-1})\}$
+\{v\in H^1(\Omega(t_{n-1}))^d: v|_{\Gamma_D}=\vec d(\cdot,t_n) - \vec d(\cdot,t_{n-1})\}$
 such that
 \begin{multline*}
   (C \varepsilon(\Delta\vec u^n), \varepsilon(\varphi) )_{\Omega(t_{n-1})}
@@ -155,12 +158,12 @@ such that
   (\vec f, \varphi)_{\Omega(t_{n-1})}
   +(\sigma^{n-1},\varepsilon(\varphi))_{\Omega(t_{n-1})}
   \\
-  +(\vec b\vec x,t_{1})-\vec b\vec x,t_{n-1}, \varphi)_{\Gamma_N}
+  +(\vec b(\vec x,t_n)-\vec b(\vec x,t_{n-1}), \varphi)_{\Gamma_N}
   \\
   \forall \varphi \in \{v\in H^1(\Omega(t_{n-1}))^d: v|_{\Gamma_D}=0\}.
 \end{multline*}
 We note that in the program we will always assume that there are no boundary
-forces, i.e. $\vec b = 0$, and that the deformation of the body is driven by
+forces, i.e.~$\vec b = 0$, and that the deformation of the body is driven by
 body forces $\vec f$ and prescribed boundary displacements $\vec d$ alone. It
 is also worth noting that when intregrating by parts, we would get terms of
 the form
@@ -183,7 +186,7 @@ There are differences, however:
   able to solve the next time step on a new domain;
 
   \item We need to know $\sigma^{n-1}$ to compute the next incremental
-  displacement, i.e. we need to compute it at the end of the time step
+  displacement, i.e.~we need to compute it at the end of the time step
   to make sure it is available for the next time step. Essentially,
   the stress variable is our window to the history of deformation of
   the body.
@@ -213,21 +216,21 @@ is a priori not clear how to store $\sigma^n$ in a computer program.
 
 To decide this, we have to see where it is used. The only place where we
 require the stress is in the term
-$(\sigma^n,\varepsilon(\varphi))_{\Omega(t_n)}$. In practice, we of
+$(\sigma^{n-1},\varepsilon(\varphi))_{\Omega(t_{n-1})}$. In practice, we of
 course replace this term by numerical quadrature
 \begin{gather*}
-  (\sigma^n,\varepsilon(\varphi))_{\Omega(t_n)}
+  (\sigma^{n-1},\varepsilon(\varphi))_{\Omega(t_{n-1})}
   =
   \sum_{K\subset {\mathbb T}}
-  (\sigma^n,\varepsilon(\varphi))_K
+  (\sigma^{n-1},\varepsilon(\varphi))_K
   \approx
   \sum_{K\subset {\mathbb T}}
   \sum_q
-  w_q \ \sigma^n(\vec x_q) \ \varepsilon(\varphi(\vec x_q)),
+  w_q \ \sigma^{n-1}(\vec x_q) \ \varepsilon(\varphi(\vec x_q)),
 \end{gather*}
 where $w_q$ are the quadrature weights and $\vec x_q$ the quadrature points on
 cell $K$. This should make clear that what we really need is not the stress
-$\sigma^n$ in itself, but only the values of the stress in the quadrature
+$\sigma^{n-1}$ in itself, but only the values of the stress in the quadrature
 points on all cells. This, however, is a simpler task: we only have to provide
 a data structure that is able to hold one symmetric tensor of rank 2 for each
 quadrature point on all cells (or, since we compute in parallel, all
@@ -251,10 +254,11 @@ end, we have to define a rotation matrix $R(\Delta \vec u^n)$ that describes,
 in each point the rotation due to the displacement increments. It is not hard
 to see that the actual dependence of $R$ on $\Delta \vec u^n$ can only be
 through the curl of the displacement, rather than the displacement itself or
-its gradient (the constant components of the increment describe translations,
-its divergence the dilational modes, and the curl the rotational modes). Since
-the exact form of $R$ is cumbersome, we only state it in the program code, and
-note that the correct updating formula for the stress variable is then
+its full gradient (the constant components of the increment describe
+translations, its divergence the dilational modes, and the curl the rotational
+modes). Since the exact form of $R$ is cumbersome, we only state it in the
+program code, and note that the correct updating formula for the stress
+variable is then
 \begin{gather*}
   \sigma^n
   = 
@@ -319,9 +323,15 @@ job. Here, ``TTTT.TTTT'' denotes the time for which this output has
 been generated, and ``NNN'' the number of the MPI process that did this.
 
 The next step is to convert this file or these files into whatever
-format you like. For this, there is a program
+format you like. The program that does this is the step-19 tutorial program:
+call it through
+\begin{center}
+  \texttt{../step-19/step-19 solution-0000.0000.*.d2 solution-0000-0000.gmv}
+\end{center}
+to merge all the intermediate format files into a single file in GMV
+format. More details on the parameters of this program and what it can do for
+you can be found in the documentation of the step-19 tutorial program.
 
-HOW??
 
 
 \subsection*{Overall structure of the program}

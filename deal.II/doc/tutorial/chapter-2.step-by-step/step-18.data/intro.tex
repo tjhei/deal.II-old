@@ -378,6 +378,32 @@ elastoplasticity: I. Mixed displacement-pressure formulation''
 pp. 3559--3586, 2004).
 
 
+\paragraph*{Stabilization issues.} The formulation we have chosen, i.e. using
+piecewise (bi-, tri-)linear elements for all components of the displacement
+vector, and treating the stress as a variable dependent on the displacement is
+appropriate for most materials. However, this so-called displacement-based
+formulation becomes unstable and exhibits spurious modes for incompressible or
+nearly-incompressible materials. While fluids are usually not elastic (in most
+cases, the stress depends on velocity gradients, not displacement gradients,
+although there are exceptions such as electro-rheologic fluids), there are a
+few solids that are nearly incompressible, for example rubber. Another case is
+that many plasticity models ultimately let the material become incompressible,
+although this is outside the scope of the present program.
+
+Incompressibility is characterized by Poisson's ratio
+\begin{gather*}
+  \nu = \frac{\lambda}{2(\lambda+\mu)},
+\end{gather*}
+where $\lambda,\mu$ are the Lam'e constants of the material.
+Physical constraints indicate that $-1\le \nu\le \tfrac 12$. If $\nu$
+approaches $\tfrac 12$, then the material becomes incompressible. In that
+case, pure displacement-based formulations are no longer appropriate for the
+solution of such problems, and stabilization techniques have to be employed
+for a stable and accurate solution. The book and paper cited above give
+indications as to how to do this, but there is also a large volume of
+literature on this subject.
+
+
 \paragraph*{Refinement during timesteps.} In the present form, the program
 only refines the initial mesh a number of times, but then never again. For any
 kind of realistic simulation, one would want to extend this so that the mesh
@@ -395,7 +421,6 @@ communication of these data elements is therefore necessary, making the entire
 process a little more unpleasant.
 
 
-Pressure stabilization
 
 Make sure that cells are always well-formed
 

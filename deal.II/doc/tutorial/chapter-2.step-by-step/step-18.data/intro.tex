@@ -31,24 +31,24 @@ webpage \texttt{http://www.dealii.org/}.
 
 In general, time-dependent small elastic deformations are described by the
 elastic wave equation
-\begin{gather*}
+\begin{gather}
   \rho \frac{\partial^2 \vec u}{\partial t^2} 
   + c \frac{\partial \vec u}{\partial t}
   - \div ( C \varepsilon(\vec u)) = \vec f
   \qquad
   \text{in $\Omega$},
-\end{gather*}
+\end{gather}
 where $\vec u=\vec u (\vec x,t)$ is the deformation of the body, $\rho$
 and $c$ the density and attenuation coefficient, and $\vec f$ external forces.
 In addition, initial conditions
-\begin{align*}
+\begin{align}
   \vec u(\cdot, 0) = \vec u_0(\cdot)
   \qquad
   \text{on $\Omega$},
-\end{align*}
+\end{align}
 and Dirichlet (displacement) or Neumann (force) boundary conditions need
 to be specified for a unique solution:
-\begin{align*}
+\begin{align}
   \vec u(\vec x,t) &= \vec d(\vec x,t)
   \qquad
   &&\text{on $\Gamma_D\subset\partial\Omega$},  
@@ -56,7 +56,7 @@ to be specified for a unique solution:
   \vec n \ C \varepsilon(\vec u(\vec x,t)) &= \vec b\vec x,t)
   \qquad
   &&\text{on $\Gamma_N=\partial\Omega\backslash\Gamma_D$}.
-\end{align*}
+\end{align}
 In above formulation, $\varepsilon(\vec u)= \tfrac 12 (\nabla \vec u + \nabla
 \vec u^T)$ is the symmetric gradient of the displacement, also called the
 \textit{strain}. $C$ is a tensor of rank 4, called the \textit{stress-strain
@@ -79,7 +79,7 @@ that all changes in external configuration happen on times scales that are
 much larger than $\tau$. In that case, the dynamic nature of the change is
 unimportant: we can consider the body to always be in static equilibrium,
 i.e.~we can assume that at all times the body satisfies
-\begin{align*}
+\begin{align}
   - \div ( C \varepsilon(\vec u)) &= \vec f
   &&\text{in $\Omega$},
   \\
@@ -90,7 +90,7 @@ i.e.~we can assume that at all times the body satisfies
   \vec n \ C \varepsilon(\vec u(\vec x,t)) &= \vec b(\vec x,t)
   \qquad
   &&\text{on $\Gamma_N$}.
-\end{align*}
+\end{align}
 Note that the differential equation does not contain any time derivatives any
 more -- all time dependence is introduced through boundary conditions and a
 possibly time-varying force function $\vec f(\vec x,t)$.
@@ -99,7 +99,7 @@ While these equations are sufficient to describe small deformations, computing
 large deformations is a little more complicated. To do so, let us first
 introduce a stress variable $\sigma$, and write the differential equations in
 terms of the stress:
-\begin{align*}
+\begin{align}
   - \div \sigma &= \vec f
   &&\text{in $\Omega(t)$},
   \\
@@ -110,15 +110,16 @@ terms of the stress:
   \vec n \ C \varepsilon(\vec u(\vec x,t)) &= \vec b(\vec x,t)
   \qquad
   &&\text{on $\Gamma_N=\partial\Omega(t)\backslash\Gamma_D$}.
-\end{align*}
+\end{align}
 Note that these equations are posed on a domain $\Omega(t)$ that
 changes with time, with the boundary moving according to the
 displacements $\vec u(\vec x,t)$ of the points on the boundary. To
 complete this system, we have to specify the relationship between the
 stress and the strain, as follows:
-\begin{align*}
+\begin{align}
+  \label{eq:stress-strain}
   \dot\sigma = C \varepsilon (\dot{\vec u}),
-\end{align*}
+\end{align}
 where a dot indicates a time derivative. Both the stress $\sigma$ and the
 strain $\varepsilon(\vec u)$ are symmetric tensors of rank 2.
 
@@ -128,15 +129,15 @@ strain $\varepsilon(\vec u)$ are symmetric tensors of rank 2.
 Numerically, this system is solved as follows: first, we discretize
 the time component using a backward Euler scheme. This leads to a
 discrete equilibrium of force at time step $n$:
-\begin{align*}
+\begin{align}
   -\div \sigma^n &= f^n,
 \intertext{where}
   \sigma^n &= \sigma^{n-1} + C \varepsilon (\Delta \vec u^n),
-\end{align*}
+\end{align}
 and $\Delta \vec u^n$ the incremental displacement for time step
 $n$. This way, if we want to solve for the displacement increment, we
 have to solve the following system:
-\begin{align*}
+\begin{align}
   - \div  C \varepsilon(\Delta\vec u^n) &= \vec f - \div \sigma^{n-1}
   &&\text{in $\Omega(t_{n-1})$},
   \\
@@ -147,12 +148,12 @@ have to solve the following system:
   \vec n \ C \varepsilon(\Delta \vec u^n(\vec x,t)) &= \vec b(\vec x,t_n)-\vec b(\vec x,t_{n-1})
   \qquad
   &&\text{on $\Gamma_N=\partial\Omega(t_{n-1})\backslash\Gamma_D$}.
-\end{align*}
+\end{align}
 The weak form of this set of equations, which as usual is the basis for the
 finite element formulation, reads as follows: find $\Delta \vec u^n \in
 \{v\in H^1(\Omega(t_{n-1}))^d: v|_{\Gamma_D}=\vec d(\cdot,t_n) - \vec d(\cdot,t_{n-1})\}$
 such that
-\begin{multline*}
+\begin{multline}
   (C \varepsilon(\Delta\vec u^n), \varepsilon(\varphi) )_{\Omega(t_{n-1})}
   = 
   (\vec f, \varphi)_{\Omega(t_{n-1})}
@@ -161,7 +162,7 @@ such that
   +(\vec b(\vec x,t_n)-\vec b(\vec x,t_{n-1}), \varphi)_{\Gamma_N}
   \\
   \forall \varphi \in \{v\in H^1(\Omega(t_{n-1}))^d: v|_{\Gamma_D}=0\}.
-\end{multline*}
+\end{multline}
 We note that in the program we will always assume that there are no boundary
 forces, i.e.~$\vec b = 0$, and that the deformation of the body is driven by
 body forces $\vec f$ and prescribed boundary displacements $\vec d$ alone. It
@@ -201,9 +202,9 @@ complicated and will be discussed in the next section.
 
 As indicated above, we need to have the stress variable $\sigma^n$ available
 when computing time step $n+1$, and we can compute it using
-\begin{gather*}
+\begin{gather}
   \sigma^n = \sigma^{n-1} + C \varepsilon (\Delta \vec u^n).  
-\end{gather*}
+\end{gather}
 There are, despite the apparent simplicity of this equation, two questions
 that we need to discuss. The first concerns the way we store $\sigma^n$: even
 if we compute the incremental updates $\Delta\vec u^n$ using lowest-order
@@ -218,7 +219,7 @@ To decide this, we have to see where it is used. The only place where we
 require the stress is in the term
 $(\sigma^{n-1},\varepsilon(\varphi))_{\Omega(t_{n-1})}$. In practice, we of
 course replace this term by numerical quadrature
-\begin{gather*}
+\begin{gather}
   (\sigma^{n-1},\varepsilon(\varphi))_{\Omega(t_{n-1})}
   =
   \sum_{K\subset {\mathbb T}}
@@ -227,7 +228,7 @@ course replace this term by numerical quadrature
   \sum_{K\subset {\mathbb T}}
   \sum_q
   w_q \ \sigma^{n-1}(\vec x_q) \ \varepsilon(\varphi(\vec x_q)),
-\end{gather*}
+\end{gather}
 where $w_q$ are the quadrature weights and $\vec x_q$ the quadrature points on
 cell $K$. This should make clear that what we really need is not the stress
 $\sigma^{n-1}$ in itself, but only the values of the stress in the quadrature
@@ -259,13 +260,13 @@ translations, its divergence the dilational modes, and the curl the rotational
 modes). Since the exact form of $R$ is cumbersome, we only state it in the
 program code, and note that the correct updating formula for the stress
 variable is then
-\begin{gather*}
+\begin{gather}
   \sigma^n
   = 
   R(\Delta \vec u^n)^T 
   [\sigma^{n-1} + C \varepsilon (\Delta \vec u^n)]
   R(\Delta \vec u^n).
-\end{gather*}
+\end{gather}
 This is all implemented in the function
 ``update\_\-quadrature\_\-point\_history'' of the example program.
 
@@ -337,9 +338,64 @@ you can be found in the documentation of the step-19 tutorial program.
 \subsection*{Overall structure of the program}
 \subsection*{Possible directions for extensions}
 
-Refinement during timesteps
+The program as is does not really solve an equation that has many applications
+in practice: quasi-static material deformation based on a purely elastic law
+is almost boring. However, the program may serve as the starting point for
+more interesting experiments, and that indeed was the initial motivation for
+writing it. Here are some suggestions of what the program is missing and in
+what direction it may be extended:
 
-Plasticity
+\paragraph*{Plasticity models.} The most obvious extension is to use a more
+realistic material model for large-scale quasistatic deformation. The natural
+choice for this would be plasticity, in which a nonlinear relationship between
+stress and strain replaces equation \eqref{eq:stress-strain}. Plasticity
+models are usually rather complicated to program since this dependence is
+generally non-smooth. The material can be thought of being able to withstand
+only a maximal stress (the yield stress) after which it starts to ``flow''. A
+mathematical description to this can be given in the form of a variational
+inequality, which alternatively can be treated as minimizing the elastic
+energy
+\begin{gather}
+  E(\vec u) = 
+  (\varepsilon(\vec u), C\varepsilon(\vec u))_{\Omega}
+  - (\vec f, \vec u)_{\Omega} - (\vec b, \vec u)_{\Gamma_N},
+\end{gather}
+subject to the constraint
+\begin{gather}
+  f(\sigma(\vec u)) \le 0
+\end{gather}
+on the stress. This extension makes the problem to be solved in each time step
+nonlinear, so we need another loop within each time step.
+
+Without going into further details of this model, we refer to the excellent
+book by Simo and Hughes on ``Computational Inelasticity'' for a
+comprehensive overview of computational strategies for solving plastic
+models. Alternative, a brief but concise description of an algorithm for
+plasticity is given in an article by S. Commend, A. Truty, and Th. Zimmermann,
+titled ``Stabilized finite elements applied to 
+elastoplasticity: I. Mixed displacement-pressure formulation''
+(Computer Methods in Applied Mechanics and Engineering, vol. 193,
+pp. 3559--3586, 2004).
+
+
+\paragraph*{Refinement during timesteps.} In the present form, the program
+only refines the initial mesh a number of times, but then never again. For any
+kind of realistic simulation, one would want to extend this so that the mesh
+is refined and coarsened every few time steps instead. This is not hard to do,
+in fact, but has been left for future tutorial programs or as an exercise, if
+you wish. The main complication one has to overcome is that one has to
+transfer the data that is stored in the quadrature points of the cells of the
+old mesh only the new mesh, preferably by some sort of projection scheme. This
+is slightly messy in the sequential case. However, it becomes complicated once
+we run the program in parallel, since then each process only stores this data
+for the cells it owned on the old mesh, and it may need to know the values of
+the quadrature point data on other cells if the corresponding cells on the new
+mesh are assigned to this process after subdividing the new mesh. A global
+communication of these data elements is therefore necessary, making the entire
+process a little more unpleasant.
+
+
+Pressure stabilization
 
 Make sure that cells are always well-formed
 

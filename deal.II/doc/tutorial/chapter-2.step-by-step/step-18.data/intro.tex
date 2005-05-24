@@ -325,9 +325,9 @@ been generated, and ``NNN'' the number of the MPI process that did this.
 
 The next step is to convert this file or these files into whatever
 format you like. The program that does this is the step-19 tutorial program:
-call it through
+for example, for the first time step, call it through
 \begin{center}
-  \texttt{../step-19/step-19 solution-0000.0000.*.d2 solution-0000-0000.gmv}
+  \texttt{../step-19/step-19 solution-0001.0000.*.d2 solution-0001.0000.gmv}
 \end{center}
 to merge all the intermediate format files into a single file in GMV
 format. More details on the parameters of this program and what it can do for
@@ -336,6 +336,8 @@ you can be found in the documentation of the step-19 tutorial program.
 
 
 \subsection*{Overall structure of the program}
+
+
 \subsection*{Possible directions for extensions}
 
 The program as is does not really solve an equation that has many applications
@@ -421,9 +423,30 @@ communication of these data elements is therefore necessary, making the entire
 process a little more unpleasant.
 
 
+\paragraph*{Ensure mesh regularity.} At present, the program makes no attempt
+to make sure that a cell, after moving its vertices at the end of the time
+step, still has a valid geometry (i.e. that its Jacobian determinant is
+positive and bounded away from zero everywhere). It is, in fact, not very hard
+to set boundary values and forcing terms in such a way that one gets distorted
+and inverted cells rather quickly. Certainly, in some cases of large
+deformation, this is unavoidable with a mesh of finite mesh size, but in some
+other cases this should be preventable by appropriate mesh refinement and/or a
+reduction of the time step size. The program does not do that, but a more
+sophisticated version definitely should employ some sort of heuristic defining
+what amount of deformation of cells acceptable, and what isn't.
 
-Make sure that cells are always well-formed
 
-Mention 3d in makefile.
+\subsection*{Compiling the program}
+
+Finally, just to remind everyone: the program runs in 3d (see the definition
+of the \texttt{elastic\_problem} variable in \texttt{main()}, unlike almost all
+of the other example programs. While the compiler doesn't care what dimension
+it compiles for, the linker has to know which library to link with. And as
+explained in other places, this requires slight changes to the Makefile
+compared to the other tutorial programs. In particular, everywhere where the
+2d versions of libraries are mentioned, one needs to change this to
+3d. Conversely, if you want to run the program in 2d (after making the
+necessary changes to accomodate for a 2d geometry), you have to change the
+Makefile back to allow for 2d.
 
 \end{document}

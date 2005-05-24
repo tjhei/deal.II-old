@@ -337,6 +337,30 @@ you can be found in the documentation of the step-19 tutorial program.
 
 \subsection*{Overall structure of the program}
 
+The overall structure of the program can be inferred from the \texttt{run()}
+function that first calls \texttt{do\_initial\_timestep()} for the first time
+step, and then \texttt{do\_timestep()} on all subsequent time steps. The
+difference between these functions is only that on the first time step we
+start on a coarse mesh, solve on it, refine the mesh adaptively, and then
+start again with a clean state on that new mesh. This procedure gives us a
+better starting mesh, although we should of course keep adapting the mesh as
+iterations proceed -- this isn't done in this program, but commented on below.
+
+The common part of the two functions treating time steps is that the following
+sequence of operations on the present mesh:
+\begin{itemize}
+\item \texttt{assemble\_system ()} [via \texttt{solve\_timestep ()}]:
+\item \texttt{solve\_linear\_problem ()} [via \texttt{solve\_timestep ()}]: 
+\item \texttt{update\_quadrature\_point\_history ()} [via
+  \texttt{solve\_timestep ()}]:
+\item \texttt{move\_mesh ()}:
+\item \texttt{output\_results ()}: This function simply outputs the solution
+  based on what we have said above, i.e. every processor computes output only
+  for its own portion of the domain, and this can then be later merged by an
+  external program. In addition to the solution, we also compute the norm of
+  the stress averaged over all the quadrature points on each cell.
+\end{itemize}
+
 
 \subsection*{Possible directions for extensions}
 

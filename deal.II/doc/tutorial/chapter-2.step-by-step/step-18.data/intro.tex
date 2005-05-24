@@ -203,6 +203,7 @@ complicated and will be discussed in the next section.
 As indicated above, we need to have the stress variable $\sigma^n$ available
 when computing time step $n+1$, and we can compute it using
 \begin{gather}
+  \label{eq:stress-update}
   \sigma^n = \sigma^{n-1} + C \varepsilon (\Delta \vec u^n).  
 \end{gather}
 There are, despite the apparent simplicity of this equation, two questions
@@ -261,6 +262,7 @@ modes). Since the exact form of $R$ is cumbersome, we only state it in the
 program code, and note that the correct updating formula for the stress
 variable is then
 \begin{gather}
+  \label{eq:stress-update+rot}
   \sigma^n
   = 
   R(\Delta \vec u^n)^T 
@@ -352,8 +354,15 @@ sequence of operations on the present mesh:
 \item \texttt{assemble\_system ()} [via \texttt{solve\_timestep ()}]:
 \item \texttt{solve\_linear\_problem ()} [via \texttt{solve\_timestep ()}]: 
 \item \texttt{update\_quadrature\_point\_history ()} [via
-  \texttt{solve\_timestep ()}]:
-\item \texttt{move\_mesh ()}:
+  \texttt{solve\_timestep ()}]: Based on the displacement field $\Delta \vec
+  u^n$ computed before, we update the stress values in all quadrature points
+  according to \eqref{eq:stress-update} and \eqref{eq:stress-update+rot},
+  including the rotation of the coordinate system.
+
+\item \texttt{move\_mesh ()}: Given the solution computed before, in this
+  function we deform the mesh by moving each vertex by the displacement vector
+  field evaluated at this particular vertex.
+
 \item \texttt{output\_results ()}: This function simply outputs the solution
   based on what we have said above, i.e. every processor computes output only
   for its own portion of the domain, and this can then be later merged by an

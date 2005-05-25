@@ -129,11 +129,13 @@ strain $\varepsilon(\vec u)$ are symmetric tensors of rank 2.
 Numerically, this system is solved as follows: first, we discretize
 the time component using a backward Euler scheme. This leads to a
 discrete equilibrium of force at time step $n$:
-\begin{align}
-  -\div \sigma^n &= f^n,
-\intertext{where}
-  \sigma^n &= \sigma^{n-1} + C \varepsilon (\Delta \vec u^n),
-\end{align}
+\begin{gather}
+  -\div \sigma^n = f^n,
+\end{gather}
+where
+\begin{gather}
+  \sigma^n = \sigma^{n-1} + C \varepsilon (\Delta \vec u^n),
+\end{gather}
 and $\Delta \vec u^n$ the incremental displacement for time step
 $n$. This way, if we want to solve for the displacement increment, we
 have to solve the following system:
@@ -153,7 +155,8 @@ The weak form of this set of equations, which as usual is the basis for the
 finite element formulation, reads as follows: find $\Delta \vec u^n \in
 \{v\in H^1(\Omega(t_{n-1}))^d: v|_{\Gamma_D}=\vec d(\cdot,t_n) - \vec d(\cdot,t_{n-1})\}$
 such that
-\begin{multline}
+\begin{gather}
+  \begin{split}
   \label{eq:linear-system}
   (C \varepsilon(\Delta\vec u^n), \varepsilon(\varphi) )_{\Omega(t_{n-1})}
   = 
@@ -163,8 +166,9 @@ such that
   +(\vec b(\vec x,t_n)-\vec b(\vec x,t_{n-1}), \varphi)_{\Gamma_N}
   \\
   \forall \varphi \in \{\vec v\in H^1(\Omega(t_{n-1}))^d: \vec
-  v|_{\Gamma_D}=0\}. 
-\end{multline}
+  v|_{\Gamma_D}=0\}.     
+  \end{split}
+\end{gather}
 We note that, for simplicity, in the program we will always assume that there
 are no boundary forces, i.e.~$\vec b = 0$, and that the deformation of the
 body is driven by body forces $\vec f$ and prescribed boundary displacements
@@ -375,8 +379,8 @@ sequence of operations on the present mesh:
   In practice, $A^K$ is computed using numerical quadrature according to the
   formula
   \begin{gather}
-    A^K_{ij} = \sum_q w_q  \varepsilon(\varphi_i(\vec x_q)) : C :
-                           \varepsilon(\varphi_j(\vec x_q)),
+    A^K_{ij} = \sum_q w_q [\varepsilon(\varphi_i(\vec x_q)) : C :
+                           \varepsilon(\varphi_j(\vec x_q))],
   \end{gather}
   with quadrature points $\vec x_q$ and weights $w_q$. We have built these
   contributions before, in step-8 and step-17, but in both of these cases we

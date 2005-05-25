@@ -138,7 +138,7 @@ and $\Delta \vec u^n$ the incremental displacement for time step
 $n$. This way, if we want to solve for the displacement increment, we
 have to solve the following system:
 \begin{align}
-  - \div  C \varepsilon(\Delta\vec u^n) &= \vec f - \div \sigma^{n-1}
+  - \div  C \varepsilon(\Delta\vec u^n) &= \vec f + \div \sigma^{n-1}
   &&\text{in $\Omega(t_{n-1})$},
   \\
   \Delta \vec u^n(\vec x,t) &= \vec d(\vec x,t_n) - \vec d(\vec x,t_{n-1})
@@ -154,10 +154,11 @@ finite element formulation, reads as follows: find $\Delta \vec u^n \in
 \{v\in H^1(\Omega(t_{n-1}))^d: v|_{\Gamma_D}=\vec d(\cdot,t_n) - \vec d(\cdot,t_{n-1})\}$
 such that
 \begin{multline}
+  \label{eq:linear-system}
   (C \varepsilon(\Delta\vec u^n), \varepsilon(\varphi) )_{\Omega(t_{n-1})}
   = 
   (\vec f, \varphi)_{\Omega(t_{n-1})}
-  +(\sigma^{n-1},\varepsilon(\varphi))_{\Omega(t_{n-1})}
+  -(\sigma^{n-1},\varepsilon(\varphi))_{\Omega(t_{n-1})}
   \\
   +(\vec b(\vec x,t_n)-\vec b(\vec x,t_{n-1}), \varphi)_{\Gamma_N}
   \\
@@ -166,13 +167,13 @@ such that
 We note that in the program we will always assume that there are no boundary
 forces, i.e.~$\vec b = 0$, and that the deformation of the body is driven by
 body forces $\vec f$ and prescribed boundary displacements $\vec d$ alone. It
-is also worth noting that when intregrating by parts, we would get terms of
+is also worth noting that when integrating by parts, we would get terms of
 the form
 $(C \varepsilon(\Delta\vec u^n), \nabla \varphi )_{\Omega(t_{n-1})}$,
 but that we replace it with the term involving the symmetric gradient
 $\varepsilon(\varphi)$ instead of $\nabla\varphi$. Due to the symmetry of $C$
 the two terms are equivalent, but the symmetric version avoids a potential for
-round-off to render the resulting matrix slightly nonsymmetric.
+round-off to render the resulting matrix slightly non-symmetric.
 
 The system at time step $n$, to be solved on the old domain
 $\Omega(t_{n-1})$, has exactly the form of a stationary elastic
@@ -212,7 +213,7 @@ if we compute the incremental updates $\Delta\vec u^n$ using lowest-order
 finite elements, then its symmetric gradient $\varepsilon(\Delta\vec u^n)$ is
 in general still a function that is not easy to describe. In particular, it is
 not a piecewise constant function, and on general meshes (with cells that are
-not rectangles parallel to the coordinate axes) or with nonconstant
+not rectangles parallel to the coordinate axes) or with non-constant
 stress-strain tensors $C$ it is not even a bi- or trilinear function. Thus, it
 is a priori not clear how to store $\sigma^n$ in a computer program.
 
@@ -228,7 +229,7 @@ course replace this term by numerical quadrature
   \approx
   \sum_{K\subset {\mathbb T}}
   \sum_q
-  w_q \ \sigma^{n-1}(\vec x_q) \ \varepsilon(\varphi(\vec x_q)),
+  w_q \ \sigma^{n-1}(\vec x_q) : \varepsilon(\varphi(\vec x_q)),
 \end{gather}
 where $w_q$ are the quadrature weights and $\vec x_q$ the quadrature points on
 cell $K$. This should make clear that what we really need is not the stress
@@ -303,7 +304,7 @@ This has two advantages: first, simulations may just dump the intermediate
 format data during run-time, and the user may later decide which particular
 graphics format she wants to have. This way, she does not have to re-run the
 entire simulation if graphical output is requested in a different format. One
-typical case is that one would like to take a quick loook at the data with
+typical case is that one would like to take a quick look at the data with
 gnuplot, and then create high-quality pictures using GMV or OpenDX. Since both
 can be generated out of the intermediate format without problem, there is no
 need to re-run the simulation.
@@ -352,7 +353,138 @@ The common part of the two functions treating time steps is that the following
 sequence of operations on the present mesh:
 \begin{itemize}
 \item \texttt{assemble\_system ()} [via \texttt{solve\_timestep ()}]:
-\item \texttt{solve\_linear\_problem ()} [via \texttt{solve\_timestep ()}]: 
+  This first function is also the most interesting one. It assembles the
+  linear system corresponding to the discretized version of equation
+  \eqref{eq:linear-system}. This leads to a system matrix $A_{ij} = \sum_K
+  A^K_{ij}$ built up of local contributions on each cell $K$ with entries
+  \begin{gather}
+    A^K_{ij} = (C \varepsilon(\varphi_i), \varepsilon(\varphi_j))_K;
+  \end{gather}
+  In practice, $A^K$ is computed using numerical quadrature according to the
+  formula
+  \begin{gather}
+    A^K_{ij} = \sum_q w_q  \varepsilon(\varphi_i(\vec x_q)) : C :
+                           \varepsilon(\varphi_j(\vec x_q)),
+  \end{gather}
+  with quadrature points $\vec x_q$ and weights $w_q$. We have built these
+  contributions before, in step-8 and step-17, but in both of these cases we
+  have done so rather clumsily by using knowledge of how the rank-4 tensor $C$
+  is composed, and considering individual elements of the strain tensors
+  $\varepsilon(\varphi_i),\varepsilon(\varphi_j)$. This is not really
+  convenient, in particular if we want to consider more complicated elasticity
+  models than the isotropic case for which $C$ had the convenient form
+  $c_{ijkl}  = \lambda \delta_{ij} \delta_{kl} + \mu (\delta_{ik} \delta_{jl}
+  + \delta_{il} \delta_{jk})$. While we in fact do not use a more complicated
+  form that this in the present program, we nevertheless want to write it in a
+  way that would easily allow for this. It is then natural to introduce
+  classes that represent symmetric tensors of rank 2 (for the strains and
+  stresses) and 4 (for the stress-strain tensor $C$). Fortunately, deal.II
+  provides these: the \texttt{SymmetricTensor<rank,dim>} class template
+  provides a full-fledged implementation of such tensors of rank \texttt{rank}
+  (which needs to be an even number) and dimension \texttt{dim}.
+
+  What we then need is two things: a way to create the stress-strain rank-4
+  tensor $C$ as well as to create a symmetric tensor of rank 2 (the strain
+  tensor) from the gradients of a shape function $\varphi_i$ at a quadrature
+  point $\vec x_q$ on a given cell. At the top of the implementation of this
+  example program, you will find such functions. The first one,
+  \texttt{get\_stress\_strain\_tensor}, takes two arguments corresponding to
+  the Lam'e constants $\lambda$ and $\mu$ and returns the stress-strain tensor
+  for the isotropic case corresponding to these constants (in the program, we
+  will choose constants corresponding to steel); it would be simple to replace
+  this function by one that computes this tensor for the anisotropic case, or
+  taking into account crystal symmetries, for example. The second one,
+  \texttt{get\_strain} takes an object of type \texttt{FEValues} and indices
+  $i$ and $q$ and returns the symmetric gradient, i.e. the strain,
+  corresponding to shape function $\varphi_i(\vec x_q)$, evaluated on the cell
+  on which the \texttt{FEValues} object was last reinitialized.
+
+  Given this, the innermost loop of \texttt{assemble\_system} computes the
+  local contributions to the matrix in the following elegant way (the variable
+  \texttt{stress\_strain\_tensor}, corresponding to the tensor $C$, has
+  previously been initialized with the result of the first function above):
+  \begin{verbatim}
+for (unsigned int i=0; i<dofs_per_cell; ++i)
+  for (unsigned int j=0; j<dofs_per_cell; ++j) 
+    for (unsigned int q_point=0; q_point<n_q_points;
+         ++q_point)
+      {
+        const SymmetricTensor<2,dim>
+          eps_phi_i = get_strain (fe_values, i, q_point),
+          eps_phi_j = get_strain (fe_values, j, q_point);
+
+        cell_matrix(i,j) 
+          += (eps_phi_i * stress_strain_tensor * eps_phi_j
+              *
+              fe_values.JxW (q_point));
+      }
+  \end{verbatim}
+  It is worth noting the expressive power of this piece of code, and to
+  compare it with the complications we had to go through in previous examples
+  for the elasticity problem. (To be fair, the \texttt{SymmetricTensor} class
+  template did not exist when these previous examples were written.) For
+  simplicity, \texttt{operator*} provides for the (double summation) product
+  between symmetric tensors of even rank here.
+
+  Assembling the local contributions 
+  \begin{gather}
+    \begin{split}
+      f^K_i &= 
+      (\vec f, \varphi_i)_K -(\sigma^{n-1},\varepsilon(\varphi_i))_K
+      \\
+      &\approx
+      \sum_q
+      w_q \left\{
+        \vec f(\vec x_q) \cdot \varphi_i(\vec x_q) -
+        \sigma^{n-1}_q : \varepsilon(\varphi_i(\vec x_q))
+      \right\}
+    \end{split}
+  \end{gather}
+  to the right hand side of \eqref{eq:linear-system} is equally
+  straightforward (note that we do not consider any boundary tractions $\vec
+  b$ here). Remember that we only had to store the old stress in the
+  quadrature points of cells. In the program, we will provide a variable
+  \texttt{local\_quadrature\_points\_data} that allows to access the stress
+  $\sigma^{n-1}_q$ in each quadrature point. With this the code for the right
+  hand side looks as this, again rather elegant:
+  \begin{verbatim}
+for (unsigned int i=0; i<dofs_per_cell; ++i)
+  {
+    const unsigned int 
+      component_i = fe.system_to_component_index(i).first;
+
+    for (unsigned int q_point=0; q_point<n_q_points; ++q_point)
+      {
+        const SymmetricTensor<2,dim> &old_stress
+          = local_quadrature_points_data[q_point].old_stress;
+        
+        cell_rhs(i) += (body_force_values[q_point](component_i) *
+                        fe_values.shape_value (i,q_point)
+                        -
+                        old_stress *
+                        get_strain (fe_values,i,q_point))
+                       *
+                       fe_values.JxW (q_point);
+      }
+  }
+  \end{verbatim}
+  Note that in the multiplication $\vec f(\vec x_q) \cdot \varphi_i(\vec
+  x_q)$, we have made use that for the chosen finite element, only one vector
+  component (namely \texttt{component\_i}) of $\varphi_i$ is nonzero, and that
+  we therefore also have to consider only one component of $\vec f(\vec
+  x_q)$.
+
+  This essentially concludes the new material we present in this function. It
+  later has to deal with boundary conditions as well as hanging node
+  constraints, but this parallels what we had to do previously in other
+  programs already.
+
+\item \texttt{solve\_linear\_problem ()} [via \texttt{solve\_timestep ()}]:
+  Unlike the previous one, this function is not really interesting, since it
+  does what similar functions have done in all previous tutorial programs --
+  solving the linear system using the CG method. It is virtually unchanged
+  from step-17.
+
 \item \texttt{update\_quadrature\_point\_history ()} [via
   \texttt{solve\_timestep ()}]: Based on the displacement field $\Delta \vec
   u^n$ computed before, we update the stress values in all quadrature points
@@ -370,6 +502,20 @@ sequence of operations on the present mesh:
   the stress averaged over all the quadrature points on each cell.
 \end{itemize}
 
+With this general structure of the code, we only have to define what case
+we want to solve. For the present program, we have chosen to simulate the
+quasistatic deformation of a vertical cylinder for which the bottom boundary
+is fixed and the top boundary is pushed down at a prescribed vertical
+velocity. However, the horizontal velocity of the top boundary is left
+unspecified -- one can imagine this situation is a well-greased plate pushing
+from the top onto the cylinder, the points on the top boundary of the cylinder
+being allowed to slide along the surface of the plate, but forced to move
+downward by the plate. The inner and outer boundaries of the cylinder are free
+and not subject to any prescribed deflection or traction.
+
+The program text will reveal more about how to implement this situation, and
+the results section will show what displacement pattern comes out of this
+simulation. 
 
 \subsection*{Possible directions for extensions}
 
@@ -460,7 +606,7 @@ communication of these data elements is therefore necessary, making the entire
 process a little more unpleasant.
 
 
-\paragraph*{Ensure mesh regularity.} At present, the program makes no attempt
+\paragraph*{Ensuring mesh regularity.} At present, the program makes no attempt
 to make sure that a cell, after moving its vertices at the end of the time
 step, still has a valid geometry (i.e. that its Jacobian determinant is
 positive and bounded away from zero everywhere). It is, in fact, not very hard
@@ -483,7 +629,7 @@ explained in other places, this requires slight changes to the Makefile
 compared to the other tutorial programs. In particular, everywhere where the
 2d versions of libraries are mentioned, one needs to change this to
 3d. Conversely, if you want to run the program in 2d (after making the
-necessary changes to accomodate for a 2d geometry), you have to change the
+necessary changes to accommodate for a 2d geometry), you have to change the
 Makefile back to allow for 2d.
 
 \end{document}

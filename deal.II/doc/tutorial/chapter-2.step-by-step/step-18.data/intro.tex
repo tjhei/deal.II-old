@@ -193,8 +193,8 @@ There are differences, however:
   the stress variable is our window to the history of deformation of
   the body.
 \end{enumerate}
-These two operations are done in the functions ``move\_mesh'' and
-``update\_\-quadrature\_\-point\_history'' in the program. While moving
+These two operations are done in the functions \texttt{move\_mesh} and
+\texttt{update\_\-quadrature\_\-point\_history} in the program. While moving
 the mesh is only a technicality, updating the stress is a little more
 complicated and will be discussed in the next section.
 
@@ -271,7 +271,7 @@ variable is then
   R(\Delta \vec u^n).
 \end{gather}
 This is all implemented in the function
-``update\_\-quadrature\_\-point\_history'' of the example program.
+\texttt{update\_\-quadrature\_\-point\_history} of the example program.
 
 
 \subsection*{Parallel graphical output}
@@ -290,14 +290,14 @@ into separate files and have a way to merge them later on. At this point, it
 should be noted that none of the graphical output formats known to the author
 of this program allows for a simple way to later re-read it and merge it with
 other files corresponding to the same simulation. What deal.II therefore
-offers is the following: When you call the ``DataOut::build\_patches''
+offers is the following: When you call the \texttt{DataOut::build\_patches}
 function, an intermediate format is generated that contains all the
 information for the data on each cell. Usually, this intermediate format is
 then further processed and converted into one of the graphical formats that we
 can presently write, such as gmv, eps, ucd, gnuplot, or a number of other
 ones. Once written in these formats, there is no way to reconstruct the
 necessary information to merge multiple blocks of output. However, the base
-classes of ``DataOut'' also allows to simply dump the intermediate format to a
+classes of \texttt{DataOut} also allows to simply dump the intermediate format to a
 file, from which it can later be recovered without loss of information.
 
 This has two advantages: first, simulations may just dump the intermediate
@@ -317,14 +317,14 @@ that belongs to this computation (in the sequential case, this will simply be
 a single file). They may then later be read in and merged so that we can
 output a single file in whatever graphical format is requested.
 
-The way to do this is to first instruct the ``DataOutBase'' class to
+The way to do this is to first instruct the \texttt{DataOutBase} class to
 write intermediate format rather than in gmv or any other graphical
 format. This is simple: just use
-``data\_out.write\_deal\_II\_intermediate''. This will generate one file
-called ``solution-TTTT.TTTT.d2'' if there is only one processor, or
-files ``solution-TTTT.TTTT.NNN.d2'' if this is really a parallel
-job. Here, ``TTTT.TTTT'' denotes the time for which this output has
-been generated, and ``NNN'' the number of the MPI process that did this.
+\texttt{data\_out.write\_deal\_II\_intermediate}. This will generate one file
+called \texttt{solution-TTTT.TTTT.d2} if there is only one processor, or
+files \texttt{solution-TTTT.TTTT.NNN.d2} if this is really a parallel
+job. Here, \texttt{TTTT.TTTT} denotes the time for which this output has
+been generated, and \texttt{NNN} the number of the MPI process that did this.
 
 The next step is to convert this file or these files into whatever
 format you like. The program that does this is the step-19 tutorial program:

@@ -46,7 +46,7 @@ In addition, initial conditions
   \qquad
   \text{on $\Omega$},
 \end{align}
-and Dirichlet (displacement) or Neumann (force) boundary conditions need
+and Dirichlet (displacement) or Neumann (traction) boundary conditions need
 to be specified for a unique solution:
 \begin{align}
   \vec u(\vec x,t) &= \vec d(\vec x,t)
@@ -63,11 +63,11 @@ In above formulation, $\varepsilon(\vec u)= \tfrac 12 (\nabla \vec u + \nabla
   tensor} that contains knowledge of the elastic strength of the material; its
 symmetry properties make sure that it maps symmetric tensors of rank 2
 (``matrices'' of dimension $d$, where $d$ is the spatial dimensionality) onto
-symmetric tensors of same rank. We will comment on the roles of the strain and
-stress tensors more below. For the moment it suffices to say that we interpret
-the term $\div ( C \varepsilon(\vec u))$ as the vector with components $\tfrac
-\partial{\partial x_j} C_{ijkl} \varepsilon(\vec u)_{kl}$, where summation
-over indices $j,k,l$ is implied.
+symmetric tensors of the same rank. We will comment on the roles of the strain
+and stress tensors more below. For the moment it suffices to say that we
+interpret the term $\div ( C \varepsilon(\vec u))$ as the vector with
+components $\tfrac \partial{\partial x_j} C_{ijkl} \varepsilon(\vec u)_{kl}$,
+where summation over indices $j,k,l$ is implied.
 
 The quasistatic limit of this equation is motivated as follows: each small
 perturbation of the body, for example by changes in boundary condition or the
@@ -75,7 +75,7 @@ forcing function, will result in a corresponding change in the configuration
 of the body. In general, this will be in the form of waves radiating away from
 the location of the disturbance. Due to the presence of the damping term,
 these waves will be attenuated on a time scale of, say, $\tau$. Now, assume
-that all changes in external configuration happen on times scales that are
+that all changes in external forcing happen on times scales that are
 much larger than $\tau$. In that case, the dynamic nature of the change is
 unimportant: we can consider the body to always be in static equilibrium,
 i.e.~we can assume that at all times the body satisfies
@@ -162,18 +162,19 @@ such that
   \\
   +(\vec b(\vec x,t_n)-\vec b(\vec x,t_{n-1}), \varphi)_{\Gamma_N}
   \\
-  \forall \varphi \in \{v\in H^1(\Omega(t_{n-1}))^d: v|_{\Gamma_D}=0\}.
+  \forall \varphi \in \{\vec v\in H^1(\Omega(t_{n-1}))^d: \vec
+  v|_{\Gamma_D}=0\}. 
 \end{multline}
-We note that in the program we will always assume that there are no boundary
-forces, i.e.~$\vec b = 0$, and that the deformation of the body is driven by
-body forces $\vec f$ and prescribed boundary displacements $\vec d$ alone. It
-is also worth noting that when integrating by parts, we would get terms of
-the form
-$(C \varepsilon(\Delta\vec u^n), \nabla \varphi )_{\Omega(t_{n-1})}$,
-but that we replace it with the term involving the symmetric gradient
-$\varepsilon(\varphi)$ instead of $\nabla\varphi$. Due to the symmetry of $C$
-the two terms are equivalent, but the symmetric version avoids a potential for
-round-off to render the resulting matrix slightly non-symmetric.
+We note that, for simplicity, in the program we will always assume that there
+are no boundary forces, i.e.~$\vec b = 0$, and that the deformation of the
+body is driven by body forces $\vec f$ and prescribed boundary displacements
+$\vec d$ alone. It is also worth noting that when integrating by parts, we
+would get terms of the form $(C \varepsilon(\Delta\vec u^n), \nabla \varphi
+)_{\Omega(t_{n-1})}$, but that we replace it with the term involving the
+symmetric gradient $\varepsilon(\varphi)$ instead of $\nabla\varphi$. Due to
+the symmetry of $C$, the two terms are equivalent, but the symmetric version
+avoids a potential for round-off to render the resulting matrix slightly
+non-symmetric.
 
 The system at time step $n$, to be solved on the old domain
 $\Omega(t_{n-1})$, has exactly the form of a stationary elastic
@@ -220,7 +221,7 @@ is a priori not clear how to store $\sigma^n$ in a computer program.
 To decide this, we have to see where it is used. The only place where we
 require the stress is in the term
 $(\sigma^{n-1},\varepsilon(\varphi))_{\Omega(t_{n-1})}$. In practice, we of
-course replace this term by numerical quadrature
+course replace this term by numerical quadrature:
 \begin{gather}
   (\sigma^{n-1},\varepsilon(\varphi))_{\Omega(t_{n-1})}
   =
@@ -249,19 +250,29 @@ move the mesh nodes around to get to $\Omega(t_n)$ on which the next increment
 is computed. What we have to make sure, in this context, is that moving the
 mesh does not only involve moving around the nodes, but also making
 corresponding changes to the stress variable: the updated stress is a variable
-that is defined with respect to the coordinate system of the old mesh, and has
-to be transferred to the new mesh. While the updating procedure has already
-taken care of the case where the material is compressed or dilated, it has to
-be explicitly extended to account for the case that a cell is rotated. To this
-end, we have to define a rotation matrix $R(\Delta \vec u^n)$ that describes,
-in each point the rotation due to the displacement increments. It is not hard
-to see that the actual dependence of $R$ on $\Delta \vec u^n$ can only be
-through the curl of the displacement, rather than the displacement itself or
-its full gradient (the constant components of the increment describe
-translations, its divergence the dilational modes, and the curl the rotational
-modes). Since the exact form of $R$ is cumbersome, we only state it in the
-program code, and note that the correct updating formula for the stress
-variable is then
+that is defined with respect to the coordinate system of the material in the
+old domain, and has to be transferred to the new domain. The reason for this
+can be understood as follows: locally, the incremental deformation $\Delta\vec
+u$ can be decomposed into three parts, a linear translation (the constant part
+of the displacement field in the neighborhood of a point), a dilational
+component (that part of the gradient if the displacement field that has a
+nonzero divergence), and a rotation. A linear translation of the material does
+not affect the stresses that are frozen into it -- the stress values are
+simply translated along. The dilational or compressional change produces a
+corresponding stress update. However, the rotational component does not
+necessarily induce a nonzero stress update (think, in 2d, for example of the
+situation where $\Delta\vec u=(y, -x)^T$, which which $\varepsilon(\Delta \vec
+u)=0$). Nevertheless, if the the material was pre-stressed in a certain
+direction, then this direction will be rotated along with the material.  To
+this end, we have to define a rotation matrix $R(\Delta \vec u^n)$ that
+describes, in each point the rotation due to the displacement increments. It
+is not hard to see that the actual dependence of $R$ on $\Delta \vec u^n$ can
+only be through the curl of the displacement, rather than the displacement
+itself or its full gradient (as mentioned above, the constant components of
+the increment describe translations, its divergence the dilational modes, and
+the curl the rotational modes). Since the exact form of $R$ is cumbersome, we
+only state it in the program code, and note that the correct updating formula
+for the stress variable is then
 \begin{gather}
   \label{eq:stress-update+rot}
   \sigma^n
@@ -270,7 +281,8 @@ variable is then
   [\sigma^{n-1} + C \varepsilon (\Delta \vec u^n)]
   R(\Delta \vec u^n).
 \end{gather}
-This is all implemented in the function
+
+Both stress update and rotation are implemented in the function
 \texttt{update\_\-quadrature\_\-point\_history} of the example program.
 
 
@@ -297,8 +309,8 @@ then further processed and converted into one of the graphical formats that we
 can presently write, such as gmv, eps, ucd, gnuplot, or a number of other
 ones. Once written in these formats, there is no way to reconstruct the
 necessary information to merge multiple blocks of output. However, the base
-classes of \texttt{DataOut} also allows to simply dump the intermediate format to a
-file, from which it can later be recovered without loss of information.
+classes of \texttt{DataOut} also allow to simply dump the intermediate format
+to a file, from which it can later be recovered without loss of information.
 
 This has two advantages: first, simulations may just dump the intermediate
 format data during run-time, and the user may later decide which particular
@@ -320,7 +332,7 @@ output a single file in whatever graphical format is requested.
 The way to do this is to first instruct the \texttt{DataOutBase} class to
 write intermediate format rather than in gmv or any other graphical
 format. This is simple: just use
-\texttt{data\_out.write\_deal\_II\_intermediate}. This will generate one file
+\texttt{data\_out.write\_deal\_II\_intermediate}. We will write to a file
 called \texttt{solution-TTTT.TTTT.d2} if there is only one processor, or
 files \texttt{solution-TTTT.TTTT.NNN.d2} if this is really a parallel
 job. Here, \texttt{TTTT.TTTT} denotes the time for which this output has
@@ -343,13 +355,13 @@ you can be found in the documentation of the step-19 tutorial program.
 The overall structure of the program can be inferred from the \texttt{run()}
 function that first calls \texttt{do\_initial\_timestep()} for the first time
 step, and then \texttt{do\_timestep()} on all subsequent time steps. The
-difference between these functions is only that on the first time step we
+difference between these functions is only that in the first time step we
 start on a coarse mesh, solve on it, refine the mesh adaptively, and then
 start again with a clean state on that new mesh. This procedure gives us a
 better starting mesh, although we should of course keep adapting the mesh as
 iterations proceed -- this isn't done in this program, but commented on below.
 
-The common part of the two functions treating time steps is that the following
+The common part of the two functions treating time steps is the following
 sequence of operations on the present mesh:
 \begin{itemize}
 \item \texttt{assemble\_system ()} [via \texttt{solve\_timestep ()}]:
@@ -375,7 +387,7 @@ sequence of operations on the present mesh:
   models than the isotropic case for which $C$ had the convenient form
   $c_{ijkl}  = \lambda \delta_{ij} \delta_{kl} + \mu (\delta_{ik} \delta_{jl}
   + \delta_{il} \delta_{jk})$. While we in fact do not use a more complicated
-  form that this in the present program, we nevertheless want to write it in a
+  form than this in the present program, we nevertheless want to write it in a
   way that would easily allow for this. It is then natural to introduce
   classes that represent symmetric tensors of rank 2 (for the strains and
   stresses) and 4 (for the stress-strain tensor $C$). Fortunately, deal.II
@@ -389,7 +401,7 @@ sequence of operations on the present mesh:
   point $\vec x_q$ on a given cell. At the top of the implementation of this
   example program, you will find such functions. The first one,
   \texttt{get\_stress\_strain\_tensor}, takes two arguments corresponding to
-  the Lam'e constants $\lambda$ and $\mu$ and returns the stress-strain tensor
+  the Lam\'e constants $\lambda$ and $\mu$ and returns the stress-strain tensor
   for the isotropic case corresponding to these constants (in the program, we
   will choose constants corresponding to steel); it would be simple to replace
   this function by one that computes this tensor for the anisotropic case, or
@@ -469,10 +481,10 @@ for (unsigned int i=0; i<dofs_per_cell; ++i)
   }
   \end{verbatim}
   Note that in the multiplication $\vec f(\vec x_q) \cdot \varphi_i(\vec
-  x_q)$, we have made use that for the chosen finite element, only one vector
-  component (namely \texttt{component\_i}) of $\varphi_i$ is nonzero, and that
-  we therefore also have to consider only one component of $\vec f(\vec
-  x_q)$.
+  x_q)$, we have made use of the fact that for the chosen finite element, only
+  one vector component (namely \texttt{component\_i}) of $\varphi_i$ is
+  nonzero, and that we therefore also have to consider only one component of
+  $\vec f(\vec x_q)$.
 
   This essentially concludes the new material we present in this function. It
   later has to deal with boundary conditions as well as hanging node
@@ -482,7 +494,9 @@ for (unsigned int i=0; i<dofs_per_cell; ++i)
 \item \texttt{solve\_linear\_problem ()} [via \texttt{solve\_timestep ()}]:
   Unlike the previous one, this function is not really interesting, since it
   does what similar functions have done in all previous tutorial programs --
-  solving the linear system using the CG method. It is virtually unchanged
+  solving the linear system using the CG method, using an incomplete LU
+  decomposition as a preconditioner (in the parallel case, it uses an ILU of
+  each processor's block separately). It is virtually unchanged
   from step-17.
 
 \item \texttt{update\_quadrature\_point\_history ()} [via
@@ -502,16 +516,17 @@ for (unsigned int i=0; i<dofs_per_cell; ++i)
   the stress averaged over all the quadrature points on each cell.
 \end{itemize}
 
-With this general structure of the code, we only have to define what case
-we want to solve. For the present program, we have chosen to simulate the
+With this general structure of the code, we only have to define what case we
+want to solve. For the present program, we have chosen to simulate the
 quasistatic deformation of a vertical cylinder for which the bottom boundary
 is fixed and the top boundary is pushed down at a prescribed vertical
 velocity. However, the horizontal velocity of the top boundary is left
-unspecified -- one can imagine this situation is a well-greased plate pushing
+unspecified -- one can imagine this situation as a well-greased plate pushing
 from the top onto the cylinder, the points on the top boundary of the cylinder
-being allowed to slide along the surface of the plate, but forced to move
-downward by the plate. The inner and outer boundaries of the cylinder are free
-and not subject to any prescribed deflection or traction.
+being allowed to slide horizontally along the surface of the plate, but forced
+to move downward by the plate. The inner and outer boundaries of the cylinder
+are free and not subject to any prescribed deflection or traction. In
+addition, gravity acts on the body.
 
 The program text will reveal more about how to implement this situation, and
 the results section will show what displacement pattern comes out of this
@@ -530,12 +545,12 @@ what direction it may be extended:
 realistic material model for large-scale quasistatic deformation. The natural
 choice for this would be plasticity, in which a nonlinear relationship between
 stress and strain replaces equation \eqref{eq:stress-strain}. Plasticity
-models are usually rather complicated to program since this dependence is
-generally non-smooth. The material can be thought of being able to withstand
-only a maximal stress (the yield stress) after which it starts to ``flow''. A
-mathematical description to this can be given in the form of a variational
-inequality, which alternatively can be treated as minimizing the elastic
-energy
+models are usually rather complicated to program since the stress-strain
+dependence is generally non-smooth. The material can be thought of being able
+to withstand only a maximal stress (the yield stress) after which it starts to
+``flow''. A mathematical description to this can be given in the form of a
+variational inequality, which alternatively can be treated as minimizing the
+elastic energy
 \begin{gather}
   E(\vec u) = 
   (\varepsilon(\vec u), C\varepsilon(\vec u))_{\Omega}
@@ -551,7 +566,7 @@ nonlinear, so we need another loop within each time step.
 Without going into further details of this model, we refer to the excellent
 book by Simo and Hughes on ``Computational Inelasticity'' for a
 comprehensive overview of computational strategies for solving plastic
-models. Alternative, a brief but concise description of an algorithm for
+models. Alternatively, a brief but concise description of an algorithm for
 plasticity is given in an article by S. Commend, A. Truty, and Th. Zimmermann,
 titled ``Stabilized finite elements applied to 
 elastoplasticity: I. Mixed displacement-pressure formulation''
@@ -575,7 +590,7 @@ Incompressibility is characterized by Poisson's ratio
 \begin{gather*}
   \nu = \frac{\lambda}{2(\lambda+\mu)},
 \end{gather*}
-where $\lambda,\mu$ are the Lam'e constants of the material.
+where $\lambda,\mu$ are the Lam\'e constants of the material.
 Physical constraints indicate that $-1\le \nu\le \tfrac 12$. If $\nu$
 approaches $\tfrac 12$, then the material becomes incompressible. In that
 case, pure displacement-based formulations are no longer appropriate for the
@@ -596,8 +611,8 @@ is refined and coarsened every few time steps instead. This is not hard to do,
 in fact, but has been left for future tutorial programs or as an exercise, if
 you wish. The main complication one has to overcome is that one has to
 transfer the data that is stored in the quadrature points of the cells of the
-old mesh only the new mesh, preferably by some sort of projection scheme. This
-is slightly messy in the sequential case. However, it becomes complicated once
+old mesh to the new mesh, preferably by some sort of projection scheme. This
+is only slightly messy in the sequential case. However, it becomes complicated once
 we run the program in parallel, since then each process only stores this data
 for the cells it owned on the old mesh, and it may need to know the values of
 the quadrature point data on other cells if the corresponding cells on the new
@@ -616,20 +631,21 @@ deformation, this is unavoidable with a mesh of finite mesh size, but in some
 other cases this should be preventable by appropriate mesh refinement and/or a
 reduction of the time step size. The program does not do that, but a more
 sophisticated version definitely should employ some sort of heuristic defining
-what amount of deformation of cells acceptable, and what isn't.
+what amount of deformation of cells is acceptable, and what isn't.
 
 
 \subsection*{Compiling the program}
 
 Finally, just to remind everyone: the program runs in 3d (see the definition
-of the \texttt{elastic\_problem} variable in \texttt{main()}, unlike almost all
-of the other example programs. While the compiler doesn't care what dimension
-it compiles for, the linker has to know which library to link with. And as
-explained in other places, this requires slight changes to the Makefile
+of the \texttt{elastic\_problem} variable in \texttt{main()}, unlike almost
+all of the other example programs. While the compiler doesn't care what
+dimension it compiles for, the linker has to know which library to link with.
+And as explained in other places, this requires slight changes to the Makefile
 compared to the other tutorial programs. In particular, everywhere where the
-2d versions of libraries are mentioned, one needs to change this to
-3d. Conversely, if you want to run the program in 2d (after making the
-necessary changes to accommodate for a 2d geometry), you have to change the
-Makefile back to allow for 2d.
+2d versions of libraries are mentioned, one needs to change this to 3d,
+although this is already done in the distributed version of the Makefile.
+Conversely, if you want to run the program in 2d (after making the necessary
+changes to accommodate for a 2d geometry), you have to change the Makefile
+back to allow for 2d.
 
 \end{document}

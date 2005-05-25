@@ -1,3 +1,197 @@
 <a name="Results"></a>
 <h1>Results</h1>
 
+<p>
+Running the program takes a good while if one doesn't change the flags
+in the Makefile: in debug mode (the default) and on only a single
+machine, it takes about 3h45min on my Athlon XP 2GHz. Fortunately, but
+setting <code>debug-mode = off</code> in the Makefile, this can be
+reduced significantly, to about 23 minutes, a much more reasonable time.
+
+</p>
+
+<p>
+If run, the program prints the following output, explaining what it is
+doing all that time:
+<code>
+<pre>
+examples/step-18> time make run
+============================ Running step-18
+Timestep 1 at time 1
+  Cycle 0:
+    Number of active cells:       3712 (by partition: 3712)
+    Number of degrees of freedom: 17226 (by partition: 17226)
+    Assembling system... norm of rhs is 2.34224e+10
+    Solver converged in 117 iterations.
+    Updating quadrature point data...
+  Cycle 1:
+    Number of active cells:       12812 (by partition: 12812)
+    Number of degrees of freedom: 51726 (by partition: 51726)
+    Assembling system... norm of rhs is 2.34227e+10
+    Solver converged in 130 iterations.
+    Updating quadrature point data...
+    Moving mesh...
+
+Timestep 2 at time 2
+    Assembling system... norm of rhs is 2.30852e+10
+    Solver converged in 131 iterations.
+    Updating quadrature point data...
+    Moving mesh...
+
+Timestep 3 at time 3
+    Assembling system... norm of rhs is 2.27792e+10
+    Solver converged in 126 iterations.
+    Updating quadrature point data...
+    Moving mesh...
+
+Timestep 4 at time 4
+    Assembling system... norm of rhs is 2.25107e+10
+    Solver converged in 124 iterations.
+    Updating quadrature point data...
+    Moving mesh...
+
+Timestep 5 at time 5
+    Assembling system... norm of rhs is 2.22883e+10
+    Solver converged in 122 iterations.
+    Updating quadrature point data...
+    Moving mesh...
+
+Timestep 6 at time 6
+    Assembling system... norm of rhs is 2.21272e+10
+    Solver converged in 118 iterations.
+    Updating quadrature point data...
+    Moving mesh...
+
+Timestep 7 at time 7
+    Assembling system... norm of rhs is 2.20652e+10
+    Solver converged in 117 iterations.
+    Updating quadrature point data...
+    Moving mesh...
+
+Timestep 8 at time 8
+    Assembling system... norm of rhs is 2.22501e+10
+    Solver converged in 127 iterations.
+    Updating quadrature point data...
+    Moving mesh...
+
+Timestep 9 at time 9
+    Assembling system... norm of rhs is 2.32742e+10
+    Solver converged in 144 iterations.
+    Updating quadrature point data...
+    Moving mesh...
+
+Timestep 10 at time 10
+    Assembling system... norm of rhs is 2.55929e+10
+    Solver converged in 149 iterations.
+    Updating quadrature point data...
+    Moving mesh...
+</pre>
+</code>
+In other words, it is computing on 12,000 cells and with some 52,000
+unknowns. Not a whole lot, but enough for a coupled three-dimensional
+problem to keep a computer busy for a while. At the end of the day,
+this is what we have for output:
+<code>
+<pre>
+examples/step-18> ls -l *.d2
+-rw-r--r--  1 bangerth wheeler 8797414 May 25 09:10 solution-0001.0000.d2
+-rw-r--r--  1 bangerth wheeler 8788500 May 25 09:32 solution-0002.0000.d2
+-rw-r--r--  1 bangerth wheeler 8763718 May 25 09:55 solution-0003.0000.d2
+-rw-r--r--  1 bangerth wheeler 8738940 May 25 10:17 solution-0004.0000.d2
+-rw-r--r--  1 bangerth wheeler 8710104 May 25 10:39 solution-0005.0000.d2
+-rw-r--r--  1 bangerth wheeler 8685388 May 25 11:01 solution-0006.0000.d2
+-rw-r--r--  1 bangerth wheeler 8649088 May 25 11:23 solution-0007.0000.d2
+-rw-r--r--  1 bangerth wheeler 8585146 May 25 11:45 solution-0008.0000.d2
+-rw-r--r--  1 bangerth wheeler 8489764 May 25 12:07 solution-0009.0000.d2
+-rw-r--r--  1 bangerth wheeler 8405388 May 25 12:29 solution-0010.0000.d2
+</pre>
+</code>
+</p>
+
+<p>
+Let us convert these files in deal.II intermediate format to gmv
+format (this assumes that you have already compiled the step-19
+example program):
+<code>
+<pre>
+examples/step-18> ../step-19/step-19
+
+Converter from deal.II intermediate format to other graphics formats.
+
+Usage: ./step-19 [-p parameter_file] list_of_input_files [-x output_format] output_file
+
+examples/step-18> ../step-19/step-19 solution-0001.0000.d2 solution-0001.0000.gmv
+[...]
+</pre>
+</code>
+Of course, since we have run the program only in sequential mode, we
+do have only one intermediate file for each time step that we have to
+take as input.
+</p>
+
+<p>
+If we visualize these files with GMV, we get to see the full picture
+of the disaster our forced compression wreaks on the cylinder (click
+on the images for a larger version; colors in the images encode the
+norm of the stress in the material):
+</p>
+
+<table width="100%">
+  <tr width="100%">
+    <td>
+      <a href="step-18.data/solution-0002.0000.png" target="_top">
+       <img src="step-18.data/solution-0002.0000.png"
+       width="100%"></a>
+       Time = 2
+    </td>
+
+    <td>
+      <a href="step-18.data/solution-0005.0000.png" target="_top">
+       <img src="step-18.data/solution-0005.0000.png"
+       width="100%"></a> 
+       Time = 5
+    </td>
+
+    <td>
+      <a href="step-18.data/solution-0007.0000.png" target="_top">
+       <img src="step-18.data/solution-0007.0000.png"
+       width="100%"></a>
+       Time = 7
+    </td>
+  </tr>
+
+  <tr width="100%">
+    <td>
+      <a href="step-18.data/solution-0008.0000.png" target="_top">
+       <img src="step-18.data/solution-0008.0000.png"
+       width="100%"></a>
+       Time = 8
+    </td>
+
+    <td>
+      <a href="step-18.data/solution-0009.0000.png" target="_top">
+       <img src="step-18.data/solution-0009.0000.png"
+       width="100%"></a> 
+       Time = 9
+    </td>
+
+    <td>
+      <a href="step-18.data/solution-0010.0000.png" target="_top">
+       <img src="step-18.data/solution-0010.0000.png"
+       width="100%"></a>
+       Time = 10
+    </td>
+  </tr>
+</table>
+
+<p>
+As is clearly visible, as we keep compressing the cylinder, it starts
+to buckle and ultimately collapses. Towards the end of the simulation,
+the deflection pattern becomes nonsymmetric (the cylinder top slides
+to the right). The model clearly does not provide for this (all our
+forces and boundary deflections are symmetric) but the effect is
+probably physically correct anyway: in reality, small inhomogeneities
+in the body's material properties would lead it to buckle to one side
+to evade the forcing; in numerical simulation, small perturbations
+such as numerical round-off or an inexact solution of a linear system
+by an iterative solver could have the same effect.

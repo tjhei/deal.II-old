@@ -976,6 +976,15 @@ DEAL::151900
 DEAL::57891050
 DEAL::Checking Nedelec1 in 2d:
 DEAL::Checking Nedelec1 in 3d:
+DEAL::Checking RaviartThomas0 in 2d:
+DEAL::Checking RaviartThomas1 in 2d:
+DEAL::Checking RaviartThomas2 in 2d:
+DEAL::Checking RaviartThomasNodal0 in 2d:
+DEAL::Checking RaviartThomasNodal1 in 2d:
+DEAL::Checking RaviartThomasNodal2 in 2d:
+DEAL::Checking RaviartThomasNodal0 in 3d:
+DEAL::Checking RaviartThomasNodal1 in 3d:
+DEAL::Checking RaviartThomasNodal2 in 3d:
 DEAL::Checking FE_Q<1>(1)3 in 1d:
 DEAL::0 1 2 3 4 
 DEAL::0 1 2 3 

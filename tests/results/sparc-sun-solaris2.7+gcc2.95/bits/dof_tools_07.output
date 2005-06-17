@@ -81,6 +81,24 @@ DEAL::Checking Nedelec1 in 2d:
 DEAL::29 29 
 DEAL::Checking Nedelec1 in 3d:
 DEAL::142 142 142 
+DEAL::Checking RaviartThomas0 in 2d:
+DEAL::29 29 
+DEAL::Checking RaviartThomas1 in 2d:
+DEAL::98 98 
+DEAL::Checking RaviartThomas2 in 2d:
+DEAL::207 207 
+DEAL::Checking RaviartThomasNodal0 in 2d:
+DEAL::29 29 
+DEAL::Checking RaviartThomasNodal1 in 2d:
+DEAL::98 98 
+DEAL::Checking RaviartThomasNodal2 in 2d:
+DEAL::207 207 
+DEAL::Checking RaviartThomasNodal0 in 3d:
+DEAL::97 97 97 
+DEAL::Checking RaviartThomasNodal1 in 3d:
+DEAL::652 652 652 
+DEAL::Checking RaviartThomasNodal2 in 3d:
+DEAL::2061 2061 2061 
 DEAL::Checking FE_Q<1>(1)3 in 1d:
 DEAL::5 5 5 
 DEAL::Checking FE_DGQ<1>(2)2 in 1d:

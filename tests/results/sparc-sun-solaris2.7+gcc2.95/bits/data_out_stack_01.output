@@ -526,7 +526,7 @@ triangle {
 %%Title: deal.II Output
 %%Creator: the deal.II library
 
-%%BoundingBox: 0 0 300 1249
+%%BoundingBox: 0 0 300 1250
 /m {moveto} bind def
 /l {lineto} bind def
 /s {setrgbcolor} bind def
@@ -1630,7 +1630,7 @@ triangle {
 %%Title: deal.II Output
 %%Creator: the deal.II library
 
-%%BoundingBox: 0 0 300 2010
+%%BoundingBox: 0 0 300 2011
 /m {moveto} bind def
 /l {lineto} bind def
 /s {setrgbcolor} bind def

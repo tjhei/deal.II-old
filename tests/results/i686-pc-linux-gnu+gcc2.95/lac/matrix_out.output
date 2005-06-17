@@ -73,7 +73,7 @@
 %%Title: deal.II Output
 %%Creator: the deal.II library
 
-%%BoundingBox: 0 0 299 252
+%%BoundingBox: 0 0 300 252
 /m {moveto} bind def
 /l {lineto} bind def
 /s {setrgbcolor} bind def

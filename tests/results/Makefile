@@ -55,6 +55,7 @@ linkdirs-%:
 
 .links:   linkfiles-i686-pc-linux-gnu+icc7.1-to-i686-pc-linux-gnu+gcc3.2 \
 	  linkfiles-i686-pc-linux-gnu+gcc3.4-to-i686-pc-linux-gnu+gcc3.2 \
+	  linkfiles-i686-pc-linux-gnu+gcc4.0-to-i686-pc-linux-gnu+gcc3.4 \
 	  linkfiles-i686-pc-linux-gnu+gcc2.95-to-sparc-sun-solaris2.7+gcc2.95 \
 	  linkfiles-mips-sgi-irix6.5+MIPSpro7.4-to-i686-pc-linux-gnu+gcc3.2 \
 	  linkdirs-sparc-sun-solaris2.8+gcc2.95-to-sparc-sun-solaris2.7+gcc2.95 \

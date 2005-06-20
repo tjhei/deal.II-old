@@ -616,13 +616,17 @@ in fact, but has been left for future tutorial programs or as an exercise, if
 you wish. The main complication one has to overcome is that one has to
 transfer the data that is stored in the quadrature points of the cells of the
 old mesh to the new mesh, preferably by some sort of projection scheme. This
-is only slightly messy in the sequential case. However, it becomes complicated once
-we run the program in parallel, since then each process only stores this data
-for the cells it owned on the old mesh, and it may need to know the values of
-the quadrature point data on other cells if the corresponding cells on the new
-mesh are assigned to this process after subdividing the new mesh. A global
-communication of these data elements is therefore necessary, making the entire
-process a little more unpleasant.
+is only slightly messy in the sequential case; in fact, the functions
+\texttt{FETools} \texttt{::} \texttt{get\_projection\_from\_quadrature\_points\_matrix} will do
+the projection, and the \texttt{FiniteElement} \texttt{::} \texttt{get\_restriction\_matrix} and
+\texttt{FiniteElement} \texttt{::} \texttt{get\_prolongation\_matrix} functions will do the
+transfer between mother and child cells. However, it becomes complicated
+once we run the program in parallel, since then each process only stores this
+data for the cells it owned on the old mesh, and it may need to know the
+values of the quadrature point data on other cells if the corresponding cells
+on the new mesh are assigned to this process after subdividing the new mesh. A
+global communication of these data elements is therefore necessary, making the
+entire process a little more unpleasant.
 
 
 \paragraph*{Ensuring mesh regularity.} At present, the program makes no attempt

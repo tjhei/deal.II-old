@@ -1365,7 +1365,11 @@ in fact, but has been left for future tutorial programs or as an exercise, if
 you wish. The main complication one has to overcome is that one has to
 transfer the data that is stored in the quadrature points of the cells of the
 old mesh to the new mesh, preferably by some sort of projection scheme. This
-is only slightly messy in the sequential case. However, it becomes complicated once
+is only slightly messy in the sequential case; in fact, the functions
+<tt>FETools::get_projection_from_quadrature_points_matrix</tt> will do
+the projection, and the <tt>FiniteElement::get_restriction_matrix</tt> and
+<tt>FiniteElement::get_prolongation_matrix</tt> functions will do the
+transfer between mother and child cells. However, it becomes complicated once
 we run the program in parallel, since then each process only stores this data
 for the cells it owned on the old mesh, and it may need to know the values of
 the quadrature point data on other cells if the corresponding cells on the new

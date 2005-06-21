@@ -51,7 +51,8 @@ linkdirs-%:
 #    linkfiles-i686-pc-linux-gnu+gcc3.4
 #    i686-pc-linux-gnu+icc7.1
 #
-# All other configurations produce the same output as another, so there we link whole directories.
+# All other configurations produce the same output as another, so there we 
+# link whole directories.
 
 .links:   linkfiles-i686-pc-linux-gnu+icc7.1-to-i686-pc-linux-gnu+gcc3.2 \
 	  linkfiles-i686-pc-linux-gnu+gcc3.4-to-i686-pc-linux-gnu+gcc3.2 \

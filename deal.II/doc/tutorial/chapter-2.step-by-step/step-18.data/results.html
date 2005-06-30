@@ -12,7 +12,7 @@ reduced significantly, to about 23 minutes, a much more reasonable time.
 
 <p>
 If run, the program prints the following output, explaining what it is
-doing all that time:
+doing during all that time:
 <code>
 <pre>
 examples/step-18> time make run
@@ -139,21 +139,21 @@ norm of the stress in the material):
 
 <table width="100%">
   <tr width="100%">
-    <td>
+    <td width="33%">
       <a href="step-18.data/solution-0002.0000.png" target="_top">
        <img src="step-18.data/solution-0002.0000.png"
        width="100%"></a>
        Time = 2
     </td>
 
-    <td>
+    <td width="33%">
       <a href="step-18.data/solution-0005.0000.png" target="_top">
        <img src="step-18.data/solution-0005.0000.png"
        width="100%"></a> 
        Time = 5
     </td>
 
-    <td>
+    <td width="33%">
       <a href="step-18.data/solution-0007.0000.png" target="_top">
        <img src="step-18.data/solution-0007.0000.png"
        width="100%"></a>
@@ -162,21 +162,21 @@ norm of the stress in the material):
   </tr>
 
   <tr width="100%">
-    <td>
+    <td width="33%">
       <a href="step-18.data/solution-0008.0000.png" target="_top">
        <img src="step-18.data/solution-0008.0000.png"
        width="100%"></a>
        Time = 8
     </td>
 
-    <td>
+    <td width="33%">
       <a href="step-18.data/solution-0009.0000.png" target="_top">
        <img src="step-18.data/solution-0009.0000.png"
        width="100%"></a> 
        Time = 9
     </td>
 
-    <td>
+    <td width="33%">
       <a href="step-18.data/solution-0010.0000.png" target="_top">
        <img src="step-18.data/solution-0010.0000.png"
        width="100%"></a>
@@ -193,6 +193,9 @@ to the right). The model clearly does not provide for this (all our
 forces and boundary deflections are symmetric) but the effect is
 probably physically correct anyway: in reality, small inhomogeneities
 in the body's material properties would lead it to buckle to one side
-to evade the forcing; in numerical simulation, small perturbations
+to evade the forcing; in numerical simulations, small perturbations
 such as numerical round-off or an inexact solution of a linear system
-by an iterative solver could have the same effect.
+by an iterative solver could have the same effect. Another typical source for
+asymmetries in adaptive computations is that only a certain fraction of cells
+is refined in each step, which may lead to asymmetric meshes even if the
+original coarse mesh was symmetric.

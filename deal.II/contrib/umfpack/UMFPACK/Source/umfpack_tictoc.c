@@ -3,9 +3,8 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.      */
-/* Davis.  All Rights Reserved.  See ../README for License.                   */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.            */
+/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
 
@@ -58,8 +57,8 @@ void umfpack_tic (double stats [2])
     /* stats [0]: current wallclock time, in seconds */
     /* stats [1]: user + system time for the process, in seconds */
 
-    struct tms t ;
     double ticks ;
+    struct tms t ;
 
     ticks = (double) sysconf (_SC_CLK_TCK) ;
     stats [0] = (double) times (&t) / ticks ;

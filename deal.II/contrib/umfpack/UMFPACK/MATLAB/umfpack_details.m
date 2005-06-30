@@ -1,5 +1,5 @@
 function [out1, out2, out3, out4, out5] = umfpack (in1, in2, in3, in4, in5)
-% UMFPACK v4.3:  details on each usage.
+% UMFPACK v4.4:  details on each usage.
 %
 % Factor or solve a sparse linear system, returning either the solution x to
 % Ax=b or A'x'=b', the factorization LU=PAQ, or LU=P(R\A)Q.  A must be sparse.
@@ -116,23 +116,32 @@ function [out1, out2, out3, out4, out5] = umfpack (in1, in2, in3, in4, in5)
 %
 %       Prints the current Control settings, and Info
 %
+% det = umfpack (A, 'det') ;
+% [det dexp] = umfpack (A, 'det') ;
+%
+%	Computes the determinant of A.  The 2nd form returns the determinant
+%	in the form det*10^dexp, where det is in the range +/- 1 to 10,
+%	which helps to avoid overflow/underflow when dexp is out of range of
+%	normal floating-point numbers.
+%
 % If present, Qinit is a user-supplied 1-by-n permutation vector.  It is an
 % initial fill-reducing column pre-ordering for A; if not present, then colamd
 % or amd are used instead.  If present, Control is a user-supplied 20-by-1
 % array.   Control and Info are optional; if Control is not present, defaults
 % are used.  If a Control entry is NaN, then the default is used for that entry.
 %
-% UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.
-% Davis.  All Rights Reserved.
-% 
+%
+% UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
+% All Rights Reserved.  Type umfpack_details for License.
+%
 % UMFPACK License:
-% 
+%
 %     Your use or distribution of UMFPACK or any modified version of
 %     UMFPACK implies that you agree to this License.
-% 
+%
 %     THIS MATERIAL IS PROVIDED AS IS, WITH ABSOLUTELY NO WARRANTY
 %     EXPRESSED OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
-% 
+%
 %     Permission is hereby granted to use or copy this program, provided
 %     that the Copyright, this License, and the Availability of the original
 %     version is retained on all copies.  User documentation of any code that
@@ -143,7 +152,7 @@ function [out1, out2, out3, out4, out5] = umfpack (in1, in2, in3, in4, in5)
 %     retained, and a notice that the code was modified is included.  This
 %     software was developed with support from the National Science Foundation,
 %     and is provided to you free of charge.
-% 
+%
 % Availability: http://www.cise.ufl.edu/research/sparse/umfpack
 %
 % See also umfpack, umfpack_make, umfpack_report,

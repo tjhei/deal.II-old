@@ -11,8 +11,8 @@ function x = umfpack_btf (A, b, Control)
 %
 % See also:  umfpack, umfpack_factorize, umfpack_details, dmperm
 
-% UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.
-% Davis.  All Rights Reserved.  Type umfpack_details for License.
+% UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
+% All Rights Reserved.  Type umfpack_details for License.
 
 if (nargin < 2)
     help umfpack_btf

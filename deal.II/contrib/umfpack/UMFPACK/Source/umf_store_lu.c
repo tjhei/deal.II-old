@@ -3,9 +3,8 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.      */
-/* Davis.  All Rights Reserved.  See ../README for License.                   */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.            */
+/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
 
@@ -16,7 +15,6 @@
 
 #include "umf_internal.h"
 #include "umf_mem_alloc_head_block.h"
-#include "umf_mem_free_tail_block.h"
 #include "umf_get_memory.h"
 
 /* ========================================================================== */
@@ -35,6 +33,12 @@ GLOBAL Int UMF_store_lu
     /* local variables */
     /* ---------------------------------------------------------------------- */
 
+    Entry pivot_value ;
+#ifdef DROP
+    double droptol ;
+#endif
+    Entry *D, *Lval, *Uval, *Fl1, *Fl2, *Fu1, *Fu2,
+	*Flublock, *Flblock, *Fublock ;
     Int i, k, fnr_curr, fnrows, fncols, row, col, pivrow, pivcol, *Frows,
 	*Fcols, *Lpattern, *Upattern, *Lpos, *Upos, llen, ulen, fnc_curr, fnpiv,
 	uilen, lnz, unz, nb, *Lilen,
@@ -42,8 +46,6 @@ GLOBAL Int UMF_store_lu
 	pivrow_position, p, size, lip, uip, lnzi, lnzx, unzx, lnz2i, lnz2x,
 	unz2i, unz2x, zero_pivot, *Pivrow, *Pivcol, kk,
 	Lnz [MAXNB] ;
-    Entry *D, pivot_value, *Lval, *Uval, *Fl1, *Fl2, *Fu1, *Fu2,
-	*Flublock, *Flblock, *Fublock ;
 
 #ifndef NDEBUG
     Int *Col_degree, *Row_degree ;
@@ -51,7 +53,6 @@ GLOBAL Int UMF_store_lu
 
 #ifdef DROP
     Int all_lnz, all_unz ;
-    double droptol ;
     droptol = Numeric->droptol ;
 #endif
 
@@ -94,7 +95,7 @@ GLOBAL Int UMF_store_lu
     nb = Work->nb ;
 
 #ifndef NDEBUG
-    DEBUG1 (("\n##################################### STORE LU: fnrows "ID
+    DEBUG1 (("\nSTORE LU: fnrows "ID
 	" fncols "ID"\n", fnrows, fncols)) ;
 
     DEBUG2 (("\nFrontal matrix, including all space:\n"
@@ -212,8 +213,9 @@ GLOBAL Int UMF_store_lu
 
 	    for (i = kk + 1 ; i < fnpiv ; i++)
 	    {
+		Entry x ;
 		double s ;
-		Entry x = Fl1 [i] ;
+		x = Fl1 [i] ;
 		if (IS_ZERO (x)) continue ;
 		all_lnz++ ;
 		APPROX_ABS (s, x) ;
@@ -224,8 +226,9 @@ GLOBAL Int UMF_store_lu
 
 	    for (i = 0 ; i < fnrows ; i++)
 	    {
+		Entry x ;
 		double s ;
-		Entry x = Fl2 [i] ;
+		x = Fl2 [i] ;
 		if (IS_ZERO (x)) continue ;
 		all_lnz++ ;
 		APPROX_ABS (s, x) ;
@@ -384,9 +387,10 @@ GLOBAL Int UMF_store_lu
 
 		for (i = kk + 1 ; i < fnpiv ; i++)
 		{
+		    Entry x ;
 		    double s ;
 		    Int row2, pos ;
-		    Entry x = Fl1 [i] ;
+		    x = Fl1 [i] ;
 		    APPROX_ABS (s, x) ;
 		    if (s <= droptol) continue ;
 		    row2 = Pivrow [i] ;
@@ -399,9 +403,10 @@ GLOBAL Int UMF_store_lu
 
 		for (i = 0 ; i < fnrows ; i++)
 		{
+		    Entry x ;
 		    double s ;
 		    Int row2, pos ;
-		    Entry x = Fl2 [i] ;
+		    x = Fl2 [i] ;
 		    APPROX_ABS (s, x) ;
 		    if (s <= droptol) continue ;
 		    row2 = Frows [i] ;
@@ -416,8 +421,9 @@ GLOBAL Int UMF_store_lu
 
 		for (i = kk + 1 ; i < fnpiv ; i++)
 		{
+		    Entry x ;
 		    Int row2, pos ;
-		    Entry x = Fl1 [i] ;
+		    x = Fl1 [i] ;
 		    if (IS_ZERO (x)) continue ;
 		    row2 = Pivrow [i] ;
 		    pos = llen++ ;
@@ -429,8 +435,9 @@ GLOBAL Int UMF_store_lu
 
 		for (i = 0 ; i < fnrows ; i++)
 		{
+		    Entry x ;
 		    Int row2, pos ;
-		    Entry x = Fl2 [i] ;
+		    x = Fl2 [i] ;
 		    if (IS_ZERO (x)) continue ;
 		    row2 = Frows [i] ;
 		    pos = llen++ ;
@@ -451,9 +458,10 @@ GLOBAL Int UMF_store_lu
 
 		for (i = kk + 1 ; i < fnpiv ; i++)
 		{
+		    Entry x ;
 		    double s ;
 		    Int row2, pos ;
-		    Entry x = Fl1 [i] ;
+		    x = Fl1 [i] ;
 		    APPROX_ABS (s, x) ;
 		    if (s <= droptol) continue ;
 		    row2 = Pivrow [i] ;
@@ -470,9 +478,10 @@ GLOBAL Int UMF_store_lu
 
 		for (i = 0 ; i < fnrows ; i++)
 		{
+		    Entry x ;
 		    double s ;
 		    Int row2, pos ;
-		    Entry x = Fl2 [i] ;
+		    x = Fl2 [i] ;
 		    APPROX_ABS (s, x) ;
 		    if (s <= droptol) continue ;
 		    row2 = Frows [i] ;
@@ -491,8 +500,9 @@ GLOBAL Int UMF_store_lu
 
 		for (i = kk + 1 ; i < fnpiv ; i++)
 		{
+		    Entry x ;
 		    Int row2, pos ;
-		    Entry x = Fl1 [i] ;
+		    x = Fl1 [i] ;
 		    if (IS_ZERO (x)) continue ;
 		    row2 = Pivrow [i] ;
 		    pos = Lpos [row2] ;
@@ -508,8 +518,9 @@ GLOBAL Int UMF_store_lu
 
 		for (i = 0 ; i < fnrows ; i++)
 		{
+		    Entry x ;
 		    Int row2, pos ;
-		    Entry x = Fl2 [i] ;
+		    x = Fl2 [i] ;
 		    if (IS_ZERO (x)) continue ;
 		    row2 = Frows [i] ;
 		    pos = Lpos [row2] ;
@@ -634,8 +645,9 @@ GLOBAL Int UMF_store_lu
 
 	    for (i = kk + 1 ; i < fnpiv ; i++)
 	    {
+		Entry x ;
 		double s ;
-		Entry x = Fu1 [i*nb] ;
+		x = Fu1 [i*nb] ;
 		if (IS_ZERO (x)) continue ;
 		all_unz++ ;
 		APPROX_ABS (s, x) ;
@@ -646,8 +658,9 @@ GLOBAL Int UMF_store_lu
 
 	    for (i = 0 ; i < fncols ; i++)
 	    {
+		Entry x ;
 		double s ;
-		Entry x = Fu2 [i] ;
+		x = Fu2 [i] ;
 		if (IS_ZERO (x)) continue ;
 		all_unz++ ;
 		APPROX_ABS (s, x) ;
@@ -849,9 +862,10 @@ GLOBAL Int UMF_store_lu
 
 		for (i = kk + 1 ; i < fnpiv ; i++)
 		{
+		    Entry x ;
 		    double s ;
 		    Int col2, pos ;
-		    Entry x = Fu1 [i*nb] ;
+		    x = Fu1 [i*nb] ;
 		    APPROX_ABS (s, x) ;
 		    if (s <= droptol) continue ;
 		    col2 = Pivcol [i] ;
@@ -863,9 +877,10 @@ GLOBAL Int UMF_store_lu
 
 		for (i = 0 ; i < fncols ; i++)
 		{
+		    Entry x ;
 		    double s ;
 		    Int col2, pos ;
-		    Entry x = Fu2 [i] ;
+		    x = Fu2 [i] ;
 		    APPROX_ABS (s, x) ;
 		    if (s <= droptol) continue ;
 		    col2 = Fcols [i] ;
@@ -879,8 +894,9 @@ GLOBAL Int UMF_store_lu
 
 		for (i = kk + 1 ; i < fnpiv ; i++)
 		{
+		    Entry x ;
 		    Int col2, pos ;
-		    Entry x = Fu1 [i*nb] ;
+		    x = Fu1 [i*nb] ;
 		    if (IS_ZERO (x)) continue ;
 		    col2 = Pivcol [i] ;
 		    pos = ulen++ ;
@@ -891,8 +907,9 @@ GLOBAL Int UMF_store_lu
 
 		for (i = 0 ; i < fncols ; i++)
 		{
+		    Entry x ;
 		    Int col2, pos ;
-		    Entry x = Fu2 [i] ;
+		    x = Fu2 [i] ;
 		    if (IS_ZERO (x)) continue ;
 		    col2 = Fcols [i] ;
 		    pos = ulen++ ;
@@ -915,9 +932,10 @@ GLOBAL Int UMF_store_lu
 
 		for (i = kk + 1 ; i < fnpiv ; i++)
 		{
+		    Entry x ;
 		    double s ;
 		    Int col2, pos ;
-		    Entry x = Fu1 [i*nb] ;
+		    x = Fu1 [i*nb] ;
 		    APPROX_ABS (s, x) ;
 		    if (s <= droptol) continue ;
 		    col2 = Pivcol [i] ;
@@ -933,9 +951,10 @@ GLOBAL Int UMF_store_lu
 
 		for (i = 0 ; i < fncols ; i++)
 		{
+		    Entry x ;
 		    double s ;
 		    Int col2, pos ;
-		    Entry x = Fu2 [i] ;
+		    x = Fu2 [i] ;
 		    APPROX_ABS (s, x) ;
 		    if (s <= droptol) continue ;
 		    col2 = Fcols [i] ;
@@ -953,8 +972,9 @@ GLOBAL Int UMF_store_lu
 
 		for (i = kk + 1 ; i < fnpiv ; i++)
 		{
+		    Entry x ;
 		    Int col2, pos ;
-		    Entry x = Fu1 [i*nb] ;
+		    x = Fu1 [i*nb] ;
 		    if (IS_ZERO (x)) continue ;
 		    col2 = Pivcol [i] ;
 		    pos = Upos [col2] ;
@@ -969,8 +989,9 @@ GLOBAL Int UMF_store_lu
 
 		for (i = 0 ; i < fncols ; i++)
 		{
+		    Entry x ;
 		    Int col2, pos ;
-		    Entry x = Fu2 [i] ;
+		    x = Fu2 [i] ;
 		    if (IS_ZERO (x)) continue ;
 		    col2 = Fcols [i] ;
 		    pos = Upos [col2] ;

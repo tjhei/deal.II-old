@@ -1,7 +1,7 @@
 function [out1, out2, out3, out4, out5] = umfpack (in1, in2, in3, in4, in5)
-% UMFPACK v4.3 is a MATLAB mexFunction for solving sparse linear systems.
+% UMFPACK v4.4 is a MATLAB mexFunction for solving sparse linear systems.
 %
-% UMFPACK v4.3:                       |  MATLAB approximate equivalent:
+% UMFPACK v4.4:                       |  MATLAB approximate equivalent:
 % ---------------------------------------------------------------------
 % x = umfpack (A, '\', b) ;           |  x = A \ b
 %                                     |
@@ -20,7 +20,7 @@ function [out1, out2, out3, out4, out5] = umfpack (in1, in2, in3, in4, in5)
 %                                     |  R = spdiags (r, 0, m, m) ;
 %                                     |  [L,U,P] = lu ((R\A)*Q) ;
 %                                     |
-% [P,Q,F,C] = umfpack (A, 'symbolic') |  [m,n] = size (A) ; 
+% [P,Q,F,C] = umfpack (A, 'symbolic') |  [m,n] = size (A) ;
 %                                     |  I = speye (n) ;
 %                                     |  Q = I (:, colamd (A)) ;
 %                                     |  [count,h,parent,post] = ...
@@ -36,8 +36,8 @@ function [out1, out2, out3, out4, out5] = umfpack (in1, in2, in3, in4, in5)
 % See also: lu_normest, colamd, amd.
 % To use UMFPACK for an arbitrary b, see umfpack_solve.
 
-% UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.
-% Davis.  All Rights Reserved.  Type umfpack_details for License.
+% UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
+% All Rights Reserved.  Type umfpack_details for License.
 
 help umfpack
 error ('umfpack mexFunction not found!  Use umfpack_make to compile umfpack.') ;

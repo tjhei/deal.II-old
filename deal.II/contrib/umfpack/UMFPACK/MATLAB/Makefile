@@ -2,9 +2,6 @@
 # UMFPACK Makefile for the UMFPACK MATLAB mexFunction (old "make" only)
 #-------------------------------------------------------------------------------
 
-# UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.
-# Davis.  All Rights Reserved.  See ../README for License.
-
 # This is a very ugly Makefile, and is only provided for those who do not
 # have GNU make.  Note that it is not used if you have GNU make.  It ignores
 # dependency checking and just compiles everything.  It was created
@@ -144,6 +141,8 @@ umfpack:
 	$(MV) -f umfpack_get_lunz.o umfpack_md_get_lunz.o
 	$(MX) -DDINT -c ../Source/umfpack_get_symbolic.c
 	$(MV) -f umfpack_get_symbolic.o umfpack_md_get_symbolic.o
+	$(MX) -DDINT -c ../Source/umfpack_get_determinant.c
+	$(MV) -f umfpack_get_determinant.o umfpack_md_get_determinant.o
 	$(MX) -DDINT -c ../Source/umfpack_numeric.c
 	$(MV) -f umfpack_numeric.o umfpack_md_numeric.o
 	$(MX) -DDINT -c ../Source/umfpack_qsymbolic.c
@@ -290,6 +289,8 @@ umfpack:
 	$(MV) -f umfpack_get_lunz.o umfpack_mz_get_lunz.o
 	$(MX) -DZINT -c ../Source/umfpack_get_symbolic.c
 	$(MV) -f umfpack_get_symbolic.o umfpack_mz_get_symbolic.o
+	$(MX) -DZINT -c ../Source/umfpack_get_determinant.c
+	$(MV) -f umfpack_get_determinant.o umfpack_mz_get_determinant.o
 	$(MX) -DZINT -c ../Source/umfpack_numeric.c
 	$(MV) -f umfpack_numeric.o umfpack_mz_numeric.o
 	$(MX) -DZINT -c ../Source/umfpack_qsymbolic.c
@@ -380,7 +381,8 @@ umfpack:
 	    umfpack_md_col_to_triplet.o umfpack_md_defaults.o \
 	    umfpack_md_free_numeric.o umfpack_md_free_symbolic.o \
 	    umfpack_md_get_numeric.o umfpack_md_get_lunz.o \
-	    umfpack_md_get_symbolic.o umfpack_md_numeric.o \
+	    umfpack_md_get_symbolic.o umfpack_md_get_determinant.o \
+	    umfpack_md_numeric.o \
 	    umfpack_md_qsymbolic.o umfpack_md_report_control.o \
 	    umfpack_md_report_info.o umfpack_md_report_matrix.o \
 	    umfpack_md_report_numeric.o umfpack_md_report_perm.o \
@@ -410,7 +412,8 @@ umfpack:
 	    umfpack_mz_col_to_triplet.o umfpack_mz_defaults.o \
 	    umfpack_mz_free_numeric.o umfpack_mz_free_symbolic.o \
 	    umfpack_mz_get_numeric.o umfpack_mz_get_lunz.o \
-	    umfpack_mz_get_symbolic.o umfpack_mz_numeric.o \
+	    umfpack_mz_get_symbolic.o umfpack_mz_get_determinant.o \
+	    umfpack_mz_numeric.o \
 	    umfpack_mz_qsymbolic.o umfpack_mz_report_control.o \
 	    umfpack_mz_report_info.o umfpack_mz_report_matrix.o \
 	    umfpack_mz_report_numeric.o umfpack_mz_report_perm.o \

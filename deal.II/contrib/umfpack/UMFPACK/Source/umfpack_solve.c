@@ -3,9 +3,8 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.      */
-/* Davis.  All Rights Reserved.  See ../README for License.                   */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.            */
+/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
 
@@ -76,9 +75,10 @@ UMFPACK_solve
     /* local variables */
     /* ---------------------------------------------------------------------- */
 
+    double Info2 [UMFPACK_INFO], stats [2] ;
+    double *Info ;
     NumericType *Numeric ;
     Int n, i, irstep, status ;
-    double Info2 [UMFPACK_INFO], *Info, /* tstart, tend */ stats [2] ;
 #ifndef WSOLVE
     Int *Pattern, wsize ;
     double *W ;
@@ -100,7 +100,7 @@ UMFPACK_solve
     /* get parameters */
     /* ---------------------------------------------------------------------- */
 
-    irstep = (Int) GET_CONTROL (UMFPACK_IRSTEP, UMFPACK_DEFAULT_IRSTEP) ;
+    irstep = GET_CONTROL (UMFPACK_IRSTEP, UMFPACK_DEFAULT_IRSTEP) ;
 
     if (User_Info != (double *) NULL)
     {
@@ -150,11 +150,7 @@ UMFPACK_solve
 	irstep = 0 ;
     }
 
-    if (!Xx || !Bx
-#ifdef COMPLEX
-	|| !Xz || !Bz
-#endif
-    )
+    if (!Xx || !Bx)
     {
 	Info [UMFPACK_STATUS] = UMFPACK_ERROR_argument_missing ;
 	return (UMFPACK_ERROR_argument_missing) ;

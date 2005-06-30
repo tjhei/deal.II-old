@@ -1,4 +1,4 @@
-UMFPACK Version 4.3:  a set of routines solving sparse linear systems via LU
+UMFPACK Version 4.4:  a set of routines solving sparse linear systems via LU
     factorization.  Requires two other packages:  the BLAS (dense matrix
     operations) and AMD (sparse matrix minimum degree ordering).  Includes
     a C-callable and MATLAB interface, and a basic FORTRAN 77 interface to
@@ -26,7 +26,7 @@ Quick start (for MATLAB users):
 
 --------------------------------------------------------------------------------
 
-UMFPACK Version 4.3 (Jan. 16, 2003),  Copyright (c) 2003 by Timothy A.
+UMFPACK Version 4.4 (Jan. 28, 2005),  Copyright (c) 2005 by Timothy A.
 Davis.  All Rights Reserved.
 
 UMFPACK License:
@@ -61,16 +61,17 @@ Availability:
     (http://www.mathworks.com).  COLAMD V1.0 appears as a column-preordering
     in SuperLU (SuperLU is available at http://www.netlib.org).
     UMFPACK v4.0 is a built-in routine in MATLAB 6.5.
+    UMFPACK v4.3 is a built-in routine in MATLAB 7.1.
 
 --------------------------------------------------------------------------------
 
 Refer to ../AMD/README for the License for AMD, which is a separate
 package for ordering sparse matrices that is required by UMFPACK.
-UMFPACK v4.3 can use either AMD v1.0 or v1.1.
+UMFPACK v4.4 can use either AMD v1.0 or v1.1.
 
 --------------------------------------------------------------------------------
 
-This is the UMFPACK README file.  It is a terse overview of UMFPACK.
+This is the UMFPACK README.txt file.  It is a terse overview of UMFPACK.
 Refer to the User Guide (Doc/UserGuide.pdf) for how to install and use UMFPACK,
 or to the Quick Start Guide, QuickStart.pdf.
 
@@ -124,6 +125,9 @@ Acknowledgements:
     Anderson also incorporated UMFPACK v4.0 into MATLAB, for lu, backslash (\),
     and forward slash (/).
 
+    David Bateman (Motorola) wrote the initial version of the packed complex
+    input option, and umfpack_get_determinant.
+
 --------------------------------------------------------------------------------
 Files and directories in the UMFPACK distribution:
 --------------------------------------------------------------------------------
@@ -147,7 +151,7 @@ Files and directories in the UMFPACK distribution:
     Makefile	top-level Makefile for GNU make or original make.
 		Windows users would require Cygwin to use "make"
 
-    README	this file
+    README.txt	this file
 
     ----------------------------------------------------------------------------
     Doc directory: documentation
@@ -182,9 +186,12 @@ Files and directories in the UMFPACK distribution:
     umfpack_defaults.c		set Control defaults
     umfpack_free_numeric.c	free Numeric object
     umfpack_free_symbolic.c	free Symbolic object
+    umfpack_get_determinant.c	compute determinant from Numeric object
     umfpack_get_lunz.c		get nz's in L and U
     umfpack_get_numeric.c	get Numeric object
     umfpack_get_symbolic.c	get Symbolic object
+    umfpack_load_numeric.c	load Numeric object from file
+    umfpack_load_symbolic.c	load Symbolic object from file
     umfpack_numeric.c		numeric factorization
     umfpack_qsymbolic.c		symbolic factorization, user Q
     umfpack_report_control.c	print Control settings
@@ -196,6 +203,8 @@ Files and directories in the UMFPACK distribution:
     umfpack_report_symbolic.c	print Symbolic object
     umfpack_report_triplet.c	print triplet matrix
     umfpack_report_vector.c	print dense vector
+    umfpack_save_numeric.c	save Numeric object to file
+    umfpack_save_symbolic.c	save Symbolic object to file
     umfpack_scale.c		scale a vector
     umfpack_solve.c		solve a linear system
     umfpack_symbolic.c		symbolic factorization
@@ -270,9 +279,12 @@ Files and directories in the UMFPACK distribution:
     umfpack_defaults.h
     umfpack_free_numeric.h
     umfpack_free_symbolic.h
+    umfpack_get_determinant.h
     umfpack_get_lunz.h
     umfpack_get_numeric.h
     umfpack_get_symbolic.h
+    umfpack_load_numeric.h
+    umfpack_load_symbolic.h
     umfpack_numeric.h
     umfpack_qsymbolic.h
     umfpack_report_control.h
@@ -284,6 +296,8 @@ Files and directories in the UMFPACK distribution:
     umfpack_report_symbolic.h
     umfpack_report_triplet.h
     umfpack_report_vector.h
+    umfpack_save_numeric.h
+    umfpack_save_symbolic.h
     umfpack_scale.h
     umfpack_solve.h
     umfpack_symbolic.h
@@ -291,6 +305,7 @@ Files and directories in the UMFPACK distribution:
     umfpack_timer.h
     umfpack_transpose.h
     umfpack_triplet_to_col.h
+
     umfpack_wsolve.h		note that there is no umfpack_wsolve.c.  The
 				umfpack_*_wsolve routines are created from the
 				umfpack_solve.c file.
@@ -335,11 +350,13 @@ Files and directories in the UMFPACK distribution:
     umf4_f77zwrapper.c		a simple FORTRAN interface for the complex
 				UMFPACK routines.  compile with "make fortran"
     umf4zhb.f			a demo of the FORTRAN interface (complex)
-    umf4zhb.out			output of umf4zhb with Bai/qc324.cua, which is
-				not included in this distribution, see
-				http://www.cise.ufl.edu/research/sparse/matrices
+    umf4zhb.out			output of umf4zhb with HB/qc324.cua
 
     umf4hb64.f			64-bit version of umf4hb.f
+
+    simple_compile		a single command that compiles the double/int
+				version of UMFPACK (useful prototype for
+				Microsoft Visual Studio project)
 
     ----------------------------------------------------------------------------
     MATLAB directory:
@@ -349,18 +366,19 @@ Files and directories in the UMFPACK distribution:
     GNUmakefile			a nice Makefile, for GNU make
     Makefile			an ugly Unix Makefile (for older make's)
 
+    lu_normest.m		1-norm estimate of A-L*U (by Hager & Davis).
     luflop.m			for "help luflop"
     luflopmex.c			luflop mexFunction, for computing LU flop count
-    lu_normest.m		1-norm estimate of A-L*U (by Hager & Davis).
+    umfpack.m			for "help umfpack"
     umfpack_btf.m		solve Ax=b using umfpack and dmperm
     umfpack_demo.m		a full umfpack demo
     umfpack_details.m		the details of how to use umfpack
-    umfpack.m			for "help umfpack"
     umfpack_make.m		compile the umfpack mexFunction within MATLAB
-    umfpackmex.c		the umfpack mexFunction
     umfpack_report.m		report statistics
     umfpack_simple.m		a simple umfpack demo
     umfpack_solve.m		x=A\b or b/A for arbitrary b
+    umfpack_test.m		extensive test, requires UF sparse matrices
+    umfpackmex.c		the umfpack mexFunction
     west0067.mat		sparse matrix for umfpack_demo.m
 
     umfpack_demo.m.out		output of umfpack_demo.m

@@ -3,9 +3,8 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.      */
-/* Davis.  All Rights Reserved.  See ../README for License.                   */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.            */
+/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
 
@@ -28,7 +27,7 @@ GLOBAL void UMFPACK_report_status
     /* get control settings and status to determine what to print */
     /* ---------------------------------------------------------------------- */
 
-    prl = (Int) GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
+    prl = GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
 
     if (prl < 1)
     {
@@ -38,7 +37,7 @@ GLOBAL void UMFPACK_report_status
 
     if (status == UMFPACK_OK && prl <= 1)
     {
-	/* no output generated if prl is 1 or less and no error occured. */
+	/* no output generated if prl is 1 or less and no error occurred. */
 	/* note that the default printing level is 1. */
 	return ;
     }

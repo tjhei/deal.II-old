@@ -7,14 +7,14 @@ function rho = lu_normest (A, L, U)
 %
 % which estimates the computation of the 1-norm:
 %
-%       rho = norm (A-L*U, 1) 
+%       rho = norm (A-L*U, 1)
 %
 % Authors:  William W. Hager, Math Dept., Univ. of Florida
 %       Timothy A. Davis, CISE Dept., Univ. of Florida
 %       Gainesville, FL, 32611, USA.
 %       based on normest1, contributed on November, 1997
 %
-% This code can be quite easily adapted to estimate the 1-norm of any 
+% This code can be quite easily adapted to estimate the 1-norm of any
 % matrix E, where E itself is dense or not explicitly represented, but the
 % computation of E (and E') times a vector is easy.  In this case, our matrix
 % of interest is:

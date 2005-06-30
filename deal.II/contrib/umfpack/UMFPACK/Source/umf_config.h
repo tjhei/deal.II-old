@@ -3,9 +3,8 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.      */
-/* Davis.  All Rights Reserved.  See ../README for License.                   */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.            */
+/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
 
@@ -256,7 +255,7 @@
     about 36 minutes.  BE CAREFUL:  if you compare the run time of UMFPACK with
     other sparse matrix packages, be sure to use the same timer.  See
     umfpack_tictoc.c for the timer used internally by UMFPACK.  See also
-    umfpack_timer.c for the timer used in an earlier version of UMFPACK (V4.0).
+    umfpack_timer.c for the timer used in an earlier version of UMFPACK.
     That timer is still available as a user-callable routine, but it is no
     longer used internally by UMFPACK.
 */

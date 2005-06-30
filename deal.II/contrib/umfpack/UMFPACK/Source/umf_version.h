@@ -3,9 +3,8 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.      */
-/* Davis.  All Rights Reserved.  See ../README for License.                   */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.            */
+/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
 
@@ -120,18 +119,17 @@ SCALAR_IS_LTZERO(x):
 
 #define Entry double
 
-#define REAL_COMPONENT(c)		(c)
-#define IMAG_COMPONENT(c)		(0.)
-#define ASSIGN(c,s1,s2)		    { (c) = (s1) ; }
+#define SPLIT(s)    		    (1)
+#define REAL_COMPONENT(c)	    (c)
+#define IMAG_COMPONENT(c)	    (0.)
+#define ASSIGN(c,s1,s2,p,split)	    { (c) = (s1)[p] ; }
 #define CLEAR(c)		    { (c) = 0. ; }
 #define CLEAR_AND_INCREMENT(p)	    { *p++ = 0. ; }
 #define IS_NAN(a)		    SCALAR_IS_NAN (a)
 #define IS_ZERO(a)		    SCALAR_IS_ZERO (a)
 #define IS_NONZERO(a)		    SCALAR_IS_NONZERO (a)
 #define SCALE_DIV(c,s)		    { (c) /= (s) ; }
-#ifndef NRECIPROCAL
-#define SCALE_RECIP(c,s)	    { (c) *= (s) ; }
-#endif
+#define SCALE(c,s)		    { (c) *= (s) ; }
 #define ASSEMBLE(c,a)		    { (c) += (a) ; }
 #define ASSEMBLE_AND_INCREMENT(c,p) { (c) += *p++ ; }
 #define DECREMENT(c,a)		    { (c) -= (a) ; }
@@ -216,11 +214,24 @@ typedef struct
 
 /* -------------------------------------------------------------------------- */
 
-/* c = (s1) + (s2)i */
-#define ASSIGN(c,s1,s2) \
+/* Return TRUE if a complex number is in split form, FALSE if in packed form */
+#define SPLIT(sz) ((sz) != (double *) NULL)
+
+/* -------------------------------------------------------------------------- */
+
+/* c = (s1) + (s2)*i, if s2 is null, then X is in "packed" format (compatible
+ * with Entry and ANSI C99 double _Complex type).  */
+#define ASSIGN(c,s1,s2,p,split)	\
 { \
-    (c).Real = (s1) ; \
-    (c).Imag = (s2) ; \
+    if (split) \
+    { \
+        (c).Real = (s1)[p] ; \
+        (c).Imag = (s2)[p] ; \
+    }  \
+    else \
+    { \
+ 	(c) = ((Entry *)(s1))[p] ; \
+    }  \
 }
 
 /* -------------------------------------------------------------------------- */
@@ -271,15 +282,12 @@ typedef struct
 
 /* -------------------------------------------------------------------------- */
 
-/* c *= s, where s is the reciprocal scale factor.  Not used if
- * NRECIPROCAL is defined at compile time. */
-#ifndef NRECIPROCAL
-#define SCALE_RECIP(c,s) \
+/* c *= s */
+#define SCALE(c,s) \
 { \
     (c).Real *= (s) ; \
     (c).Imag *= (s) ; \
 }
-#endif
 
 /* -------------------------------------------------------------------------- */
 
@@ -603,6 +611,7 @@ typedef struct
 #define UMFPACK_get_lunz	 umfpack_di_get_lunz
 #define UMFPACK_get_numeric	 umfpack_di_get_numeric
 #define UMFPACK_get_symbolic	 umfpack_di_get_symbolic
+#define UMFPACK_get_determinant	 umfpack_di_get_determinant
 #define UMFPACK_numeric		 umfpack_di_numeric
 #define UMFPACK_qsymbolic	 umfpack_di_qsymbolic
 #define UMFPACK_report_control	 umfpack_di_report_control
@@ -717,6 +726,7 @@ typedef struct
 #define UMFPACK_get_lunz	 umfpack_dl_get_lunz
 #define UMFPACK_get_numeric	 umfpack_dl_get_numeric
 #define UMFPACK_get_symbolic	 umfpack_dl_get_symbolic
+#define UMFPACK_get_determinant	 umfpack_dl_get_determinant
 #define UMFPACK_numeric		 umfpack_dl_numeric
 #define UMFPACK_qsymbolic	 umfpack_dl_qsymbolic
 #define UMFPACK_report_control	 umfpack_dl_report_control
@@ -831,6 +841,7 @@ typedef struct
 #define UMFPACK_get_lunz	 umfpack_zi_get_lunz
 #define UMFPACK_get_numeric	 umfpack_zi_get_numeric
 #define UMFPACK_get_symbolic	 umfpack_zi_get_symbolic
+#define UMFPACK_get_determinant	 umfpack_zi_get_determinant
 #define UMFPACK_numeric		 umfpack_zi_numeric
 #define UMFPACK_qsymbolic	 umfpack_zi_qsymbolic
 #define UMFPACK_report_control	 umfpack_zi_report_control
@@ -945,6 +956,7 @@ typedef struct
 #define UMFPACK_get_lunz	 umfpack_zl_get_lunz
 #define UMFPACK_get_numeric	 umfpack_zl_get_numeric
 #define UMFPACK_get_symbolic	 umfpack_zl_get_symbolic
+#define UMFPACK_get_determinant	 umfpack_zl_get_determinant
 #define UMFPACK_numeric		 umfpack_zl_numeric
 #define UMFPACK_qsymbolic	 umfpack_zl_qsymbolic
 #define UMFPACK_report_control	 umfpack_zl_report_control

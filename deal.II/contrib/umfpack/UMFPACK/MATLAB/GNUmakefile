@@ -2,9 +2,6 @@
 # UMFPACK GNUmakefile for the UMFPACK MATLAB mexFunction (GNU "make" only)
 #-------------------------------------------------------------------------------
 
-# UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.
-# Davis.  All Rights Reserved.  See ../README for License.
-
 all: umfpack luflop
 
 include ../Make/Make.include
@@ -38,7 +35,7 @@ UMFINT = umf_analyze umf_apply_order umf_colamd umf_free umf_fsize \
 
 # non-user-callable and user-callable amd_*.[ch] files (int/long versions only):
 AMD = amd_aat amd_1 amd_2 amd_dump amd_postorder amd_post_tree amd_defaults \
-	amd_order amd_control amd_info amd_valid
+	amd_order amd_control amd_info amd_valid amd_preprocess
 
 # non-user-callable, created from umf_ltsolve.c, umf_utsolve.c,
 # umf_triplet.c, and umf_assemble.c , with int/long and real/complex versions:
@@ -52,10 +49,10 @@ UMF = $(UMF_CREATED) $(UMFCH)
 # user-callable umfpack_*.[ch] files (int/long and real/complex):
 UMFPACK = umfpack_col_to_triplet umfpack_defaults umfpack_free_numeric \
 	umfpack_free_symbolic umfpack_get_numeric umfpack_get_lunz \
-	umfpack_get_symbolic umfpack_numeric umfpack_qsymbolic \
-	umfpack_report_control umfpack_report_info umfpack_report_matrix \
-	umfpack_report_numeric umfpack_report_perm umfpack_report_status \
-	umfpack_report_symbolic umfpack_report_triplet \
+	umfpack_get_symbolic umfpack_get_determinant umfpack_numeric \
+	umfpack_qsymbolic umfpack_report_control umfpack_report_info \
+	umfpack_report_matrix umfpack_report_numeric umfpack_report_perm \
+	umfpack_report_status umfpack_report_symbolic umfpack_report_triplet \
 	umfpack_report_vector umfpack_solve umfpack_symbolic \
 	umfpack_transpose umfpack_triplet_to_col umfpack_scale \
 	umfpack_load_numeric umfpack_save_numeric \

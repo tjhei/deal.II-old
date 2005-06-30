@@ -30,3 +30,4 @@
 /INCLUDE umfpack_load_symbolic.h/r ../Include/umfpack_load_symbolic.h
 /INCLUDE umfpack_save_numeric.h/r ../Include/umfpack_save_numeric.h
 /INCLUDE umfpack_save_symbolic.h/r ../Include/umfpack_save_symbolic.h
+/INCLUDE umfpack_get_determinant.h/r ../Include/umfpack_get_determinant.h

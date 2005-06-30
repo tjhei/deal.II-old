@@ -3,12 +3,9 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.      */
-/* Davis.  All Rights Reserved.  See ../README for License.                   */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.            */
+/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
-/* -------------------------------------------------------------------------- */
-/* Minor revision, Aug 13, 2003 (version 4.1.1).  Removed call to spparms.    */
 /* -------------------------------------------------------------------------- */
 
 /*
@@ -20,10 +17,6 @@
     rectangular.  b must be a dense n-by-1 vector (real or complex).
     L is unit lower triangular, U is upper triangular, and R is diagonal.
     P and Q are permutation matrices (permutations of an identity matrix).
-
-    This has changed since v4.0.  The outputs P and Q are returned as
-    permutation matrices instead of permutation vectors, and the row scale
-    factor r is also returned.  v4.0 did not scale the matrix.
 
     The matrix A is scaled, by default.  Each row i is divided by r (i), where
     r (i) is the sum of the absolute values of the entries in that row.  The
@@ -46,7 +39,7 @@
 
     returns LU factors such that L*U = P*A*Q, with no scaling.
 
-    See umfpack.m and umfpack.h for details.
+    See umfpack.m, umfpack_details.m, and umfpack.h for details.
 
     Note that this mexFunction accesses only the user-callable UMFPACK routines.
     Thus, is also provides another example of how user C code can access
@@ -64,7 +57,12 @@
     factorizing A, and then solving via the transposed L and U matrices.
     The solution is still x = (A.'\b.').', except that A is factorized instead
     of A.'.
+
+    Modified for v4.3.1, Jan 10, 2005: default has been changed to
+    NO_TRANSPOSE_FORWARD_SLASH, to test iterative refinement for b/A.
+    v4.4: added method for computing the determinant.
 */
+#define NO_TRANSPOSE_FORWARD_SLASH  /* default has changed for v4.3.1 */
 
 #include "umfpack.h"
 #include "mex.h"
@@ -144,6 +142,9 @@ void mexFunction
     /* local variables */
     /* ---------------------------------------------------------------------- */
 
+    double Info [UMFPACK_INFO], Control [UMFPACK_CONTROL], dx, dz, dexp ;
+    double *Lx, *Lz, *Ux, *Uz, *Ax, *Az, *Bx, *Bz, *Xx, *Xz, *User_Control,
+	*p, *q, *OutInfo, *p1, *p2, *p3, *p4, *Ltx, *Ltz, *Rs, *Px, *Qx ;
     void *Symbolic, *Numeric ;
     int *Lp, *Li, *Up, *Ui, *Ap, *Ai, *P, *Q, do_solve, lnz, unz, nn, i,
 	transpose, size, do_info, do_numeric, *Front_npivcol, op, k, *Rp, *Ri,
@@ -151,10 +152,7 @@ void mexFunction
 	nfronts, nchains, *Ltp, *Ltj, *Qinit, print_level, status2, no_scale,
 	*Front_1strow, *Front_leftmostdesc, n_row, n_col, n_inner, sys,
 	ignore1, ignore2, ignore3, A_is_complex, B_is_complex, X_is_complex,
-	*Pp, *Pi, *Qp, *Qi, do_recip ;
-    double *Lx, *Lz, *Ux, *Uz, *Ax, *Az, *Bx, *Bz, *Xx, *Xz, *User_Control,
-	*p, *q, Info [UMFPACK_INFO], Control [UMFPACK_CONTROL], *OutInfo,
-	*p1, *p2, *p3, *p4, *Ltx, *Ltz, *Rs, *Px, *Qx ;
+	*Pp, *Pi, *Qp, *Qi, do_recip, do_det ;
     mxArray *Amatrix, *Bmatrix, *User_Control_matrix, *User_Qinit ;
     char *operator, *operation ;
     mxComplexity Atype, Xtype ;
@@ -177,6 +175,7 @@ void mexFunction
     do_numeric = TRUE ;
     transpose = FALSE ;
     no_scale = FALSE ;
+    do_det = FALSE ;
 
     /* find the operator */
     op = 0 ;
@@ -308,6 +307,27 @@ void mexFunction
 		User_Control_matrix = (mxArray *) pargin [nargin-1] ;
 	    }
 	    if (nargin < 2 || nargin > 4 || nargout > 5 || nargout < 4)
+	    {
+		mexErrMsgTxt ("wrong number of arguments") ;
+	    }
+
+	}
+	else if (STRING_MATCH (operator, "det"))
+	{
+
+	    /* -------------------------------------------------------------- */
+	    /* compute the determinant */
+	    /* -------------------------------------------------------------- */
+
+	    /*
+	     * [det] = umfpack (A, 'det') ;
+	     * [dmantissa dexp] = umfpack (A, 'det') ;
+	     */
+
+	    operation = "determinant" ;
+	    do_det = TRUE ;
+	    Amatrix = (mxArray *) pargin [0] ;
+	    if (nargin > 2 || nargout > 2)
 	    {
 		mexErrMsgTxt ("wrong number of arguments") ;
 	    }
@@ -741,7 +761,7 @@ void mexFunction
 	}
 
 	/* ------------------------------------------------------------------ */
-	/* return the solution or the factorization */
+	/* return the solution, determinant, or the factorization */
 	/* ------------------------------------------------------------------ */
 
 	if (do_solve)
@@ -921,6 +941,66 @@ void mexFunction
 			1+UMFPACK_PRL) ;
 		    mexWarnMsgTxt (warning) ;
 		}
+	    }
+
+	}
+	else if (do_det)
+	{
+
+	    /* -------------------------------------------------------------- */
+	    /* get the determinant */
+	    /* -------------------------------------------------------------- */
+
+	    if (nargout == 2)
+	    {
+		/* [det dexp] = umfpack (A, 'det') ;
+		 * return determinant in the form det * 10^dexp */
+		p = &dexp ;
+	    }
+	    else
+	    {
+		/* [det] = umfpack (A, 'det') ;
+		 * return determinant as a single scalar (overflow or
+		 * underflow is much more likely) */
+		p = (double *) NULL ;
+	    }
+	    if (A_is_complex)
+	    {
+		status = umfpack_zi_get_determinant (&dx, &dz, p,
+			Numeric, Info) ;
+		umfpack_zi_free_numeric (&Numeric) ;
+	    }
+	    else
+	    {
+		status = umfpack_di_get_determinant (&dx, p,
+			Numeric, Info) ;
+		umfpack_di_free_numeric (&Numeric) ;
+		dz = 0 ;
+	    }
+	    if (status < 0)
+	    {
+		error ("extracting LU factors failed", A_is_complex, nargout,
+		    pargout, Control, Info, status, do_info) ;
+	    }
+	    if (A_is_complex)
+	    {
+		pargout [0] = mxCreateDoubleMatrix (1, 1, mxCOMPLEX) ;
+		p = mxGetPr (pargout [0]) ;
+		*p = dx ;
+		p = mxGetPi (pargout [0]) ;
+		*p = dz ;
+	    }
+	    else
+	    {
+		pargout [0] = mxCreateDoubleMatrix (1, 1, mxREAL) ;
+		p = mxGetPr (pargout [0]) ;
+		*p = dx ;
+	    }
+	    if (nargout == 2)
+	    {
+		pargout [1] = mxCreateDoubleMatrix (1, 1, mxREAL) ;
+		p = mxGetPr (pargout [1]) ;
+		*p = dexp ;
 	    }
 
 	}

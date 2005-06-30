@@ -6,8 +6,8 @@ function umfpack_demo
 % See also umfpack, umfpack_make, umfpack_details, umfpack_report,
 % and umfpack_simple.
 
-% UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.
-% Davis.  All Rights Reserved.  Type umfpack_details for License.
+% UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
+% All Rights Reserved.  Type umfpack_details for License.
 
 %-------------------------------------------------------------------------------
 % get default control parameters
@@ -193,3 +193,10 @@ XM = B'/A ;
 
 fprintf ('Difference between UMFPACK and MATLAB solution: %g\n', ...
     norm (XU - XM, Inf)) ;
+
+%-------------------------------------------------------------------------------
+% compute the determinant
+%-------------------------------------------------------------------------------
+
+fprintf ('\n--------------------------------------------------------------\n') ;
+fprintf ('det(A): %g  UMFPACK determinant: %g\n', det (A), umfpack (A, 'det')) ;

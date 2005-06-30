@@ -3,11 +3,11 @@ function umfpack_make
 %
 % Compiles the UMFPACK mexFunction and then runs a simple demo.
 %
-% UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.
-% Davis.  All Rights Reserved.  Type umfpack_details for License.
-%
 % See also: umfpack, umfpack_details, umfpack_report, umfpack_demo, and
 % umfpack_simple.
+%
+% UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
+% All Rights Reserved.  Type umfpack_details for License.
 
 help umfpack_make
 
@@ -190,12 +190,12 @@ umfint = { 'analyze', 'apply_order', 'colamd', 'free', 'fsize', ...
 
 % non-user-callable and user-callable amd_*.[ch] files (int versions only):
 amd = { 'aat', '1', '2', 'dump', 'postorder', 'post_tree', 'defaults', ...
-        'order', 'control', 'info', 'valid' } ;
+        'order', 'control', 'info', 'valid', 'preprocess' } ;
 
 % user-callable umfpack_*.[ch] files (real/complex):
 user = { 'col_to_triplet', 'defaults', 'free_numeric', ...
         'free_symbolic', 'get_numeric', 'get_lunz', ...
-        'get_symbolic', 'numeric', 'qsymbolic', ...
+        'get_symbolic', 'get_determinant', 'numeric', 'qsymbolic', ...
         'report_control', 'report_info', 'report_matrix', ...
         'report_numeric', 'report_perm', 'report_status', ...
         'report_symbolic', 'report_triplet', ...
@@ -220,7 +220,7 @@ end
 rules = { [mx ' -DDINT'] , [mx ' -DZINT'] } ;
 kinds = { 'md', 'mz' } ;
 
-for what = 1:2 
+for what = 1:2
 
     rule = rules {what} ;
     kind = kinds {what} ;

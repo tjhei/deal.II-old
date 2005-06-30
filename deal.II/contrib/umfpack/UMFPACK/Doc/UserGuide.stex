@@ -20,8 +20,8 @@
 \author{Timothy A. Davis \\
 Dept. of Computer and Information Science and Engineering \\
 Univ. of Florida, Gainesville, FL}
-\title{UMFPACK Version 4.3 User Guide}
-\date{Jan. 16, 2004}
+\title{UMFPACK Version 4.4 User Guide}
+\date{Jan. 28, 2005}
 \maketitle
 
 %-------------------------------------------------------------------------------
@@ -36,9 +36,9 @@ Univ. of Florida, Gainesville, FL}
 \end{abstract}
 %-------------------------------------------------------------------------------
 
-Technical Report TR-04-003.
+Technical Report TR-04-003 (revised)
 
-UMFPACK Version 4.3 (Jan. 16, 2004), Copyright\copyright 2004 by Timothy A.
+UMFPACK Version 4.4 (Jan. 28, 2005), Copyright\copyright 2005 by Timothy A.
 Davis.  All Rights Reserved.
 
 {\bf UMFPACK License:}
@@ -83,7 +83,7 @@ Davis.  All Rights Reserved.
 %-------------------------------------------------------------------------------
 
 UMFPACK\footnote{Pronounced with two syllables: umph-pack}
-Version 4.3 is a set of routines for solving systems of linear
+Version 4.4 is a set of routines for solving systems of linear
 equations, $\m{Ax}=\m{b}$, when $\m{A}$ is sparse and unsymmetric.  It is based
 on the Unsymmetric-pattern MultiFrontal method \cite{DavisDuff97,DavisDuff99}.
 UMFPACK factorizes
@@ -249,7 +249,7 @@ Row pivoting for sparsity and numerical accuracy is performed if the
 diagonal entry is too small.
 
 More details of the method, including experimental results, are
-described in \cite{Davis03,Davis03}, available at
+described in \cite{Davis03,Davis03_algo}, available at
 http://www.cise.ufl.edu/tech-reports.
 
 %-------------------------------------------------------------------------------
@@ -257,12 +257,13 @@ http://www.cise.ufl.edu/tech-reports.
 %-------------------------------------------------------------------------------
 
 In addition to appearing as a Collected Algorithm of the ACM,
-UMFPACK Version 4.3 is available at http://www.cise.ufl.edu/research/sparse.
-An earlier version (Version 4.0) is included as a built-in routine in MATLAB
-6.5.  Version 4.0 does not have the symmetric or 2-by-2 strategies and it takes
+UMFPACK Version 4.4 is available at http://www.cise.ufl.edu/research/sparse.
+Version 4.3 is included as a built-in routine in MATLAB
+7.1.  Version 4.0 (in MATLAB 6.5)
+does not have the symmetric or 2-by-2 strategies and it takes
 less advantage of the level-3
 BLAS \cite{DaydeDuff99,ACM679a,ATLAS,GotoVandeGeijn02}.
-Version 4.3 (and v4.2 and v4.1) tend to be much faster than Version 4.0,
+Version 4.4 (and v4.3 through v4.1) tend to be much faster than Version 4.0,
 particularly on unsymmetric matrices with mostly symmetric
 nonzero pattern (such as finite element and circuit simulation matrices).
 Version 3.0 and following make
@@ -278,7 +279,32 @@ MA38 (functionally equivalent to Version 2.2.1) in the Harwell
 Subroutine Library.
 
 %-------------------------------------------------------------------------------
-\section{Primary changes since Version 4.1}
+\section{Primary changes from prior versions}
+%-------------------------------------------------------------------------------
+
+A detailed list of changes is in the {\tt ChangeLog} file.
+
+%-------------------------------------------------------------------------------
+\subsection{Version 4.4}
+%-------------------------------------------------------------------------------
+
+Bug fix in strategy selection in {\tt umfpack\_*\_qsymbolic}.
+Added packed complex case for all complex input/output arguments.
+Added {\tt umfpack\_get\_determinant}.
+Added minimal support for Microsoft Visual Studio
+(the {\tt umf\_multicompile.c} file).
+
+%-------------------------------------------------------------------------------
+\subsection{Version 4.3.1}
+%-------------------------------------------------------------------------------
+
+Minor bug fix in the forward/backsolve.  This bug had the effect of turning
+off iterative refinement when solving $\m{A}\tr\m{x}=\m{b}$ after factorizing
+$\m{A}$.  UMFPACK mexFunction now factorizes $\m{A}\tr$ in its forward-slash
+operation.
+
+%-------------------------------------------------------------------------------
+\subsection{Version 4.3}
 %-------------------------------------------------------------------------------
 
 No changes are visible to the C or MATLAB user, except the presence of
@@ -287,11 +313,11 @@ and three new statistics in the {\tt Info} array.
 The primary change is the addition of an (optional) drop tolerance.
 
 %-------------------------------------------------------------------------------
-\section{Primary changes in Version 4.1 (since Version 4.0)}
+\subsection{Version 4.1}
 %-------------------------------------------------------------------------------
 
-A detailed list of changes is in the {\tt ChangeLog} file.  The following
-is a summary of the main changes that are visible to the C or MATLAB user:
+The following is a summary of the main changes that are visible to the C
+or MATLAB user:
 
 \begin{enumerate}
 
@@ -355,8 +381,8 @@ is a summary of the main changes that are visible to the C or MATLAB user:
 \section{Using UMFPACK in MATLAB}
 %-------------------------------------------------------------------------------
 
-The easiest way to use UMFPACK is within MATLAB.  Version 4.0 is a built-in
-routine in MATLAB 6.5, and is used in {\tt x = A}$\backslash${\tt b} when
+The easiest way to use UMFPACK is within MATLAB.  Version 4.3 is a built-in
+routine in MATLAB 7.1, and is used in {\tt x = A}$\backslash${\tt b} when
 {\tt A} is sparse, square, unsymmetric (or symmetric but not positive definite),
 and with nonzero entries that are not confined in a narrow band.
 It is also used for the {\tt [L,U,P,Q] = lu (A)} usage of {\tt lu}.
@@ -379,10 +405,7 @@ of the UMFPACK mexFunction within MATLAB.
 
 An optional input argument can be used to modify the control parameters for
 UMFPACK, and an optional output argument provides statistics on the 
-factorization.  UMFPACK will print these statistics if you turn
-on the sparse matrix monitor flag with {\tt spparms ('spumoni', 1)}.
-The UMFPACK printing level parameter described in Section~\ref{Reporting}
-is set to {\tt spumoni} plus 1.  Type {\tt help umfpack} for more information.
+factorization.
 
 Refer to the AMD User Guide for more details about the AMD mexFunction.
 
@@ -416,14 +439,17 @@ x = A \ b ;
 \hline
  & & \\
 \begin{minipage}[t]{1.5in}
-Solve $\m{Ax}=\m{b}$ using a different column pre-ordering.
+Solve $\m{Ax}=\m{b}$ using a different row and column pre-ordering
+(symmetric ordering).
 \end{minipage}
 &
 \begin{minipage}[t]{2.2in}
 \begin{verbatim}
 S = spones (A) ;
 Q = symamd (S+S') ;
-x = umfpack (A,Q,'\',b) ;
+Control = umfpack ;
+Control (6) = 3 ;
+x = umfpack (A,Q,'\',b,Control) ;
 \end{verbatim}
 \end{minipage}
 &
@@ -432,7 +458,7 @@ x = umfpack (A,Q,'\',b) ;
 spparms ('autommd',0) ;
 S = spones (A) ;
 Q = symamd (S+S') ;
-x = A (:,Q) \ b ;
+x = A (Q,Q) \ b (Q) ;
 x (Q) = x ;
 spparms ('autommd',1) ;
 \end{verbatim}
@@ -449,12 +475,14 @@ Solve $\m{A}\tr\m{x}\tr = \m{b}\tr$.
 \begin{verbatim}
 x = umfpack (b,'/',A) ;
 \end{verbatim}
+Note: $\m{A}$ is factorized.
 \end{minipage}
 &
 \begin{minipage}[t]{2.2in}
 \begin{verbatim}
 x = b / A ;
 \end{verbatim}
+Note: $\m{A}\tr$ is factorized.
 \end{minipage}
  \\
  & & \\
@@ -492,7 +520,7 @@ x = Q * (U \ (L \ c)) ;
 }
 \end{table}
 
-Note: in MATLAB 6.5, use {\tt spparms ('autoamd',0)} in addition to
+Note: in MATLAB 6.5 or later, use {\tt spparms ('autoamd',0)} in addition to
 {\tt spparms ('autommd',0)}, in Table~\ref{matlab}, to turn off MATLAB's
 default reordering.
 
@@ -502,7 +530,7 @@ This is more restrictive than what you can do with MATLAB's
 backslash or forward slash.  See {\tt umfpack\_solve} for an M-file that
 removes this restriction.
 This restriction does not apply to the built-in backslash operator
-in MATLAB 6.5, which uses UMFPACK v4.0 to factorize the matrix.
+in MATLAB 6.5 or later, which uses UMFPACK to factorize the matrix.
 You can do this yourself in MATLAB:
 
 {\footnotesize
@@ -602,13 +630,24 @@ and thus using {\tt utMalloc} might not always be successful.
 To use the documented {\tt mxMalloc} routine instead, compile the
 mexFunction with the {\tt -DNUTIL} flag enabled.
 
+To compute the determinant with UMFPACK:
+
+\begin{verbatim}
+    d = umfpack (A, 'det') ;
+    [d e] = umfpack (A, 'det') ;
+\end{verbatim}
+
+The first case is identical to MATLAB's {\tt det}.
+The second case returns the determinant in the form
+$d \times 10^e$, which avoids overflow if $e$ is large.
+
 %-------------------------------------------------------------------------------
 \section{Using UMFPACK in a C program}
 \label{C}
 %-------------------------------------------------------------------------------
 
-The C-callable UMFPACK library consists of 31 user-callable routines and one
-include file.  Twenty-seven of the routines come in four versions, with
+The C-callable UMFPACK library consists of 32 user-callable routines and one
+include file.  All but three of the routines come in four versions, with
 different sizes of integers and for real or complex floating-point numbers:
 \begin{enumerate}
 \item {\tt umfpack\_di\_*}: real double precision, {\tt int} integers.
@@ -616,7 +655,7 @@ different sizes of integers and for real or complex floating-point numbers:
 \item {\tt umfpack\_zi\_*}: complex double precision, {\tt int} integers.
 \item {\tt umfpack\_zl\_*}: complex double precision, {\tt long} integers.
 \end{enumerate}
-where {\tt *} denotes the specific name of one of the 27 routines.
+where {\tt *} denotes the specific name of one of the routines.
 Routine names beginning with {\tt umf\_} are internal to the package,
 and should not be called by the user.  The include file {\tt umfpack.h}
 must be included in any C program that uses UMFPACK.
@@ -630,7 +669,7 @@ for more details.
 Use only one version for any one problem; do not attempt to use one version
 to analyze the matrix and another version to factorize the matrix, for example.
 
-The notation {\tt umfpack\_di\_*} refers to all 27 user-callable routines
+The notation {\tt umfpack\_di\_*} refers to all user-callable routines
 for the real double precision and {\tt int} integer case.  The notation
 {\tt umfpack\_*\_numeric}, for example, refers all four versions
 (real/complex, int/long) of a single operation
@@ -669,7 +708,10 @@ precision arguments, and return double precision arguments.  In the
 hold the real part of the matrices; and second double precision arrays hold
 the imaginary part of the input and output matrices.  Internally, complex
 numbers are stored in arrays with their real and imaginary parts interleaved,
-as required by the BLAS.
+as required by the BLAS (``packed'' complex form).
+
+New to Version 4.4 is the option of providing input/output arguments
+in packed complex form.
 
 %-------------------------------------------------------------------------------
 \subsection{Primary routines, and a simple example}
@@ -770,13 +812,19 @@ The complex versions add another array for the imaginary part:
 \end{verbatim}
 }
 
+Alternatively, if {\tt Az} is {\tt NULL},
+the real part of the $k$th entry is located in
+{\tt Ax[2*k]} and the imaginary part is located in
+{\tt Ax[2*k+1]}, and the {\tt Ax} array is of size {\tt 2*nz}.
+
 All nonzeros are entries, but an entry may be numerically zero.  The row indices
 of entries in column {\tt j} are stored in
     {\tt Ai[Ap[j]} \ldots {\tt Ap[j+1]-1]}.
 The corresponding numerical values are stored in
     {\tt Ax[Ap[j]} \ldots {\tt Ap[j+1]-1]}.
 The imaginary part, for the complex versions, is stored in
-    {\tt Az[Ap[j]} \ldots {\tt Ap[j+1]-1]}.
+    {\tt Az[Ap[j]} \ldots {\tt Ap[j+1]-1]}
+    (see above for the packed complex case).
 
 No duplicate row indices may be present, and the row indices in any given
 column must be sorted in ascending order.  The first entry {\tt Ap[0]} must be
@@ -950,7 +998,12 @@ $j =$ {\tt Tj[k]}, and $a_{ij} =$ {\tt Tx[k]}.  For the complex versions,
 The triplets can be in any
 order in the {\tt Ti}, {\tt Tj}, and {\tt Tx} arrays (and {\tt Tz} for
 the complex versions), and duplicate entries may
-exist.  Any duplicate entries are summed when the triplet form is converted to
+exist.  
+If {\tt Tz} is NULL, then the array {\tt Tx} becomes of size {\tt 2*nz},
+and the real and imaginary parts of the
+{\tt k}-th triplet are located in {\tt Tx[2*k]} and {\tt Tx[2*k+1]},
+respectively.
+Any duplicate entries are summed when the triplet form is converted to
 compressed column form.  This is a convenient way to create a matrix arising in
 finite-element methods, for example.
 
@@ -992,7 +1045,7 @@ Four routines are provided for manipulating sparse matrices:
     Applies the row scale factors to a user-provided vector.  This is not
     required to solve the sparse linear system $\m{Ax}=\m{b}$ or
     $\m{A}\tr\m{x}=\m{b}$, since {\tt umfpack\_*\_solve} applies the scale
-    factors for those systems.  This routine is new to Version 4.1.
+    factors for those systems.
 
 \end{itemize}
 
@@ -1004,6 +1057,10 @@ however.  Refer to the discussion of
 on how to compute these operations in your own code.
 The only primary matrix operation not provided by UMFPACK is the
 multiplication of two sparse matrices \cite{Gustavson78}.
+A future package under development (as of Jan. 2005), CHOLMOD,
+will provide many of these matrix operations, which
+can then be used in conjunction with UMFPACK.
+Watch my web page for details.
 
 %-------------------------------------------------------------------------------
 \subsection{Getting the contents of opaque objects}
@@ -1016,6 +1073,7 @@ except to pass them back to subsequent calls to UMFPACK.  Three routines
 are provided for copying their contents into user-provided arrays using simpler
 data structures.  Four routines are provided for saving and loading the
 {\tt Numeric} and {\tt Symbolic} objects to/from binary files.
+An additional routine is provided that computes the determinant.
 They are fully described in Section~\ref{Get}:
 
 \begin{itemize}
@@ -1045,6 +1103,12 @@ They are fully described in Section~\ref{Get}:
     preordering, supernodal column elimination tree, and information
     about each frontal matrix) into arrays provided by the user.
 
+\item {\tt umfpack\_*\_get\_determinant}:
+
+    Computes the determinant from the diagonal of $\m{U}$ and the permutations
+    $\m{P}$ and $\m{Q}$.  This is mostly of theoretical interest.
+    It is not a good test to determine if your matrix is singular or not.
+
 \item {\tt umfpack\_*\_save\_numeric}:
 
     Saves a copy of the {\tt Numeric} object to a file, in binary format.
@@ -1068,7 +1132,8 @@ They are fully described in Section~\ref{Get}:
 UMFPACK itself does not make use of these routines;
 they are provided solely for returning the contents of the opaque
 {\tt Symbolic} and {\tt Numeric} objects to the user, and saving/loading
-them to/from a binary file.
+them to/from a binary file.  None of them do any computation, except for
+{\tt umfpack\_*\_get\_determinant}.
 
 %-------------------------------------------------------------------------------
 \subsection{Reporting routines}
@@ -1128,7 +1193,10 @@ compiled
 into the C-callable UMFPACK library than when used in the MATLAB mexFunction.
 MATLAB stores its sparse matrices using the same compressed column data
 structure discussed above, where row and column indices of an $m$-by-$n$
-matrix are in the range 0 to $m-1$ or $n-1$, respectively.
+matrix are in the range 0 to $m-1$ or $n-1$, respectively\footnote{Complex
+matrices in MATLAB use the split array form, with one {\tt double} array
+for the real part and another array for the imaginary part.  UMFPACK
+supports that format, as well as the packed complex format (new to Version 4.4).}
 It prints them as if they are in the range 1 to $m$ or $n$.
 The UMFPACK mexFunction behaves the same way.
 
@@ -1197,11 +1265,14 @@ versions (there is no {\tt umfpack\_di\_timer} routine, for example).
 
 UMFPACK uses an optional {\tt double} array (currently of size 20)
 to modify its control parameters.  If you pass {\tt (double *) NULL} instead
-of a {\tt Control} array, then defaults are used.
+of a {\tt Control} array, then defaults are used.  These defaults provide
+nearly optimal performance (both speed, memory usage, and numerical accuracy)
+for a wide range of matrices from real applications.
+
 This array will almost certainly grow in size in future releases,
 so be sure to dimension your {\tt Control} array to be of size
 {\tt UMFPACK\_CONTROL}.  That constant is currently defined to be 20,
-but will increase in future versions.
+but may increase in future versions, since all 20 entries are in use.
 
 The contents of this array may be modified by the user
 (see {\tt umfpack\_*\_defaults}).  Each
@@ -1279,15 +1350,15 @@ in Sections~\ref{Primary}~through~\ref{Report}, below.
 Many of the routines return a {\tt status} value.
 This is also returned as the first entry in the {\tt Info} array, for
 those routines with that argument.  The following list summarizes
-all of the error codes in UMFPACK v4.3.  Each error code is given a
+all of the error codes in UMFPACK.  Each error code is given a
 specific name in the {\tt umfpack.h} include file, so you can use
 those constants instead of hard-coded values in your program.
 Future versions may report additional error codes.
 
 A value of zero means everything was successful, and the matrix is
 non-singular.  A value greater than zero means the routine was successful,
-but a warning occurred.  Currently, the only warning code is when the
-matrix is singular.  A negative value means the routine was not successful.
+but a warning occurred.
+A negative value means the routine was not successful.
 In this case, no {\tt Symbolic} or {\tt Numeric} object was created.
 
 \begin{itemize}
@@ -1295,6 +1366,14 @@ In this case, no {\tt Symbolic} or {\tt Numeric} object was created.
 
 \item {\tt UMFPACK\_WARNING\_singular\_matrix},  (1):  Matrix is singular.
     There are exact zeros on the diagonal of $\m{U}$.
+
+\item {\tt UMFPACK\_WARNING\_determinant\_underflow}, (2):
+    The determinant is nonzero, but smaller in magnitude than
+    the smallest positive floating-point number.
+
+\item {\tt UMFPACK\_WARNING\_determinant\_overflow}, (3):
+    The determinant is larger in magnitude than
+    the largest positive floating-point number (IEEE Inf).
 
 \item {\tt UMFPACK\_ERROR\_out\_of\_memory},  (-1):  Not enough memory.
     The ANSI C {\tt malloc} or {\tt realloc} routine failed.
@@ -1308,7 +1387,9 @@ In this case, no {\tt Symbolic} or {\tt Numeric} object was created.
     If you try to factorize a matrix using one version of UMFPACK and
     then use the factors in another version, this error code will trigger as
     well.  You cannot factor your matrix using
-    version 4.0 and then solve with version 4.1.
+    version 4.0 and then solve with version 4.1, for example.\footnote{
+    Exception: v4.3, v4.3.1, and v4.4 use identical data structures
+    for the {\tt Numeric} and {\tt Symbolic} objects}.
     You cannot use different precisions of the same version
     (real and complex, for example).
     It is possible for the {\tt Numeric} object to be corrupted by your
@@ -1327,9 +1408,11 @@ In this case, no {\tt Symbolic} or {\tt Numeric} object was created.
     Some arguments of some are optional (you can pass a {\tt NULL} pointer
     instead of an array).  This error code occurs if you pass a {\tt NULL}
     pointer when that argument is required to be present.
-    \item {\tt UMFPACK\_ERROR\_n\_nonpositive}  (-6):  
+
+\item {\tt UMFPACK\_ERROR\_n\_nonpositive}  (-6):  
     The number of rows or columns of the matrix must be greater than zero.
-    \item {\tt UMFPACK\_ERROR\_invalid\_matrix}  (-8):  
+
+\item {\tt UMFPACK\_ERROR\_invalid\_matrix}  (-8):  
     The matrix is invalid.  For the column-oriented input, this error
     code will occur if the contents of {\tt Ap} and/or {\tt Ai} are invalid.
 
@@ -1444,7 +1527,10 @@ The matrix $\m{A}$ is {\tt m}-by-{\tt n} with {\tt nz} entries.
 
 The {\tt sys} argument of {\tt umfpack\_*\_solve}
 is an integer in the range 0 to 14 which defines which linear system is
-to be solved.  Valid values are listed in Table~\ref{sys}.
+to be solved.
+\footnote{Integer values for {\tt sys} are used instead of strings (as in LINPACK
+and LAPACK) to avoid C-to-Fortran portability issues.}
+Valid values are listed in Table~\ref{sys}.
 The notation $\m{A}\he$ refers to the matrix transpose, which is the
 complex conjugate transpose for complex matrices ({\tt A'} in MATLAB).
 The array transpose is $\m{A}\tr$, which is {\tt A.'} in MATLAB.
@@ -1458,23 +1544,29 @@ The array transpose is $\m{A}\tr$, which is {\tt A.'} in MATLAB.
 \hline
 Value & & system \\
 \hline
+& & \\
 {\tt UMFPACK\_A}      &  (0) & $\m{Ax}=\m{b}$ \\
 {\tt UMFPACK\_At}     &  (1) & $\m{A}\he\m{x}=\m{b}$ \\
 {\tt UMFPACK\_Aat}    &  (2) & $\m{A}\tr\m{x}=\m{b}$ \\
+& & \\
 \hline
+& & \\
 {\tt UMFPACK\_Pt\_L}  &  (3) & $\m{P}\tr\m{Lx}=\m{b}$ \\
 {\tt UMFPACK\_L}      &  (4) & $\m{Lx}=\m{b}$ \\
 {\tt UMFPACK\_Lt\_P}  &  (5) & $\m{L}\he\m{Px}=\m{b}$ \\
 {\tt UMFPACK\_Lat\_P} &  (6) & $\m{L}\tr\m{Px}=\m{b}$ \\
 {\tt UMFPACK\_Lt}     &  (7) & $\m{L}\he\m{x}=\m{b}$ \\
 {\tt UMFPACK\_Lat}    &  (8) & $\m{L}\tr\m{x}=\m{b}$ \\
+& & \\
 \hline
+& & \\
 {\tt UMFPACK\_U\_Qt}  &  (9) & $\m{UQ}\tr\m{x}=\m{b}$ \\
 {\tt UMFPACK\_U}      & (10) & $\m{Ux}=\m{b}$ \\
 {\tt UMFPACK\_Q\_Ut}  & (11) & $\m{QU}\he\m{x}=\m{b}$ \\
 {\tt UMFPACK\_Q\_Uat} & (12) & $\m{QU}\tr\m{x}=\m{b}$ \\
 {\tt UMFPACK\_Ut}     & (13) & $\m{U}\he\m{x}=\m{b}$ \\
 {\tt UMFPACK\_Uat}    & (14) & $\m{U}\tr\m{x}=\m{b}$ \\
+& & \\
 \hline
 \end{tabular}
 }
@@ -1540,13 +1632,14 @@ The {\tt filename} string should be large enough to hold the name of a file.
 {\footnotesize
 \begin{verbatim}
 int lnz, unz, Lp [m+1], Lj [lnz], Up [n+1], Ui [unz], do_recip ;
-double Lx [lnz], Ux [unz], D [min (m,n)], Rs [m] ;
+double Lx [lnz], Ux [unz], D [min (m,n)], Rs [m], Mx [1], Ex [1] ;
 int nfr, nchains, P1 [m], Q1 [n], Front_npivcol [n+1], Front_parent [n+1], Front_1strow [n+1],
     Front_leftmostdesc [n+1], Chain_start [n+1], Chain_maxrows [n+1], Chain_maxcols [n+1] ;
 char filename [100] ;
 
 status = umfpack_di_get_lunz (&lnz, &unz, &m, &n, &nz_udiag, Numeric) ;
-status = umfpack_di_get_numeric (Lp, Lj, Lx, Up, Ui, Ux, P, Q, D, &do_recip, Rs, Numeric) ;
+status = umfpack_di_get_numeric (Lp, Lj, Lx, Up, Ui, Ux, P, Q, D,
+    &do_recip, Rs, Numeric) ;
 status = umfpack_di_get_symbolic (&m, &n, &n1, &nz, &nfr, &nchains, P1, Q1,
     Front_npivcol, Front_parent, Front_1strow, Front_leftmostdesc,
     Chain_start, Chain_maxrows, Chain_maxcols, Symbolic) ;
@@ -1554,6 +1647,7 @@ status = umfpack_di_load_numeric (&Numeric, filename) ;
 status = umfpack_di_save_numeric (Numeric, filename) ;
 status = umfpack_di_load_symbolic (&Symbolic, filename) ;
 status = umfpack_di_save_symbolic (Symbolic, filename) ;
+status = umfapck_di_get_determinant (Mx, Ex, Numeric, Info) ;
 \end{verbatim}
 }
 
@@ -1599,6 +1693,9 @@ umfpack_zi_free_numeric (&Numeric) ;
 \end{verbatim}
 }
 
+The arrays {\tt Ax}, {\tt Bx}, and {\tt Xx} double in size if
+any imaginary argument ({\tt Az}, {\tt Xz}, or {\tt Bz}) is {\tt NULL}.
+
 %-------------------------------------------------------------------------------
 \subsection{Alternative routines: complex/{\tt int}}
 %-------------------------------------------------------------------------------
@@ -1629,13 +1726,16 @@ status = umfpack_zi_scale (Yx, Yz, Zx, Zz, Numeric) ;
 \end{verbatim}
 }
 
+The arrays {\tt Tx}, {\tt Rx}, {\tt Yx}, and {\tt Zx} double in size if
+any imaginary argument ({\tt Tz}, {\tt Rz}, {\tt Yz}, or {\tt Zz}) is {\tt NULL}.
+
 %-------------------------------------------------------------------------------
 \subsection{Getting the contents of opaque objects: complex/{\tt int}}
 %-------------------------------------------------------------------------------
 
 {\footnotesize
 \begin{verbatim}
-double Lz [lnz], Uz [unz], Dx [min (m,n)], Dz [min (m,n)] ;
+double Lz [lnz], Uz [unz], Dx [min (m,n)], Dz [min (m,n)], Mz [1] ;
 
 status = umfpack_zi_get_lunz (&lnz, &unz, &m, &n, &nz_udiag, Numeric) ;
 status = umfpack_zi_get_numeric (Lp, Lj, Lx, Lz, Up, Ui, Ux, Uz, P, Q, Dx, Dz,
@@ -1647,8 +1747,12 @@ status = umfpack_zi_load_numeric (&Numeric, filename) ;
 status = umfpack_zi_save_numeric (Numeric, filename) ;
 status = umfpack_zi_load_symbolic (&Symbolic, filename) ;
 status = umfpack_zi_save_symbolic (Symbolic, filename) ;
+status = umfapck_zi_get_determinant (Mx, Mz, Ex, Numeric, Info) ;
 \end{verbatim}
 }
+
+The arrays {\tt Lx}, {\tt Ux}, {\tt Dx}, and {\tt Mx} double in size if
+any imaginary argument ({\tt Lz}, {\tt Uz}, {\tt Dz}, or {\tt Mz}) is {\tt NULL}.
 
 %-------------------------------------------------------------------------------
 \subsection{Reporting routines: complex/{\tt int}}
@@ -1671,12 +1775,14 @@ status = umfpack_zi_report_vector (n, Xx, Xz, Control) ;
 \end{verbatim}
 }
 
+The arrays {\tt Ax}, {\tt Rx}, {\tt Tx}, and {\tt Xx} double in size if
+any imaginary argument ({\tt Az}, {\tt Rz}, {\tt Tz}, or {\tt Xz}) is {\tt NULL}.
 
 
 
 
 %-------------------------------------------------------------------------------
-\section{Synopsis of utility routines}
+\subsection{Utility routines}
 %-------------------------------------------------------------------------------
 
 These routines are the same in all four versions of UMFPACK.
@@ -1693,7 +1799,7 @@ umfpack_toc (s) ;
 }
 
 %-------------------------------------------------------------------------------
-\section{Synopsis of AMD ordering routines}
+\subsection{AMD ordering routines}
 %-------------------------------------------------------------------------------
 
 UMFPACK makes use of the AMD ordering package for its symmetric ordering
@@ -1720,7 +1826,7 @@ amd_info (amd_info) ;
 \section{Using UMFPACK in a Fortran program}
 %-------------------------------------------------------------------------------
 
-UMFPACK v4.3 includes a basic Fortran 77 interface to some of the C-callable
+UMFPACK includes a basic Fortran 77 interface to some of the C-callable
 UMFPACK routines.
 Since interfacing C and Fortran programs is not portable, this interface might
 not work with all C and Fortran compilers.  Refer to Section~\ref{Install} for
@@ -1871,9 +1977,15 @@ the matrix, solution, and right-hand-side, respectively.  The
 \end{verbatim}
 }
 
+The Fortran interface does not support the packed complex case.
+
 %-------------------------------------------------------------------------------
-\section{Installing the C library}
+\section{Installation}
 \label{Install}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+\subsection{Installing the C library}
 %-------------------------------------------------------------------------------
 
 The following discussion assumes you have the {\tt make} program, either in
@@ -1881,7 +1993,7 @@ Unix, or in Windows with Cygwin\footnote{www.cygwin.com}.
 You can skip this section and go to next one if all you want to use is
 the UMFPACK and AMD mexFunctions in MATLAB.
 
-You will need to install both UMFPACK v4.3 and AMD v1.1 (or AMD v1.0) to use UMFPACK.
+You will need to install both UMFPACK v4.4 and AMD v1.1 (or AMD v1.0) to use UMFPACK.
 The {\tt UMFPACK} and {\tt AMD} subdirectories must be placed side-by-side
 within the same directory.  AMD is a stand-alone package that
 is required by UMFPACK.  UMFPACK can be compiled without the
@@ -2054,8 +2166,11 @@ Harwell/Boeing matrices.  Note that this uses a stand-alone Fortran
 program to read in the Fortran-formatted Harwell/Boeing matrices and
 write them to a file which can be read by a C program.
 
+The {\tt umf\_multicompile.c} file has been added to assist in the
+compilation of UMFPACK in Microsoft Visual Studio, for Windows.
+
 %-------------------------------------------------------------------------------
-\section{Installing the MATLAB interface}
+\subsection{Installing the MATLAB interface}
 %-------------------------------------------------------------------------------
 
 If all you want to do is use the UMFPACK mexFunction in MATLAB, you can skip
@@ -2064,8 +2179,7 @@ the use of the {\tt make} command described above.  Simply type
 You can also type {\tt amd\_make} in the {\tt AMD/MATLAB} directory
 to compile the stand-alone AMD mexFunction (this is not required to
 compile the UMFPACK mexFunction).  This works on any computer with MATLAB,
-including Windows.  This method of creating the UMFPACK mexFunction
-has been tested with MATLAB 5.3, 6.1, and 6.5.
+including Windows.
 
 You will be prompted to select several configuration options, including
 whether or not to use the BLAS.
@@ -2089,7 +2203,7 @@ this file to the location listed above.
 If you have MATLAB 6.5 or later, you can probably skip this step.
 
 %-------------------------------------------------------------------------------
-\section{Installing the Fortran interface}
+\subsection{Installing the Fortran interface}
 %-------------------------------------------------------------------------------
 
 Once the 32-bit C-callable UMFPACK library is compiled, you can also compile
@@ -2114,7 +2228,7 @@ You may need to modify the interface routines in the file
 has not been tested.
 
 %-------------------------------------------------------------------------------
-\section{Known Issues}
+\subsection{Known Issues}
 %-------------------------------------------------------------------------------
 
 The Microsoft C or C++ compilers on a Pentium badly break the IEEE 754 standard,
@@ -2150,7 +2264,7 @@ all of these warnings.
 \label{Future}
 %-------------------------------------------------------------------------------
 
-Here are a few features that are not in UMFPACK Version 4.3, in no particular
+Here are a few features that are not in UMFPACK Version 4.4, in no particular
 order.  They may appear in a future release of UMFPACK.  If you are interested,
 let me know and I could consider including them:
 
@@ -2198,7 +2312,8 @@ let me know and I could consider including them:
     to C and included in UMFPACK.  This would result in better performance
     for matrices from circuit simulation and
     chemical process engineering.  See {\tt umfpack\_btf.m} for the MATLAB
-    version of this feature.
+    version of this feature.  An upcoming package (KLU) will include
+    this feature.
 
 \item The ability to use user-provided {\tt malloc}, {\tt free}, and
     {\tt realloc} memory allocation routines.  Note that UMFPACK makes very
@@ -2219,11 +2334,6 @@ let me know and I could consider including them:
     time proportional to the number of nonzeros in the upper bound of $\m{U}$.
     The method used in UMFPACK exploits super-columns, however, so this
     bound is rarely reached.
-
-\item The complex versions could use ANSI C99 {\tt double \_Complex} arguments,
-    and support the use of interleaved real/imaginary parts as input and output
-    arguments.  The \newline
-    {\tt umfpack\_*\_report\_vector} routine is one example.
 
 \item Other basic sparse matrix operations, such as sparse matrix
     multiplication, could be included.
@@ -2430,6 +2540,15 @@ INCLUDE umfpack_save_symbolic.h via sed
 {\footnotesize
 \begin{verbatim}
 INCLUDE umfpack_load_symbolic.h via sed
+\end{verbatim}
+}
+
+\newpage
+\subsection{umfpack\_*\_get\_determinant}
+
+{\footnotesize
+\begin{verbatim}
+INCLUDE umfpack_get_determinant.h via sed
 \end{verbatim}
 }
 

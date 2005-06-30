@@ -3,9 +3,8 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.      */
-/* Davis.  All Rights Reserved.  See ../README for License.                   */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.            */
+/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
 
@@ -21,11 +20,11 @@ GLOBAL void UMFPACK_report_control
     const double Control [UMFPACK_CONTROL]
 )
 {
-    Int prl, nb, irstep, strategy, scale, s ;
     double drow, dcol, relpt, relpt2, alloc_init, front_alloc_init, amd_alpha,
 	tol, force_fixQ, droptol, aggr ;
+    Int prl, nb, irstep, strategy, scale, s ;
 
-    prl = (Int) GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
+    prl = GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
 
     if (prl < 2)
     {
@@ -96,7 +95,7 @@ GLOBAL void UMFPACK_report_control
     /* block size */
     /* ---------------------------------------------------------------------- */
 
-    nb = (Int) GET_CONTROL (UMFPACK_BLOCK_SIZE, UMFPACK_DEFAULT_BLOCK_SIZE) ;
+    nb = GET_CONTROL (UMFPACK_BLOCK_SIZE, UMFPACK_DEFAULT_BLOCK_SIZE) ;
     nb = MAX (1, nb) ;
     PRINTF (("    "ID": block size for dense matrix kernels: "ID"\n",
 	(Int) INDEX (UMFPACK_BLOCK_SIZE), nb)) ;
@@ -105,7 +104,7 @@ GLOBAL void UMFPACK_report_control
     /* strategy */
     /* ---------------------------------------------------------------------- */
 
-    strategy = (Int) GET_CONTROL (UMFPACK_STRATEGY, UMFPACK_DEFAULT_STRATEGY) ;
+    strategy = GET_CONTROL (UMFPACK_STRATEGY, UMFPACK_DEFAULT_STRATEGY) ;
     if (strategy < UMFPACK_STRATEGY_AUTO
      || strategy > UMFPACK_STRATEGY_SYMMETRIC)
     {
@@ -153,7 +152,7 @@ GLOBAL void UMFPACK_report_control
     }
     else
     {
-	s =(Int) -alloc_init ;
+	s = -alloc_init ;
 	s = MAX (1, s) ;
 	PRINTF (("    "ID": initial allocation (in Units): "ID"\n",
 	(Int) INDEX (UMFPACK_ALLOC_INIT), s)) ;
@@ -163,7 +162,7 @@ GLOBAL void UMFPACK_report_control
     /* maximum iterative refinement steps */
     /* ---------------------------------------------------------------------- */
 
-    irstep = (Int) GET_CONTROL (UMFPACK_IRSTEP, UMFPACK_DEFAULT_IRSTEP) ;
+    irstep = GET_CONTROL (UMFPACK_IRSTEP, UMFPACK_DEFAULT_IRSTEP) ;
     irstep = MAX (0, irstep) ;
     PRINTF (("    "ID": max iterative refinement steps: "ID"\n",
 	(Int) INDEX (UMFPACK_IRSTEP), irstep)) ;
@@ -230,7 +229,7 @@ GLOBAL void UMFPACK_report_control
     /* scaling */
     /* ---------------------------------------------------------------------- */
 
-    scale = (Int) GET_CONTROL (UMFPACK_SCALE, UMFPACK_DEFAULT_SCALE) ;
+    scale = GET_CONTROL (UMFPACK_SCALE, UMFPACK_DEFAULT_SCALE) ;
     if (scale != UMFPACK_SCALE_NONE && scale != UMFPACK_SCALE_MAX)
     {
 	scale = UMFPACK_DEFAULT_SCALE ;
@@ -264,7 +263,7 @@ GLOBAL void UMFPACK_report_control
     }
     else
     {
-	s = (Int) -front_alloc_init ;
+	s = -front_alloc_init ;
 	s = MAX (1, s) ;
 	PRINTF (("    "ID": initial frontal matrix size (# of Entry's): "ID"\n",
 	(Int) INDEX (UMFPACK_FRONT_ALLOC_INIT), s)) ;

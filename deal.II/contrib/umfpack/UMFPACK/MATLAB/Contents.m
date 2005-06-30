@@ -7,16 +7,18 @@
 % umfpack_demo      a long demo
 % umfpack_simple    a simple demo
 % umfpack_btf       factorize A using a block triangular form
-% umfpack_solve     x = A\b or x = b/A 
+% umfpack_solve     x = A\b or x = b/A
 % lu_normest        estimates norm (L*U-A, 1) without forming L*U-A
 % luflop	    given L and U, computes # of flops required to compute them
+% umfpack_test	    for testing umfpack (requires UFget interface to UF sparse
+%			matrix collection)
 %
 % See also:
 % amd		    symmetric minimum degree ordering
 % colamd            unsymmetric column approx minimum degree ordering
 % symamd            symmetric approx minimum degree ordering, based on colamd
 %
-% UMFPACK Version 4.3 (Jan. 16, 2004),  Copyright (c) 2004 by Timothy A.
-% Davis.  All Rights Reserved.  Type umfpack_details for License.
+% UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
+% All Rights Reserved.  Type umfpack_details for License.
 
 help Contents

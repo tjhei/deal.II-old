@@ -14,11 +14,11 @@ function f = luflop (L, U)
 % L and U must be sparse.
 %
 % Note: the above expression has a subtle undercount when exact numerical
-% cancelation occurs.  Try [L,U,P] = lu (sparse (ones (10))) and then 
+% cancelation occurs.  Try [L,U,P] = lu (sparse (ones (10))) and then
 % luflop (L,U).
 
-% UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.
-% Davis.  All Rights Reserved.  Type umfpack_details for License.
+% UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
+% All Rights Reserved.  Type umfpack_details for License.
 
 help luflop
 error ('luflop mexFunction not found!  Use umfpack_make to compile luflop.') ;

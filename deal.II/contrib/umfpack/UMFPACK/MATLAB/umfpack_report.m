@@ -20,8 +20,8 @@ function umfpack_report (Control, Info)
 % See also umfpack, umfpack_make, umfpack_details,
 % umfpack_demo, and umfpack_simple.
 
-% UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.
-% Davis.  All Rights Reserved.  See ../README for License.
+% UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
+% All Rights Reserved.  Type umfpack_details for License.
 
 %-------------------------------------------------------------------------------
 % get inputs, use defaults if input arguments not present
@@ -45,7 +45,7 @@ end
 % control settings
 %-------------------------------------------------------------------------------
 
-fprintf ('\nUMFPACK Version 4.3:  Control settings:\n\n') ;
+fprintf ('\nUMFPACK Version 4.4:  Control settings:\n\n') ;
 fprintf ('    Control (1): print level: %d\n', Control (1)) ;
 fprintf ('    Control (2): dense row parameter:    %g\n', Control (2)) ;
 fprintf ('       "dense" rows have    > max (16, (%g)*16*sqrt(n_col)) entries\n', Control (2)) ;

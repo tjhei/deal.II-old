@@ -1,4 +1,4 @@
-This directory is an almost identical copy of the UMFPACK 4.3
+This directory is an almost identical copy of the UMFPACK 4.4
 release. The only things I have changed are the Makefiles: they build
 shared libraries instead of static ones if deal.II is so configured,
 and they put the object files somewhere else. This also allowed us to

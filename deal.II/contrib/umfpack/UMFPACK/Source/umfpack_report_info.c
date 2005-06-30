@@ -3,9 +3,8 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.      */
-/* Davis.  All Rights Reserved.  See ../README for License.                   */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.            */
+/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
 
@@ -89,7 +88,7 @@ GLOBAL void UMFPACK_report_info
     /* get control settings and status to determine what to print */
     /* ---------------------------------------------------------------------- */
 
-    prl = (Int) GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
+    prl = GET_CONTROL (UMFPACK_PRL, UMFPACK_DEFAULT_PRL) ;
 
     if (!Info || prl < 2)
     {
@@ -264,7 +263,7 @@ GLOBAL void UMFPACK_report_info
 	Info [UMFPACK_NEMPTY_ROW]) ;
     PRINT_INFO ("        number of empty columns                    %.0f\n",
 	Info [UMFPACK_NEMPTY_COL]) ;
-    is_sym = (Int) Info [UMFPACK_S_SYMMETRIC] ;
+    is_sym = Info [UMFPACK_S_SYMMETRIC] ;
     if (is_sym > 0)
     {
 	PRINTF (("        submatrix S square and diagonal preserved\n")) ;

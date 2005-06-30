@@ -3,9 +3,8 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.      */
-/* Davis.  All Rights Reserved.  See ../README for License.                   */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.            */
+/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
 
@@ -15,6 +14,9 @@
     routine names all start with the letters "umfpack_".  Non-user-accessible
     file names and routine names all start with "umf_".
 */
+
+#ifndef _UMF_INTERNAL
+#define _UMF_INTERNAL
 
 /* -------------------------------------------------------------------------- */
 /* ANSI standard include files */
@@ -747,10 +749,12 @@ typedef struct	/* SymbolicType */
 
 /* for testing out-of-memory conditions: */
 #define UMF_TCOV_TEST
-GLOBAL extern Int umf_fail, umf_fail_lo, umf_fail_hi ;
-GLOBAL extern Int umf_realloc_fail, umf_realloc_lo, umf_realloc_hi ;
+GLOBAL extern int umf_fail, umf_fail_lo, umf_fail_hi ;
+GLOBAL extern int umf_realloc_fail, umf_realloc_lo, umf_realloc_hi ;
 
 /* for testing malloc count: */
 #define UMF_MALLOC_COUNT
+
+#endif
 
 #endif

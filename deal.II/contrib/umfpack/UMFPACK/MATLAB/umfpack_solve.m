@@ -10,8 +10,8 @@ function x = umfpack_solve (arg1, op, arg2, Control)
 % See also umfpack, umfpack_make, umfpack_details, umfpack_report,
 % and umfpack_simple.
 
-% UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.
-% Davis.  All Rights Reserved.  Type umfpack_details for License.
+% UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
+% All Rights Reserved.  Type umfpack_details for License.
 
 %-------------------------------------------------------------------------------
 % check inputs and get default control parameters
@@ -62,7 +62,7 @@ if (op == '\')
 
     else
 
-	% factorize with UMFPACK and do the forward/back solves in MATLAB 
+	% factorize with UMFPACK and do the forward/back solves in MATLAB
 	[L, U, P, Q, R] = umfpack (A, Control) ;
 	x = Q * (U \ (L \ (P * (R \ b)))) ;
 

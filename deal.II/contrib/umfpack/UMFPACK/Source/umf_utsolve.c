@@ -3,9 +3,8 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.      */
-/* Davis.  All Rights Reserved.  See ../README for License.                   */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.            */
+/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
 
@@ -31,9 +30,10 @@ UMF_utsolve			/* solve U.'x=b (array transpose) */
     /* local variables */
     /* ---------------------------------------------------------------------- */
 
+    Entry xk ;
+    Entry *xp, *D, *Uval ;
     Int k, deg, j, *ip, col, *Upos, *Uilen, kstart, kend, up,
 	*Uip, n, uhead, ulen, pos, npiv, n1, *Ui ;
-    Entry *xp, xk, *D, *Uval ;
 
     /* ---------------------------------------------------------------------- */
     /* get parameters */

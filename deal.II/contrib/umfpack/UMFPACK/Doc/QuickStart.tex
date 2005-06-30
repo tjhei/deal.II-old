@@ -18,8 +18,8 @@
 \author{Timothy A. Davis \\
 Dept. of Computer and Information Science and Engineering \\
 Univ. of Florida, Gainesville, FL}
-\title{UMFPACK Version 4.3 Quick Start Guide}
-\date{Jan. 16, 2004}
+\title{UMFPACK Version 4.4 Quick Start Guide}
+\date{Jan. 28, 2005}
 \maketitle
 
 %-------------------------------------------------------------------------------
@@ -35,9 +35,7 @@ Univ. of Florida, Gainesville, FL}
 \end{abstract}
 %-------------------------------------------------------------------------------
 
-Technical Report TR-04-003
-
-UMFPACK Version 4.3 (Jan. 16, 2004), Copyright\copyright 2004 by Timothy A.
+UMFPACK Version 4.4 (Jan. 28, 2005), Copyright\copyright 2005 by Timothy A.
 Davis.  All Rights Reserved.  Refer to the UMFPACK User Guide
 for the License. See \newline
 http://www.cise.ufl.edu/research/sparse/umfpack
@@ -54,20 +52,28 @@ or non-singular, and real or complex (or any combination).  Only square
 matrices $\m{A}$ can be used to solve $\m{Ax}=\m{b}$ or related systems.
 Rectangular matrices can only be factorized.
 
-UMFPACK Version 4.0 is a built-in routine in MATLAB 6.5, used by the forward and
-backslash operator, and the {\tt lu} routine.  The following is a short
+UMFPACK Version 4.3 is a built-in routine in MATLAB 7.1, used by the forward and
+backslash operator, and the {\tt lu} routine.  MATLAB 6.5 used Version 4.0.
+The following is a short
 introduction to Unix users of the C interface of UMFPACK.
 
 %-------------------------------------------------------------------------------
 
-The C-callable UMFPACK library consists of 31 user-callable routines and one
-include file.  Twenty-seven of the routines come in four versions, with
+The C-callable UMFPACK library consists of 32 user-callable routines and one
+include file.  Twenty-eight of the routines come in four versions, with
 different sizes of integers and for real or complex floating-point numbers.
 This Quick Start Guide assumes you are working with real matrices
 (not complex) and with {\tt int}'s as integers (not {\tt long}'s).
 Refer to the User Guide for information about the complex and
 long integer versions.  The include file {\tt umfpack.h}
 must be included in any C program that uses UMFPACK.
+
+For more details, see:
+{\em A column pre-ordering strategy for the unsymmetric-pattern multifrontal method},
+Davis, T. A.,
+ACM Trans. Math. Software, vol 30. no 2, 2004, pp. 165-195, and
+{\em Algorithm 832:  {UMFPACK}, an unsymmetric-pattern multifrontal method},
+same issue, pp. 196-199.
 
 %-------------------------------------------------------------------------------
 \section{Primary routines, and a simple example}
@@ -79,6 +85,7 @@ is given in Section~\ref{Primary}.
 Additional routines are available for passing a different column ordering
 to UMFPACK, changing default parameters, manipulating sparse matrices,
 getting the LU factors, save and loading the LU factors from a file,
+computing the determinant,
 and reporting results.  See the User Guide for more information.
 
 \begin{itemize}
@@ -227,15 +234,17 @@ for more details.
 \label{Install}
 %-------------------------------------------------------------------------------
 
-You will need to install both UMFPACK v4.3 and AMD v1.1 (or AMD v1.0) to use UMFPACK.
+You will need to install both UMFPACK v4.4 and AMD v1.1 (or AMD v1.0) to use UMFPACK.
 The {\tt UMFPACK} and {\tt AMD} subdirectories must be placed side-by-side
 within the same parent directory.  AMD is a stand-alone package that
 is required by UMFPACK.  UMFPACK can be compiled without the
 BLAS but your performance will be much less than what it should be.
 
 System-dependent configurations are in the {\tt AMD/Make}
-and {\tt UMFPACK/Make} directories.  You can edit the {\tt Make.include}
-files in those directories to customize the compilation.  The default
+and {\tt UMFPACK/Make} directories
+(Note that {\tt UMFPACK/Make} is a symbolic link to {\tt AMD/Make}).
+You can edit the {\tt Make.include}
+file in those directories to customize the compilation.  The default
 settings will work on most systems, except that UMFPACK will be compiled so
 that it does not use the BLAS.  Sample configuration files are provided
 for Linux, Sun Solaris, SGI IRIX, IBM AIX, and the DEC/Compaq Alpha.
@@ -301,8 +310,8 @@ most deal with how the BLAS are called:
 \item {\tt -DNPOSIX} if you do not have the POSIX-compliant
     {\tt sysconf} and {\tt times} routines.
 \item {\tt -DNRECIPROCAL} controls a trade-off between speed and accuracy.
-    This is normally off by default, except when the {\tt gcc}
-    compiler is used.
+    This is off by default (speed preferred over accuracy) except when
+    compiling for MATLAB.
 \end{itemize}
 
 When you compile your program that uses the C-callable UMFPACK library,
@@ -916,7 +925,7 @@ Arguments:
 
             UMFPACK_WARNING_singular_matrix
 
-                A divide-by-zero occured.  Your solution will contain Inf's
+                A divide-by-zero occurred.  Your solution will contain Inf's
                 and/or NaN's.  Some parts of the solution may be valid.  For
                 example, solving Ax=b with
 

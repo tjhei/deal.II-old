@@ -2,6 +2,9 @@
 # UMFPACK Makefile for compiling on Unix systems (for GNU or original make)
 #-------------------------------------------------------------------------------
 
+# UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
+# All Rights Reserved.  See ../Doc/License for License.
+
 all: dist
 
 include ../Make/Make.include
@@ -22,6 +25,7 @@ purge: clean
 
 UMFPACK = umfpack_col_to_triplet umfpack_defaults umfpack_free_numeric \
 	umfpack_free_symbolic umfpack_get_numeric umfpack_get_lunz \
+	umfpack_get_determinant \
 	umfpack_get_symbolic umfpack_numeric umfpack_qsymbolic \
 	umfpack_report_control umfpack_report_info umfpack_report_matrix \
 	umfpack_report_numeric umfpack_report_perm umfpack_report_status \

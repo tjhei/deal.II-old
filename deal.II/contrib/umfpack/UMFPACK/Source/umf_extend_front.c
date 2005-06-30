@@ -3,9 +3,8 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.3 (Jan. 16, 2004), Copyright (c) 2004 by Timothy A.      */
-/* Davis.  All Rights Reserved.  See ../README for License.                   */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.            */
+/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
 
@@ -127,8 +126,8 @@ GLOBAL Int UMF_extend_front
 
     if (Work->do_grow)
     {
-	fnr2 = (Int) (UMF_FRONTAL_GROWTH * Work->fnrows_new + 2) ;
-	fnc2 = (Int) (UMF_FRONTAL_GROWTH * Work->fncols_new + 2) ;
+	fnr2 = UMF_FRONTAL_GROWTH * Work->fnrows_new + 2 ;
+	fnc2 = UMF_FRONTAL_GROWTH * Work->fncols_new + 2 ;
 	if (!UMF_grow_front (Numeric, fnr2, fnc2, Work, 1))
 	{
 	    DEBUGm4 (("out of memory: extend front\n")) ;

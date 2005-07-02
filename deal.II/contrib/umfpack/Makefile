@@ -1,5 +1,13 @@
 include ../../common/Make.global_options
 
+deplibs = 
+
+# for cygwin, llapack and other libraries are necessary to link with
+ifeq ($(findstring cygwin,$(TARGET)),cygwin)
+  deplibs = $(LIBS)
+endif
+
+
 # rules
 lib: $(LIBDIR)/liblac_umfpack$(lib-suffix)
 
@@ -20,7 +28,7 @@ UMFPACK:
 
 $(LIBDIR)/liblac_umfpack$(shared-lib-suffix): AMD UMFPACK
 	@echo "=====umfpack==========optimized==$(MT)== Linking library:   $(@F)"
-	@$(SHLIBLD) $(LDFLAGS) -shared -o $@ $D/lib/contrib/umfpack/*.o
+	@$(SHLIBLD) $(LDFLAGS) -shared -o $@ $D/lib/contrib/umfpack/*.o $(deplibs)
 
 
 $(LIBDIR)/liblac_umfpack$(static-lib-suffix): AMD UMFPACK

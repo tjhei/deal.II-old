@@ -15,11 +15,3 @@ DEAL::Reading grid_in_3d_4.in
 DEAL::  13824 active cells
 DEAL::  42816 active faces
 DEAL::  1728 misoriented faces
-DEAL::Reading grid_in_3d_evil_0.in
-DEAL::  10 active cells
-DEAL::  50 active faces
-DEAL::  0 misoriented faces
-DEAL::Reading grid_in_3d_evil_4.in
-DEAL::  10 active cells
-DEAL::  50 active faces
-DEAL::  0 misoriented faces

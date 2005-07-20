@@ -1,0 +1,4 @@
+*.o *.go *.exe Makefile.dep *.gnuplot *.gmv *.eps
+step-19
+*.ii
+*.ti

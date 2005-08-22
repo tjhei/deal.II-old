@@ -234,7 +234,7 @@ course replace this term by numerical quadrature:
   \approx
   \sum_{K\subset {\mathbb{T}}}
   \sum_q
-  w_q \ \sigma^{n-1}(\vec x_q) : \varepsilon(\varphi(\vec x_q)),
+  w_q \ \sigma^{n-1}(\vec x_q) : \varepsilon(\varphi(\vec x_q),
 \end{gather}
 where $w_q$ are the quadrature weights and $\vec x_q$ the quadrature points on
 cell $K$. This should make clear that what we really need is not the stress
@@ -259,13 +259,13 @@ old domain, and has to be transferred to the new domain. The reason for this
 can be understood as follows: locally, the incremental deformation $\Delta\vec
 u$ can be decomposed into three parts, a linear translation (the constant part
 of the displacement field in the neighborhood of a point), a dilational
-component (that part of the gradient if the displacement field that has a
+component (that part of the gradient of the displacement field that has a
 nonzero divergence), and a rotation. A linear translation of the material does
 not affect the stresses that are frozen into it -- the stress values are
 simply translated along. The dilational or compressional change produces a
 corresponding stress update. However, the rotational component does not
 necessarily induce a nonzero stress update (think, in 2d, for example of the
-situation where $\Delta\vec u=(y, -x)^T$, which which $\varepsilon(\Delta \vec
+situation where $\Delta\vec u=(y, -x)^T$, with which $\varepsilon(\Delta \vec
 u)=0$). Nevertheless, if the the material was pre-stressed in a certain
 direction, then this direction will be rotated along with the material.  To
 this end, we have to define a rotation matrix $R(\Delta \vec u^n)$ that
@@ -374,7 +374,7 @@ sequence of operations on the present mesh:
   \eqref{eq:linear-system}. This leads to a system matrix $A_{ij} = \sum_K
   A^K_{ij}$ built up of local contributions on each cell $K$ with entries
   \begin{gather}
-    A^K_{ij} = (C \varepsilon(\varphi_i), \varepsilon(\varphi_j))_K;
+    A^K_{ij} = (C \varepsilon(\varphi_j), \varepsilon(\varphi_i))_K;
   \end{gather}
   In practice, $A^K$ is computed using numerical quadrature according to the
   formula
@@ -389,7 +389,7 @@ sequence of operations on the present mesh:
   $\varepsilon(\varphi_i),\varepsilon(\varphi_j)$. This is not really
   convenient, in particular if we want to consider more complicated elasticity
   models than the isotropic case for which $C$ had the convenient form
-  $c_{ijkl}  = \lambda \delta_{ij} \delta_{kl} + \mu (\delta_{ik} \delta_{jl}
+  $C_{ijkl}  = \lambda \delta_{ij} \delta_{kl} + \mu (\delta_{ik} \delta_{jl}
   + \delta_{il} \delta_{jk})$. While we in fact do not use a more complicated
   form than this in the present program, we nevertheless want to write it in a
   way that would easily allow for this. It is then natural to introduce

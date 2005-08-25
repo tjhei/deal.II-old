@@ -3,3 +3,4 @@ step-2
 sparsity_pattern.*
 *.ii
 *.ti
+ii_files

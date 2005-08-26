@@ -4,3 +4,4 @@ Makefile.depend
 *.output
 *.check *.OK
 *.exe
+ii_files

@@ -6,3 +6,4 @@ Makefile.depend
 *.exe
 threads.cc
 Makefile.tests
+ii_files

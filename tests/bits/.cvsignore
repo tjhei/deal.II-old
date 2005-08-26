@@ -6,3 +6,4 @@ Makefile.tests
 *.check *.OK
 *.exe
 threads.cc
+ii_files

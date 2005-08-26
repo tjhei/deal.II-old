@@ -5,3 +5,4 @@ Make.depend Makefile.depend Makefile.tests
 T
 *.check *.OK
 *.exe
+ii_files

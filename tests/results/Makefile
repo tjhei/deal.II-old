@@ -59,6 +59,7 @@ linkdirs-%:
 	  linkfiles-i686-pc-linux-gnu+gcc4.0-to-i686-pc-linux-gnu+gcc3.4 \
 	  linkfiles-i686-pc-linux-gnu+gcc4.1-to-i686-pc-linux-gnu+gcc4.0 \
 	  linkfiles-mips-sgi-irix6.5+MIPSpro7.4-to-i686-pc-linux-gnu+gcc3.2 \
+	  linkdirs-mips-sgi-irix6.5+MIPSpro7.4x-to-mips-sgi-irix6.5+MIPSpro7.4 \
 	  linkdirs-i686-pc-linux-gnu+icc7-to-i686-pc-linux-gnu+icc7.1 \
 	  linkdirs-i686-pc-linux-gnu+gcc3.3-to-i686-pc-linux-gnu+gcc3.2
 	@touch .links

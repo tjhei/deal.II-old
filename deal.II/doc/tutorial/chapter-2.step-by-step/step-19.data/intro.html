@@ -1,3 +1,14 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
 
+<p>
+In <a href="step-18.html" target="body">step-18</a>, we saw a need to write
+output files in an intermediate format: in a parallel program, it doesn't scale
+well if all processors participate in computing a result, and then only a
+single processor generates the graphical output. Rather, each of them should
+generate output for its share of the domain, and later on merge all these
+output files into a single one.
+</p>
+
+<p>
+Thus was the beginning of step-19.

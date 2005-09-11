@@ -11,4 +11,41 @@ output files into a single one.
 </p>
 
 <p>
-Thus was the beginning of step-19.
+Thus was the beginning of step-19: it is the program that reads a number of
+files written in intermediate format, and merges and converts them into the
+final format that one would like to use for visualization. It can also be used
+for the following purpose: if you are unsure at the time of a computation what
+graphics program you would like to use, write your results in intermediate
+format; it can later be converted, using the present program, to any other
+format you may want.
+</p>
+
+<p>
+While this in itself was not interesting enough to make a tutorial program, we
+have used the opportunity to introduce one class that has proven to be
+extremely help- and useful in real application programs, but had not been
+covered by any of the previous tutorial programs: the
+<code>ParameterHandler</code> class. This class is used in applications that
+want to have some of their behavior determined at run time, using input
+files. For example, one may want to specify the geometry, or specifics of the
+equation to be solved, at run time. Other typical parameters are the number of
+nonlinear iterations, the name of output files, or the names of input files
+specifying material properties or boundary conditions.
+</p>
+
+<p>
+Working with such parameter files is not rocket science. However, it is rather
+tedious to write the parsers for such files, in particular if they should be
+extensible, be able to group parameters into subsections, perform some error
+checks such as that parameters can have only certain kinds of values (for
+example, it should only be allowed to have integer values in an input file for
+parameters that denote a number of iteration), and similar requirements. The
+<code>ParameterHandler</code> class allows for all this: an application program
+will declare the parameters it expects (or call a function in the library that
+declares a number of parameters for you), the <code>ParameterHandler</code>
+class then reads an input file with all these parameters, and the application
+program can then get their values back from this class.
+</p>
+
+<p>
+what these three steps do...

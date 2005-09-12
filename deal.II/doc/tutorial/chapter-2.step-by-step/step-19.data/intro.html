@@ -48,4 +48,76 @@ program can then get their values back from this class.
 </p>
 
 <p>
-what these three steps do...
+In order to perform these three steps, the <code>ParameterHandler</code> offers
+three sets of functions: first, the
+<code>ParameterHandler::declare_entry</code> function is used to declare the
+existence of a named parameter in the present section of the input file (one
+can enter and leave subsections in a parameter file just like you would
+navigate through a directory tree in a file system, with the functions
+<code>ParameterHandler::enter_subsection</code> and
+<code>ParameterHandler::leave_subsection</code> taking on the roles of the
+commands <code>cd dir</code> and <code>cd ..</code>; the only difference being
+that if you enter a subsection that has never been visited before, it is
+created: it isn't necessary to "create" subsections explicitly). When declaring
+a parameter, one has to specify its name and default value, in case the
+parameter isn't later listed explicitly in the parameter file. In addition to
+that, there are optional arguments indicating a pattern that a parameter has to
+satisfy, such as being an integer (see the discussion above), and a help text
+that might later give an explanation of what the parameter stands for.
+</p>
+
+<p>
+Once all parameters have been declared, parameters can be read, using the
+<code>ParameterHandler::read_input</code> family of functions. There are
+versions of this function that can read from a file stream, that take a file
+name, or that simply take a string and parse it. When reading parameters, the
+class makes sure that only parameters are listed in the input that have been
+declared before, and that the values of parameters satisfy the pattern that has
+been given to describe the kind of values a parameter can have. Input that uses
+undeclared parameters or values for parameters that do not conform to the
+pattern are rejected by raising an exception.
+</p>
+
+<p>
+A typical input file will look like this:
+<code>
+<pre>
+set Output format  = dx
+set Output file    = my_output_file.dx
+
+set Maximal number of iterations = 13
+
+subsection Application
+  set Color of output = blue
+  set Generate output = false
+end
+</pre>
+</code>
+Note that subsections can be nested.
+</p>
+
+<p>
+Finally, the application program can get the values of declared parameters back
+by traversing the subsections of the parameter tree and using the
+<code>ParameterHandler::get</code> and related functions. The
+<code>ParameterHandler::get</code> simply returns the value of a parameter as a
+string, whereas <code>ParameterHandler::get_integer</code>,
+<code>ParameterHandler::get_double</code>, and
+<code>ParameterHandler::get_bool</code> already convert them to the indicated
+type. 
+</p>
+
+<p>
+Using the <code>ParameterHandler</code> class therefore provides for a pretty
+flexible mechanism to handle all sorts of moderately complex input files without
+much effort on the side of the application programmer. We will use this to
+provide all sorts of options to the step-19 program in order to convert from
+intermediate file format to any other graphical file format.
+</p>
+
+<p>
+The rest of the story is probably best told by looking at the source of step-19
+itself. Let us, however, end this introduction by pointing the reader at the
+extensive class documentation of the <code>ParameterHandler</code> class for
+more information on specific details of that class.
+</p>

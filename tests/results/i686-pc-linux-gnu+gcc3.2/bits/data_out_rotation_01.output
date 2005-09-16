@@ -677,7 +677,7 @@ LOOKUP_TABLE default
 
 2 2
 [deal.II intermediate format graphics data]
-[written by deal.II version 5.2]
+[written by deal.II 5.3.pre]
 2
 node_data
 cell_data
@@ -4816,7 +4816,7 @@ LOOKUP_TABLE default
 
 3 3
 [deal.II intermediate format graphics data]
-[written by deal.II version 5.2]
+[written by deal.II 5.3.pre]
 2
 node_data
 cell_data
@@ -5725,7 +5725,7 @@ LOOKUP_TABLE default
 
 2 2
 [deal.II intermediate format graphics data]
-[written by deal.II version 5.2]
+[written by deal.II 5.3.pre]
 2
 node_data
 cell_data
@@ -9864,7 +9864,7 @@ LOOKUP_TABLE default
 
 3 3
 [deal.II intermediate format graphics data]
-[written by deal.II version 5.2]
+[written by deal.II 5.3.pre]
 2
 node_data
 cell_data
@@ -10773,7 +10773,7 @@ LOOKUP_TABLE default
 
 2 2
 [deal.II intermediate format graphics data]
-[written by deal.II version 5.2]
+[written by deal.II 5.3.pre]
 2
 node_data
 cell_data
@@ -14912,7 +14912,7 @@ LOOKUP_TABLE default
 
 3 3
 [deal.II intermediate format graphics data]
-[written by deal.II version 5.2]
+[written by deal.II 5.3.pre]
 2
 node_data
 cell_data
@@ -15821,7 +15821,7 @@ LOOKUP_TABLE default
 
 2 2
 [deal.II intermediate format graphics data]
-[written by deal.II version 5.2]
+[written by deal.II 5.3.pre]
 2
 node_data
 cell_data
@@ -19960,7 +19960,7 @@ LOOKUP_TABLE default
 
 3 3
 [deal.II intermediate format graphics data]
-[written by deal.II version 5.2]
+[written by deal.II 5.3.pre]
 2
 node_data
 cell_data
@@ -20869,7 +20869,7 @@ LOOKUP_TABLE default
 
 2 2
 [deal.II intermediate format graphics data]
-[written by deal.II version 5.2]
+[written by deal.II 5.3.pre]
 2
 node_data
 cell_data
@@ -25008,7 +25008,7 @@ LOOKUP_TABLE default
 
 3 3
 [deal.II intermediate format graphics data]
-[written by deal.II version 5.2]
+[written by deal.II 5.3.pre]
 2
 node_data
 cell_data
@@ -25917,7 +25917,7 @@ LOOKUP_TABLE default
 
 2 2
 [deal.II intermediate format graphics data]
-[written by deal.II version 5.2]
+[written by deal.II 5.3.pre]
 2
 node_data
 cell_data
@@ -30056,7 +30056,7 @@ LOOKUP_TABLE default
 
 3 3
 [deal.II intermediate format graphics data]
-[written by deal.II version 5.2]
+[written by deal.II 5.3.pre]
 2
 node_data
 cell_data
@@ -34378,7 +34378,7 @@ LOOKUP_TABLE default
 
 3 3
 [deal.II intermediate format graphics data]
-[written by deal.II version 5.2]
+[written by deal.II 5.3.pre]
 3
 node_data_0
 node_data_1

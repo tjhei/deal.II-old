@@ -1,8 +1,8 @@
 # Makefile,v 1.10 2003/05/02 15:30:57 wolf Exp
 
-# Generate links to identical output files
-
-all: .links
+# Generate links to identical output files. when making these links, first
+# remove all links that we presently have
+all: clean .links
 
 
 # if one calls linkfiles-TARGET-to-SOURCE, then it looks into the target
@@ -64,7 +64,20 @@ linkdirs-%:
 	  linkdirs-i686-pc-linux-gnu+gcc3.3-to-i686-pc-linux-gnu+gcc3.2
 	@touch .links
 
+# remove the links file, but also remove all linked directories here. in
+# subdirectories, remove all actual links to other files. they will simply be
+# regenerated later on
 clean:
+	for i in * ; do \
+		if $(TEST_MINUS_L) $$i ; then rm -f $$i ; fi ; \
+	done
+	for i in * ; do \
+		if test -d $$i ; then \
+			for j in $$i/*/* ; do \
+				if $(TEST_MINUS_L) $$j ; then rm -f $$j ; fi ; \
+			done ; \
+		fi ; \
+	done
 	rm .links
 
 

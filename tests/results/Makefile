@@ -68,18 +68,19 @@ linkdirs-%:
 # subdirectories, remove all actual links to other files. they will simply be
 # regenerated later on
 clean:
-	for i in * ; do \
+	@for i in * ; do \
 		if $(TEST_MINUS_L) $$i ; then rm -f $$i ; fi ; \
 	done
-	for i in * ; do \
+	@for i in * ; do \
 		if test -d $$i ; then \
 			for j in $$i/*/* ; do \
 				if $(TEST_MINUS_L) $$j ; then rm -f $$j ; fi ; \
 			done ; \
 		fi ; \
 	done
-	rm .links
+	@rm .links
 
+.PHONY: clean
 
 include ../../common/Make.global_options
 include ../Makefile.paths

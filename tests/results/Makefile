@@ -78,7 +78,7 @@ clean:
 			done ; \
 		fi ; \
 	done
-	@rm .links
+	@rm -f .links
 
 .PHONY: clean
 

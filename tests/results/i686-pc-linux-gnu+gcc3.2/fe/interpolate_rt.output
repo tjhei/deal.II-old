@@ -1,0 +1,5 @@
+
+DEAL::FE_RaviartThomas<2>(1) 12  vector 0.832332 Vector 0.832332
+DEAL::FE_RaviartThomas<2>(2) 21  vector 0.898440 Vector 0.898440
+DEAL::FE_RaviartThomas<2>(2) 21  vector 0.749882 Vector 0.749882
+DEAL::FE_RaviartThomas<2>(3) 32  vector 0.749555 Vector 0.749555

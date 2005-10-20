@@ -93,12 +93,16 @@ i.e.~we can assume that at all times the body satisfies
 \end{align}
 Note that the differential equation does not contain any time derivatives any
 more -- all time dependence is introduced through boundary conditions and a
-possibly time-varying force function $\vec f(\vec x,t)$.
+possibly time-varying force function $\vec f(\vec x,t)$. The changes in
+configuration can therefore be considered as being stationary
+instantaneously. An alternative view of this is that $t$ is not really a time
+variable, but only a time-like parameter that governs the evolution of the
+problem.
 
 While these equations are sufficient to describe small deformations, computing
 large deformations is a little more complicated. To do so, let us first
-introduce a stress variable $\sigma$, and write the differential equations in
-terms of the stress:
+introduce a tensorial stress variable $\sigma$, and write the differential
+equations in terms of the stress:
 \begin{align}
   - \div \sigma &= \vec f
   &&\text{in $\Omega(t)$},
@@ -114,8 +118,8 @@ terms of the stress:
 Note that these equations are posed on a domain $\Omega(t)$ that
 changes with time, with the boundary moving according to the
 displacements $\vec u(\vec x,t)$ of the points on the boundary. To
-complete this system, we have to specify the relationship between the
-stress and the strain, as follows:
+complete this system, we have to specify the incremental relationship between
+the stress and the strain, as follows:
 \begin{align}
   \label{eq:stress-strain}
   \dot\sigma = C \varepsilon (\dot{\vec u}),
@@ -137,7 +141,8 @@ where
   \sigma^n = \sigma^{n-1} + C \varepsilon (\Delta \vec u^n),
 \end{gather}
 and $\Delta \vec u^n$ the incremental displacement for time step
-$n$. This way, if we want to solve for the displacement increment, we
+$n$. In addition, we have to specify initial data $\vec u(\cdot,0)=\vec u_0$. 
+This way, if we want to solve for the displacement increment, we
 have to solve the following system:
 \begin{align}
   - \div  C \varepsilon(\Delta\vec u^n) &= \vec f + \div \sigma^{n-1}
@@ -189,7 +194,7 @@ continuous finite elements.
 
 There are differences, however:
 \begin{enumerate}
-  \item We have to move the mesh after each time step, in order to be
+  \item We have to move (update) the mesh after each time step, in order to be 
   able to solve the next time step on a new domain;
 
   \item We need to know $\sigma^{n-1}$ to compute the next incremental
@@ -258,7 +263,8 @@ that is defined with respect to the coordinate system of the material in the
 old domain, and has to be transferred to the new domain. The reason for this
 can be understood as follows: locally, the incremental deformation $\Delta\vec
 u$ can be decomposed into three parts, a linear translation (the constant part
-of the displacement field in the neighborhood of a point), a dilational
+of the displacement increment field in the neighborhood of a point), a
+dilational 
 component (that part of the gradient of the displacement field that has a
 nonzero divergence), and a rotation. A linear translation of the material does
 not affect the stresses that are frozen into it -- the stress values are
@@ -595,7 +601,8 @@ Incompressibility is characterized by Poisson's ratio
   \nu = \frac{\lambda}{2(\lambda+\mu)},
 \end{gather*}
 where $\lambda,\mu$ are the Lam\'e constants of the material.
-Physical constraints indicate that $-1\le \nu\le \tfrac 12$. If $\nu$
+Physical constraints indicate that $-1\le \nu\le \tfrac 12$ (the condition
+also follows from mathematical stability considerations). If $\nu$
 approaches $\tfrac 12$, then the material becomes incompressible. In that
 case, pure displacement-based formulations are no longer appropriate for the
 solution of such problems, and stabilization techniques have to be employed

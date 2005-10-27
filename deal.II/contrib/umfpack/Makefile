@@ -28,7 +28,7 @@ UMFPACK:
 
 $(LIBDIR)/liblac_umfpack$(shared-lib-suffix): AMD UMFPACK
 	@echo "=====umfpack==========optimized==$(MT)== Linking library:   $(@F)"
-	@$(SHLIBLD) $(LDFLAGS) -shared -o $@ $D/lib/contrib/umfpack/*.o $(deplibs)
+	@$(SHLIBLD) $(LDFLAGS) $(SHLIBFLAGS) -o $@ $D/lib/contrib/umfpack/*.o $(deplibs)
 
 
 $(LIBDIR)/liblac_umfpack$(static-lib-suffix): AMD UMFPACK

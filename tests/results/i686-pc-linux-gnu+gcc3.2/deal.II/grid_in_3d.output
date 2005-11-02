@@ -1,19 +1,19 @@
 
 DEAL::Reading grid_in_3d_1.in
 DEAL::  16480 active cells
-DEAL::  hash=951346498
+DEAL::  hash=950760495
 DEAL::Reading grid_in_3d_2.in
 DEAL::  360 active cells
-DEAL::  hash=447682
+DEAL::  hash=454134
 DEAL::Reading grid_in_3d_3.in
 DEAL::  2 active cells
-DEAL::  hash=4
+DEAL::  hash=2
 DEAL::Reading grid_in_3d_4.in
 DEAL::  13824 active cells
-DEAL::  hash=667289411
+DEAL::  hash=667584889
 DEAL::Reading grid_in_3d_evil_0.in
 DEAL::  10 active cells
-DEAL::  hash=304
+DEAL::  hash=318
 DEAL::Reading grid_in_3d_evil_1.in
 DEAL::  caught exception:
 DEAL::--------------------------------------------------------
@@ -55,4 +55,4 @@ Grid Orientation Error: Mesh is Unorientable
 
 DEAL::Reading grid_in_3d_evil_4.in
 DEAL::  10 active cells
-DEAL::  hash=304
+DEAL::  hash=318

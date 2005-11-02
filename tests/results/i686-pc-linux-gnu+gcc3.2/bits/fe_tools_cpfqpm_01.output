@@ -30,11 +30,11 @@ DEAL::0.019 0.98 0.019 0.98
 DEAL::Checking Q1 against Q3 in 2d:
 DEAL::Checking Q3 against Q1 in 2d:
 DEAL::7.2 2.8
-DEAL::0.00036 0.96 0.96 0.00036 0.019 0.019 0.019 0.019 
+DEAL::0.00036 0.96 0.96 0.00036 0.96 0.00036 0.00036 0.96 
 DEAL::Checking Q1 against Q3 in 3d:
 DEAL::Checking Q3 against Q1 in 3d:
 DEAL::19. 4.7
-DEAL::6.7e-06 0.94 0.018 0.00035 0.94 6.7e-06 0.00035 0.018 0.018 0.00035 0.018 0.00035 0.00035 0.018 0.00035 0.018 
+DEAL::6.7e-06 0.94 0.018 0.00035 6.7e-06 0.94 0.018 0.00035 0.018 0.00035 6.7e-06 0.94 0.018 0.00035 6.7e-06 0.94 
 DEAL::Checking Q2 against Q2 in 1d:
 DEAL::Checking Q2 against Q2 in 1d:
 DEAL::Checking Q2 against Q2 in 2d:

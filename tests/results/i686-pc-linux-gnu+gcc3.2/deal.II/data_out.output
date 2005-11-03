@@ -338,8 +338,8 @@ light_source {
   <0,20,0>
   color White
 }
-#declare HMIN=1;
-#declare HMAX=14;
+#declare HMIN=0;
+#declare HMAX=17;
 
 #declare Tex=texture{
   pigment {

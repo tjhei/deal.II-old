@@ -6,14 +6,14 @@ DEAL::Number of constraints: 0
 DEAL::|A|=0
 DEAL::|B|=2154.26
 DEAL::2D
-DEAL::Number of cells: 1009
-DEAL::Number of dofs: 1301
-DEAL::Number of constraints: 459
+DEAL::Number of cells: 1186
+DEAL::Number of dofs: 1537
+DEAL::Number of constraints: 600
 DEAL::|A|=0
-DEAL::|B|=246388.
+DEAL::|B|=315328.
 DEAL::3D
-DEAL::Number of cells: 1023
-DEAL::Number of dofs: 1745
-DEAL::Number of constraints: 881
+DEAL::Number of cells: 736
+DEAL::Number of dofs: 1311
+DEAL::Number of constraints: 592
 DEAL::|A|=0
-DEAL::|B|=1.30692e+06
+DEAL::|B|=743585.

@@ -456,7 +456,7 @@ light_source {
   <0,20,0>
   color White
 }
-#declare HMIN=4.0;
+#declare HMIN=0.0;
 #declare HMAX=6.0;
 
 #declare Tex=texture{
@@ -1008,7 +1008,7 @@ light_source {
   <0,20,0>
   color White
 }
-#declare HMIN=6.0000;
+#declare HMIN=0.0000;
 #declare HMAX=8.0000;
 
 #declare Tex=texture{
@@ -1560,7 +1560,7 @@ light_source {
   <0,20,0>
   color White
 }
-#declare HMIN=8.0000;
+#declare HMIN=0.0000;
 #declare HMAX=10.000;
 
 #declare Tex=texture{
@@ -2112,7 +2112,7 @@ light_source {
   <0,20,0>
   color White
 }
-#declare HMIN=2.0000;
+#declare HMIN=0.0000;
 #declare HMAX=4.0000;
 
 #declare Tex=texture{
@@ -2664,8 +2664,8 @@ light_source {
   <0,20,0>
   color White
 }
-#declare HMIN=4.0000;
-#declare HMAX=8.0000;
+#declare HMIN=0.0000;
+#declare HMAX=10.000;
 
 #declare Tex=texture{
   pigment {
@@ -3216,8 +3216,8 @@ light_source {
   <0,20,0>
   color White
 }
-#declare HMIN=6.0000;
-#declare HMAX=12.000;
+#declare HMIN=0.0000;
+#declare HMAX=16.000;
 
 #declare Tex=texture{
   pigment {

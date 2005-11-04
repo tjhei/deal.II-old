@@ -2,11 +2,11 @@
 DEAL::Reading grid_in_3d_1.in
 DEAL::  16480 active cells
 DEAL::  52008 active faces
-DEAL::  9600 misoriented faces
+DEAL::  7200 misoriented faces
 DEAL::Reading grid_in_3d_2.in
 DEAL::  360 active cells
 DEAL::  1218 active faces
-DEAL::  498 misoriented faces
+DEAL::  618 misoriented faces
 DEAL::Reading grid_in_3d_3.in
 DEAL::  2 active cells
 DEAL::  11 active faces

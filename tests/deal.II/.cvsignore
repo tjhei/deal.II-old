@@ -1,7 +1,1 @@
-Makefile.depend
-*.go
-*.testcase
-*.output
-*.check *.OK
-*.exe
-ii_files
+Makefile.tests

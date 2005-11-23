@@ -65,9 +65,7 @@ clean:
 #
 # note that we take care if there are no f-files
 #
-# If the file should turn out to be empty, then blow it
-# away to let make issue a proper error message rather than
-# some obscure follow-up problems
+# If the command fails, then remove Makefile.dep again and fail
 Makefile.dep: $(f-files) Makefile
 	@echo ============================ Remaking Makefile
 	@(if test "x$(f-files)" != "x" ; then \
@@ -75,8 +73,8 @@ Makefile.dep: $(f-files) Makefile
 	     echo $$i | $(PERL) -pi -e 's#source/(.*)\.f#\$$(LIBDIR)/contrib/hsl/\1.$(OBJEXT):source/\1.f#;' ;\
 	    done ; \
           fi) \
-		> Makefile.dep
-	@if test -s $@ ; then : else rm $@ ; fi
+		> $@ \
+	 || (rm -f $@ ; false)
 
 
 # include all the dependencies

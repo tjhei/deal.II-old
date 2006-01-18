@@ -9,7 +9,7 @@ endif
 
 
 # rules
-lib: $(LIBDIR)/liblac_umfpack$(lib-suffix)
+all: AMD UMFPACK $(LIBDIR)/liblac_umfpack$(lib-suffix)
 
 ifneq ($(with-multithreading),no)
   MT = MT
@@ -26,12 +26,12 @@ UMFPACK:
 	cd UMFPACK/Source ; $(MAKE) all
 
 
-$(LIBDIR)/liblac_umfpack$(shared-lib-suffix): AMD UMFPACK
+$(LIBDIR)/liblac_umfpack$(shared-lib-suffix): $D/lib/contrib/umfpack/*.o
 	@echo "=====umfpack==========optimized==$(MT)== Linking library:   $(@F)"
 	@$(SHLIBLD) $(LDFLAGS) $(SHLIBFLAGS) -o $@ $D/lib/contrib/umfpack/*.o $(deplibs)
 
 
-$(LIBDIR)/liblac_umfpack$(static-lib-suffix): AMD UMFPACK
+$(LIBDIR)/liblac_umfpack$(static-lib-suffix): $D/lib/contrib/umfpack/*.o
 	@echo "=====umfpack==========optimized==$(MT)== Linking library:   $(@F)"
 	@$(AR) ru $@ $D/lib/contrib/umfpack/*.o
 	@$(RANLIB) $@

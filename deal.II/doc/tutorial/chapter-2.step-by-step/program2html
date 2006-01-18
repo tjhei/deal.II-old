@@ -6,7 +6,7 @@ print "<h1> The commented program</h1>\n";
 # ignore comments at the start of the program. this includes CVS
 # tags and copyright notices.
 $_ = <>;
-while ( m!^/[/\*]!  ||  m/^$/ ) {
+while ( m!^/[/\*]!  ||  m!\s*\*! || m/^$/ ) {
     $_ = <>;
 }
 

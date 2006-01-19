@@ -26,14 +26,18 @@ UMFPACK:
 	cd UMFPACK/Source ; $(MAKE) all
 
 
-$(LIBDIR)/liblac_umfpack$(shared-lib-suffix): $D/lib/contrib/umfpack/*.o
+$(LIBDIR)/liblac_umfpack$(shared-lib-suffix): $D/lib/contrib/umfpack/*.$(OBJEXT)
+
 	@echo "=====umfpack==========optimized==$(MT)== Linking library:   $(@F)"
-	@$(SHLIBLD) $(LDFLAGS) $(SHLIBFLAGS) -o $@ $D/lib/contrib/umfpack/*.o $(deplibs)
+	@$(SHLIBLD) $(LDFLAGS) $(SHLIBFLAGS) -o $@ $D/lib/contrib/umfpack/*.$(OBJEXT)
+ $(deplibs)
 
 
-$(LIBDIR)/liblac_umfpack$(static-lib-suffix): $D/lib/contrib/umfpack/*.o
+$(LIBDIR)/liblac_umfpack$(static-lib-suffix): $D/lib/contrib/umfpack/*.$(OBJEXT)
+
 	@echo "=====umfpack==========optimized==$(MT)== Linking library:   $(@F)"
-	@$(AR) ru $@ $D/lib/contrib/umfpack/*.o
+	@$(AR) ru $@ $D/lib/contrib/umfpack/*.$(OBJEXT)
+
 	@$(RANLIB) $@
 
 

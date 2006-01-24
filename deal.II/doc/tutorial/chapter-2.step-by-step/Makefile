@@ -17,11 +17,13 @@ $(example-htmls):
 	@TOC=`cat $D/examples/$(@:.html=)/$(@:.html=.cc) \
 	  | $(PERL) program2toc \
 	  | $(PERL) -pi -e 's/\"/\\\"/g;'` ; \
+	 plainTOC=`echo $$TOC | $(PERL) -pi -e 's/href=.../href=\\\"\#plain-/g;'` ; \
 	 cat head.html \
 	  | $(PERL) -pi -e '$$step="$@";                     \
                          $$step=~s/step-(\d+).html/$$1/g; \
                          s/step xxx/step $$step/g;'       \
-	  | $(PERL) -pi -e "s!TOC!$$TOC!g;" \
+	  | $(PERL) -pi -e "s!commentedTOC!$$TOC!g;" \
+	  | $(PERL) -pi -e "s!plainTOC!$$plainTOC!g;" \
 	  > $@
 	@cat $(@:.html=.data/intro.html) >> $@
 	@cat $D/examples/$(@:.html=)/$(@:.html=.cc) \

@@ -1,11 +1,4 @@
-# Copyright (C) 1999, 2000, 2001, 2002 by Wolfgang Bangerth, University of Heidelberg
-
-# ignore comments at the start of the program. this includes CVS
-# tags and copyright notices.
-$_ = <>;
-while ( m!^/[/\*]!  ||  m!\s*\*! || m/^$/ ) {
-    $_ = <>;
-}
+# Copyright (C) 1999, 2000, 2001, 2002, 2006 by Wolfgang Bangerth, University of Heidelberg
 
 print <<END;
 <a name=\"PlainProg\"></a>

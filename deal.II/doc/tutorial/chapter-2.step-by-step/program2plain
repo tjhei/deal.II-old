@@ -15,7 +15,7 @@ the path on some remote server.)
 END
 
 
-do {
+while (<>) {
     # ignore comment lines
     if ( ! m!^\s*//! ) {
 	# substitute special characters
@@ -43,6 +43,6 @@ do {
 	   print;
 	}
     }	
-} while (<>);
+}
 
 print "</code></pre>\n</p>\n\n";

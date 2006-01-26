@@ -8,12 +8,11 @@ Number of active cells: 1024
 Total number of cells: 1365
 Number of degrees of freedom: 1089
 DEAL:cg::Starting value 0.121094
-DEAL:cg::Starting value 0.323075
-DEAL:cg::Convergence step 47 value 5.33692e-13
+DEAL:cg::Convergence step 48 value 5.33692e-13
 </code></pre>
 
 The first three lines is what we wrote to <code>cout</code>. The last
-three lines were generated without our interaction by the CG
+two lines were generated without our intervention by the CG
 solver. The first two lines state the residual at the start of the
 iteration, while the last line tells us that the solver needed 47
 iterations to bring the norm of the residual to 5.3e-13, i.e. below
@@ -29,6 +28,25 @@ Apart from the output shown above, the program generated the file
 viewed as follows: invoke GNUPLOT and enter the following sequence of
 commands at its prompt:
 <pre><code>
+examples/step-3> gnuplot
+
+        G N U P L O T
+        Version 3.7 patchlevel 3
+        last modified Thu Dec 12 13:00:00 GMT 2002
+        System: Linux 2.6.11.4-21.10-default
+
+        Copyright(C) 1986 - 1993, 1998 - 2002
+        Thomas Williams, Colin Kelley and many others
+
+        Type `help` to access the on-line reference manual
+        The gnuplot FAQ is available from
+        http://www.gnuplot.info/gnuplot-faq.html
+
+        Send comments and requests for help to <info-gnuplot@dartmouth.edu>
+        Send bugs, suggestions and mods to <bug-gnuplot@dartmouth.edu>
+
+
+Terminal type set to 'x11'
 gnuplot> set data style lines
 gnuplot> splot "solution.gpl"
 </code></pre>

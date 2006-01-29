@@ -48,21 +48,24 @@ parameter. For example, consider the following piece of code:
 
 <p>
 At the point where the compiler sees this function, it does not know
-anything about the value of ``dim'', by now there is a whole zoo of
-functions make_grid, one for every possible value of ``dim''. But since
-the compiler can't know which might be used, it can not compile the
-function. 
+anything about the actual value of ``dim''. The only thing the compiler has is
+a template, i.e. a blueprint, to generate
+functions <code>make_grid</code> if given a particular value of
+``dim''. Since ``dim'' has an unknown value, there is no
+code the compiler can generate for the moment.
 </p>
 
 <p>
-However, if later down a function would use the following sequence,
+However, if later down the compiler would encounter code that looks, for
+example, like this,
 <pre><code>
   Triangulation&lt;2&gt; triangulation;
   make_grid (triangulation);
 </code></pre>
-the compiler will deduce that the function make_grid for dim==2 was
-requested and will compile that function with dim replaced by 2
-everywhere, i.e. it will compiler the function as if it were defined
+then the compiler will deduce that the function <code>make_grid</code> for
+<code>dim==2</code> was 
+requested and will compile the template above into a function with dim replaced
+by 2 everywhere, i.e. it will compile the function as if it were defined
 as
 <pre><code>
   void make_grid (Triangulation&lt;2&gt; &amp;triangulation)
@@ -82,7 +85,7 @@ might be (and actually is) a totally unrelated  function.
 </p>
 
 <p>
-The same can be made with member variables. Consider the following
+The same can be done with member variables. Consider the following
 function, which might in turn call the above one:
 <pre><code>
   template &lt;int dim&gt;
@@ -90,32 +93,32 @@ function, which might in turn call the above one:
   {
     make_grid (triangulation);
 
-    DoFHandler&lt;dim&gt; dof_handler;
+    DoFHandler&lt;dim&gt; dof_handler(triangulation);
     ...
   };
 </code></pre>
 This function has a member variable of type
-<code>DoFHandler&lt;dim&gt;</code> the size of which may (and does)
-depend on the dimension we are working in. Again, the compiler can't
-compile this function until it knows for which dimension and therefore
-how many space shall be reserved for the member variable. If you call
+<code>DoFHandler&lt;dim&gt;</code>. Again, the compiler can't
+compile this function until it knows for which dimension. If you call
 this function for a specific dimension as above, the compiler will
 take the template, replace all occurences of dim by the dimension for
 which it was called, and compile it. If you call the function several
 times for different dimensions, it will compile it several times, each
 time calling the right ``make_grid'' function and reserving the right
-amount of memory for the member variable.
+amount of memory for the member variable; note that the size of a
+<code>DoFHandler</code> might, and indeed does, depend on the space dimension.
 </p>
 
 <p>
 The <acronym>deal.II</acronym> library is build around this concept
-and that allows you to program in way that will not need to
+of dimension-independent programming, and therefore allows you to program in
+a way that will not need to 
 distinguish between the space dimensions. It should be noted that in
 only a very few places is it necessary to actually compare the
 dimension using ``if''s or ``switch''es. However, since the compiler
 has to compile each function for each dimension separately, even there
 it knows the value of ``dim'' at the time of compilation and will
-therefore be able to optimize the ``if'' statement along with the
+therefore be able to optimize away the ``if'' statement along with the
 unused branch.
 </p>
 

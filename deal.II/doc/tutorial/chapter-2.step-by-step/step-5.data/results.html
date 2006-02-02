@@ -2,58 +2,68 @@
 <h1>Results</h1>
 
 <p>
-The output of the program looks as follows:
+When the last block in <code>main()</code> is commented in, the output
+of the program looks as follows:
 <pre><code>
 Cycle 0:
    Number of active cells: 20
    Total number of cells: 20
    Number of degrees of freedom: 25
-   11 CG iterations needed to obtain convergence.
+   13 CG iterations needed to obtain convergence.
 Cycle 1:
    Number of active cells: 80
    Total number of cells: 100
    Number of degrees of freedom: 89
-   16 CG iterations needed to obtain convergence.
+   18 CG iterations needed to obtain convergence.
 Cycle 2:
    Number of active cells: 320
    Total number of cells: 420
    Number of degrees of freedom: 337
-   27 CG iterations needed to obtain convergence.
+   29 CG iterations needed to obtain convergence.
 Cycle 3:
    Number of active cells: 1280
    Total number of cells: 1700
    Number of degrees of freedom: 1313
-   53 CG iterations needed to obtain convergence.
+   52 CG iterations needed to obtain convergence.
 Cycle 4:
    Number of active cells: 5120
    Total number of cells: 6820
    Number of degrees of freedom: 5185
-   102 CG iterations needed to obtain convergence.
+   95 CG iterations needed to obtain convergence.
 Cycle 5:
    Number of active cells: 20480
    Total number of cells: 27300
    Number of degrees of freedom: 20609
-   200 CG iterations needed to obtain convergence.
+   182 CG iterations needed to obtain convergence.
 --------------------------------------------------------
-An error occurred in line &lt;206&gt; of file &lt;step-5.cc&gt; in function
-    void Coefficient&lt;2&gt;::value_list&lt;2&gt;(const class vector&lt;Point&lt;2&gt;,__default_alloc_template&lt;false,0&gt; &gt; &, class vector&lt;double,__default_alloc_template&lt;false,0&gt; &gt; &, unsigned int = 0) const
+An error occurred in line &lt;326&gt; of file &lt;step-5.cc&gt; in function
+    void Coefficient&lt;dim&gt;::value_list(const std::vector&lt;Point&lt;dim&gt;, std::allocat
+or&lt;Point&lt;dim&gt; &gt; &gt;&, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&, unsigned int)
+ const [with int dim = 2]
 The violated condition was: 
-    values.size() == n_points
+    values.size() == points.size()
 The name and call sequence of the exception was:
-    ExcVectorHasWrongSize (values.size(), n_points)
+    ExcDimensionMismatch (values.size(), points.size())
 Additional Information: 
-The vector has size 1 but should have 2 elements.
+Dimension 1 not equal to 2
+
+Stacktrace:
+-----------
+#0  ./step-5(_ZNK11CoefficientILi2EE10value_listERKSt6vectorI5PointILi2EESaIS3_E
+ERS1_IdSaIdEEj+0x88) [0x416c0c]
+#1  ./step-5(main+0x82) [0x41638a]
+#2  /lib64/tls/libc.so.6(__libc_start_main+0xea) [0x2aaaac60254a]
+#3  ./step-5(_ZN15DataOut_DoFDataILi2E10DoFHandlerLi2ELi2EE5clearEv+0x52) [0x416
+26a]
 --------------------------------------------------------
+make: *** [run] Aborted
 </code></pre>
 </p>
 
 <p>
+Let's first focus on the things before the error:
 In each cycle, the number of cells quadruples and the number of CG
-iterations roughly doubles. The exception is only raised if the
-respective lines at the end of the programs are un-commented.
-</p>
-
-<p>
+iterations roughly doubles.
 Also, in each cycle, the program writes one output graphic file in EPS
 format. They are depicted in the following:
 </p>
@@ -99,4 +109,66 @@ example.
 </p>
 
 
+<p>
+As for the error &mdash; let's look at it again:
+<pre><code>
+--------------------------------------------------------
+An error occurred in line &lt;326&gt; of file &lt;step-5.cc&gt; in function
+    void Coefficient&lt;dim&gt;::value_list(const std::vector&lt;Point&lt;dim&gt;, std::allocat
+or&lt;Point&lt;dim&gt; &gt; &gt;&, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&, unsigned int)
+ const [with int dim = 2]
+The violated condition was: 
+    values.size() == points.size()
+The name and call sequence of the exception was:
+    ExcDimensionMismatch (values.size(), points.size())
+Additional Information: 
+Dimension 1 not equal to 2
 
+Stacktrace:
+-----------
+#0  ./step-5(_ZNK11CoefficientILi2EE10value_listERKSt6vectorI5PointILi2EESaIS3_E
+ERS1_IdSaIdEEj+0x88) [0x416c0c]
+#1  ./step-5(main+0x82) [0x41638a]
+#2  /lib64/tls/libc.so.6(__libc_start_main+0xea) [0x2aaaac60254a]
+#3  ./step-5(_ZN15DataOut_DoFDataILi2E10DoFHandlerLi2ELi2EE5clearEv+0x52) [0x416
+26a]
+--------------------------------------------------------
+make: *** [run] Aborted
+</code></pre>
+</p>
+
+<p>
+What we see is that the error was triggered in line 326 of the
+step-5.cc file (as we modify tutorial programs over time, these line
+numbers change, so you should check what line number you actually get
+in your output). That's already good information if you want to look up
+in the code what exactly happened. But the text tells you even
+more. First, it prints the function this happens in, and then the
+plain text version of the condition that was violated. This will
+almost always be enough already to let you know what exactly went wrong.
+</p>
+
+<p>
+But that's not all yet. You get to see the name of the exception
+(<code>ExcDimensionMismatch</code>) and this exception even prints the
+values of the two array sizes. If you go back to the code in
+<code>main()</code>, you will remember that we gave the two variables
+sizes 1 and 2, which of course are the ones that you find in the
+output again.
+</p>
+
+<p>
+So now we know pretty exactly where the error happened and what went
+wrong. What we don't know yet is how exactly we got there. The
+stacktrace at the bottom actually tells us what happened, though it
+takes some training to read the mangled function names. What you
+should be able to glean from this text is that the problem happened in
+<code>Coefficient::value_list</code> (stackframe 0) and that it was
+called from <code>main()</code> (stackframe 1). In realistic programs,
+there would be many more functions in between these two. For example,
+we might have made the mistake in the <code>assemble_system</code>
+function, in which stackframe 1 would be
+<code>LaplaceProblem&lt;2&gt;::assemble_system</code>, stackframe 2
+would be <code>LaplaceProblem&lt;2&gt;::run</code>, and stackframe 3
+would be <code>main()</code> &mdash; you get the idea.
+</p>

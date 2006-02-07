@@ -32,19 +32,20 @@ Cycle 7:
 </p>
 
 <p>
-As intended, the number of cells roughly doubles in each cycle.
-The number of degrees is slightly more than four times the number of
+As intended, the number of cells roughly doubles in each cycle.  The
+number of degrees is slightly more than four times the number of
 cells; one would expect a factor of exactly four in two spatial
 dimensions on an infinite grid (since the spacing between the degrees
 of freedom is half the cell width: one additional degree of freedom on
 each edge and one in the middle of each cell), but it is larger than
-that factor due to the finite size and due to additional degrees of
-freedom which are introduced due to hanging nodes and local
+that factor due to the finite size of the mesh and due to additional
+degrees of freedom which are introduced by hanging nodes and local
 refinement.
 </p>
 
 <p>
-The final solution, as written by the program, looks as follows:
+The final solution, as written by the program at the end of the
+<code>run()</code> function, looks as follows:
 </p>
 
 <p>
@@ -53,7 +54,7 @@ The final solution, as written by the program, looks as follows:
 
 <p>
 In each cycle, the program furthermore writes the grid in EPS
-format. These are depicted in the following:
+format. These are shown in the following:
 </p>
 
 <p>
@@ -84,8 +85,6 @@ format. These are depicted in the following:
 <IMG SRC="step-6.data/grid-5.jpg" ALT="grid-5" WIDTH="300">
 </td>
 </tr>
-</table>
-</p>
 
 <tr>
 <td>
@@ -112,107 +111,72 @@ from the optimal square.
 
 
 <p>
-For completeness, we show what happens if the destructor is omitted
+For completeness, we show what happens if the code we commented about
+in the destructor of the <code>LaplaceProblem</code> class is omitted
 from this example.
 </p>
 <pre><code>
 --------------------------------------------------------
-An error occurred in line <20> of file <source/subscriptor.cc> in function
-    Subscriptor::~Subscriptor()
-The violated condition was:
+An error occurred in line <78> of file <source/subscriptor.cc> in function
+    virtual Subscriptor::~Subscriptor()
+The violated condition was: 
     counter == 0
 The name and call sequence of the exception was:
-    InUse()
-Additional Information:
-This object is still used by 1 other objects.
+    ExcInUse(counter, object_info->name(), infostring)
+Additional Information: 
+Object of class 4FE_QILi2EE is still used by 1 other objects.
+  from Subscriber 10DoFHandlerILi2EE
+
+Stacktrace:
+-----------
+#0  /u/bangerth/p/deal.II/1/deal.II/lib/libbase.g.so(_ZN11SubscriptorD2Ev+0x25b) [0x2aaaabc62087]
+#1  /u/bangerth/p/deal.II/1/deal.II/lib/libdeal_II_2d.g.so(_ZN13FiniteElementILi2EED2Ev+0x3f6) [0x2aaaaaf85122]
+#2  ./step-6(_ZN7FE_PolyI24TensorProductPolynomialsILi2EELi2EED2Ev+0x58) [0x41ee28]
+#3  ./step-6(_ZN4FE_QILi2EED1Ev+0x58) [0x41b9ee]
+#4  ./step-6(_ZN14LaplaceProblemILi2EED1Ev+0x10d) [0x4162fb]
+#5  ./step-6(main+0x7d) [0x415da5]
+#6  /lib64/tls/libc.so.6(__libc_start_main+0xea) [0x2aaaac60254a]
+#7  ./step-6(_ZN15DataOut_DoFDataILi2E10DoFHandlerLi2ELi2EE5clearEv+0x52) [0x415c8a]
 --------------------------------------------------------
+make: *** [run] Aborted
 </code></pre>
 </p>
 
 <p>
-From the above error message, it is difficult to infer what has
-actually happened. A stack backtrace in the debugger at least tells us
-what object is presently destructed:
-<pre><code>
-#0  0x4004b0d1 in __kill () at soinit.c:27
-#1  0x4004aeff in raise (sig=6) at ../sysdeps/posix/raise.c:27
-#2  0x4004c19b in abort () at ../sysdeps/generic/abort.c:83
-#3  0x813e2b9 in void __IssueError_Assert<Subscriptor::InUse> (
-    file=0x8187223 "source/subscriptor.cc", line=20, 
-    function=0x8187207 "Subscriptor::~Subscriptor()", 
-    cond=0x81871fa "counter == 0", exc_name=0x81871f2 "InUse()", 
-    e={<ExceptionBase> = {<exception> = {_vptr.exception = 0x8189a8c}, 
-        file = 0x8187223 "source/subscriptor.cc", line = 20, 
-        function = 0x8187207 "Subscriptor::~Subscriptor()", 
-        cond = 0x81871fa "counter == 0", exc = 0x81871f2 "InUse()"}, })
-    at /home/wolf/program/newdeal/deal.II/base/include/base/exceptions.h:382
-#4  0x80daa64 in Subscriptor::~Subscriptor (this=0xbffff534, __in_chrg=2)
-    at source/subscriptor.cc:20
-#5  0x8063d57 in FiniteElementBase<2>::~FiniteElementBase (this=0xbffff534, 
-    __in_chrg=2) at source/fe/fe.cc:256
-#6  0x8063dd5 in FiniteElement<2>::~FiniteElement (this=0xbffff534, 
-    __in_chrg=2)
-    at /home/wolf/program/newdeal/deal.II/deal.II/include/fe/fe.h:967
-#7  0x8074d55 in FEQ1Mapping<2>::~FEQ1Mapping (this=0xbffff534, __in_chrg=2)
-    at source/fe/q1_mapping.cc:726
-#8  0x806f625 in FEQ2<2>::~FEQ2 (this=0xbffff534, __in_chrg=2)
-    at source/fe/fe_lib.quadratic.cc:1095
-#9  0x80e9d5a in LaplaceProblem<2>::~LaplaceProblem (this=0xbffff084, 
-    __in_chrg=2) at step-6.cc:306
-#10 0x804a783 in main () at step-6.cc:932
-</code></pre>
-Note that the debugger stops automatically at the point where the
-exception was thrown, you need not place a breakpoint. From frame 4 we
-see that the exception occured in the destructor of the
-``Subscriptor'' class, which is where the zeroness of the counter is
-checked. Frame 8 tells us that it is the ``fe'' object (which is of
-type ``FEQ2'') of the ``LaplaceProblem'' class, that resists its
-destruction.
-</p>
-
-<p>
+From the above error message, we conclude that an object of type
+``10DoFHandlerILi2EE'' is still using the object of type
+``4FE_QILi2EE''. These are of course "mangled" names for
+<code>DoFHandler</code> and <code>FE_Q</code>. The mangling works as
+follows: the first number indicates the number of characters of the
+template class, i.e. 10 for <code>DoFHandler</code> and 4
+for<code>FE_Q</code>; the rest of the text is then template
+arguments. From this we can already glean a little bit who's the
+culprit here, and who the victim.:
 The one object that still uses the finite element is the
-``dof_handler'' object. This is usually difficult to find out since
-the ``Subscriptor'' class that stores the counter has no possibility
-to store which other object subscribed to it. However, by thinking a
-little bit about which objects use the one that is presently
-destructed, one usually quite quickly finds out where the problem is.
+``dof_handler'' object.
 </p>
-
 
 <p>
-Versions after <acronym>deal.II<acronym> 3.0 give slightly better
-information in that they are at least able to tell which object is
-destructed. The output then looks like this:
-</p>
+The stacktrace gives an indication of where the problem happened. For
+technical reasons, the present code only shows mangled function names,
+but if you run the stacktrace through the <code>c++filt</code>
+program, you will get something like this:
 <pre><code>
---------------------------------------------------------
-An error occurred in line <20> of file <source/subscriptor.cc> in function
-    Subscriptor::~Subscriptor()
-The violated condition was:
-    counter == 0
-The name and call sequence of the exception was:
-    InUse()
-Additional Information:
-Object of class t4FEQ21i2 is still used by 1 other objects.
---------------------------------------------------------
+#0  /u/bangerth/p/deal.II/1/deal.II/lib/libbase.g.so(Subscriptor::~Subscriptor()+0x25b) [0x2aaaabc62087]
+#1  /u/bangerth/p/deal.II/1/deal.II/lib/libdeal_II_2d.g.so(FiniteElement<2>::~FiniteElement()+0x3f6) [0x2aaaaaf85122]
+#2  ./step-6(FE_Poly<TensorProductPolynomials<2>, 2>::~FE_Poly()+0x58) [0x41ee28]
+#3  ./step-6(FE_Q<2>::~FE_Q()+0x58) [0x41b9ee]
+#4  ./step-6(LaplaceProblem<2>::~LaplaceProblem()+0x10d) [0x4162fb]
+#5  ./step-6(main+0x7d) [0x415da5]
+#6  /lib64/tls/libc.so.6(__libc_start_main+0xea) [0x2aaaac60254a]
+#7  ./step-6(DataOut_DoFData<2, DoFHandler, 2, 2>::clear()+0x52) [0x415c8a]
 </code></pre>
 </p>
 
 <p>
-This tells us, that the object that is presently deleted is of type
-<code>t4FEQ21i2</code>. Of course, this is not the actual name of the
-class, but what the C++ run time library returns as name; it is in
-fact the <it>mangled name</it> of the class, and you can get back the
-true class name by running the program <code>c++filt</code> on that
-name, which then returns <code>FEQ2&lt;2&gt;</code>. (The mangled name
-can be read without <code>c++filt</code> in the following way: the
-first letter tells us that the class name is a template, the second
-that the name of the class name without template arguments is four
-characters; we then already have <code>FEQ2&lt;...&gt;</code>. After
-the class name, the next character tells us that the class has one
-template parameter, the ``i'' indicates that it is of type ``int'' and
-finally that it has the value ``2''. Thus, we arrive at
-<code>FEQ2&lt;2&gt;</code>.)
+In other words, we can now see that the exception was triggered in the
+destructor of the <code>FiniteElement</code> class that was called
+through a few more functions from the destructor of the
+<code>LaplaceProblem</code> class, exactly where we have commented out
+the call to <code>DoFHandler::clear()</code>.
 </p>
-

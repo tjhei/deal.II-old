@@ -1,29 +1,25 @@
-//-----------------------------------------------------------------------------
-// boost/type_traits/detail/bool_trait_def.hpp header file
-// See http://www.boost.org for updates, documentation, and revision history.
-//-----------------------------------------------------------------------------
+
+// NO INCLUDE GUARDS, THE HEADER IS INTENDED FOR MULTIPLE INCLUSION
+
+// Copyright Aleksey Gurtovoy 2002-2004
 //
-// Copyright (c) 2002
-// Aleksey Gurtovoy
-//
-// Permission to use, copy, modify, distribute and sell this software
-// and its documentation for any purpose is hereby granted without fee, 
-// provided that the above copyright notice appears in all copies and 
-// that both the copyright notice and this permission notice appear in 
-// supporting documentation. No representations are made about the 
-// suitability of this software for any purpose. It is provided "as is" 
-// without express or implied warranty.
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 
-// no include guards, the header is intended for multiple inclusion!
+// $Source$
+// $Date$
+// $Revision$
 
-#include "boost/type_traits/detail/template_arity_spec.hpp"
-#include "boost/mpl/bool.hpp"
-#include "boost/mpl/aux_/lambda_support.hpp"
-#include "boost/config.hpp"
+#include <boost/type_traits/detail/template_arity_spec.hpp>
+#include <boost/type_traits/integral_constant.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/aux_/lambda_support.hpp>
+#include <boost/config.hpp>
 
-#if defined(__SUNPRO_CC)
+#if defined(__SUNPRO_CC) && (__SUNPRO_CC < 0x570)
 #   define BOOST_TT_AUX_BOOL_TRAIT_VALUE_DECL(C) \
-    typedef mpl::bool_< C > type; \
+    typedef ::boost::integral_constant<bool,C> type; \
     enum { value = type::value }; \
     /**/
 #   define BOOST_TT_AUX_BOOL_C_BASE(C)
@@ -31,7 +27,7 @@
 #elif defined(BOOST_MSVC) && BOOST_MSVC <= 1200
 
 #   define BOOST_TT_AUX_BOOL_TRAIT_VALUE_DECL(C) \
-    typedef mpl::bool_< C > base_; \
+    typedef ::boost::integral_constant<bool,C> base_; \
     using base_::value; \
     /**/
 
@@ -42,7 +38,7 @@
 #endif
 
 #ifndef BOOST_TT_AUX_BOOL_C_BASE
-#   define BOOST_TT_AUX_BOOL_C_BASE(C) : mpl::bool_< C >
+#   define BOOST_TT_AUX_BOOL_C_BASE(C) : ::boost::integral_constant<bool,C>
 #endif 
 
 

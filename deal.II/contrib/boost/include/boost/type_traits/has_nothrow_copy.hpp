@@ -1,11 +1,10 @@
 
-// (C) Copyright Steve Cleary, Beman Dawes, Howard Hinnant & John Maddock 2000.
-// Permission to copy, use, modify, sell and distribute this software is 
-// granted provided this copyright notice appears in all copies. This software 
-// is provided "as is" without express or implied warranty, and with no claim 
-// as to its suitability for any purpose.
+//  (C) Copyright Steve Cleary, Beman Dawes, Howard Hinnant & John Maddock 2000.
+//  Use, modification and distribution are subject to the Boost Software License,
+//  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt).
 //
-// See http://www.boost.org for most recent version including documentation.
+//  See http://www.boost.org/libs/type_traits for most recent version including documentation.
 
 #ifndef BOOST_TT_HAS_NOTHROW_COPY_HPP_INCLUDED
 #define BOOST_TT_HAS_NOTHROW_COPY_HPP_INCLUDED
@@ -17,7 +16,20 @@
 
 namespace boost {
 
-BOOST_TT_AUX_BOOL_TRAIT_DEF1(has_nothrow_copy,T,::boost::has_trivial_copy<T>::value)
+namespace detail{
+
+template <class T>
+struct has_nothrow_copy_imp{
+   BOOST_STATIC_CONSTANT(bool, value = 
+      (::boost::type_traits::ice_or<
+         ::boost::has_trivial_copy<T>::value,
+         BOOST_HAS_NOTHROW_COPY(T)
+      >::value));
+};
+
+}
+
+BOOST_TT_AUX_BOOL_TRAIT_DEF1(has_nothrow_copy,T,::boost::detail::has_nothrow_copy_imp<T>::value)
 
 } // namespace boost
 

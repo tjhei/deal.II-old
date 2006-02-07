@@ -1,15 +1,12 @@
 
-// Copyright (C) 2000 John Maddock (john_maddock@compuserve.com)
-// Copyright (C) 2002 Aleksey Gurtovoy (agurtovoy@meta-comm.com)
+//  Copyright 2000 John Maddock (john@johnmaddock.co.uk)
+//  Copyright 2002 Aleksey Gurtovoy (agurtovoy@meta-comm.com)
 //
-// Permission to copy and use this software is granted, 
-// provided this copyright notice appears in all copies. 
-// Permission to modify the code and to distribute modified code is granted, 
-// provided this copyright notice appears in all copies, and a notice 
-// that the code was modified is included with the copyright notice.
+//  Use, modification and distribution are subject to the Boost Software License,
+//  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt).
 //
-// This software is provided "as is" without express or implied warranty, 
-// and with no claim as to its suitability for any purpose.
+//  See http://www.boost.org/libs/type_traits for most recent version including documentation.
 
 #ifndef BOOST_TT_IS_FUNCTION_HPP_INCLUDED
 #define BOOST_TT_IS_FUNCTION_HPP_INCLUDED
@@ -18,7 +15,7 @@
 #include "boost/type_traits/detail/false_result.hpp"
 #include "boost/config.hpp"
 
-#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(BOOST_TT_TEST_MS_FUNC_SIGS)
 #   include "boost/type_traits/detail/is_function_ptr_helper.hpp"
 #else
 #   include "boost/type_traits/detail/is_function_ptr_tester.hpp"
@@ -37,7 +34,7 @@
 namespace boost {
 namespace detail {
 
-#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(BOOST_TT_TEST_MS_FUNC_SIGS)
 template<bool is_ref = true>
 struct is_function_chooser
     : ::boost::type_traits::false_result
@@ -56,7 +53,7 @@ struct is_function_chooser<false>
 template <typename T>
 struct is_function_impl
     : is_function_chooser< ::boost::is_reference<T>::value >
-        ::template result_<T>
+        ::BOOST_NESTED_TEMPLATE result_<T>
 {
 };
 
@@ -71,6 +68,12 @@ struct is_function_impl
         == sizeof(::boost::type_traits::yes_type)
         );
 };
+
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+template <typename T>
+struct is_function_impl<T&> : public false_type
+{};
+#endif
 
 #endif
 

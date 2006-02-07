@@ -1,11 +1,10 @@
 
-// (C) Copyright Steve Cleary, Beman Dawes, Howard Hinnant & John Maddock 2000.
-// Permission to copy, use, modify, sell and distribute this software is 
-// granted provided this copyright notice appears in all copies. This software 
-// is provided "as is" without express or implied warranty, and with no claim 
-// as to its suitability for any purpose.
+//  (C) Copyright Steve Cleary, Beman Dawes, Howard Hinnant & John Maddock 2000.
+//  Use, modification and distribution are subject to the Boost Software License,
+//  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt).
 //
-// See http://www.boost.org for most recent version including documentation.
+//  See http://www.boost.org/libs/type_traits for most recent version including documentation.
 
 #ifndef BOOST_TT_IS_INTEGRAL_HPP_INCLUDED
 #define BOOST_TT_IS_INTEGRAL_HPP_INCLUDED
@@ -36,21 +35,30 @@ BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,bool,true)
 BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,char,true)
 
 #ifndef BOOST_NO_INTRINSIC_WCHAR_T
+// If the following line fails to compile and you're using the Intel
+// compiler, see http://lists.boost.org/MailArchives/boost-users/msg06567.php,
+// and define BOOST_NO_INTRINSIC_WCHAR_T on the command line.
 BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,wchar_t,true)
 #endif
 
-#if (defined(BOOST_MSVC) && (BOOST_MSVC == 1200)) || (defined(BOOST_INTEL_CXX_VERSION) && defined(_MSC_VER) && (BOOST_INTEL_CXX_VERSION <= 600))
+#if (defined(BOOST_MSVC) && (BOOST_MSVC == 1200)) \
+    || (defined(BOOST_INTEL_CXX_VERSION) && defined(_MSC_VER) && (BOOST_INTEL_CXX_VERSION <= 600)) \
+    || (defined(__BORLANDC__) && (__BORLANDC__ == 0x600) && (_MSC_VER == 1200))
 BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,unsigned __int8,true)
 BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,__int8,true)
 BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,unsigned __int16,true)
 BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,__int16,true)
 BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,unsigned __int32,true)
 BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,__int32,true)
+#ifdef __BORLANDC__
+BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,unsigned __int64,true)
+BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,__int64,true)
+#endif
 #endif
 
 # if defined(BOOST_HAS_LONG_LONG)
-BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,unsigned long long,true)
-BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,long long,true)
+BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral, ::boost::ulong_long_type,true)
+BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral, ::boost::long_long_type,true)
 #elif defined(BOOST_HAS_MS_INT64)
 BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,unsigned __int64,true)
 BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(is_integral,__int64,true)

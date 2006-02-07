@@ -7,10 +7,9 @@
 //  (C) Copyright Greg Colvin and Beman Dawes 1998, 1999.
 //  Copyright (c) 2001, 2002, 2003 Peter Dimov
 //
-//  Permission to copy, use, modify, sell and distribute this software
-//  is granted provided this copyright notice appears in all copies.
-//  This software is provided "as is" without express or implied
-//  warranty, and with no claim as to its suitability for any purpose.
+//  Distributed under the Boost Software License, Version 1.0. (See
+//  accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
 //
 //  See http://www.boost.org/libs/smart_ptr/shared_ptr.htm for documentation.
 //
@@ -48,6 +47,7 @@ namespace detail
 {
 
 struct static_cast_tag {};
+struct const_cast_tag {};
 struct dynamic_cast_tag {};
 struct polymorphic_cast_tag {};
 
@@ -68,16 +68,26 @@ template<> struct shared_ptr_traits<void const>
     typedef void reference;
 };
 
+template<> struct shared_ptr_traits<void volatile>
+{
+    typedef void reference;
+};
+
+template<> struct shared_ptr_traits<void const volatile>
+{
+    typedef void reference;
+};
+
 #endif
 
 // enable_shared_from_this support
 
-template<class T, class Y> void sp_enable_shared_from_this(boost::enable_shared_from_this<T> * pe, Y * px, shared_count const & pn)
+template<class T, class Y> void sp_enable_shared_from_this( shared_count const & pn, boost::enable_shared_from_this<T> const * pe, Y const * px )
 {
-    if(pe != 0) pe->_internal_weak_this._internal_assign(px, pn);
+    if(pe != 0) pe->_internal_weak_this._internal_assign(const_cast<Y*>(px), pn);
 }
 
-inline void sp_enable_shared_from_this(void const *, void const *, shared_count const &)
+inline void sp_enable_shared_from_this( shared_count const & /*pn*/, ... )
 {
 }
 
@@ -111,9 +121,9 @@ public:
     }
 
     template<class Y>
-    explicit shared_ptr(Y * p): px(p), pn(p, checked_deleter<Y>()) // Y must be complete
+    explicit shared_ptr( Y * p ): px( p ), pn( p ) // Y must be complete
     {
-        detail::sp_enable_shared_from_this(p, p, pn);
+        detail::sp_enable_shared_from_this( pn, p, p );
     }
 
     //
@@ -124,7 +134,7 @@ public:
 
     template<class Y, class D> shared_ptr(Y * p, D d): px(p), pn(p, d)
     {
-        detail::sp_enable_shared_from_this(p, p, pn);
+        detail::sp_enable_shared_from_this( pn, p, p );
     }
 
 //  generated copy constructor, assignment, destructor are fine...
@@ -159,6 +169,11 @@ public:
     }
 
     template<class Y>
+    shared_ptr(shared_ptr<Y> const & r, detail::const_cast_tag): px(const_cast<element_type *>(r.px)), pn(r.pn)
+    {
+    }
+
+    template<class Y>
     shared_ptr(shared_ptr<Y> const & r, detail::dynamic_cast_tag): px(dynamic_cast<element_type *>(r.px)), pn(r.pn)
     {
         if(px == 0) // need to allocate new counter -- the cast failed
@@ -183,7 +198,7 @@ public:
     {
         Y * tmp = r.get();
         pn = detail::shared_count(r);
-        detail::sp_enable_shared_from_this(tmp, tmp, pn);
+        detail::sp_enable_shared_from_this( pn, tmp, tmp );
     }
 
 #endif
@@ -253,13 +268,24 @@ public:
         return px != 0;
     }
 
-#else
+#elif \
+    ( defined(__MWERKS__) && BOOST_WORKAROUND(__MWERKS__, < 0x3200) ) || \
+    ( defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ < 304) )
 
     typedef T * (this_type::*unspecified_bool_type)() const;
-
+    
     operator unspecified_bool_type() const // never throws
     {
         return px == 0? 0: &this_type::get;
+    }
+
+#else 
+
+    typedef T * this_type::*unspecified_bool_type;
+
+    operator unspecified_bool_type() const // never throws
+    {
+        return px == 0? 0: &this_type::px;
     }
 
 #endif
@@ -351,6 +377,11 @@ template<class T, class U> shared_ptr<T> static_pointer_cast(shared_ptr<U> const
     return shared_ptr<T>(r, detail::static_cast_tag());
 }
 
+template<class T, class U> shared_ptr<T> const_pointer_cast(shared_ptr<U> const & r)
+{
+    return shared_ptr<T>(r, detail::const_cast_tag());
+}
+
 template<class T, class U> shared_ptr<T> dynamic_pointer_cast(shared_ptr<U> const & r)
 {
     return shared_ptr<T>(r, detail::dynamic_cast_tag());
@@ -414,9 +445,12 @@ template<class E, class T, class Y> std::basic_ostream<E, T> & operator<< (std::
 
 // get_deleter (experimental)
 
-#if defined(__GNUC__) &&  (__GNUC__ < 3)
+#if ( defined(__GNUC__) && BOOST_WORKAROUND(__GNUC__, < 3) ) || \
+    ( defined(__EDG_VERSION__) && BOOST_WORKAROUND(__EDG_VERSION__, <= 238) ) || \
+    ( defined(__HP_aCC) && BOOST_WORKAROUND(__HP_aCC, <= 33500) )
 
 // g++ 2.9x doesn't allow static_cast<X const *>(void *)
+// apparently EDG 2.38 and HP aCC A.03.35 also don't accept it
 
 template<class D, class T> D * get_deleter(shared_ptr<T> const & p)
 {

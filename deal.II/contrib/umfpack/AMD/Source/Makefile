@@ -25,11 +25,11 @@ AMDL = $(addprefix $D/lib/contrib/umfpack/, $(addsuffix .$(OBJEXT), $(subst amd_
 #-------------------------------------------------------------------------------
 
 $D/lib/contrib/umfpack/amd_i_%.$(OBJEXT): amd_%.c $(INC)
-	@echo =====umfpack==========optimized==$(MT)== $(<F)
+	@echo =====umfpack==========optimized====== $(<F)
 	@$(CC) $(CFLAGS) -I../Include -DDINT -c $< -o $@
 
 $D/lib/contrib/umfpack/amd_l_%.$(OBJEXT): amd_%.c $(INC)
-	@echo =====umfpack==========optimized==$(MT)== $(<F)
+	@echo =====umfpack==========optimized====== $(<F)
 	@$(CC) $(CFLAGS) -I../Include -DDLONG -c $< -o $@
 
 all: $(AMDI) $(AMDL)

@@ -117,7 +117,8 @@ element. Of course, while $i$ is in the range $0,\ldots,N-1$, the functions
 $comp(i)$ and $base(i)$ have the ranges $0,1$ (in 2D) and $0,\ldots,n-1$,
 respectively. 
 
-For example (but this layout is not mandatory, and you should not rely on it),
+For example (though this sequence of shape functions is not
+guaranteed, and you should not rely on it),
 the following layout could be used by the library:
 \begin{center}
 \begin{multline*}
@@ -331,7 +332,7 @@ right hand side vectors.
 
 As a final note: in the step-17 example program, we will revisit the elastic
 problem laid out here, and will show how to solve it in parallel on a cluster
-of computers. The resulting problem will thus be able to solve this problem to
+of computers. The resulting program will thus be able to solve this problem to
 significantly higher accuracy, and more efficiently if this is required.
 
 

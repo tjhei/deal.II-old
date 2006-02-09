@@ -13,18 +13,22 @@ while (<>) {
         # replace double dashes in comments by &mdash;
 	$text =~ s!--!&mdash;!g;
 
-	# only allow header levels 3 and 4, since higher ones are
+	# only allow header levels 3 through 6, since higher ones are
 	# reserved for top-level document headers
-	if (! ($newlevel =~ /[34]/)) {
-	    print STDERR "Only header levels 3 and 4 are allowed.\n";
+	if (! ($newlevel =~ /[3456]/)) {
+	    print STDERR "Only header levels 3 through 6 are allowed.\n";
 	    print STDERR "You had $newlevel.\n";
 	    die;
 	}
 
 	if ($newlevel > $level) {
-	    print "      <ul>\n";
+	    for ($i=$level; $i<$newlevel; ++$i) {
+	        print "      <ul>\n";
+            }
 	} elsif ($newlevel < $level) {
-	    print "      </ul>\n";
+	    for ($i=$newlevel; $i<$level; ++$i) {
+	        print "      </ul>\n";
+            }
 	}
 
 	$reftext = $text;
@@ -35,7 +39,6 @@ while (<>) {
     } 
 }
 
-if ( $level == 4) {
+for (; $level>=3; --$level) {
     print "      </ul>\n";
 }
-print "    </ul>\n";

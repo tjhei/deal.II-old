@@ -2,7 +2,7 @@
 
 \begin{document}
 
-In this example program, we will mainly consider two aspects:
+In this program, we will mainly consider two aspects:
 \begin{itemize}
 \item Verification of correctness of the program;
 \item Non-homogeneous Neumann boundary conditions for the Helmholtz equation.
@@ -54,7 +54,7 @@ rule with points only at points where super-convergence might occur.
 
 The function \texttt{integrate\_difference} evaluates the desired norm on each
 cell $K$ of the triangulation and returns a vector which holds these
-values. From the local values, we can then obtain the global error. For
+values for each cell. From the local values, we can then obtain the global error. For
 example, if the vector $(e_i)$ contains the local $L_2$ norms, then
 $$
   E = \| {\mathbf e} \| = \left( \sum_i e_i^2 \right)^{1/2}
@@ -117,7 +117,7 @@ $$
   {(f,v)}_\Omega + {(g_2,v)}_{\Gamma_2}
 $$
 for all test functions $v\in H^1_0=\{v\in H^1: v|_{\Gamma_1}=0\}$. The
-boundary term ${(g_2,v)}_{\Gamma_2}$ has appeared by partial integration and
+boundary term ${(g_2,v)}_{\Gamma_2}$ has appeared by integration by parts and
 using $\partial_n u=g$ on $\Gamma_2$ and $v=0$ on $\Gamma_1$. The cell
 matrices and vectors which we use to build the global matrices and right hand
 side vectors in the discrete formulation therefore look like this:
@@ -138,7 +138,7 @@ class \texttt{FEFaceValues} that performs these tasks for integrations on
 faces of cells. One provides it with a quadrature formula for a manifold with
 dimension one less than the dimension of the domain is, and the cell and the
 number of its face on which we want to perform the integration. The class will
-then compute the values, gradients, normal vectors, weights, etc at the
+then compute the values, gradients, normal vectors, weights, etc. at the
 quadrature points on this face, which we can then use in the same way as for
 the domain integrals. The details of how this is done are shown in the
 following program.

@@ -2,7 +2,7 @@
 <h1>Introduction</h1>
 
 <P>
-In this example program, we will mainly consider two aspects:
+In this program, we will mainly consider two aspects:
 <UL>
 <LI>Verification of correctness of the program;
 <LI>Non-homogeneous Neumann boundary conditions for the Helmholtz equation.
@@ -59,7 +59,7 @@ rule with points only at points where super-convergence might occur.
 <P>
 The function <TT>integrate_difference</TT> evaluates the desired norm on each
 cell <I>K</I> of the triangulation and returns a vector which holds these
-values. From the local values, we can then obtain the global error. For
+values for each cell. From the local values, we can then obtain the global error. For
 example, if the vector (<I>e</I><SUB><I>i</I></SUB>) contains the local <I>L</I><SUB>2</SUB> norms, then
 <BR><P></P>
 <DIV ALIGN="CENTER">
@@ -258,7 +258,7 @@ boundary term
  WIDTH="61" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
  src="step-7.data/intro/img19.gif"
  ALT="${(g_2,v)}_{\Gamma_2}$">
-has appeared by partial integration and
+has appeared by integration by parts and
 using 
 <!-- MATH: $\partial_n u=g$ -->
 <IMG
@@ -297,7 +297,7 @@ class <TT>FEFaceValues</TT> that performs these tasks for integrations on
 faces of cells. One provides it with a quadrature formula for a manifold with
 dimension one less than the dimension of the domain is, and the cell and the
 number of its face on which we want to perform the integration. The class will
-then compute the values, gradients, normal vectors, weights, etc at the
+then compute the values, gradients, normal vectors, weights, etc. at the
 quadrature points on this face, which we can then use in the same way as for
 the domain integrals. The details of how this is done are shown in the
 following program.

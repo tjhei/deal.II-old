@@ -176,19 +176,19 @@ If we implemented this, we would get code like this:
   for (unsigned int q=0; q<n_q_points; ++q) 
     for (unsigned int i=0; i<dofs_per_cell; ++i)
       for (unsigned int j=0; j<dofs_per_cell; ++j)
-        local_matrix(i,j) += (Kinverse[q]][0][0] *
+        local_matrix(i,j) += (k_inverse_values[q][0][0] *
                               fe_values.shape_value_component(i,q,0) *
                               fe_values.shape_value_component(j,q,0) 
                               +
-                              Kinverse[q]][0][1] *
+                              k_inverse_values[q][0][1] *
                               fe_values.shape_value_component(i,q,0) *
                               fe_values.shape_value_component(j,q,1) 
                               +
-                              Kinverse[q]][1][0] *
+                              k_inverse_values[q][1][0] *
                               fe_values.shape_value_component(i,q,1) *
                               fe_values.shape_value_component(j,q,0) 
                               +
-                              Kinverse[q]][1][1] *
+                              k_inverse_values[q][1][1] *
                               fe_values.shape_value_component(i,q,1) *
                               fe_values.shape_value_component(j,q,1) 
                              )
@@ -273,7 +273,7 @@ for (unsigned int q=0; q<n_q_points; ++q)
           const double div_phi_j_u    = extract_div_u (fe_values, j, q);
           const double phi_j_p        = extract_p (fe_values, j, q);
                
-          local_matrix(i,j) += (phi_i_u * Kinverse[q] * phi_j_u
+          local_matrix(i,j) += (phi_i_u * k_inverse_values[q] * phi_j_u
                                 - div_phi_i_u * phi_j_p
                                 - phi_i_p * div_phi_j_u)
                                * fe_values.JxW(q);

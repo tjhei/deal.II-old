@@ -673,6 +673,20 @@ six times refined mesh and using elements of order 2 yields an improvement of
 earth shattering, but significant.
 
 
+\subsubsection*{A remark on similar functionality in deal.II}
+
+As a final remark about solvers and preconditioners, let us note that a
+significant amount of functionality introduced above is actually also present
+in the library itself. It probably even is more powerful and general, but we
+chose to introduce this material here anyway to demonstrate how to work with
+block matrices and to develop solvers and preconditioners, rather than using
+black box components from the library.
+
+For those interested in looking up the corresponding library classes: the
+\texttt{InverseMatrix} is roughly equivalent to the
+\texttt{PreconditionLACSolver} class in the library. Likewise, the Schur
+complement class corresponds to the \texttt{SchurMatrix} class.
+
 
 \subsection*{Definition of the test case}
 

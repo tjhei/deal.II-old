@@ -19,7 +19,7 @@ $u$ for the solution variable will become clear in the next section.
 
 After discussing the equation and the formulation we are going to use to solve
 it, this introduction will cover the use of block matrices and vectors, the
-definition of solvers and preconditioners, and finally the actual testcase we
+definition of solvers and preconditioners, and finally the actual test case we
 are going to solve.
 
 \subsection*{Formulation, weak form, and discrete problem}
@@ -35,7 +35,7 @@ name $u$ more commonly used for the solution of partial differential equations.
 Typical applications of this view of the Laplace equation are then modeling
 groundwater flow, or the flow of hydrocarbons in oil reservoirs. In these
 applications, $K$ is then the permeability tensor, i.e. a measure for how much
-resistence the soil or rock matrix asserts on the fluid flow. In the
+resistance the soil or rock matrix asserts on the fluid flow. In the
 applications just named, a desirable feature is that the numerical scheme is
 locally conservative, i.e. that whatever flows into a cell also flows out of
 it (or the difference is equal to the integral over the source terms over each
@@ -107,7 +107,7 @@ discrete problem
 with the bilinear form and right hand side as stated above, and $x_h=\{\vec
 u_h,p_h\}$, $w_h=\{\vec v_h,q_h\}$. Both $x_h$ and $w_h$ are from the space
 $X_h=RT(k)\times DQ(k)$, where $RT(k)$ is itself a space of $dim$-dimensional
-functions to accomodate for the fact that the flow velocity is vector-valued.
+functions to accommodate for the fact that the flow velocity is vector-valued.
 The necessary question then is: how do we do this in a program?
 
 Vector-valued elements have already been discussed in previous tutorial
@@ -666,7 +666,7 @@ typical run on 5 times refined meshes using elements of order 0, the number of
 outer iterations drops from 164 to 12. On the other hand, we now have to apply
 a very expensive preconditioner 12 times. A better measure is therefore simply
 the run-time of the program: on my laptop, it drops from 28 to 23 seconds for
-this testcase. That doesn't seem too impressive, but the savings become more
+this test case. That doesn't seem too impressive, but the savings become more
 pronounced on finer meshes and with elements of higher order. For example, a
 six times refined mesh and using elements of order 2 yields an improvement of
 318 to 12 outer iterations, at a runtime of 338 seconds to 229 seconds. Not
@@ -674,7 +674,7 @@ earth shattering, but significant.
 
 
 
-\subsection*{Definition of the testcase}
+\subsection*{Definition of the test case}
 
 In this tutorial program, we will solve the Laplace equation in mixed
 formulation as stated above. Since we want to monitor convergence of the
@@ -694,7 +694,7 @@ simplicity. Consequently, the exact velocity satisfies
   \end{pmatrix}.
 \end{align*}
 This solution was chosen since it is exactly divergence free, making it a
-realistic testcase for incompressible fluid flow. By consequence, the right
+realistic test case for incompressible fluid flow. By consequence, the right
 hand side equals $f=0$, and as boundary values we have to choose
 $g=p|_{\partial\Omega}$.
 

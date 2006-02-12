@@ -5,9 +5,9 @@
 
 This program is devoted to two aspects: the use of mixed finite elements -- in
 particular Raviart-Thomas elements -- and using block matrices to define
-solvers and preconditioners that use the substructure of the system
-matrix. The equation we are going to solve is again the Laplace equation,
-though with a matrix-valued coefficient:
+solvers, preconditioners, and nested versions of those that use the
+substructure of the system matrix. The equation we are going to solve is again
+the Laplace equation, though with a matrix-valued coefficient:
 \begin{align*}
   -\nabla \cdot K(\vec x) \nabla p &= f \qquad && \text{in $\Omega$}, \\
   p &= g && \text{on $\partial\Omega$}.
@@ -640,13 +640,13 @@ look like this:
     schur_rhs -= system_rhs.block(1);
 
     SchurComplement
-      schur_complement (system_matrix, m_inverse)
+      schur_complement (system_matrix, m_inverse);
     
     ApproximateSchurComplement
       approximate_schur_complement (system_matrix);
       
     InverseMatrix<ApproximateSchurComplement>
-      preconditioner (approximate_schur_complement)
+      preconditioner (approximate_schur_complement);
     
     SolverControl solver_control (system_matrix.block(0,0).m(),
                                   1e-6*schur_rhs.l2_norm());

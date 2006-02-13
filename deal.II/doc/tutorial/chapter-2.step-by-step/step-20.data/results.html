@@ -1,8 +1,176 @@
 <a name="Results"></a>
 <h1>Results</h1>
 
-convergence for h and p
+<h3>Output of the program and graphical visualization</h3>
+
+<p>
+If we run the program as is, we get this output:
+<pre><code>
+examples/step-20> make run
+============================ Remaking Makefile.dep
+==============debug========= step-20.cc
+============================ Linking step-20
+============================ Running step-20
+Number of active cells: 64
+Total number of cells: 85
+Number of degrees of freedom: 208 (144+64)
+10 CG Schur complement iterations to obtain convergence.
+Errors: ||e_p||_L2 = 0.178055,   ||e_u||_L2 = 0.0433435
+</code></pre>
+The fact that the number of iterations is so small, of course, is due to good
+(but expensive!) preconditioner we have developed. To get confidence in the
+solution, let us take a look at it. The following three images show (from left
+to right) the x-velocity, the y-velocity, and the pressure (click on the images
+for larger versions):
+
+<p ALIGN=CENTER>
+<a href="step-20.data/u.png"><img width="32%" src="step-20.data/u.png"></a>
+<a href="step-20.data/v.png"><img width="32%" src="step-20.data/v.png"></a>
+<a href="step-20.data/p.png"><img width="32%" src="step-20.data/p.png"></a>
+</p>
+
+<p>
+Let us start with the pressure: it is highest at the left and lowest at the
+right, so flow will be from left to right. In addition, though hardly visible
+in the graph, we have chosen the pressure field such that the flow left-right
+flow first channels towards the center and then outward again. Consequently,
+the x-velocity has to increase to get the flow through the narrow part,
+something that can easily be seen in the left image. The middle image
+represents inward flow in y-direction at the left end of the domain, and
+outward flow in y-directino at the right end of the domain.
+</p>
+
+<p>
+As an additional remark, note how the x-velocity in the left image is only
+continuous in x-direction, whereas the y-velocity is continuous in
+y-direction. The flow fields are discontinuous in the other directions. This
+very obviously reflects the continuity properties of the Raviart-Thomas
+elements, which are, in fact, only in the space H(div) and not in the space
+H<sup>1</sup>. Finally, the pressure field is completely discontinuous, but
+that should not surprise given that we have chosen <code>FE_DGQ(0)</code> as
+the finite element for that solution component.
+</p>
+
+
+<h3>Convergence</h3>
+
+<p>
+The program offers two obvious places where playing and observing convergence
+is in order: the degree of the finite elements used (passed to the constructor
+of the <code>MixedLaplaceProblem</code> class from <code>main()</code>), and
+the refinement level (determined in
+<code>MixedLaplaceProblem::make_grid_and_dofs</code>). What one can do is to
+change these values and observe the errors computed later on in the course of
+the program run.
+</p>
+
+<p>
+If one does this, one finds the following pattern for the L<sub>2</sub> error
+in the pressure variable:
+<table align="center" border="1" cellspacing="3" cellpadding="3">
+  <tr>
+    <td></td>
+    <td colspan="3" align="center">Finite element order</td>
+  </tr>
+
+  <tr>
+    <td>Refinement level</td>
+    <td>0</td>
+    <td>1</td>
+    <td>2</td>
+  </tr>
+
+  <tr>
+    <td>0</td>  <td>1.45344</td>  <td>0.0831743</td>  <td>0.0235186</td>
+  </tr>
+
+  <tr>
+    <td>1</td>  <td>0.715099</td>  <td>0.0245341</td>  <td>0.00293983</td>
+  </tr>
+
+  <tr>
+    <td>2</td>  <td>0.356383</td>  <td>0.0063458</td>  <td>0.000367478</td>
+  </tr>
+
+  <tr>
+    <td>3</td>  <td>0.178055</td>  <td>0.00159944</td>  <td>4.59349e-05</td>
+  </tr>
+
+  <tr>
+    <td>4</td>  <td>0.0890105</td>  <td>0.000400669</td>  <td>5.74184e-06</td>
+  </tr>
+
+  <tr>
+    <td>5</td>  <td>0.0445032</td>  <td>0.000100218</td>  <td>7.17799e-07</td>
+  </tr>
+
+  <tr>
+    <td>6</td>  <td>0.0222513</td>  <td>2.50576e-05</td>  <td>9.0164e-08</td>
+  </tr>
+
+  <tr>
+    <td></td>  <td>O(h)</td>  <td>O(h<sup>2</sup></td>  <td>O(h<sup>3)</sup></td>
+  </tr>
+</table>
+
+The theoretically expected convergence orders are very nicely reflected by the
+experimentally observed ones indicated in the last row of the table.
+</p>
+
+<p>
+One can make the same experiment with the L<sub>2</sub> error
+in the velocity variables:
+<table align="center" border="1" cellspacing="3" cellpadding="3">
+  <tr>
+    <td></td>
+    <td colspan="3" align="center">Finite element order</td>
+  </tr>
+
+  <tr>
+    <td>Refinement level</td>
+    <td>0</td>
+    <td>1</td>
+    <td>2</td>
+  </tr>
+
+  <tr>
+    <td>0</td> <td>0.367423</td> <td>0.127657</td> <td>5.10388e-14</td>
+  </tr>
+
+  <tr>
+    <td>1</td> <td>0.175891</td> <td>0.0319142</td> <td>9.04414e-15</td>
+  </tr>
+
+  <tr>
+    <td>2</td> <td>0.0869402</td> <td>0.00797856</td> <td>1.23723e-14</td>
+  </tr>
+
+  <tr>
+    <td>3</td> <td>0.0433435</td> <td>0.00199464</td> <td>1.86345e-07</td>
+  </tr>
+
+  <tr>
+    <td>4</td> <td>0.0216559</td> <td>0.00049866</td> <td>2.72566e-07</td>
+  </tr>
+
+  <tr>
+    <td>5</td> <td>0.010826</td> <td>0.000124664</td> <td>3.57141e-07</td>
+  </tr>
+
+  <tr>
+    <td>6</td> <td>0.00541274</td> <td>3.1166e-05</td> <td>4.46124e-07</td>
+  </tr>
+
+  <tr>
+    <td></td>  <td>O(h)</td>  <td>O(h<sup>2</sup></td>  <td>O(h<sup>3)</sup></td>
+  </tr>
+</table>
+The result concerning the convergence order is the same here.
+</p>
+
 
 try out preconditioner
 
 try out different coefficient
+
+different quadrature formula for errors

@@ -109,7 +109,7 @@ in the pressure variable:
   </tr>
 
   <tr>
-    <td></td>  <td>O(h)</td>  <td>O(h<sup>2</sup></td>  <td>O(h<sup>3)</sup></td>
+    <td></td>  <td>O(h)</td>  <td>O(h<sup>2)</sup></td>  <td>O(h<sup>3)</sup></td>
   </tr>
 </table>
 
@@ -162,15 +162,135 @@ in the velocity variables:
   </tr>
 
   <tr>
-    <td></td>  <td>O(h)</td>  <td>O(h<sup>2</sup></td>  <td>O(h<sup>3)</sup></td>
+    <td></td>  <td>O(h)</td>  <td>O(h<sup>2)</sup></td>  <td>O(h<sup>3)</sup></td>
   </tr>
 </table>
 The result concerning the convergence order is the same here.
 </p>
 
 
-try out preconditioner
+<a name="extensions"></a>
+<h3>Possibilities for extensions</h3>
 
-try out different coefficient
+<p>
+Realistic flow computations for ground water or oil reservoir simulations will
+not use a constant permeability. Here's a first, rather simple way to change
+this situation: we use a permeability that decays very rapidly away from a
+central flowline until it hits a background value of 0.001. This is to mimick
+the behavior of fluids in sandstone: in most of the domain, the sandstone is
+homogenous and, while permeably to fluids, not overly so; on the other stone,
+the stone has cracked, or faulted, along one line, and the fluids flow much
+easier along this large crask. Here is how we could implement something like
+this: 
+<pre><code>
+template &lt;int dim&gt;
+void
+KInverse&lt;dim&gt;::value_list (const std::vector&lt;Point&lt;dim&gt; &gt; &amp;points,
+                           std::vector&lt;Tensor&lt;2,dim&gt; &gt;    &amp;values) const
+{
+  Assert (points.size() == values.size(),
+	  ExcDimensionMismatch (points.size(), values.size()));
 
-different quadrature formula for errors
+  for (unsigned int p=0; p&lt;points.size(); ++p)
+    {
+      values[p].clear ();
+
+      const double distance_to_flowline
+        = std::fabs(points[p][1]-0.2*std::sin(10*points[p][0]));
+      
+      const double permeability = std::max(std::exp(-(distance_to_flowline*
+                                                      distance_to_flowline)
+                                                    / (0.1 * 0.1)),
+                                           0.001);
+      
+      for (unsigned int d=0; d&lt;dim; ++d)
+	values[p][d][d] = 1./permeability;
+    }
+}
+</code></pre>
+Remember that the function returns the inverse of the permeability tensor.
+</p>
+
+<p>
+With a significantly higher mesh resolution, we can visualize this, here with
+x- and y-velocity: 
+</p>
+
+<p ALIGN=CENTER>
+<a href="step-20.data/u-wiggle.png"><img width="48%" src="step-20.data/u-wiggle.png"></a>
+<a href="step-20.data/v-wiggle.png"><img width="48%" src="step-20.data/v-wiggle.png"></a>
+</p>
+
+It is obvious how fluids flow essentially only along the middle line, and not
+anywhere else.
+</p>
+
+<p>
+Another possibility would be to use a random permeability field. A simple way
+to achieve this would be to scatter a number of centers around the domain and
+then use a permeability field that is the sum of (negative) exponentials for
+each of these centers. Flow would then try to hop from one center of high
+permeability to the next one. This is an entirely unscientific attempt at
+describing a random medium, but one possibility to implement this behavior
+would look like this:
+<pre><code>
+template &lt;int dim&gt;
+class KInverse : public TensorFunction&lt;2,dim&gt;
+{
+  public:
+    KInverse ();
+    
+    virtual void value_list (const std::vector&lt;Point&lt;dim&gt; &gt; &amp;points,
+			     std::vector&lt;Tensor&lt;2,dim&gt; &gt;    &amp;values) const;
+
+  private:
+    std::vector&lt;Point&lt;dim&gt; &gt; centers;
+};
+
+
+template &lt;int dim&gt;
+KInverse&lt;dim&gt;::KInverse () 
+{
+  const unsigned int N = 40;
+  centers.resize (N);
+  for (unsigned int i=0; i&lt;N; ++i)
+    for (unsigned int d=0; d&lt;dim; ++d)
+      centers[i][d] = 2.*rand()/RAND_MAX-1;
+}
+
+
+template &lt;int dim&gt;
+void
+KInverse&lt;dim&gt;::value_list (const std::vector&lt;Point&lt;dim&gt; &gt; &amp;points,
+                           std::vector&lt;Tensor&lt;2,dim&gt; &gt;    &amp;values) const
+{
+  Assert (points.size() == values.size(),
+	  ExcDimensionMismatch (points.size(), values.size()));
+
+  for (unsigned int p=0; p&lt;points.size(); ++p)
+    {
+      values[p].clear ();
+
+      double permeability = 0;
+      for (unsigned int i=0; i&lt;centers.size(); ++i)
+        permeability += std::exp(-(points[p]-centers[i]).square()
+                                 / (0.1 * 0.1));
+      
+      const double normalized_permeability
+        = std::max(permeability, 0.005);
+      
+      for (unsigned int d=0; d&lt;dim; ++d)
+	values[p][d][d] = 1./normalized_permeability;
+    }
+}
+</code></pre>
+
+<p>
+With a permeability field like this, we would get x-velocities and pressures as
+follows:
+</p>
+
+<p ALIGN=CENTER>
+<a href="step-20.data/u-random.png"><img width="48%" src="step-20.data/u-random.png"></a>
+<a href="step-20.data/p-random.png"><img width="48%" src="step-20.data/p-random.png"></a>
+</p>

@@ -1,10 +1,1460 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
+<P>
+This program is devoted to two aspects: the use of mixed finite elements - in
+particular Raviart-Thomas elements - and using block matrices to define
+solvers, preconditioners, and nested versions of those that use the
+substructure of the system matrix. The equation we are going to solve is again
+the Laplace equation, though with a matrix-valued coefficient:
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="RIGHT"><IMG
+ WIDTH="98" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img1.png"
+ ALT="$\displaystyle -\nabla \cdot K(\vec x) \nabla p$"></TD>
+<TD NOWRAP ALIGN="LEFT"><IMG
+ WIDTH="61" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img2.png"
+ ALT="$\displaystyle = f \qquad$"></TD>
+<TD>&nbsp;</TD>
+<TD NOWRAP ALIGN="LEFT">in <IMG
+ WIDTH="15" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img3.png"
+ ALT="$ \Omega$">
+<IMG
+ WIDTH="7" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img4.png"
+ ALT="$\displaystyle ,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="RIGHT"><IMG
+ WIDTH="11" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img5.png"
+ ALT="$\displaystyle p$"></TD>
+<TD NOWRAP ALIGN="LEFT"><IMG
+ WIDTH="28" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img6.png"
+ ALT="$\displaystyle = g$"></TD>
+<TD>&nbsp;</TD>
+<TD NOWRAP ALIGN="LEFT">on <!-- MATH
+ $\partial\Omega$
+ -->
+<IMG
+ WIDTH="24" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img7.png"
+ ALT="$ \partial\Omega$">
+<IMG
+ WIDTH="7" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img8.png"
+ ALT="$\displaystyle .$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+<IMG
+ WIDTH="40" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img9.png"
+ ALT="$ K(\vec x)$">
+ is assumed to be uniformly positive definite, i.e. there is
+<IMG
+ WIDTH="42" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img10.png"
+ ALT="$ \alpha&gt;0$">
+ such that the eigenvalues <!-- MATH
+ $\lambda_i(\vec x)$
+ -->
+<IMG
+ WIDTH="40" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img11.png"
+ ALT="$ \lambda_i(\vec x)$">
+ of <IMG
+ WIDTH="39" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img12.png"
+ ALT="$ K(x)$">
+ satisfy
+<!-- MATH
+ $\lambda_i(\vec x)\ge \alpha$
+ -->
+<IMG
+ WIDTH="71" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img13.png"
+ ALT="$ \lambda_i(\vec x)\ge \alpha$">
+. The use of the symbol <IMG
+ WIDTH="11" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img14.png"
+ ALT="$ p$">
+ instead of the usual
+<IMG
+ WIDTH="12" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img15.png"
+ ALT="$ u$">
+ for the solution variable will become clear in the next section.
 
-Adaptation of step-4.
+<P>
+After discussing the equation and the formulation we are going to use to solve
+it, this introduction will cover the use of block matrices and vectors, the
+definition of solvers and preconditioners, and finally the actual test case we
+are going to solve.
 
-explain:
-  mixed formulation
-  RT elements
-  block systems
-  solver/preconditioner
+<P>
+
+<H2><A NAME="SECTION00001000000000000000">
+Formulation, weak form, and discrete problem</A>
+</H2>
+
+<P>
+In the form above, the Laplace equation is considered a good model equation
+for fluid flow in porous media. In particular, if flow is so slow that all
+dynamic effects such as the acceleration terms in the Navier-Stokes equation
+become irrelevant, and if the flow pattern is stationary, then the Laplace
+equation models the pressure that drives the flow reasonable well. Because the
+solution variable is a pressure, we here use the name <IMG
+ WIDTH="11" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img14.png"
+ ALT="$ p$">
+ instead of the
+name <IMG
+ WIDTH="12" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img15.png"
+ ALT="$ u$">
+ more commonly used for the solution of partial differential equations.
+
+<P>
+Typical applications of this view of the Laplace equation are then modeling
+groundwater flow, or the flow of hydrocarbons in oil reservoirs. In these
+applications, <IMG
+ WIDTH="18" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img16.png"
+ ALT="$ K$">
+ is then the permeability tensor, i.e. a measure for how much
+resistance the soil or rock matrix asserts on the fluid flow. In the
+applications just named, a desirable feature is that the numerical scheme is
+locally conservative, i.e. that whatever flows into a cell also flows out of
+it (or the difference is equal to the integral over the source terms over each
+cell, if the sources are nonzero). However, as it turns out, the usual
+discretizations of the Laplace equation do not satisfy this property. On the
+other hand, one can achieve this by choosing a different formulation.
+
+<P>
+To this end, one first introduces a second variable, called the flux, <!-- MATH
+ $\vec u=-K\nabla p$
+ -->
+<IMG
+ WIDTH="83" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img17.png"
+ ALT="$ \vec u=-K\nabla p$">
+. By its definition, the flux is a vector in the negative
+direction of the pressure gradient, multiplied by the permeability tensor. If
+the permeability tensor is proportional to the unit matrix, this equation is
+easy to understand and intuitive: the higher the permeability, the higher the
+flux; and the flux is proportional to the gradient of the pressure, going from
+areas of high pressure to areas of low pressure.
+
+<P>
+With this second variable, one then finds an alternative version of the
+Laplace equation, called the mixed formulation:
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="RIGHT"><IMG
+ WIDTH="86" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img18.png"
+ ALT="$\displaystyle K^{-1} \vec u - \nabla p$"></TD>
+<TD NOWRAP ALIGN="LEFT"><IMG
+ WIDTH="60" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img19.png"
+ ALT="$\displaystyle = 0 \qquad$"></TD>
+<TD>&nbsp;</TD>
+<TD NOWRAP ALIGN="LEFT">in <IMG
+ WIDTH="15" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img3.png"
+ ALT="$ \Omega$">
+<IMG
+ WIDTH="7" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img4.png"
+ ALT="$\displaystyle ,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="RIGHT"><IMG
+ WIDTH="15" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img20.png"
+ ALT="$\displaystyle -$">div<IMG
+ WIDTH="19" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img21.png"
+ ALT="$\displaystyle \ \vec u$"></TD>
+<TD NOWRAP ALIGN="LEFT"><IMG
+ WIDTH="60" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img19.png"
+ ALT="$\displaystyle = 0 \qquad$"></TD>
+<TD>&nbsp;</TD>
+<TD NOWRAP ALIGN="LEFT">in <IMG
+ WIDTH="15" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img3.png"
+ ALT="$ \Omega$">
+<IMG
+ WIDTH="7" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img4.png"
+ ALT="$\displaystyle ,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="RIGHT"><IMG
+ WIDTH="11" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img5.png"
+ ALT="$\displaystyle p$"></TD>
+<TD NOWRAP ALIGN="LEFT"><IMG
+ WIDTH="60" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img22.png"
+ ALT="$\displaystyle = g \qquad$"></TD>
+<TD>&nbsp;</TD>
+<TD NOWRAP ALIGN="LEFT">on <!-- MATH
+ $\partial\Omega$
+ -->
+<IMG
+ WIDTH="24" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img7.png"
+ ALT="$ \partial\Omega$">
+<IMG
+ WIDTH="7" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img8.png"
+ ALT="$\displaystyle .$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+
+<P>
+The weak formulation of this problem is found by multiplying the two
+equations with test functions and integrating some terms by parts:
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="207" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img23.png"
+ ALT="$\displaystyle A(\{\vec u,p\},\{\vec v,q\}) = F(\{\vec v,q\}),$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+where
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="RIGHT"><IMG
+ WIDTH="116" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img24.png"
+ ALT="$\displaystyle A(\{\vec u,p\},\{\vec v,q\})$"></TD>
+<TD NOWRAP ALIGN="LEFT"><IMG
+ WIDTH="127" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img25.png"
+ ALT="$\displaystyle = (\vec v, K^{-1}\vec u)_\Omega - ($">div<IMG
+ WIDTH="87" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img26.png"
+ ALT="$\displaystyle \ \vec v, p)_\Omega - (q,$">div<IMG
+ WIDTH="35" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img27.png"
+ ALT="$\displaystyle \ \vec u)_\Omega$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="RIGHT"><IMG
+ WIDTH="68" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img28.png"
+ ALT="$\displaystyle F(\{\vec v,q\})$"></TD>
+<TD NOWRAP ALIGN="LEFT"><IMG
+ WIDTH="178" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img29.png"
+ ALT="$\displaystyle = -(g,\vec v\cdot \vec n)_{\partial\Omega} - (f,q)_\Omega.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+Here, <IMG
+ WIDTH="13" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img30.png"
+ ALT="$ \vec n$">
+ is the outward normal vector at the boundary. Note how in this
+formulation, Dirichlet boundary values of the original problem are
+incorporated in the weak form.
+
+<P>
+To be well-posed, we have to look for solutions and test functions in the
+space <!-- MATH
+ $H(\text{div})=\{\vec w\in L^2(\Omega)^d:\ \text{div}\ \vec w\in L^2\}$
+ -->
+<IMG
+ WIDTH="24" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img31.png"
+ ALT="$ H($">div<IMG
+ WIDTH="135" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img32.png"
+ ALT="$ )=\{\vec w\in L^2(\Omega)^d:\ $">&nbsp; &nbsp;div<IMG
+ WIDTH="67" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img33.png"
+ ALT="$ \ \vec w\in L^2\}$">
+
+for <!-- MATH
+ $\vec u,\vec v$
+ -->
+<IMG
+ WIDTH="30" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img34.png"
+ ALT="$ \vec u,\vec v$">
+, and <IMG
+ WIDTH="21" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img35.png"
+ ALT="$ L^2$">
+ for <IMG
+ WIDTH="26" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img36.png"
+ ALT="$ p,q$">
+. It is a well-known fact stated in
+almost every book on finite element theory that if one chooses discrete finite
+element spaces for the approximation of <IMG
+ WIDTH="28" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img37.png"
+ ALT="$ \vec u,p$">
+ inappropriately, then the
+resulting discrete saddle-point problem is instable and the discrete solution
+will not converge to the exact solution.
+
+<P>
+To overcome this, a number of different finite element pairs for <IMG
+ WIDTH="28" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img37.png"
+ ALT="$ \vec u,p$">
+
+have been developed that lead to a stable discrete problem. One such pair is
+to use the Raviart-Thomas spaces <IMG
+ WIDTH="48" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img38.png"
+ ALT="$ RT(k)$">
+ for the velocity <IMG
+ WIDTH="13" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img39.png"
+ ALT="$ \vec u$">
+ and
+discontinuous elements of class <IMG
+ WIDTH="50" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img40.png"
+ ALT="$ DQ(k)$">
+ for the pressure <IMG
+ WIDTH="11" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img14.png"
+ ALT="$ p$">
+. For details
+about these spaces, we refer in particular to the book on mixed finite element
+methods by Brezzi and Fortin, but many other books on the theory of finite
+elements, for example the classic book by Brenner and Scott, also state the
+relevant results.
+
+<P>
+
+<H2><A NAME="SECTION00002000000000000000">
+Assembling the linear system</A>
+</H2>
+
+<P>
+The deal.II library (of course) implements Raviart-Thomas elements <IMG
+ WIDTH="48" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img38.png"
+ ALT="$ RT(k)$">
+ of
+arbitrary order <IMG
+ WIDTH="12" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img41.png"
+ ALT="$ k$">
+, as well as discontinuous elements <IMG
+ WIDTH="50" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img42.png"
+ ALT="$ DG(k)$">
+. If we forget
+about their particular properties for a second, we then have to solve a
+discrete problem
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="141" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img43.png"
+ ALT="$\displaystyle A(x_h,w_h) = F(w_h),$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+with the bilinear form and right hand side as stated above, and <!-- MATH
+ $x_h=\{\vec u_h,p_h\}$
+ -->
+<IMG
+ WIDTH="99" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img44.png"
+ ALT="$ x_h=\{\vec u_h,p_h\}$">
+, <!-- MATH
+ $w_h=\{\vec v_h,q_h\}$
+ -->
+<IMG
+ WIDTH="100" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img45.png"
+ ALT="$ w_h=\{\vec v_h,q_h\}$">
+. Both <IMG
+ WIDTH="20" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img46.png"
+ ALT="$ x_h$">
+ and <IMG
+ WIDTH="23" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img47.png"
+ ALT="$ w_h$">
+ are from the space
+<!-- MATH
+ $X_h=RT(k)\times DQ(k)$
+ -->
+<IMG
+ WIDTH="157" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img48.png"
+ ALT="$ X_h=RT(k)\times DQ(k)$">
+, where <IMG
+ WIDTH="48" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img38.png"
+ ALT="$ RT(k)$">
+ is itself a space of <IMG
+ WIDTH="31" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img49.png"
+ ALT="$ dim$">
+-dimensional
+functions to accommodate for the fact that the flow velocity is vector-valued.
+The necessary question then is: how do we do this in a program?
+
+<P>
+Vector-valued elements have already been discussed in previous tutorial
+programs, the first time and in detail in step-8. The main difference there
+was that the vector-valued space <IMG
+ WIDTH="21" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img50.png"
+ ALT="$ V_h$">
+ is uniform in all its components: the
+<IMG
+ WIDTH="31" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img49.png"
+ ALT="$ dim$">
+ components of the displacement vector are all equal and from the same
+function space. What we could therefore do was to build <IMG
+ WIDTH="21" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img50.png"
+ ALT="$ V_h$">
+ as the outer
+product of the <IMG
+ WIDTH="31" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img49.png"
+ ALT="$ dim$">
+ times the usual <IMG
+ WIDTH="36" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img51.png"
+ ALT="$ Q(1)$">
+ finite element space, and by this
+make sure that all our shape functions have only a single non-zero vector
+component. Instead of dealing with vector-valued shape functions, all we did
+in step-8 was therefore to look at the (scalar) only non-zero component and
+use the <TT>fe.system_to_component_index(i).first</TT> call to figure out
+which component this actually is.
+
+<P>
+This doesn't work with Raviart-Thomas elements: following from their
+construction to satisfy certain regularity properties of the space
+<!-- MATH
+ $H(\text{div})$
+ -->
+<IMG
+ WIDTH="24" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img31.png"
+ ALT="$ H($">div<IMG
+ WIDTH="9" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img52.png"
+ ALT="$ )$">
+, the shape functions of <IMG
+ WIDTH="48" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img38.png"
+ ALT="$ RT(k)$">
+ are usually nonzero in all
+their vector components at once. For this reason, were
+<TT>fe.system_to_component_index(i).first</TT> applied to determine the only
+nonzero component of shape function <IMG
+ WIDTH="9" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img53.png"
+ ALT="$ i$">
+, an exception would be generated. What
+we really need to do is to get at <I>all</I> vector components of a shape
+function. In deal.II diction, we call such finite elements
+<I>non-primitive</I>, whereas finite elements that are either scalar or for
+which every vector-valued shape function is nonzero only in a single vector
+component are called <I>primitive</I>.
+
+<P>
+So what do we have to do for non-primitive elements? To figure this out, let
+us go back in the tutorial programs, almost to the very beginnings. There, we
+learned that we use the <TT>FEValues</TT> class to determine the values and
+gradients of shape functions at quadrature points. For example, we would call
+<TT>fe_values.shape_value(i,q_point)</TT> to obtain the value of the
+<TT>i</TT>th shape function on the quadrature point with number
+<TT>q_point</TT>. Later, in step-8 and other tutorial programs, we learned
+that this function call also works for vector-valued shape functions (of
+primitive finite elements), and that it returned the value of the only
+non-zero component of shape function <TT>i</TT> at quadrature point
+<TT>q_point</TT>.
+
+<P>
+For non-primitive shape functions, this is clearly not going to work: there is
+no single non-zero vector component of shape function <TT>i</TT>, and the call 
+to <TT>fe_values.shape_value(i,q_point)</TT> would consequently not make
+much sense. However, deal.II offers a second function call,
+<TT>fe_values.shape_value_component(i,q_point,comp)</TT> that returns the
+value of the <TT>comp</TT>th vector component of shape function  <TT>i</TT> at
+quadrature point <TT>q_point</TT>, where <TT>comp</TT> is an index between
+zero and the number of vector components of the present finite element; for
+example, the element we will use to describe velocities and pressures is going
+to have <IMG
+ WIDTH="58" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img54.png"
+ ALT="$ dim+1$">
+ components. It is worth noting that this function call can
+also be used for primitive shape functions: it will simply return zero for all
+components except one; for non-primitive shape functions, it will in general
+return a non-zero value for more than just one component.
+
+<P>
+We could now attempt to rewrite the bilinear form above in terms of vector
+components. For example, in 2d, the first term could be rewritten like this
+(note that <!-- MATH
+ $u_0=x_0, u_1=x_1, p=x_2$
+ -->
+<IMG
+ WIDTH="170" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img55.png"
+ ALT="$ u_0=x_0, u_1=x_1, p=x_2$">
+):
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="RIGHT"><IMG
+ WIDTH="108" HEIGHT="38" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img56.png"
+ ALT="$\displaystyle (\vec u_h^i, K^{-1}\vec u_h^j) =$"></TD>
+<TD NOWRAP ALIGN="LEFT"><IMG
+ WIDTH="301" HEIGHT="45" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img57.png"
+ ALT="$\displaystyle \left((x_h^i)_0, K^{-1}_{00} (x_h^j)_0\right) + \left((x_h^i)_0, K^{-1}_{01} (x_h^j)_1\right) +$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR VALIGN="MIDDLE">
+<TD>&nbsp;</TD>
+<TD NOWRAP ALIGN="LEFT"><IMG
+ WIDTH="293" HEIGHT="45" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img58.png"
+ ALT="$\displaystyle \left((x_h^i)_1, K^{-1}_{10} (x_h^j)_0\right) + \left((x_h^i)_1, K^{-1}_{11} (x_h^j)_1\right).$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+If we implemented this, we would get code like this:
+<PRE>
+  for (unsigned int q=0; q&lt;n_q_points; ++q) 
+    for (unsigned int i=0; i&lt;dofs_per_cell; ++i)
+      for (unsigned int j=0; j&lt;dofs_per_cell; ++j)
+        local_matrix(i,j) += (k_inverse_values[q][0][0] *
+                              fe_values.shape_value_component(i,q,0) *
+                              fe_values.shape_value_component(j,q,0) 
+                              +
+                              k_inverse_values[q][0][1] *
+                              fe_values.shape_value_component(i,q,0) *
+                              fe_values.shape_value_component(j,q,1) 
+                              +
+                              k_inverse_values[q][1][0] *
+                              fe_values.shape_value_component(i,q,1) *
+                              fe_values.shape_value_component(j,q,0) 
+                              +
+                              k_inverse_values[q][1][1] *
+                              fe_values.shape_value_component(i,q,1) *
+                              fe_values.shape_value_component(j,q,1) 
+                             )
+                             *
+                             fe_values.JxW(q);
+</PRE>
+This is, at best, tedious, error prone, and not dimension independent. There
+are obvious ways to make things dimension independent, but in the end, the
+code is simply not pretty. What would be much nicer is if we could simply
+extract the <IMG
+ WIDTH="13" HEIGHT="13" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img39.png"
+ ALT="$ \vec u$">
+ and <IMG
+ WIDTH="11" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img14.png"
+ ALT="$ p$">
+ components of a shape function <IMG
+ WIDTH="20" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img59.png"
+ ALT="$ x_h^i$">
+. In the
+program we do that, by writing functions like this one:
+<PRE>
+template &lt;int dim&gt;
+Tensor&lt;1,dim&gt;
+extract_u (const FEValuesBase&lt;dim&gt; &amp;fe_values,
+           const unsigned int i,
+           const unsigned int q)
+{
+  Tensor&lt;1,dim&gt; tmp;
+
+  for (unsigned int d=0; d&lt;dim; ++d)
+    tmp[d] = fe_values.shape_value_component (i,q,d);
+
+  return tmp;
+}
+</PRE>
+
+<P>
+What this function does is, given an <TT>fe_values</TT> object, to extract
+the values of the first <IMG
+ WIDTH="31" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img49.png"
+ ALT="$ dim$">
+ components of shape function <TT>i</TT> at
+quadrature points <TT>q</TT>, that is the velocity components of that shape
+function. Put differently, if we write shape functions <IMG
+ WIDTH="20" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img59.png"
+ ALT="$ x_h^i$">
+ as the tuple
+<!-- MATH
+ $\{\vec u_h^i,p_h^i\}$
+ -->
+<IMG
+ WIDTH="61" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img60.png"
+ ALT="$ \{\vec u_h^i,p_h^i\}$">
+, then the function returns the velocity part of this
+tuple. Note that the velocity is of course a <IMG
+ WIDTH="31" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img49.png"
+ ALT="$ dim$">
+-dimensional tensor, and
+that the function returns a corresponding object.
+
+<P>
+Likewise, we have a function that extracts the pressure component of a shape
+function:
+<PRE>
+template &lt;int dim&gt;
+double extract_p (const FEValuesBase&lt;dim&gt; &amp;fe_values,
+                  const unsigned int i,
+                  const unsigned int q)
+{
+  return fe_values.shape_value_component (i,q,dim);
+}
+</PRE>
+Finally, the bilinear form contains terms involving the gradients of the
+velocity component of shape functions. To be more precise, we are not really
+interested in the full gradient, but only the divergence of the velocity
+components, i.e. <!-- MATH
+ $\text{div}\ \vec u_h^i = \sum_{d=0}^{dim-1}
+\frac{\partial}{\partial x_d} (\vec u_h^i)_d$
+ -->
+div<IMG
+ WIDTH="170" HEIGHT="40" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img61.png"
+ ALT="$ \ \vec u_h^i = \sum_{d=0}^{dim-1}
+\frac{\partial}{\partial x_d} (\vec u_h^i)_d$">
+. Here's a function that returns
+this quantity:
+<PRE>
+template &lt;int dim&gt;
+double
+extract_div_u (const FEValuesBase&lt;dim&gt; &amp;fe_values,
+               const unsigned int i,
+               const unsigned int q)
+{
+  double divergence = 0;
+  for (unsigned int d=0; d&lt;dim; ++d)
+    divergence += fe_values.shape_grad_component (i,q,d)[d];
+
+  return divergence;
+}
+</PRE>
+
+<P>
+With these three functions, all of which are completely dimension independent
+and will therefore also work in 3d, assembling the local matrix and right hand
+side contributions becomes a charm:
+<PRE>
+for (unsigned int q=0; q&lt;n_q_points; ++q) 
+  for (unsigned int i=0; i&lt;dofs_per_cell; ++i)
+    {
+      const Tensor&lt;1,dim&gt; phi_i_u = extract_u (fe_values, i, q);
+      const double div_phi_i_u    = extract_div_u (fe_values, i, q);
+      const double phi_i_p        = extract_p (fe_values, i, q);
+           
+      for (unsigned int j=0; j&lt;dofs_per_cell; ++j)
+        {
+          const Tensor&lt;1,dim&gt; phi_j_u = extract_u (fe_values, j, q);
+          const double div_phi_j_u    = extract_div_u (fe_values, j, q);
+          const double phi_j_p        = extract_p (fe_values, j, q);
+               
+          local_matrix(i,j) += (phi_i_u * k_inverse_values[q] * phi_j_u
+                                - div_phi_i_u * phi_j_p
+                                - phi_i_p * div_phi_j_u)
+                               * fe_values.JxW(q);
+        }
+
+      local_rhs(i) += -(phi_i_p *
+                        rhs_values[q] *
+                        fe_values.JxW(q));
+    }
+</PRE>
+This very closely resembles the form we have originally written down the
+bilinear form and right hand side.
+
+<P>
+There is one final term that we have to take care of: the right hand side
+contained the term <!-- MATH
+ $(g,\vec v\cdot \vec n)_{\partial\Omega}$
+ -->
+<IMG
+ WIDTH="80" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img62.png"
+ ALT="$ (g,\vec v\cdot \vec n)_{\partial\Omega}$">
+, constituting the
+weak enforcement of pressure boundary conditions. We have already seen in
+step-7 how to deal with face integrals: essentially exactly the same as with
+domain integrals, except that we have to use the <TT>FEFaceValues</TT> class
+instead of <TT>FEValues</TT>. To compute the boundary term we then simply have
+to loop over all boundary faces and integrate there. If you look closely at
+the definitions of the <TT>extract_*</TT> functions above, you will realize
+that it isn't even necessary to write new functions that extract the velocity
+and pressure components of shape functions from <TT>FEFaceValues</TT> objects:
+both <TT>FEValues</TT> and <TT>FEFaceValues</TT> are derived from a common
+base class, <TT>FEValuesBase</TT>, and the extraction functions above can
+therefore deal with both in exactly the same way. Assembling the missing
+boundary term then takes on the following form:
+<PRE>
+for (unsigned int face_no=0;
+     face_no&lt;GeometryInfo&lt;dim&gt;::faces_per_cell;
+     ++face_no)
+  if (cell-&gt;at_boundary(face_no))
+    {
+      fe_face_values.reinit (cell, face_no);
+    
+      pressure_boundary_values
+        .value_list (fe_face_values.get_quadrature_points(),
+                     boundary_values);
+
+      for (unsigned int q=0; q&lt;n_face_q_points; ++q) 
+        for (unsigned int i=0; i&lt;dofs_per_cell; ++i)
+          {
+            const Tensor&lt;1,dim&gt;
+              phi_i_u = extract_u (fe_face_values, i, q);
+                
+            local_rhs(i) += -(phi_i_u *
+                              fe_face_values.normal_vector(q) *
+                              boundary_values[q] *
+                              fe_face_values.JxW(q));
+        }
+  }
+</PRE>
+
+<P>
+You will find the exact same code as above in the sources for the present
+program. We will therefore not comment much on it below.
+
+<P>
+
+<H2><A NAME="SECTION00003000000000000000">
+Linear solvers and preconditioners</A>
+</H2>
+
+<P>
+After assembling the linear system we are faced with the task of solving
+it. The problem here is: the matrix has a zero block at the bottom right
+(there is no term in the bilinear form that couples the pressure <IMG
+ WIDTH="11" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img14.png"
+ ALT="$ p$">
+ with the
+pressure test function <IMG
+ WIDTH="11" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img63.png"
+ ALT="$ q$">
+), and it is indefinite. At least it is
+symmetric. In other words: the Conjugate Gradient method is not going to
+work. We would have to resort to other iterative solvers instead, such as
+MinRes, SymmLQ, or GMRES, that can deal with indefinite systems. However, then
+the next problem immediately surfaces: due to the zero block, there are zeros
+on the diagonal and none of the usual preconditioners (Jacobi, SSOR) will work
+as they require division by diagonal elements.
+
+<P>
+
+<H3><A NAME="SECTION00003100000000000000">
+Solving using the Schur complement</A>
+</H3>
+
+<P>
+In view of this, let us take another look at the matrix. If we sort our
+degrees of freedom so that all velocity come before all pressure variables,
+then we can subdivide the linear system <IMG
+ WIDTH="63" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img64.png"
+ ALT="$ AX=B$">
+ into the following blocks:
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="185" HEIGHT="54" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img65.png"
+ ALT="$\displaystyle \begin{pmatrix}M &amp; B^T \\ B &amp; 0 \end{pmatrix} \begin{pmatrix}U \\ P \end{pmatrix} = \begin{pmatrix}F \\ G \end{pmatrix},$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+where <IMG
+ WIDTH="33" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img66.png"
+ ALT="$ U,P$">
+ are the values of velocity and pressure degrees of freedom,
+respectively, <IMG
+ WIDTH="20" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img67.png"
+ ALT="$ M$">
+ is the mass matrix on the velocity space, <IMG
+ WIDTH="16" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img68.png"
+ ALT="$ B$">
+ corresponds to
+the negative divergence operator, and <IMG
+ WIDTH="26" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img69.png"
+ ALT="$ B^T$">
+ is its transpose and corresponds
+to the negative gradient.
+
+<P>
+By block elimination, we can then re-order this system in the following way
+(multiply the first row of the system by <IMG
+ WIDTH="50" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img70.png"
+ ALT="$ BM^{-1}$">
+ and then subtract the
+second row from it):
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="RIGHT"><IMG
+ WIDTH="85" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img71.png"
+ ALT="$\displaystyle BM^{-1}B^T P$"></TD>
+<TD NOWRAP ALIGN="LEFT"><IMG
+ WIDTH="116" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img72.png"
+ ALT="$\displaystyle = BM^{-1} F - G,$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="RIGHT"><IMG
+ WIDTH="33" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img73.png"
+ ALT="$\displaystyle MU$"></TD>
+<TD NOWRAP ALIGN="LEFT"><IMG
+ WIDTH="90" HEIGHT="37" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img74.png"
+ ALT="$\displaystyle = F - B^TP.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+Here, the matrix <!-- MATH
+ $S=BM^{-1}B^T$
+ -->
+<IMG
+ WIDTH="105" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img75.png"
+ ALT="$ S=BM^{-1}B^T$">
+ (called the <I>Schur complement</I> of <IMG
+ WIDTH="15" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img76.png"
+ ALT="$ A$">
+)
+is obviously symmetric and, owing to the positive definiteness of <IMG
+ WIDTH="20" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img67.png"
+ ALT="$ M$">
+ and the
+fact that <IMG
+ WIDTH="26" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img69.png"
+ ALT="$ B^T$">
+ has full column rank, <IMG
+ WIDTH="14" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img77.png"
+ ALT="$ S$">
+ is also positive
+definite. 
+
+<P>
+Consequently, if we could compute <IMG
+ WIDTH="14" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img77.png"
+ ALT="$ S$">
+, we could apply the Conjugate Gradient
+method to it. However, computing <IMG
+ WIDTH="14" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img77.png"
+ ALT="$ S$">
+ is expensive, and <IMG
+ WIDTH="14" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img77.png"
+ ALT="$ S$">
+ is most
+likely also a full matrix. On the other hand, the CG algorithm doesn't require
+us to actually have a representation of <IMG
+ WIDTH="14" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img77.png"
+ ALT="$ S$">
+, it is sufficient to form
+matrix-vector products with it. We can do so in steps: to compute <IMG
+ WIDTH="22" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img78.png"
+ ALT="$ Sv$">
+, we 
+
+<UL>
+<LI>form <IMG
+ WIDTH="67" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img79.png"
+ ALT="$ w = B^T v$">
+;
+</LI>
+<LI>solve <IMG
+ WIDTH="62" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img80.png"
+ ALT="$ My = w$">
+ for <IMG
+ WIDTH="79" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img81.png"
+ ALT="$ y=M^{-1}w$">
+, using the CG method applied to the
+  positive definite and symmetric mass matrix <IMG
+ WIDTH="20" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img67.png"
+ ALT="$ M$">
+;
+</LI>
+<LI>form <IMG
+ WIDTH="54" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img82.png"
+ ALT="$ z=By$">
+ to obtain <IMG
+ WIDTH="51" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img83.png"
+ ALT="$ Sv=z$">
+.
+</LI>
+</UL>
+We will implement a class that does that in the program. Before showing its
+code, let us first note that we need to multiply with <IMG
+ WIDTH="37" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img84.png"
+ ALT="$ M^{-1}$">
+ in several
+places here: in multiplying with the Schur complement <IMG
+ WIDTH="14" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img77.png"
+ ALT="$ S$">
+, forming the right
+hand side of the first equation, and solving in the second equation. From a
+coding viewpoint, it is therefore appropriate to relegate such a recurring
+operation to a class of its own. We call it <TT>InverseMatrix</TT>. As far as
+linear solvers are concerned, this class will have all operations that solvers
+need, which in fact includes only the ability to perform matrix-vector
+products; we form them by using a CG solve (this of course requires that the
+matrix passed to this class satisfies the requirements of the CG
+solvers). Here are the relevant parts of the code that implements this:
+<PRE>
+class InverseMatrix
+{
+  public:
+    InverseMatrix (const SparseMatrix&lt;double&gt; &amp;m);
+
+    void vmult (Vector&lt;double&gt;       &amp;dst,
+                const Vector&lt;double&gt; &amp;src) const;
+
+  private:
+    const SmartPointer&lt;const SparseMatrix&lt;double&gt; &gt; matrix;
+    // ...
+};
+
+
+void InverseMatrix::vmult (Vector&lt;double&gt;       &amp;dst,
+                           const Vector&lt;double&gt; &amp;src) const
+{
+  SolverControl solver_control (src.size(), 1e-8*src.l2_norm());
+  SolverCG&lt;&gt;    cg (solver_control, vector_memory);
+
+  cg.solve (*matrix, dst, src, PreconditionIdentity());        
+}
+</PRE>
+Once created, objects of this class can act as matrices: they perform
+matrix-vector multiplications. How this is actually done is irrelevant to the
+outside world.
+
+<P>
+Using this class, we can then write a class that implements the Schur
+complement in much the same way: to act as a matrix, it only needs to offer a
+function to perform a matrix-vector multiplication, using the algorithm
+above. Here are again the relevant parts of the code:
+<PRE>
+class SchurComplement 
+{
+  public:
+    SchurComplement (const BlockSparseMatrix&lt;double&gt; &amp;A,
+                     const InverseMatrix             &amp;Minv);
+
+    void vmult (Vector&lt;double&gt;       &amp;dst,
+                const Vector&lt;double&gt; &amp;src) const;
+
+  private:
+    const SmartPointer&lt;const BlockSparseMatrix&lt;double&gt; &gt; system_matrix;
+    const SmartPointer&lt;const InverseMatrix&gt;              m_inverse;
+    
+    mutable Vector&lt;double&gt; tmp1, tmp2;
+};
+
+
+void SchurComplement::vmult (Vector&lt;double&gt;       &amp;dst,
+                             const Vector&lt;double&gt; &amp;src) const
+{
+  system_matrix-&gt;block(0,1).vmult (tmp1, src);
+  m_inverse-&gt;vmult (tmp2, tmp1);
+  system_matrix-&gt;block(1,0).vmult (dst, tmp2);
+}
+</PRE>
+
+<P>
+In this code, the constructor takes a reference to a block sparse matrix for
+the entire system, and a reference to an object representing the inverse of
+the mass matrix. It stores these using <TT>SmartPointer</TT> objects (see
+step-7), and additionally allocates two temporary vectors <TT>tmp1</TT> and
+<TT>tmp2</TT> for the vectors labeled <IMG
+ WIDTH="30" HEIGHT="29" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img85.png"
+ ALT="$ w,y$">
+ in the list above.
+
+<P>
+In the matrix-vector multiplication function, the product <IMG
+ WIDTH="22" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img78.png"
+ ALT="$ Sv$">
+ is performed in
+exactly the order outlined above. Note how we access the blocks <IMG
+ WIDTH="26" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img69.png"
+ ALT="$ B^T$">
+ and <IMG
+ WIDTH="16" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img68.png"
+ ALT="$ B$">
+
+by calling <TT>system_matrix-&gt;block(0,1)</TT> and
+<TT>system_matrix-&gt;block(1,0)</TT> respectively, thereby picking out
+individual blocks of the block system. Multiplication by <IMG
+ WIDTH="37" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img84.png"
+ ALT="$ M^{-1}$">
+ happens
+using the object introduced above.
+
+<P>
+With all this, we can go ahead and write down the solver we are going to
+use. Essentially, all we need to do is form the right hand sides of the two
+equations defining <IMG
+ WIDTH="15" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img86.png"
+ ALT="$ P$">
+ and <IMG
+ WIDTH="16" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img87.png"
+ ALT="$ U$">
+, and then solve them with the Schur complement
+matrix and the mass matrix, respectively:
+<PRE>
+template &lt;int dim&gt;
+void MixedLaplaceProblem&lt;dim&gt;::solve () 
+{
+  const InverseMatrix m_inverse (system_matrix.block(0,0));
+  Vector&lt;double&gt; tmp (solution.block(0).size());
+  
+  {
+    Vector&lt;double&gt; schur_rhs (solution.block(1).size());
+
+    m_inverse.vmult (tmp, system_rhs.block(0));
+    system_matrix.block(1,0).vmult (schur_rhs, tmp);
+    schur_rhs -= system_rhs.block(1);
+
+    SolverControl solver_control (system_matrix.block(0,0).m(),
+                                  1e-6*schur_rhs.l2_norm());
+    SolverCG&lt;&gt;    cg (solver_control);
+
+    cg.solve (SchurComplement(system_matrix, m_inverse),
+              solution.block(1),
+              schur_rhs,
+              PreconditionIdentity());
+  }
+  {
+    system_matrix.block(0,1).vmult (tmp, solution.block(1));
+    tmp *= -1;
+    tmp += system_rhs.block(0);
+    
+    m_inverse.vmult (solution.block(0), tmp);
+  }
+}
+</PRE>
+
+<P>
+This code looks more impressive than it actually is. At the beginning, we
+declare an object representing <IMG
+ WIDTH="37" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img84.png"
+ ALT="$ M^{-1}$">
+ and a temporary vector (of the size of
+the first block of the solution, i.e. with as many entries as there are
+velocity unknowns), and the two blocks surrounded by braces then solve the two
+equations for <IMG
+ WIDTH="15" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img86.png"
+ ALT="$ P$">
+ and <IMG
+ WIDTH="16" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img87.png"
+ ALT="$ U$">
+, in this order. Most of the code in each of the two
+blocks is actually devoted to constructing the proper right hand sides. For
+the first equation, this would be <!-- MATH
+ $BM^{-1}F-G$
+ -->
+<IMG
+ WIDTH="95" HEIGHT="34" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img88.png"
+ ALT="$ BM^{-1}F-G$">
+, and <IMG
+ WIDTH="83" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img89.png"
+ ALT="$ -B^TP+G$">
+ for the second
+one. The first hand side is then solved with the Schur complement matrix, and
+the second simply multiplied with <IMG
+ WIDTH="37" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img84.png"
+ ALT="$ M^{-1}$">
+. The code as shown uses no
+preconditioner (i.e. the identity matrix as preconditioner) for the Schur
+complement.
+
+<P>
+
+<H3><A NAME="SECTION00003200000000000000">
+A preconditioner for the Schur complement</A>
+</H3>
+
+<P>
+One may ask whether it would help if we had a preconditioner for the Schur
+complement <!-- MATH
+ $S=BM^{-1}B^T$
+ -->
+<IMG
+ WIDTH="105" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img75.png"
+ ALT="$ S=BM^{-1}B^T$">
+. The general answer, as usual, is: of course. The
+problem is only, we don't know anything about this Schur complement matrix. We
+do not know its entries, all we know is its action. On the other hand, we have
+to realize that our solver is expensive since in each iteration we have to do
+one matrix-vector product with the Schur complement, which means that we have
+to do invert the mass matrix once in each iteration.
+
+<P>
+There are different approaches to preconditioning such a matrix. On the one
+extreme is to use something that is cheap to apply and therefore has no real
+impact on the work done in each iteration. The other extreme is a
+preconditioner that is itself very expensive, but in return really brings down
+the number of iterations required to solve with <IMG
+ WIDTH="14" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img77.png"
+ ALT="$ S$">
+. 
+
+<P>
+We will try something along the second approach, as much to improve the
+performance of the program as to demonstrate some techniques. To this end, let
+us recall that the ideal preconditioner is, of course, <IMG
+ WIDTH="31" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img90.png"
+ ALT="$ S^{-1}$">
+, but that is
+unattainable. However, how about
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="86" HEIGHT="38" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img91.png"
+ ALT="$\displaystyle \tilde S^{-1} = [B^T ($">diag<IMG
+ WIDTH="78" HEIGHT="36" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img92.png"
+ ALT="$\displaystyle M)^{-1}B]^{-1}$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+as a preconditioner? That would mean that every time we have to do one
+preconditioning step, we actually have to solve with <IMG
+ WIDTH="14" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img93.png"
+ ALT="$ \tilde S$">
+. At first,
+this looks almost as expensive as solving with <IMG
+ WIDTH="14" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img77.png"
+ ALT="$ S$">
+ right away. However, note
+that in the inner iteration, we do not have to calculate <IMG
+ WIDTH="37" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img84.png"
+ ALT="$ M^{-1}$">
+, but only
+the inverse of its diagonal, which is cheap.
+
+<P>
+To implement something like this, let us first generalize the
+<TT>InverseMatrix</TT> class so that it can work not only with
+<TT>SparseMatrix</TT> objects, but with any matrix type. This looks like so:
+<PRE>
+template &lt;class Matrix&gt;
+class InverseMatrix
+{
+  public:
+    InverseMatrix (const Matrix &amp;m);
+
+    void vmult (Vector&lt;double&gt;       &amp;dst,
+                const Vector&lt;double&gt; &amp;src) const;
+
+  private:
+    const SmartPointer&lt;const Matrix&gt; matrix;
+
+    //...
+};
+
+
+template &lt;class Matrix&gt;
+void InverseMatrix&lt;Matrix&gt;::vmult (Vector&lt;double&gt;       &amp;dst,
+                                   const Vector&lt;double&gt; &amp;src) const
+{
+  SolverControl solver_control (src.size(), 1e-8*src.l2_norm());
+  SolverCG&lt;&gt; cg (solver_control, vector_memory);
+
+  dst = 0;
+  
+  cg.solve (*matrix, dst, src, PreconditionIdentity());        
+}
+</PRE>
+Essentially, the only change we have made is the introduction of a template
+argument that generalizes the use of <TT>SparseMatrix</TT>.
+
+<P>
+The next step is to define a class that represents the approximate Schur
+complement. This should look very much like the Schur complement class itself,
+except that it doesn't need the object representing <IMG
+ WIDTH="37" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img84.png"
+ ALT="$ M^{-1}$">
+ any more:
+<PRE>
+class ApproximateSchurComplement : public Subscriptor
+{
+  public:
+    ApproximateSchurComplement (const BlockSparseMatrix&lt;double&gt; &amp;A);
+
+    void vmult (Vector&lt;double&gt;       &amp;dst,
+                const Vector&lt;double&gt; &amp;src) const;
+
+  private:
+    const SmartPointer&lt;const BlockSparseMatrix&lt;double&gt; &gt; system_matrix;
+    
+    mutable Vector&lt;double&gt; tmp1, tmp2;
+};
+
+
+void ApproximateSchurComplement::vmult (Vector&lt;double&gt;       &amp;dst,
+                                        const Vector&lt;double&gt; &amp;src) const
+{
+  system_matrix-&gt;block(0,1).vmult (tmp1, src);
+  system_matrix-&gt;block(0,0).precondition_Jacobi (tmp2, tmp1);
+  system_matrix-&gt;block(1,0).vmult (dst, tmp2);
+}
+</PRE>
+Note how the <TT>vmult</TT> function differs in simply doing one Jacobi sweep
+(i.e. multiplying with the inverses of the diagonal) instead of multiplying
+with the full <IMG
+ WIDTH="37" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="step-20.data/intro/img84.png"
+ ALT="$ M^{-1}$">
+.
+
+<P>
+With all this, we already have the preconditioner: it should be the inverse of
+the approximate Schur complement, i.e. we need code like this:
+<PRE>
+    ApproximateSchurComplement
+      approximate_schur_complement (system_matrix);
+      
+    InverseMatrix&lt;ApproximateSchurComplement&gt;
+      preconditioner (approximate_schur_complement)
+</PRE>
+That's all!
+
+<P>
+Taken together, the first block of our <TT>solve()</TT> function will then
+look like this:
+<PRE>
+    Vector&lt;double&gt; schur_rhs (solution.block(1).size());
+
+    m_inverse.vmult (tmp, system_rhs.block(0));
+    system_matrix.block(1,0).vmult (schur_rhs, tmp);
+    schur_rhs -= system_rhs.block(1);
+
+    SchurComplement
+      schur_complement (system_matrix, m_inverse);
+    
+    ApproximateSchurComplement
+      approximate_schur_complement (system_matrix);
+      
+    InverseMatrix&lt;ApproximateSchurComplement&gt;
+      preconditioner (approximate_schur_complement);
+    
+    SolverControl solver_control (system_matrix.block(0,0).m(),
+                                  1e-6*schur_rhs.l2_norm());
+    SolverCG&lt;&gt;    cg (solver_control);
+
+    cg.solve (schur_complement, solution.block(1), schur_rhs,
+              preconditioner);
+</PRE>
+Note how we pass the so-defined preconditioner to the solver working on the
+Schur complement matrix.
+
+<P>
+Obviously, applying this inverse of the approximate Schur complement is a very
+expensive preconditioner, almost as expensive as inverting the Schur
+complement itself. We can expect it to significantly reduce the number of
+outer iterations required for the Schur complement. In fact it does: in a
+typical run on 5 times refined meshes using elements of order 0, the number of
+outer iterations drops from 164 to 12. On the other hand, we now have to apply
+a very expensive preconditioner 12 times. A better measure is therefore simply
+the run-time of the program: on my laptop, it drops from 28 to 23 seconds for
+this test case. That doesn't seem too impressive, but the savings become more
+pronounced on finer meshes and with elements of higher order. For example, a
+six times refined mesh and using elements of order 2 yields an improvement of
+318 to 12 outer iterations, at a runtime of 338 seconds to 229 seconds. Not
+earth shattering, but significant.
+
+<P>
+
+<H3><A NAME="SECTION00003300000000000000">
+A remark on similar functionality in deal.II</A>
+</H3>
+
+<P>
+As a final remark about solvers and preconditioners, let us note that a
+significant amount of functionality introduced above is actually also present
+in the library itself. It probably even is more powerful and general, but we
+chose to introduce this material here anyway to demonstrate how to work with
+block matrices and to develop solvers and preconditioners, rather than using
+black box components from the library.
+
+<P>
+For those interested in looking up the corresponding library classes: the
+<TT>InverseMatrix</TT> is roughly equivalent to the
+<TT>PreconditionLACSolver</TT> class in the library. Likewise, the Schur
+complement class corresponds to the <TT>SchurMatrix</TT> class.
+
+<P>
+
+<H2><A NAME="SECTION00004000000000000000">
+Definition of the test case</A>
+</H2>
+
+<P>
+In this tutorial program, we will solve the Laplace equation in mixed
+formulation as stated above. Since we want to monitor convergence of the
+solution inside the program, we choose right hand side, boundary conditions,
+and the coefficient so that we recover a solution function known to us. In
+particular, we choose the pressure solution
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="200" HEIGHT="45" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img94.png"
+ ALT="$\displaystyle p = -\left(\frac \alpha 2 xy^2 + \beta x - \frac \alpha 6 x^2\right),$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+and for the coefficient we choose the unit matrix <!-- MATH
+ $K_{ij}=\delta_{ij}$
+ -->
+<IMG
+ WIDTH="67" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img95.png"
+ ALT="$ K_{ij}=\delta_{ij}$">
+ for
+simplicity. Consequently, the exact velocity satisfies
+<P></P>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING="0" WIDTH="100%" ALIGN="CENTER">
+<TR VALIGN="MIDDLE">
+<TD NOWRAP ALIGN="CENTER"><IMG
+ WIDTH="170" HEIGHT="54" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img96.png"
+ ALT="$\displaystyle \vec u = \begin{pmatrix}\frac \alpha 2 y^2 + \beta - \frac \alpha 2 x^2 \\ \alpha xy \end{pmatrix}.$"></TD>
+<TD NOWRAP WIDTH="10" ALIGN="RIGHT">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL"><P></P>
+This solution was chosen since it is exactly divergence free, making it a
+realistic test case for incompressible fluid flow. By consequence, the right
+hand side equals <IMG
+ WIDTH="42" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img97.png"
+ ALT="$ f=0$">
+, and as boundary values we have to choose
+<!-- MATH
+ $g=p|_{\partial\Omega}$
+ -->
+<IMG
+ WIDTH="62" HEIGHT="32" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img98.png"
+ ALT="$ g=p\vert _{\partial\Omega}$">
+.
+
+<P>
+For the computations in this program, we choose <!-- MATH
+ $\alpha=0.3,\beta=1$
+ -->
+<IMG
+ WIDTH="101" HEIGHT="30" ALIGN="MIDDLE" BORDER="0"
+ SRC="step-20.data/intro/img99.png"
+ ALT="$ \alpha=0.3,\beta=1$">
+. You can
+find the resulting solution in the ``Results'' section below, after the
+commented program.

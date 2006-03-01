@@ -114,7 +114,10 @@ scheme for the transport equation \eqref{transport-equation} is given
 by: find $u_h\in V_h$ such that for all $v_h\in V_h$ following
 equation holds:
 \begin{equation}\label{dg-transport}
-  \sum_\kappa\left\{-(u_h,\boldsymbol\beta\cdot\nabla v_h)_\kappa+(\boldsymbol\beta\cdot{\bf n}\, u_h, v_h)_{\partial\kappa_+\setminus\Gamma}+(\boldsymbol\beta\cdot{\bf n}\, u_h^-, v_h)_{\partial\kappa_-\setminus\Gamma}\right\}=(f,v_h)_\Omega-(\boldsymbol\beta\cdot{\bf n}\, g, v_h)_{\Gamma_-},
+  \sum_\kappa\left\{-(u_h,\boldsymbol\beta\cdot\nabla v_h)_\kappa
+  +(\boldsymbol\beta\cdot{\bf n}\, u_h, v_h)_{\partial\kappa_+}
+  +(\boldsymbol\beta\cdot{\bf n}\, u_h^-, v_h)_{\partial\kappa_-\setminus\Gamma}\right\}
+  =(f,v_h)_\Omega-(\boldsymbol\beta\cdot{\bf n}\, g, v_h)_{\Gamma_-},
 \end{equation}
 where $\partial\kappa_-:=\{x\in\partial\kappa,
 \boldsymbol\beta(x)\cdot{\bf n}(x)<0\}$ denotes the inflow boundary
@@ -123,7 +126,9 @@ outflow part of cell $\kappa$. Below, this equation will be referred
 to as \emph{first version} of the DG method. We note that after a
 second integration by parts, we obtain: find $u_h\in V_h$ such that
 \[
-  \sum_\kappa\left\{(\nabla\cdot\{\boldsymbol\beta u_h\},\nabla v_h)_\kappa-(\boldsymbol\beta\cdot{\bf n} [u_h], v_h)_{\partial\kappa_-}\right\}=(f,v_h)_\Omega, \quad\forall v_h\in V_h,
+  \sum_\kappa\left\{(\nabla\cdot\{\boldsymbol\beta u_h\},v_h)_\kappa
+  -(\boldsymbol\beta\cdot{\bf n} [u_h], v_h)_{\partial\kappa_-}\right\}
+  =(f,v_h)_\Omega, \quad\forall v_h\in V_h,
 \]
 where $[u_h]=u_h^+-u_h^-$ denotes the jump of the discrete function
 between two neighboring cells and is defined to be $[u_h]=u_h^+-g$ on

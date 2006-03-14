@@ -117,26 +117,24 @@ from this example.
 </p>
 <pre><code>
 --------------------------------------------------------
-An error occurred in line <78> of file <source/subscriptor.cc> in function
+An error occurred in line &lt;79&gt; of file &lt;source/subscriptor.cc&gt; in function
     virtual Subscriptor::~Subscriptor()
 The violated condition was: 
     counter == 0
 The name and call sequence of the exception was:
-    ExcInUse(counter, object_info->name(), infostring)
+    ExcInUse(counter, object_info-&gt;name(), infostring)
 Additional Information: 
 Object of class 4FE_QILi2EE is still used by 1 other objects.
   from Subscriber 10DoFHandlerILi2EE
 
 Stacktrace:
 -----------
-#0  /u/bangerth/p/deal.II/1/deal.II/lib/libbase.g.so(_ZN11SubscriptorD2Ev+0x25b) [0x2aaaabc62087]
-#1  /u/bangerth/p/deal.II/1/deal.II/lib/libdeal_II_2d.g.so(_ZN13FiniteElementILi2EED2Ev+0x3f6) [0x2aaaaaf85122]
-#2  ./step-6(_ZN7FE_PolyI24TensorProductPolynomialsILi2EELi2EED2Ev+0x58) [0x41ee28]
-#3  ./step-6(_ZN4FE_QILi2EED1Ev+0x58) [0x41b9ee]
-#4  ./step-6(_ZN14LaplaceProblemILi2EED1Ev+0x10d) [0x4162fb]
-#5  ./step-6(main+0x7d) [0x415da5]
-#6  /lib64/tls/libc.so.6(__libc_start_main+0xea) [0x2aaaac60254a]
-#7  ./step-6(_ZN15DataOut_DoFDataILi2E10DoFHandlerLi2ELi2EE5clearEv+0x52) [0x415c8a]
+#0  /u/bangerth/p/deal.II/1/deal.II/lib/libbase.g.so: Subscriptor::~Subscriptor()
+#1  /u/bangerth/p/deal.II/1/deal.II/lib/libdeal_II_2d.g.so: FiniteElement&lt;2&gt;::~FiniteElement()
+#2  ./step-6: FE_Poly&lt;TensorProductPolynomials&lt;2&gt;, 2&gt;::~FE_Poly()
+#3  ./step-6: FE_Q&lt;2&gt;::~FE_Q()
+#4  ./step-6: LaplaceProblem&lt;2&gt;::~LaplaceProblem()
+#5  ./step-6: main
 --------------------------------------------------------
 make: *** [run] Aborted
 </code></pre>
@@ -157,24 +155,8 @@ The one object that still uses the finite element is the
 </p>
 
 <p>
-The stacktrace gives an indication of where the problem happened. For
-technical reasons, the present code only shows mangled function names,
-but if you run the stacktrace through the <code>c++filt</code>
-program, you will get something like this:
-<pre><code>
-#0  /u/bangerth/p/deal.II/1/deal.II/lib/libbase.g.so(Subscriptor::~Subscriptor()+0x25b) [0x2aaaabc62087]
-#1  /u/bangerth/p/deal.II/1/deal.II/lib/libdeal_II_2d.g.so(FiniteElement<2>::~FiniteElement()+0x3f6) [0x2aaaaaf85122]
-#2  ./step-6(FE_Poly<TensorProductPolynomials<2>, 2>::~FE_Poly()+0x58) [0x41ee28]
-#3  ./step-6(FE_Q<2>::~FE_Q()+0x58) [0x41b9ee]
-#4  ./step-6(LaplaceProblem<2>::~LaplaceProblem()+0x10d) [0x4162fb]
-#5  ./step-6(main+0x7d) [0x415da5]
-#6  /lib64/tls/libc.so.6(__libc_start_main+0xea) [0x2aaaac60254a]
-#7  ./step-6(DataOut_DoFData<2, DoFHandler, 2, 2>::clear()+0x52) [0x415c8a]
-</code></pre>
-</p>
-
-<p>
-In other words, we can now see that the exception was triggered in the
+The stacktrace gives an indication of where the problem happened. We
+see that the exception was triggered in the 
 destructor of the <code>FiniteElement</code> class that was called
 through a few more functions from the destructor of the
 <code>LaplaceProblem</code> class, exactly where we have commented out

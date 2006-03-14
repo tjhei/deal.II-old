@@ -36,9 +36,8 @@ Cycle 5:
    Number of degrees of freedom: 20609
    182 CG iterations needed to obtain convergence.
 --------------------------------------------------------
-An error occurred in line &lt;326&gt; of file &lt;step-5.cc&gt; in function
-    void Coefficient&lt;dim&gt;::value_list(const std::vector&lt;Point&lt;dim&gt;, std::allocat
-or&lt;Point&lt;dim&gt; &gt; &gt;&, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&, unsigned int)
+An error occurred in line &lt;273&gt; of file &lt;step-5.cc&gt; in function
+    void Coefficient&lt;dim&gt;::value_list(const std::vector&lt;Point&lt;dim&gt;, std::allocator&lt;Point&lt;dim&gt; &gt; &gt;&, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&, unsigned int)
  const [with int dim = 2]
 The violated condition was: 
     values.size() == points.size()
@@ -49,12 +48,8 @@ Dimension 1 not equal to 2
 
 Stacktrace:
 -----------
-#0  ./step-5(_ZNK11CoefficientILi2EE10value_listERKSt6vectorI5PointILi2EESaIS3_E
-ERS1_IdSaIdEEj+0x88) [0x416c0c]
-#1  ./step-5(main+0x82) [0x41638a]
-#2  /lib64/tls/libc.so.6(__libc_start_main+0xea) [0x2aaaac60254a]
-#3  ./step-5(_ZN15DataOut_DoFDataILi2E10DoFHandlerLi2ELi2EE5clearEv+0x52) [0x416
-26a]
+#0  ./step-5: Coefficient&lt;2&gt;::value_list(std::vector&lt;Point&lt;2&gt;, std::allocator&lt;Point&lt;2&gt; &gt; &gt; const&, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&, unsigned) const
+#1  ./step-5: main
 --------------------------------------------------------
 make: *** [run] Aborted
 </code></pre>
@@ -113,9 +108,8 @@ example.
 As for the error &mdash; let's look at it again:
 <pre><code>
 --------------------------------------------------------
-An error occurred in line &lt;326&gt; of file &lt;step-5.cc&gt; in function
-    void Coefficient&lt;dim&gt;::value_list(const std::vector&lt;Point&lt;dim&gt;, std::allocat
-or&lt;Point&lt;dim&gt; &gt; &gt;&, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&, unsigned int)
+An error occurred in line &lt;273&gt; of file &lt;step-5.cc&gt; in function
+    void Coefficient&lt;dim&gt;::value_list(const std::vector&lt;Point&lt;dim&gt;, std::allocator&lt;Point&lt;dim&gt; &gt; &gt;&, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&, unsigned int)
  const [with int dim = 2]
 The violated condition was: 
     values.size() == points.size()
@@ -126,19 +120,15 @@ Dimension 1 not equal to 2
 
 Stacktrace:
 -----------
-#0  ./step-5(_ZNK11CoefficientILi2EE10value_listERKSt6vectorI5PointILi2EESaIS3_E
-ERS1_IdSaIdEEj+0x88) [0x416c0c]
-#1  ./step-5(main+0x82) [0x41638a]
-#2  /lib64/tls/libc.so.6(__libc_start_main+0xea) [0x2aaaac60254a]
-#3  ./step-5(_ZN15DataOut_DoFDataILi2E10DoFHandlerLi2ELi2EE5clearEv+0x52) [0x416
-26a]
+#0  ./step-5: Coefficient&lt;2&gt;::value_list(std::vector&lt;Point&lt;2&gt;, std::allocator&lt;Point&lt;2&gt; &gt; &gt; const&, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&, unsigned) const
+#1  ./step-5: main
 --------------------------------------------------------
 make: *** [run] Aborted
 </code></pre>
 </p>
 
 <p>
-What we see is that the error was triggered in line 326 of the
+What we see is that the error was triggered in line 273 of the
 step-5.cc file (as we modify tutorial programs over time, these line
 numbers change, so you should check what line number you actually get
 in your output). That's already good information if you want to look up
@@ -160,15 +150,14 @@ output again.
 <p>
 So now we know pretty exactly where the error happened and what went
 wrong. What we don't know yet is how exactly we got there. The
-stacktrace at the bottom actually tells us what happened, though it
-takes some training to read the mangled function names. What you
-should be able to glean from this text is that the problem happened in
+stacktrace at the bottom actually tells us what happened: the problem
+happened in 
 <code>Coefficient::value_list</code> (stackframe 0) and that it was
 called from <code>main()</code> (stackframe 1). In realistic programs,
 there would be many more functions in between these two. For example,
 we might have made the mistake in the <code>assemble_system</code>
-function, in which stackframe 1 would be
-<code>LaplaceProblem&lt;2&gt;::assemble_system</code>, stackframe 2
-would be <code>LaplaceProblem&lt;2&gt;::run</code>, and stackframe 3
+function, in which case stack frame 1 would be
+<code>LaplaceProblem&lt;2&gt;::assemble_system</code>, stack frame 2
+would be <code>LaplaceProblem&lt;2&gt;::run</code>, and stack frame 3
 would be <code>main()</code> &mdash; you get the idea.
 </p>

@@ -102,7 +102,8 @@ validate-xrefs:
 
 clean:
 	-rm -f $(example-htmls)
-	-rm -f $(example-commprogs) $(example-plainprogs) $(example-toc)
+	-rm -f $(example-commprogs) $(example-plainprogs) $(example-toc) \
+		$(example-toc-prog)  $(example-toc-plain)
 
 
 # mark the output files as phony, i.e. generate them every time

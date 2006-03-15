@@ -30,8 +30,6 @@ get_basename = $(shell echo $(1) | $(PERL) -pi -e 's/generated.//g; s/\..*//g; s
 
 all: $(example-htmls)
 
-test:
-	echo $(example-commprogs)
 
 $(example-commprogs):
 	@echo ================== Making $@

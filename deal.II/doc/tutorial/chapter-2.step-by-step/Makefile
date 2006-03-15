@@ -58,14 +58,14 @@ $(example-toc-prog):
 	  > $@
 
 
-$(example-toc-plain): $(example-toc-prog)
+$(example-toc-plain):
 	@echo ================== Making $@
 	@cat generated/$(call get_basename, $@)_toc.prog \
 	  | $(PERL) -pi -e 's/href=\"\#/href=\"\#plain-/g;' \
 	  > $@
 
 
-$(example-toc): $(example-toc-prog) $(example-toc-plain)
+$(example-toc):
 	@echo ================== Making $@
 	@echo "<table class=\"tutorial\">  <tr>    <td>" > $@
 	@echo "<ol>" >> $@
@@ -80,8 +80,7 @@ $(example-toc): $(example-toc-prog) $(example-toc-plain)
 
 
 
-$(example-htmls): $(example-commprogs) $(example-plainprogs) \
-		  $(example-toc)
+$(example-htmls):
 	@echo ================== Assembling $@
 	@cat head.html > $@
 	@echo "<h2>Overview of $(call get_basename,$@)</h2>" >> $@
@@ -107,9 +106,22 @@ clean:
 		$(example-toc-prog)  $(example-toc-plain)
 
 
-# mark the output files as phony, i.e. generate them every time
-.PHONY: $(example-htmls) $(example-commprogs) \
-        $(example-plainprogs) $(example-toc) \
-	$(example-toc-prog)  $(example-toc-plain) \
-	validate-xrefs clean
+.PHONY: validate-xrefs clean Makefile.dep
 
+
+Makefile.dep: $(shell echo $D/examples/*/*.cc)
+	@echo ================== Generating $@
+	@for i in $(example-names) ; do \
+		echo generated/$${i}_prog.html generated/$${i}_plain.html \
+		     generated/$${i}_toc.prog : \
+			`echo $D/examples/*/$${i}.cc` ; \
+		echo generated/$${i}_toc.plain : generated/$${i}_toc.prog ; \
+		echo generated/$${i}_toc.combined : \
+			generated/$${i}_toc.prog generated/$${i}_toc.plain ; \
+		echo $$i.html : generated/$${i}_prog.html generated/$${i}_plain.html \
+				generated/$${i}_toc.prog \
+				$$i.data/intro.html $$i.data/results.html ; \
+	 done \
+	> $@
+
+include Makefile.dep

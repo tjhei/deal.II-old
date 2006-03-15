@@ -40,12 +40,15 @@ $(example-commprogs):
 
 $(example-plainprogs):
 	@echo ================== Making $@
-	@cat $D/examples/$(call get_basename, $@)/*.cc \
-	  | $(PERL) program2plain \
-	  | $(PERL) -e '$$path="$D/examples/$(call get_basename,$@)/*.cc)"; \
-                        $$path =~ s!/! /!g; \
-		        while (<>) { s!PROGRAMPATH!$$path!g; print; };' \
-	  > $@
+	@echo "<a name=\"PlainProg\"></a>" > $@
+	@echo "<h1> The plain program</h1>" >> $@
+	@echo "<p>" >> $@
+	@echo "(If you are looking at a locally installed deal.II version, then the" >> $@
+	@echo "program can be found at <i>" >> $@
+	@echo $D/examples/$(call get_basename,$@)/*.cc | $(PERL) -pi -e 's!/! /!g;' >> $@
+	@echo "</i>. Otherwise, this is only" >> $@
+	@echo "the path on some remote server.) </p>" >> $@
+	@cat $D/examples/$(call get_basename, $@)/*.cc | $(PERL) program2plain >> $@
 
 
 $(example-toc-prog):

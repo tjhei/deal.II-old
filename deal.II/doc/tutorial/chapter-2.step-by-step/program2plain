@@ -1,18 +1,7 @@
 # Copyright (C) 1999, 2000, 2001, 2002, 2006 by Wolfgang Bangerth, University of Heidelberg
 
-print <<END;
-<a name=\"PlainProg\"></a>
-<h1> The plain program</h1>
-
-<p>
-(If you are looking at a locally installed deal.II version, then the
-program can be found at <i>PROGRAMPATH</i>. Otherwise, this is only
-the path on some remote server.) 
-</p>
-
-<p>
-<pre><code>
-END
+print "<p>\n";
+print "<pre><code>\n";
 
 
 while (<>) {

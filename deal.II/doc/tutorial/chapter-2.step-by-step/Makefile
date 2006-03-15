@@ -14,8 +14,8 @@ gen-example-names = $(addprefix generated/, $(example-names))
 
 # names of commented program files, plain files, and tocs for the commented
 # and commented and plain versions of the program as well as a combined one
-example-commprogs  = $(addsuffix _prog.html,$(gen-example-names))
-example-plainprogs = $(addsuffix _plain.html,$(gen-example-names))
+example-progs      = $(addsuffix _prog.html,$(gen-example-names))
+example-plain      = $(addsuffix _plain.html,$(gen-example-names))
 example-toc-prog   = $(addsuffix _toc.prog,$(gen-example-names))
 example-toc-plain  = $(addsuffix _toc.plain,$(gen-example-names))
 example-toc        = $(addsuffix _toc.combined,$(gen-example-names))
@@ -32,14 +32,14 @@ get_basename = $(shell echo $(1) | $(PERL) -pi -e 's/generated.//g; s/\..*//g; s
 all: $(example-htmls)
 
 
-$(example-commprogs):
+$(example-progs):
 	@echo ================== Making $@
 	@cat $D/examples/$(call get_basename, $@)/*.cc \
 	  | $(PERL) program2html \
 	  > $@
 
 
-$(example-plainprogs):
+$(example-plain):
 	@echo ================== Making $@
 	@echo "<a name=\"PlainProg\"></a>" > $@
 	@echo "<h1> The plain program</h1>" >> $@
@@ -103,7 +103,7 @@ validate-xrefs:
 
 clean:
 	-rm -f $(example-htmls)
-	-rm -f $(example-commprogs) $(example-plainprogs) $(example-toc) \
+	-rm -f $(example-progs) $(example-plain) $(example-toc) \
 		$(example-toc-prog)  $(example-toc-plain)
 
 
@@ -120,7 +120,7 @@ Makefile.dep: $(shell echo $D/examples/*/*.cc) Makefile
 		echo generated/$${i}_toc.combined : \
 			generated/$${i}_toc.prog generated/$${i}_toc.plain ; \
 		echo $$i.html : generated/$${i}_prog.html generated/$${i}_plain.html \
-				generated/$${i}_toc.prog \
+				generated/$${i}_toc.combined \
 				$$i.data/intro.html $$i.data/results.html ; \
 	 done \
 	> $@

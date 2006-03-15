@@ -106,10 +106,10 @@ clean:
 		$(example-toc-prog)  $(example-toc-plain)
 
 
-.PHONY: validate-xrefs clean Makefile.dep
+.PHONY: validate-xrefs clean
 
 
-Makefile.dep: $(shell echo $D/examples/*/*.cc)
+Makefile.dep: $(shell echo $D/examples/*/*.cc) Makefile
 	@echo ================== Generating $@
 	@for i in $(example-names) ; do \
 		echo generated/$${i}_prog.html generated/$${i}_plain.html \

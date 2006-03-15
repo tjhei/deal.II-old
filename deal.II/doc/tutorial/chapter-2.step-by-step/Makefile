@@ -20,6 +20,7 @@ example-toc-prog   = $(addsuffix _toc.prog,$(gen-example-names))
 example-toc-plain  = $(addsuffix _toc.plain,$(gen-example-names))
 example-toc        = $(addsuffix _toc.combined,$(gen-example-names))
 
+# finally a target for combined HTML files
 example-htmls       = $(addsuffix .html,$(example-names))
 
 

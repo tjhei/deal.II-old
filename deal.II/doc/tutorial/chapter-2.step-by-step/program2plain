@@ -18,13 +18,6 @@ while (<>) {
 	# second, replace section headers, and generate addressable
 	# anchor
 	if ( /\@sect/ ) {
-	   # replace quotation marks by the appropriate HTML quotation marks
-	   s!``!&#8220;!g;
-	   s!''!&#8221;!g;
-
-           # replace double dashes in comments by &mdash;
-	   s!--!&mdash;!g;
-
 	   m!\@sect(\d)\{(.*)\}\s*$!;
 	   $sect_name = $2;
 

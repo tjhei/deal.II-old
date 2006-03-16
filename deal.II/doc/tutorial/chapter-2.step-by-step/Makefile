@@ -129,11 +129,18 @@ $(example-doxygen):
 	@echo ================== Assembling $@
 	@echo "/**" > $@
 	@echo " * @page $(shell echo $(call get_basename,$@) | $(PERL) -pi -e 's/-/_/g;') \
-	                $(call get_basename,$@)" >> $@
-	@echo " * <h1>Overview of $(call get_basename,$@)</h1>" >> $@
-	@cat generated/$(call get_basename, $@)_prog.dox   \
-	     generated/$(call get_basename, $@)_plain.dox  \
-	 >> $@
+	                The $(call get_basename,$@) tutorial program" >> $@
+	@echo "@htmlonly" >> $@
+	@cat generated/$(call get_basename, $@)_toc.combined >> $@
+	@cat $(call get_basename, $@).data/intro.html | \
+	  $(PERL) -pi -e 's#(src|SRC|href|HREF)=\"([-a-zA-Z0-9]+.data)#\1=\"../../tutorial/chapter-2.step-by-step/\2#g;' >> $@
+	@echo "@endhtmlonly" >> $@
+	@cat generated/$(call get_basename, $@)_prog.dox >> $@
+	@echo "@htmlonly" >> $@
+	@cat $(call get_basename, $@).data/results.html | \
+	  $(PERL) -pi -e 's#(src|SRC|href|HREF)=\"([-a-zA-Z0-9]+.data)#\1=\"../../tutorial/chapter-2.step-by-step/\2#g;' >> $@
+	@echo "@endhtmlonly" >> $@
+	@cat generated/$(call get_basename, $@)_plain.dox >> $@
 	@echo " */" >> $@
 
 

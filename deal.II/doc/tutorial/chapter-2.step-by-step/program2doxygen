@@ -67,7 +67,7 @@ do {
     }
     else
     {
-	print " *         $_";
+	print " * $_";
     }
 } while (<>);
 

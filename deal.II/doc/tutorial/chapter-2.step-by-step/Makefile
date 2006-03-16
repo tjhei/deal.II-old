@@ -133,12 +133,12 @@ $(example-doxygen):
 	@echo "@htmlonly" >> $@
 	@cat generated/$(call get_basename, $@)_toc.combined >> $@
 	@cat $(call get_basename, $@).data/intro.html | \
-	  $(PERL) -pi -e 's#(src|SRC|href|HREF)=\"([-a-zA-Z0-9]+.data)#\1=\"../../tutorial/chapter-2.step-by-step/\2#g; s/(href|HREF)=.step-..(\d+)/href=\"step_\1/g;' >> $@
+	  $(PERL) -pi -e 's#(src|SRC|href|HREF)=\"([-a-zA-Z0-9]+.data)#\1=\"../../tutorial/chapter-2.step-by-step/\2#g; s/(href|HREF)=.step-(\d+)/href=\"step_\2/g;' >> $@
 	@echo "@endhtmlonly" >> $@
 	@cat generated/$(call get_basename, $@)_prog.dox >> $@
 	@echo "@htmlonly" >> $@
 	@cat $(call get_basename, $@).data/results.html | \
-	  $(PERL) -pi -e 's#(src|SRC|href|HREF)=\"([-a-zA-Z0-9]+.data)#\1=\"../../tutorial/chapter-2.step-by-step/\2#g; s/(href|HREF)=.step-..(\d+)/href=\"step_\1/g;' >> $@
+	  $(PERL) -pi -e 's#(src|SRC|href|HREF)=\"([-a-zA-Z0-9]+.data)#\1=\"../../tutorial/chapter-2.step-by-step/\2#g; s/(href|HREF)=.step-(\d+)/href=\"step_\2/g;' >> $@
 	@echo "@endhtmlonly" >> $@
 	@cat generated/$(call get_basename, $@)_plain.dox >> $@
 	@echo " */" >> $@

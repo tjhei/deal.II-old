@@ -4,8 +4,13 @@ print "\n";
 
 
 while (<>) {
-    # simply print non-comment lines and let doxygen do all the work
+    # simply print non-comment lines and let doxygen do all the work.
+    # the only thing we have to make sure is that if we copy /*...*/
+    # comments that doxygen doesn't get confused; do so by simply
+    # adding a space
     if ( ! m!^\s*//! ) {
+        s!/\*!/ \*!g;
+        s!\*/!\* /!g;
 	print " * $_";
     } else {
 	# for comments, all we do is replace section headers, and

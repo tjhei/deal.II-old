@@ -64,6 +64,11 @@ do {
 	# then replace references to other example programs automatically:
 	s!step-(\d+)!\@ref step_\1 \"step-\1\"!g;
 
+	# replace quotation marks by <code>...</code>
+	s!``!<code>!g;
+	s!''!</code>!g;
+
+
 	# finally print this line
 	print " * $_\n";
 

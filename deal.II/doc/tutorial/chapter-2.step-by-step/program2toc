@@ -6,13 +6,6 @@ while (<>) {
 	$newlevel = $1;
 	$text = $2;
 	
-	# replace quotation marks by the appropriate HTML quotation marks
-	$text =~ s!``!&#8220;!g;
-	$text =~ s!''!&#8221;!g;
-
-        # replace double dashes in comments by &mdash;
-	$text =~ s!--!&mdash;!g;
-
 	# only allow header levels 3 through 6, since higher ones are
 	# reserved for top-level document headers
 	if (! ($newlevel =~ /[3456]/)) {
@@ -36,6 +29,14 @@ while (<>) {
 	# for the anchor, use the name of the section but discard
 	# everything except for letters, numbers, and underscores
 	$reftext =~ s/[^a-zA-Z0-9_]//g;
+
+	# replace quotation marks by the appropriate HTML quotation marks
+	$text =~ s!``!&#8220;!g;
+	$text =~ s!''!&#8221;!g;
+
+        # replace double dashes in comments by &mdash;
+	$text =~ s!--!&mdash;!g;
+
 	print "        <li><a href=\"#$reftext\">$text</a>\n";
 
 	$level = $newlevel;

@@ -32,7 +32,10 @@ while (<>) {
 	}
 
 	$reftext = $text;
-	$reftext =~ s/\s/_/g;
+
+	# for the anchor, use the name of the section but discard
+	# everything except for letters, numbers, and underscores
+	$reftext =~ s/[^a-zA-Z0-9_]//g;
 	print "        <li><a href=\"#$reftext\">$text</a>\n";
 
 	$level = $newlevel;

@@ -53,8 +53,11 @@ do {
 	if ( /\@sect/ ) {
 	   s!\@sect(\d)\{(.*)\}\s*$!<h$1>$2</h$1>!g;
 	   $sect_name = $2;
-	   $sect_name =~ s/\s/_/g;
-	   $sect_name =~ s/[\'\`]/_/g;
+
+	   # for the anchor, use the name of the section but discard
+	   # everything except for letters, numbers, and underscores
+	   $sect_name =~ s/[^a-zA-Z0-9_]//g;
+
 	   $_ = "\n * <a name=\"$sect_name\"></a> \n * $_";
 	}
 

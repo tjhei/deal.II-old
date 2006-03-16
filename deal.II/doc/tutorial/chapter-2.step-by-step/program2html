@@ -1,4 +1,4 @@
-# Copyright (C) 1999, 2000, 2001, 2002, 2005 by Wolfgang Bangerth, University of Heidelberg
+# Copyright (C) 1999, 2000, 2001, 2002, 2005, 2006 by Wolfgang Bangerth, University of Heidelberg
 
 print "<a name=\"CommProg\"></a>\n";
 print "<h1> The commented program</h1>\n";
@@ -60,7 +60,11 @@ do {
 	if ( /\@sect/ ) {
 	   s!\@sect(\d)\{(.*)\}\s*$!<h$1>$2</h$1>!g;
 	   $sect_name = $2;
-	   $sect_name =~ s/\s/_/g;
+
+	   # for the anchor, use the name of the section but discard
+	   # everything except for letters, numbers, and underscores
+	   $sect_name =~ s/[^a-zA-Z0-9_]//g;
+
 	   $_ = "\n<a name=\"$sect_name\"></a>" . $_;
 	}
 

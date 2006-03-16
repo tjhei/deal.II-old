@@ -27,9 +27,12 @@ while (<>) {
 
 	   m!\@sect(\d)\{(.*)\}\s*$!;
 	   $sect_name = $2;
-	   $sect_name =~ s/\s/_/g;
-	   $_ = "\n<a name=\"plain-$sect_name\"></a>";
-	   print;
+
+	   # for the anchor, use the name of the section but discard
+	   # everything except for letters, numbers, and underscores
+	   $sect_name =~ s/[^a-zA-Z0-9_]//g;
+
+	   print "\n<a name=\"plain-$sect_name\"></a>\n";
 	}
     }	
 }

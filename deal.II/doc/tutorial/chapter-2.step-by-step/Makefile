@@ -120,9 +120,9 @@ $(example-dox-plain):
 	@echo " * " $D/examples/$(call get_basename,$@)/*.cc | $(PERL) -pi -e 's!/! /!g;' >> $@
 	@echo " * </i>. Otherwise, this is only" >> $@
 	@echo " * the path on some remote server.)" >> $@
-	@echo " * @code" >> $@
+	@echo " @code" >> $@
 	@cat $D/examples/$(call get_basename, $@)/*.cc | $(PERL) program2doxyplain >> $@
-	@echo " * @endcode" >> $@
+	@echo " @endcode" >> $@
 
 
 $(example-doxygen):

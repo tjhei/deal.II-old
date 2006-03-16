@@ -21,8 +21,9 @@ while (<>) {
 	   m!\@sect(\d)\{(.*)\}\s*$!;
 	   $sect_name = $2;
 	   $sect_name =~ s/\s/_/g;
-	   $_ = " * <a name=\"plain-$sect_name\"></a>\n";
-	   print;
+	   print "\@endcode\n";
+	   print " <a name=\"plain-$sect_name\"></a>\n";
+	   print "\@code\n";
 	}
     }	
 }

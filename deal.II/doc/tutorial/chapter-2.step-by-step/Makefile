@@ -176,7 +176,7 @@ Makefile.dep: $(shell echo $D/examples/*/*.cc) Makefile
 		echo generated/$${i}_prog.html generated/$${i}_plain.html \
 		     generated/$${i}_toc.prog \
 		     generated/$${i}_prog.dox generated/$${i}_plain.dox : \
-			`echo $D/examples/*/$${i}.cc` ; \
+			`echo $D/examples/$${i}/*.cc` ; \
 		echo generated/$${i}_toc.plain : generated/$${i}_toc.prog ; \
 		echo generated/$${i}_toc.combined : \
 			generated/$${i}_toc.prog generated/$${i}_toc.plain ; \

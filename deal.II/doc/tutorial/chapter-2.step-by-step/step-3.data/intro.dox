@@ -1,7 +1,7 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
 
-<p>
+
 This is the first example where we actually use finite elements to compute
 something. We 
 will solve a simple version of Laplace's equation with zero boundary
@@ -14,4 +14,3 @@ element programs, which are along the following lines:
   <li> Solving the linear system of equations;
   <li> Writing results to disk.
 </ul>
-</p>

@@ -1,10 +1,9 @@
 <a name="Results"></a>
 <h1>Results</h1>
 
-<p>
 The program has, after having been run, produced two sparsity
 patterns. We can visualize them using GNUPLOT:
-<pre><code>
+@code
 examples/step-2> gnuplot
 
         G N U P L O T
@@ -26,10 +25,8 @@ examples/step-2> gnuplot
 Terminal type set to 'x11'
 gnuplot> set data style points
 gnuplot> plot "sparsity_pattern.1"
-</code></pre>
-</p>
+@endcode
 
-<p>
 The results then look like this (every cross denotes an entry which
 might be nonzero; of course the fact whether the entry actually is
 zero or not depends on the equation under consideration, but the
@@ -52,19 +49,15 @@ WIDTH="300">
 </td>
 </tr>
 </table>
-</p>
 
-<p>
 The different regions in the left picture represent the degrees of
 freedom on the different refinement levels of the triangulation.  As
 can be seen in the right picture, the sparsity pattern is much better
 clustered around the main diagonal of the matrix after
 renumbering. Although this might not be apparent, the number of
 nonzero entries is the same in both pictures, of course.
-</p>
 
-<p>
 A common observation is that the more refined the grid is, the better
 the clustering around the diagonal will get.
-</p>
+
 

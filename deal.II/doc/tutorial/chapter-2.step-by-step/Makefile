@@ -38,7 +38,7 @@ get_basename = $(shell echo $(1) | $(PERL) -pi -e 's/(generated|doxygen).//g; s/
 
 
 
-all: $(example-htmls) $(example-doxygen)
+all: $(example-doxygen)
 
 
 $(example-prog):
@@ -180,12 +180,11 @@ Makefile.dep: $(shell echo $D/examples/*/*.cc) Makefile
 		echo generated/$${i}_toc.plain : generated/$${i}_toc.prog ; \
 		echo generated/$${i}_toc.combined : \
 			generated/$${i}_toc.prog generated/$${i}_toc.plain ; \
-		echo $$i.html : generated/$${i}_prog.html generated/$${i}_plain.html \
-				generated/$${i}_toc.combined \
-				$$i.data/intro.html $$i.data/results.html ; \
 		echo doxygen/$$i.h : generated/$${i}_prog.dox generated/$${i}_plain.dox \
 				generated/$${i}_toc.combined \
-				$$i.data/intro.html $$i.data/results.html ; \
+				$$i.data/intro.`if test -f $$i.data/intro.dox ; then echo dox ; else echo html ; fi` \
+				$$i.data/results.`if test -f $$i.data/results.dox ; then echo dox ; else echo html ; fi` \
+ ; \
 	 done \
 	> $@
 

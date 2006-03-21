@@ -20,7 +20,11 @@ $state =  $comment_mode;
 print " * \n";
 
 do {
-    # substitute special characters
+    # substitute tabs. also make sure that we don't output comment end
+    # markers that might confuse doxygen
+    s!/\*!/ \*!g;
+    s!\*/!\* /!g;
+
     s/\t/        /g;
 
     if (($state == $program_mode) && m!^\s*//!)

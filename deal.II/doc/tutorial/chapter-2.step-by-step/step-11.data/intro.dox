@@ -4,9 +4,9 @@
 The problem we will be considering is the solution of Laplace's problem with
 Neumann boundary conditions only:
 @f{eqnarray*}
-  -\Delta u &=& f  \mathrm{in}\ \Omega,
+  -\Delta u &=& f \qquad \mathrm{in}\ \Omega,
   \\
-  \partial_n u &=& g \mathrm{on}\ \partial\Omega.
+  \partial_n u &=& g \qquad \mathrm{on}\ \partial\Omega.
 @f}
 It is well known that if this problem is to have a solution, then the forces
 need to satisfy the compatibility condition

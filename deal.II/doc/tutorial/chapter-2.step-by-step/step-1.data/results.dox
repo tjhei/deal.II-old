@@ -7,11 +7,11 @@ like this:
 <TABLE WIDTH="60%" ALIGN="center">
   <tr>
     <td ALIGN="center">
-      @image html step-1.grid-1.jpg
+      @image html step-1.grid-1.png
     </td>
 
     <td ALIGN="center">
-      @image html step-1.grid-2.jpg
+      @image html step-1.grid-2.png
     </td>
   </tr>
 </table>

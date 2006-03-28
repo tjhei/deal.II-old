@@ -1,26 +1,24 @@
 <a name="Results"></a>
 <h1>Results</h1>
 
-<p>
+
 The program generates two kinds of output. The first are the output
 files <code>solution-adaptive-q1.gmv</code>,
 <code>solution-global-q1.gmv</code>, and
 <code>solution-global-q2.gmv</code>. We show the latter in a 3d view
 here: 
-</p>
-
-<p align="center">
-  <img src="step-7.data/solution-3d.jpg" alt="solution" width="75%">
-</p>
 
 
-<p>
+@image html step-7.solution.png
+
+
+
+
 Secondly, the program writes tables not only to disk, but also to the
 screen while running:
-</p>
 
-<pre>
-<code>
+
+@code
 examples/step-7> make run
 ============================ Running step-7
 Solving with Q1 elements, adaptive refinement
@@ -142,29 +140,26 @@ n cells  H1      L2
       4  1024 1.571e-02 1.99 1.265e-04  7.88 2.98 
       5  4096 3.937e-03 2.00 1.587e-05  7.97 2.99 
       6 16384 9.847e-04 2.00 1.986e-06  7.99 3.00 
-</code>
-</pre>
+@endcode
 
 
-<p>
 One can see the error reduction upon grid refinement, and for the
 cases where global refinement was performed, also the convergence
 rates can be seen. The linear and quadratic convergence rates of Q1
-and Q2 elements in the H<sup>1</sup> norm can clearly be seen, as
-are the quadratic and cubic rates in the L<sub>2</sub> norm.
-</p>
+and Q2 elements in the $H^1$ norm can clearly be seen, as
+are the quadratic and cubic rates in the $L_2$ norm.
 
 
-<p>
+
+
 Finally, the program generated various LaTeX tables. We show here
 the convergence table of the Q2 element with global refinement, after
 converting the format to HTML:
-</p>
 
 
-<DIV ALIGN="CENTER">
+
 <TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
-<TR><TD ALIGN="CENTER" COLSPAN=2><P>
+<TR><TD ALIGN="CENTER" COLSPAN=2>
 n cells</TD>
 <TD ALIGN="CENTER" COLSPAN=2><I>H</I><SUP>1</SUP>-error</TD>
 <TD ALIGN="CENTER" COLSPAN=3><I>L</I><SUP>2</SUP>-error</TD>
@@ -225,5 +220,5 @@ n cells</TD>
 <TD ALIGN="CENTER">7.99</TD>
 <TD ALIGN="CENTER">3.00</TD>
 </TR>
-</TABLE></DIV>
-<BR>
+</TABLE>
+

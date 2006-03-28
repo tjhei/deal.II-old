@@ -117,12 +117,12 @@ from this example.
 
 @code
 --------------------------------------------------------
-An error occurred in line &lt;79&gt; of file &lt;source/subscriptor.cc&gt; in function
+An error occurred in line <79> of file <source/subscriptor.cc> in function
     virtual Subscriptor::~Subscriptor()
 The violated condition was: 
     counter == 0
 The name and call sequence of the exception was:
-    ExcInUse(counter, object_info-&gt;name(), infostring)
+    ExcInUse(counter, object_info->name(), infostring)
 Additional Information: 
 Object of class 4FE_QILi2EE is still used by 1 other objects.
   from Subscriber 10DoFHandlerILi2EE
@@ -130,10 +130,10 @@ Object of class 4FE_QILi2EE is still used by 1 other objects.
 Stacktrace:
 -----------
 #0  /u/bangerth/p/deal.II/1/deal.II/lib/libbase.g.so: Subscriptor::~Subscriptor()
-#1  /u/bangerth/p/deal.II/1/deal.II/lib/libdeal_II_2d.g.so: FiniteElement&lt;2&gt;::~FiniteElement()
-#2  ./step-6: FE_Poly&lt;TensorProductPolynomials&lt;2&gt;, 2&gt;::~FE_Poly()
-#3  ./step-6: FE_Q&lt;2&gt;::~FE_Q()
-#4  ./step-6: LaplaceProblem&lt;2&gt;::~LaplaceProblem()
+#1  /u/bangerth/p/deal.II/1/deal.II/lib/libdeal_II_2d.g.so: FiniteElement<2>::~FiniteElement()
+#2  ./step-6: FE_Poly<TensorProductPolynomials<2>, 2>::~FE_Poly()
+#3  ./step-6: FE_Q<2>::~FE_Q()
+#4  ./step-6: LaplaceProblem<2>::~LaplaceProblem()
 #5  ./step-6: main
 --------------------------------------------------------
 make: *** [run] Aborted

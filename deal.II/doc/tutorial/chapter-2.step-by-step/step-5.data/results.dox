@@ -36,8 +36,8 @@ Cycle 5:
    Number of degrees of freedom: 20609
    182 CG iterations needed to obtain convergence.
 --------------------------------------------------------
-An error occurred in line &lt;273&gt; of file &lt;step-5.cc&gt; in function
-    void Coefficient&lt;dim&gt;::value_list(const std::vector&lt;Point&lt;dim&gt;, std::allocator&lt;Point&lt;dim&gt; &gt; &gt;&, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&, unsigned int)
+An error occurred in line <273> of file <step-5.cc> in function
+    void Coefficient<dim>::value_list(const std::vector<Point<dim>, std::allocator<Point<dim> > >&, std::vector<double, std::allocator<double> >&, unsigned int)
  const [with int dim = 2]
 The violated condition was: 
     values.size() == points.size()
@@ -48,7 +48,7 @@ Dimension 1 not equal to 2
 
 Stacktrace:
 -----------
-#0  ./step-5: Coefficient&lt;2&gt;::value_list(std::vector&lt;Point&lt;2&gt;, std::allocator&lt;Point&lt;2&gt; &gt; &gt; const&, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&, unsigned) const
+#0  ./step-5: Coefficient<2>::value_list(std::vector<Point<2>, std::allocator<Point<2> > > const&, std::vector<double, std::allocator<double> >&, unsigned) const
 #1  ./step-5: main
 --------------------------------------------------------
 make: *** [run] Aborted
@@ -108,8 +108,8 @@ example.
 As for the error &mdash; let's look at it again:
 @code
 --------------------------------------------------------
-An error occurred in line &lt;273&gt; of file &lt;step-5.cc&gt; in function
-    void Coefficient&lt;dim&gt;::value_list(const std::vector&lt;Point&lt;dim&gt;, std::allocator&lt;Point&lt;dim&gt; &gt; &gt;&, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&, unsigned int)
+An error occurred in line <273> of file <step-5.cc> in function
+    void Coefficient<dim>::value_list(const std::vector<Point<dim>, std::allocator<Point<dim> > >&, std::vector<double, std::allocator<double> >&, unsigned int)
  const [with int dim = 2]
 The violated condition was: 
     values.size() == points.size()
@@ -120,7 +120,7 @@ Dimension 1 not equal to 2
 
 Stacktrace:
 -----------
-#0  ./step-5: Coefficient&lt;2&gt;::value_list(std::vector&lt;Point&lt;2&gt;, std::allocator&lt;Point&lt;2&gt; &gt; &gt; const&, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&, unsigned) const
+#0  ./step-5: Coefficient<2>::value_list(std::vector<Point<2>, std::allocator<Point<2> > > const&, std::vector<double, std::allocator<double> >&, unsigned) const
 #1  ./step-5: main
 --------------------------------------------------------
 make: *** [run] Aborted

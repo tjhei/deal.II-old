@@ -1,9 +1,4 @@
-\documentclass{article}
-\usepackage{amsmath}
-
-\begin{document}
-
-\section{Foreword}
+<h3>Foreword</h3>
 
 This program demonstrates a number of techniques that have not been shown in
 previous example programs. In particular, it shows how to program for
@@ -26,43 +21,53 @@ to demonstrate techniques of programming with deal.II, which is indeed the
 focus here.
 
 
-\section{The problem}
+<h3>The problem</h3>
 
 Now for a description of the problem.  In the book by Dacorogna on the
 Calculus of Variations, I found the following statement, which confused me
 tremendously at first (see Section 3.4.3, ``Lavrentiev Phenomenon'', very
 slightly edited):
 
-\begin{quote}
-  \textbf{Theorem 4.6:} Let 
-  $$I(u)=\int_0^1 (x-u^3)^2 (u')^6\; dx.$$
+@par Theorem 4.6:
+  <em>
+  Let 
+  @f[
+    I(u)=\int_0^1 (x-u^3)^2 (u')^6\; dx.
+  @f]
   Let
-  $$
+  @f[
     {\cal W}_1 = \{ u\in W^{1,\infty}(0,1) : u(0)=0, u(1)=1 \}
-    $$ $$
+  @f]
+  @f[
     {\cal W}_2 = \{ u\in W^{1,1}(0,1) : u(0)=0, u(1)=1 \}
-  $$
+  @f]
+  </em>
 
+@par
+  <em>
   Then
-  $$
+  @f[
   \inf_{u\in {\cal W}_1} I(u) \ge c_0 > 0 = \inf_{u\in {\cal W}_2} I(u).
-  $$
+  @f]
   Moreover the minimum of $I(u)$ over ${\cal W}_2$ is attained by
   $u(x)=x^{1/3}$. 
+  </em>
 
-  \textsc{Remarks.}
+@par Remarks.
+  [...]
 
-  [\ldots]
-
+@par
+  <em>
   ii) it is interesting to note that if one uses the usual finite element
   methods (by taking piecewise affine functions, which are in $W^{1,\infty}$)
   one will not be able to detect the minimum of some integrals such as the one
   in the theorem.
-\end{quote}
+  </em>
+
 In other words: minimizing the energy functional over one space
 ($W^{1,\infty}$) does not give the same value as when minimizing over a larger
 space ($W^{1,1}$). Furthermore, they give a rough estimate of the value of the
-constant $c_0$, which is $c_0=\tfrac{7^23^5}{2^{18}5^5}\approx 1.61\cdot
+constant $c_0$, which is $c_0=\frac{7^23^5}{2^{18}5^5}\approx 1.61\cdot
 10^{-6}$ (although by their calculation it is obvious that this estimate is
 far too small, but the point of course is just to show that it is strictly
 larger than zero).
@@ -81,8 +86,8 @@ oscillate at cell frequency; these, however, do not converge in any reasonable
 measure.)
 
 So it took me a while to see where the problem lies. Here it is: While we are
-able to approximate functions to arbitrary accuracies in \textit{Sobolev
-  norms}, this does not necessarily also hold with respect to the functional
+able to approximate functions to arbitrary accuracies in <em>Sobolev
+  norms</em>, this does not necessarily also hold with respect to the functional
 $I(u)$!  After all, this functional was made to show exactly these
 pathologies.
 
@@ -92,7 +97,7 @@ interpolant $i_hu$ of the optimal solution $u=x^{1/3}$ into the functional
 $I(u)$: on the leftmost cell, the left end of $i_hu$ is tagged to zero by the
 boundary condition, and the right end has the value $i_hu(h)=u(h)=h^{1/3}$. So
 let us only consider the contribution of this single cell to $I(u)$:
-\begin{eqnarray*}
+@f{eqnarray*}
   \int_0^h (x-(i_hu)^3)^2 ((i_hu)')^6 dx
   &=&
   \int_0^h (x-(h^{1/3}x)^3)^2 ((h^{1/3}/h)')^6 dx
@@ -104,7 +109,7 @@ let us only consider the contribution of this single cell to $I(u)$:
   h^{-4} (h^3/3-2h^5/5+h^9/7)
   \\
   &=& {\cal O}(h^{-1}).
-\end{eqnarray*}
+@f}
 Ups, even the contribution of the first cell blows up under mesh refinement,
 and we have not even summed up the contributions of the other cells!
 
@@ -136,29 +141,28 @@ would, then its energy would have to blow up. And we will see exactly this
 in the results section below.
 
 
-\section{What to do?}
+<h3>What to do?</h3>
 
 After this somewhat theoretical introduction, let us just once in our life
 have fun with pure mathematics, and actually see what happens in this problem
 when we run the finite element method on it. So here it goes: to find the
 minimum of $I(u)$, we have to find its stationary point. The condition for
 this reads
-\begin{equation*}
+@f[
   I'(u,\varphi) 
   = 
   \int_0^1 6 (x-u^3) (u')^5 \{ (x-u^3)\varphi' - u^2 u' \varphi\}\ dx,
-\end{equation*}
+@f]
 for all test functions $\varphi$ from the same space as that from which we
 take $u$, but with zero boundary conditions. If this space allows us to
 integrate by parts, then we could associate this with a two point boundary
 value problem
-\begin{equation}
-  \label{eq:equation}
+@f{eqnarray*}
   -(x-u^3) u^2(u')^6
   - \frac{d}{dx} \left\{(x-u^3)^2 (u')^5\right\} = 0,
   \qquad\qquad u(0)=0,
   \quad u(1)=1.
-\end{equation}
+@f}
 Note that this equation degenerates wherever $u^3=x$, which is at least the
 case at $x\in\{0,1\}$ due to the prescribed boundary values for $u$, but
 possibly at other places as well.  However, for finite elements, we will want
@@ -166,20 +170,20 @@ to have the equation in weak form anyway.  Since the equation is still
 nonlinear, one may be tempted to compute iterates
 $u_{k+1}=u_k+\alpha_k\delta u_k$ using a Newton method for updates $\delta
 u_k$, like in
-\begin{equation*}
+@f[
   I''(u_k,\delta u_k,\varphi) 
   = 
   -I'(u_k, \varphi).
-\end{equation*}
+@f]
 However, since $I''(u_k,\cdot,\cdot)$ may be an indefinite operator (and, as
 numerical experiments indicate, is in fact during typical computations), we
 don't want to use this. Instead, we use a gradient method, for which we
 compute updates according to the following scheme:
-\begin{equation}
+@f{eqnarray*}
   \left<\delta u_k,\varphi\right>
   = 
   -I'(u_k, \varphi).
-\end{equation}
+@f}
 For the scalar product on the left hand side, there are multiple valid ways;
 we choose the mesh dependent definition $\left<u,v\right> = \int_\Omega (uv +
 h(x)^2 \nabla u\cdot \nabla v)\; dx$, where the weight $h(x)^2$, i.e. using
@@ -191,10 +195,9 @@ Laplace matrix.
 
 The step length $\alpha_k$ is then computed using a one-dimensional line search
 finding
-\begin{equation}
-  \label{eq:linesearch}
+@f{eqnarray*}
   \alpha_k = \arg\min_\alpha I(u_k+\alpha\delta u_k),
-\end{equation}
+@f}
 or at least an approximation to this using a one-dimensional Newton method
 which itself has a line search. The details of this can be found in the code.
 We iterate the updates and line searches until the change in energy $I(u_k)$
@@ -209,19 +212,17 @@ As for mesh refinement, it is instructional to recall how residual based error
 estimates like the one used in the Kelly et al.~error estimator are usually
 derived (the Kelly estimator is the one that we have used in most of the
 previous example programs). In a similar way, by looking at the residual of
-the strong form of the nonlinear equation we attempt here to solve, see
-equation \eqref{eq:equation}, we may be tempted to consider the following
-expression for refinement of cell $K$:
-\begin{eqnarray}
-  \label{eq:error-estimate}
+the strong form of the nonlinear equation we attempt here to solve, we may be
+tempted to consider the following expression for refinement of cell $K$:
+@f{eqnarray*}
   \eta_K^2 &=&
   h^2 \left\|
     (x-u_h^3) (u_h')^4 \left\{ u_h^2 (u_h')^2 + 5(x-u_h^3)u_h'' + 2u_h'(1-3u_h^2u_h') \right\}
   \right\|^2_K
-  \notag \\
+  \\
   && +
   h \left| (x-u_h^3)^2 [(u_h')^5] \right|^2_{\partial K},
-\end{eqnarray}
+@f}
 where $[\cdot]$ is the jump of a quantity across an intercell boundary, and 
 $|\cdot|_{\partial K}$ is the sum of the quantity evaluated at the two end
 points of a cell. Note that in the evaluation of the jump, we have made use of
@@ -248,7 +249,7 @@ contrived and pathological problem. Consider it an example in programming with
 deal.II then, and not an example in solving this particular problem.
 
 
-\section{Implementation}
+<h3>Implementation</h3>
 
 The program implements all the steps mentioned above, and we will discuss them
 in the commented code below. In general, however, note that formulating the
@@ -257,7 +258,7 @@ consequences: we have to linearize around $u_k$ when we want to compute
 $\delta u_k$, and we have to sum up these two functions afterwards.  However,
 they may be living on different grids, if we have refined the grid before this
 step, so we will have to present a way to actually get a function from one
-grid to another. The \textrm{SolutionTransfer} class will help us here. On the
+grid to another. The <code>SolutionTransfer</code> class will help us here. On the
 other hand, discretizing every nonlinear step separately has the advantage
 that we can do the initial steps, when we are still far away from the
 solution, on a coarse mesh, and only go on to more expensive computations when
@@ -272,7 +273,7 @@ does not contain much new stuff, but if it explains a few of the techniques
 that are available for nonlinear problems and in particular 1d problems, then
 this is not so bad, after all.
 
-\textbf{Note:} As shown below, the program starts the nonlinear solver from 10 different
+<em>Note:</em> As shown below, the program starts the nonlinear solver from 10 different
 initial values, and outputs the results. This is not actually too many, but we
 did so to keep run-time short (around 1:30 minutes on my laptop). If you want to
 increase the number of realizations, you may want to switch to optimized mode
@@ -293,5 +294,3 @@ should be done in optimized mode anyway.
 
 A slowdown of a factor of 7-8 is unusual, however. For 2d and 3d applications,
 a typical value is around 4. 
-
-\end{document}

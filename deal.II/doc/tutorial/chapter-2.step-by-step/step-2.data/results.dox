@@ -33,19 +33,17 @@ zero or not depends on the equation under consideration, but the
 indicated positions in the matrix tell us which shape functions can
 and which can't couple, if the equation is a local, i.e. differential
 one): 
-<TABLE WIDTH="60%">
+<TABLE WIDTH="60%" ALIGN="center">
 <tr>
-<td>
-<a href="step-2.data/sparsity_pattern_1.jpg">
-<IMG SRC="step-2.data/sparsity_pattern_1.jpg" ALT="sparsity-pattern-1"
-WIDTH="300">
-</a>
+<td ALIGN="center">
+@image html sparsity_pattern_1.jpg
+<br>
+<a href="step-2.data/sparsity_pattern_1.jpg">(Click here for larger version)</a>
 </td>
-<td>
-<a href="step-2.data/sparsity_pattern_2.jpg">
-<IMG SRC="step-2.data/sparsity_pattern_2.jpg" ALT="sparsity-pattern-2"
-WIDTH="300">
-</a>
+<td ALIGN="center">
+@image html sparsity_pattern_2.jpg
+<br>
+<a href="step-2.data/sparsity_pattern_2.jpg">(Click here for larger version)</a>
 </td>
 </tr>
 </table>

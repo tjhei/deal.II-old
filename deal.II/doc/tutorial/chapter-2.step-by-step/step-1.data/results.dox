@@ -4,15 +4,22 @@
 The program has, after having been run, produced two grids, which look
 like this:
 
-<TABLE WIDTH="60%">
-<tr>
-<td>
-<IMG SRC="step-1.data/grid-1.jpg" ALT="grid-1" WIDTH="300">
-</td>
-<td>
-<IMG SRC="step-1.data/grid-2.jpg" ALT="grid-2" WIDTH="300">
-</td>
-</tr>
+<TABLE WIDTH="60%" ALIGN="center">
+  <tr>
+    <td ALIGN="center">
+      @image html grid-1.jpg
+      <br>
+      <a href="step-1.data/grid-1.jpg">(Click here for original
+      version)</a> 
+    </td>
+
+    <td ALIGN="center">
+      @image html grid-2.jpg
+      <br>
+      <a href="step-1.data/grid-2.jpg">(Click here for original
+      version)</a> 
+    </td>
+  </tr>
 </table>
 
 The left one, well, is not very exciting. The right one is &mdash; at least

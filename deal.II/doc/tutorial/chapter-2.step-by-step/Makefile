@@ -165,6 +165,7 @@ clean:
 	-rm -f $(example-prog) $(example-plain) $(example-toc) \
 		$(example-toc-prog)  $(example-toc-plain) \
 		$(example-dox-prog) $(example-dox-plain) $(example-doxygen)
+	-rm -f Makefile.dep
 
 
 .PHONY: validate-xrefs clean

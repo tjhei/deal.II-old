@@ -1,7 +1,7 @@
 <a name="Results"></a>
 <h1>Results</h1>
 
-<p>
+
 The output of the program looks as follows:
 <pre><code>
 Cycle 0:
@@ -29,9 +29,9 @@ Cycle 7:
    Number of active cells:       3884
    Number of degrees of freedom: 18401
 </code></pre>
-</p>
 
-<p>
+
+
 As intended, the number of cells roughly doubles in each cycle.  The
 number of degrees is slightly more than four times the number of
 cells; one would expect a factor of exactly four in two spatial
@@ -41,63 +41,63 @@ each edge and one in the middle of each cell), but it is larger than
 that factor due to the finite size of the mesh and due to additional
 degrees of freedom which are introduced by hanging nodes and local
 refinement.
-</p>
 
-<p>
+
+
 The final solution, as written by the program at the end of the
 <code>run()</code> function, looks as follows:
-</p>
 
-<p>
-<IMG SRC="step-6.data/final-solution.jpg" ALT="final-solution" WIDTH="300">
-</p>
 
-<p>
+
+@image html step-6.solution.png
+
+
+
 In each cycle, the program furthermore writes the grid in EPS
 format. These are shown in the following:
-</p>
 
-<p>
+
+
 <TABLE WIDTH="100%">
 <tr>
 <td>
-<IMG SRC="step-6.data/grid-0.jpg" ALT="grid-0" WIDTH="300">
+  @image html step-6.grid-0.png
 </td>
 <td>
-<IMG SRC="step-6.data/grid-1.jpg" ALT="grid-1" WIDTH="300">
-</td>
-</tr>
-
-<tr>
-<td>
-<IMG SRC="step-6.data/grid-2.jpg" ALT="grid-2" WIDTH="300">
-</td>
-<td>
-<IMG SRC="step-6.data/grid-3.jpg" ALT="grid-3" WIDTH="300">
+  @image html step-6.grid-1.png
 </td>
 </tr>
 
 <tr>
 <td>
-<IMG SRC="step-6.data/grid-4.jpg" ALT="grid-4" WIDTH="300">
+  @image html step-6.grid-2.png
 </td>
 <td>
-<IMG SRC="step-6.data/grid-5.jpg" ALT="grid-5" WIDTH="300">
+  @image html step-6.grid-3.png
 </td>
 </tr>
 
 <tr>
 <td>
-<IMG SRC="step-6.data/grid-6.jpg" ALT="grid-6" WIDTH="300">
+  @image html step-6.grid-4.png
 </td>
 <td>
-<IMG SRC="step-6.data/grid-7.jpg" ALT="grid-7" WIDTH="300">
+  @image html step-6.grid-5.png
+</td>
+</tr>
+
+<tr>
+<td>
+  @image html step-6.grid-6.png
+</td>
+<td>
+  @image html step-6.grid-7.png
 </td>
 </tr>
 </table>
-</p>
 
-<p>
+
+
 It is clearly visible that the region where the solution has a kink,
 i.e. the circle at radial distance 0.5 from the center, is
 refined most. Furthermore, the central region where the solution is
@@ -107,15 +107,15 @@ coefficient is large there. The region outside is refined rather
 randomly, since the second derivative is constant there and refinement
 is therefore mostly based on the size of the cells and their deviation
 from the optimal square.
-</p>
 
 
-<p>
+
+
 For completeness, we show what happens if the code we commented about
 in the destructor of the <code>LaplaceProblem</code> class is omitted
 from this example.
-</p>
-<pre><code>
+
+@code
 --------------------------------------------------------
 An error occurred in line &lt;79&gt; of file &lt;source/subscriptor.cc&gt; in function
     virtual Subscriptor::~Subscriptor()
@@ -137,13 +137,13 @@ Stacktrace:
 #5  ./step-6: main
 --------------------------------------------------------
 make: *** [run] Aborted
-</code></pre>
-</p>
+@endcode
 
-<p>
+
+
 From the above error message, we conclude that an object of type
-``10DoFHandlerILi2EE'' is still using the object of type
-``4FE_QILi2EE''. These are of course "mangled" names for
+<code>10DoFHandlerILi2EE</code> is still using the object of type
+<code>4FE_QILi2EE</code>. These are of course "mangled" names for
 <code>DoFHandler</code> and <code>FE_Q</code>. The mangling works as
 follows: the first number indicates the number of characters of the
 template class, i.e. 10 for <code>DoFHandler</code> and 4
@@ -151,14 +151,14 @@ for<code>FE_Q</code>; the rest of the text is then template
 arguments. From this we can already glean a little bit who's the
 culprit here, and who the victim.:
 The one object that still uses the finite element is the
-``dof_handler'' object.
-</p>
+<code>dof_handler</code> object.
 
-<p>
+
+
 The stacktrace gives an indication of where the problem happened. We
 see that the exception was triggered in the 
 destructor of the <code>FiniteElement</code> class that was called
 through a few more functions from the destructor of the
 <code>LaplaceProblem</code> class, exactly where we have commented out
 the call to <code>DoFHandler::clear()</code>.
-</p>
+

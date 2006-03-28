@@ -1,16 +1,16 @@
 <a name="Intro"></a>
 <h1>Introduction</h1>
 
-<p>
-In <a href="step-18.html" target="body">step-18</a>, we saw a need to write
+
+In @ref step_18 "step-18", we saw a need to write
 output files in an intermediate format: in a parallel program, it doesn't scale
 well if all processors participate in computing a result, and then only a
 single processor generates the graphical output. Rather, each of them should
 generate output for its share of the domain, and later on merge all these
 output files into a single one.
-</p>
 
-<p>
+
+
 Thus was the beginning of step-19: it is the program that reads a number of
 files written in intermediate format, and merges and converts them into the
 final format that one would like to use for visualization. It can also be used
@@ -18,9 +18,9 @@ for the following purpose: if you are unsure at the time of a computation what
 graphics program you would like to use, write your results in intermediate
 format; it can later be converted, using the present program, to any other
 format you may want.
-</p>
 
-<p>
+
+
 While this in itself was not interesting enough to make a tutorial program, we
 have used the opportunity to introduce one class that has proven to be
 extremely help- and useful in real application programs, but had not been
@@ -31,9 +31,9 @@ files. For example, one may want to specify the geometry, or specifics of the
 equation to be solved, at run time. Other typical parameters are the number of
 nonlinear iterations, the name of output files, or the names of input files
 specifying material properties or boundary conditions.
-</p>
 
-<p>
+
+
 Working with such parameter files is not rocket science. However, it is rather
 tedious to write the parsers for such files, in particular if they should be
 extensible, be able to group parameters into subsections, perform some error
@@ -45,9 +45,9 @@ will declare the parameters it expects (or call a function in the library that
 declares a number of parameters for you), the <code>ParameterHandler</code>
 class then reads an input file with all these parameters, and the application
 program can then get their values back from this class.
-</p>
 
-<p>
+
+
 In order to perform these three steps, the <code>ParameterHandler</code> offers
 three sets of functions: first, the
 <code>ParameterHandler::declare_entry</code> function is used to declare the
@@ -64,9 +64,9 @@ parameter isn't later listed explicitly in the parameter file. In addition to
 that, there are optional arguments indicating a pattern that a parameter has to
 satisfy, such as being an integer (see the discussion above), and a help text
 that might later give an explanation of what the parameter stands for.
-</p>
 
-<p>
+
+
 Once all parameters have been declared, parameters can be read, using the
 <code>ParameterHandler::read_input</code> family of functions. There are
 versions of this function that can read from a file stream, that take a file
@@ -76,12 +76,11 @@ declared before, and that the values of parameters satisfy the pattern that has
 been given to describe the kind of values a parameter can have. Input that uses
 undeclared parameters or values for parameters that do not conform to the
 pattern are rejected by raising an exception.
-</p>
 
-<p>
+
+
 A typical input file will look like this:
-<code>
-<pre>
+@code
 set Output format  = dx
 set Output file    = my_output_file.dx
 
@@ -91,12 +90,11 @@ subsection Application
   set Color of output = blue
   set Generate output = false
 end
-</pre>
-</code>
+@endcode
 Note that subsections can be nested.
-</p>
 
-<p>
+
+
 Finally, the application program can get the values of declared parameters back
 by traversing the subsections of the parameter tree and using the
 <code>ParameterHandler::get</code> and related functions. The
@@ -105,19 +103,19 @@ string, whereas <code>ParameterHandler::get_integer</code>,
 <code>ParameterHandler::get_double</code>, and
 <code>ParameterHandler::get_bool</code> already convert them to the indicated
 type. 
-</p>
 
-<p>
+
+
 Using the <code>ParameterHandler</code> class therefore provides for a pretty
 flexible mechanism to handle all sorts of moderately complex input files without
 much effort on the side of the application programmer. We will use this to
 provide all sorts of options to the step-19 program in order to convert from
 intermediate file format to any other graphical file format.
-</p>
 
-<p>
+
+
 The rest of the story is probably best told by looking at the source of step-19
 itself. Let us, however, end this introduction by pointing the reader at the
 extensive class documentation of the <code>ParameterHandler</code> class for
 more information on specific details of that class.
-</p>
+

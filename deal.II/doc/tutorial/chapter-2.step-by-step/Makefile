@@ -25,8 +25,7 @@ example-dox-prog   = $(addsuffix _prog.dox,$(gen-example-names))
 example-dox-plain  = $(addsuffix _plain.dox,$(gen-example-names))
 
 
-# finally a target for combined HTML files
-example-htmls       = $(addsuffix .html,$(example-names))
+# finally a target for combined Doxygen files
 example-doxygen     = $(addprefix doxygen/,$(addsuffix .h,$(example-names)))
 
 
@@ -89,20 +88,6 @@ $(example-toc):
 
 
 
-
-$(example-htmls):
-	@echo ================== Assembling $@
-	@cat head.html > $@
-	@echo "<h1>Overview of $(call get_basename,$@)</h1>" >> $@
-	@cat generated/$(call get_basename, $@)_toc.combined  \
-	     $(call get_basename, $@).data/intro.html  \
-	     generated/$(call get_basename, $@)_prog.html   \
-	     $(call get_basename, $@).data/results.html\
-	     generated/$(call get_basename, $@)_plain.html  \
-	     foot.html                                 >> $@
-
-
-
 $(example-dox-prog):
 	@echo ================== Making $@
 	@cat $D/examples/$(call get_basename, $@)/*.cc \
@@ -133,20 +118,20 @@ $(example-doxygen):
 	@echo "@htmlonly" >> $@
 	@cat generated/$(call get_basename, $@)_toc.combined >> $@
 	@echo "@endhtmlonly" >> $@
-	@if test -f $(call get_basename, $@).data/intro.dox ; then \
-	    cat $(call get_basename, $@).data/intro.dox ; \
+	@if test -f $D/examples/$(call get_basename, $@)/doc/intro.dox ; then \
+	    cat $D/examples/$(call get_basename, $@)/doc/intro.dox ; \
 	 else \
 	    echo "@htmlonly" ; \
-	    cat $(call get_basename, $@).data/intro.html ; \
+	    cat $D/examples/$(call get_basename, $@)/doc/intro.html ; \
 	    echo "@endhtmlonly" ; \
          fi | \
 	  $(PERL) -pi -e 's#(src|SRC|href|HREF)=\"([-a-zA-Z0-9]+.data)#\1=\"../../tutorial/chapter-2.step-by-step/\2#g; s/(href|HREF)=.step-(\d+)/href=\"step_\2/g;' >> $@
 	@cat generated/$(call get_basename, $@)_prog.dox >> $@
-	@if test -f $(call get_basename, $@).data/results.dox ; then \
-	    cat $(call get_basename, $@).data/results.dox ; \
+	@if test -f $D/examples/$(call get_basename, $@)/doc/results.dox ; then \
+	    cat $D/examples/$(call get_basename, $@)/doc/results.dox ; \
 	 else \
 	    echo "@htmlonly" ; \
-	    cat $(call get_basename, $@).data/results.html ; \
+	    cat $D/examples/$(call get_basename, $@)/doc/results.html ; \
 	    echo "@endhtmlonly" ; \
          fi | \
 	  $(PERL) -pi -e 's#(src|SRC|href|HREF)=\"([-a-zA-Z0-9]+.data)#\1=\"../../tutorial/chapter-2.step-by-step/\2#g; s/(href|HREF)=.step-(\d+)/href=\"step_\2/g;' >> $@
@@ -161,7 +146,6 @@ validate-xrefs:
 
 
 clean:
-	-rm -f $(example-htmls)
 	-rm -f $(example-prog) $(example-plain) $(example-toc) \
 		$(example-toc-prog)  $(example-toc-plain) \
 		$(example-dox-prog) $(example-dox-plain) $(example-doxygen)
@@ -183,8 +167,8 @@ Makefile.dep: $(shell echo $D/examples/*/*.cc) Makefile
 			generated/$${i}_toc.prog generated/$${i}_toc.plain ; \
 		echo doxygen/$$i.h : generated/$${i}_prog.dox generated/$${i}_plain.dox \
 				generated/$${i}_toc.combined \
-				$$i.data/intro.`if test -f $$i.data/intro.dox ; then echo dox ; else echo html ; fi` \
-				$$i.data/results.`if test -f $$i.data/results.dox ; then echo dox ; else echo html ; fi` \
+				$D/examples/$$i/doc/intro.`if test -f $D/examples/$$i/doc/intro.dox ; then echo dox ; else echo html ; fi` \
+				$D/examples/$$i/doc/results.`if test -f $D/examples/$$i/doc/results.dox ; then echo dox ; else echo html ; fi` \
  ; \
 	 done \
 	> $@

@@ -109,7 +109,7 @@ in the pressure variable:
   </tr>
 
   <tr>
-    <td></td>  <td>O(h)</td>  <td>$O(h^2)$</td>  <td>$O(h^3)$</td>
+    <td></td>  <td>$O(h)$</td>  <td>$O(h^2)$</td>  <td>$O(h^3)$</td>
   </tr>
 </table>
 
@@ -162,7 +162,7 @@ in the velocity variables:
   </tr>
 
   <tr>
-    <td></td>  <td>O(h)</td>  <td>$O(h^2)$</td>  <td>$O(h^3)$</td>
+    <td></td>  <td>$O(h)$</td>  <td>$O(h^2)$</td>  <td>$O(h^3)$</td>
   </tr>
 </table>
 The result concerning the convergence order is the same here.

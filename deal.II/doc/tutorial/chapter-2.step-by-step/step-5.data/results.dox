@@ -1,10 +1,10 @@
 <a name="Results"></a>
 <h1>Results</h1>
 
-<p>
+
 When the last block in <code>main()</code> is commented in, the output
 of the program looks as follows:
-<pre><code>
+@code
 Cycle 0:
    Number of active cells: 20
    Total number of cells: 20
@@ -52,61 +52,61 @@ Stacktrace:
 #1  ./step-5: main
 --------------------------------------------------------
 make: *** [run] Aborted
-</code></pre>
-</p>
+@endcode
 
-<p>
+
+
 Let's first focus on the things before the error:
 In each cycle, the number of cells quadruples and the number of CG
 iterations roughly doubles.
 Also, in each cycle, the program writes one output graphic file in EPS
 format. They are depicted in the following:
-</p>
 
-<p>
+
+
 <TABLE WIDTH="100%">
-<tr>
-<td>
-<IMG SRC="step-5.data/solution-0.jpg" ALT="solution-0" WIDTH="300">
-</td>
-<td>
-<IMG SRC="step-5.data/solution-1.jpg" ALT="solution-1" WIDTH="300">
-</td>
-</tr>
+  <tr>
+    <td>
+      @image html step-5.solution-0.png
+    </td>
+    <td>
+      @image html step-5.solution-1.png
+    </td>
+  </tr>
 
-<tr>
-<td>
-<IMG SRC="step-5.data/solution-2.jpg" ALT="solution-2" WIDTH="300">
-</td>
-<td>
-<IMG SRC="step-5.data/solution-3.jpg" ALT="solution-3" WIDTH="300">
-</td>
-</tr>
+  <tr>
+    <td>
+      @image html step-5.solution-2.png
+    </td>
+    <td>
+      @image html step-5.solution-3.png
+    </td>
+  </tr>
 
-<tr>
-<td>
-<IMG SRC="step-5.data/solution-4.jpg" ALT="solution-4" WIDTH="300">
-</td>
-<td>
-<IMG SRC="step-5.data/solution-5.jpg" ALT="solution-5" WIDTH="300">
-</td>
-</tr>
+  <tr>
+    <td>
+      @image html step-5.solution-4.png
+    </td>
+    <td>
+      @image html step-5.solution-5.png
+    </td>
+  </tr>
 </table>
-</p>
 
-<p>
+
+
 Due to the variable coefficient (the curvature there is reduced by the
 same factor by which the coefficient is increased), the top region of
 the solution is flattened. The gradient of the solution is
 discontinuous there, although this is not very clearly visible in the
 pictures above. We will look at this in more detail in the next
 example.
-</p>
 
 
-<p>
+
+
 As for the error &mdash; let's look at it again:
-<pre><code>
+@code
 --------------------------------------------------------
 An error occurred in line &lt;273&gt; of file &lt;step-5.cc&gt; in function
     void Coefficient&lt;dim&gt;::value_list(const std::vector&lt;Point&lt;dim&gt;, std::allocator&lt;Point&lt;dim&gt; &gt; &gt;&, std::vector&lt;double, std::allocator&lt;double&gt; &gt;&, unsigned int)
@@ -124,10 +124,10 @@ Stacktrace:
 #1  ./step-5: main
 --------------------------------------------------------
 make: *** [run] Aborted
-</code></pre>
-</p>
+@endcode
 
-<p>
+
+
 What we see is that the error was triggered in line 273 of the
 step-5.cc file (as we modify tutorial programs over time, these line
 numbers change, so you should check what line number you actually get
@@ -136,18 +136,18 @@ in the code what exactly happened. But the text tells you even
 more. First, it prints the function this happens in, and then the
 plain text version of the condition that was violated. This will
 almost always be enough already to let you know what exactly went wrong.
-</p>
 
-<p>
+
+
 But that's not all yet. You get to see the name of the exception
 (<code>ExcDimensionMismatch</code>) and this exception even prints the
 values of the two array sizes. If you go back to the code in
 <code>main()</code>, you will remember that we gave the two variables
 sizes 1 and 2, which of course are the ones that you find in the
 output again.
-</p>
 
-<p>
+
+
 So now we know pretty exactly where the error happened and what went
 wrong. What we don't know yet is how exactly we got there. The
 stacktrace at the bottom actually tells us what happened: the problem
@@ -160,4 +160,4 @@ function, in which case stack frame 1 would be
 <code>LaplaceProblem&lt;2&gt;::assemble_system</code>, stack frame 2
 would be <code>LaplaceProblem&lt;2&gt;::run</code>, and stack frame 3
 would be <code>main()</code> &mdash; you get the idea.
-</p>
+

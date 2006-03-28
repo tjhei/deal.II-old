@@ -54,15 +54,16 @@ gnuplot> set hidden3d
 @endcode
 to get the result at the right:
 
-<TABLE WIDTH="100%">
-<tr>
-<td>
-<IMG SRC="step-3.data/solution-1.jpg" ALT="solution-1" WIDTH="300">
-</td>
-<td>
-<IMG SRC="step-3.data/solution-2.jpg" ALT="solution-2" WIDTH="300">
-</td>
-</tr>
+<TABLE WIDTH="60%" ALIGN="center">
+  <tr>
+    <td ALIGN="center">
+      @image html step-3.solution-1.png
+    </td>
+
+    <td ALIGN="center">
+      @image html step-3.solution-2.png
+    </td>
+  </tr>
 </table>
 
 

@@ -36,17 +36,11 @@ one):
 <TABLE WIDTH="60%" ALIGN="center">
   <tr>
     <td ALIGN="center">
-      @image html sparsity_pattern_1.jpg
-      <br>
-      <a href="step-2.data/sparsity_pattern_1.jpg">(Click here for original
-      version)</a> 
+      @image html step-2.sparsity-1.png
     </td>
 
     <td ALIGN="center">
-      @image html sparsity_pattern_2.jpg
-      <br>
-      <a href="step-2.data/sparsity_pattern_2.jpg">(Click here for original
-      version)</a> 
+      @image html step-2.sparsity-2.png
     </td>
   </tr>
 </table>

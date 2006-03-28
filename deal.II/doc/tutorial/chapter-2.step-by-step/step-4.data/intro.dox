@@ -39,7 +39,7 @@ resolved at the time of compilation for a specific template
 parameter. For example, consider the following piece of code:
 @code
   template <int dim>
-  void make_grid (Triangulation<dim> &amp;triangulation)
+  void make_grid (Triangulation<dim> &triangulation)
   {
     GridGenerator::hyper_cube (triangulation, -1, 1);
   };
@@ -68,7 +68,7 @@ requested and will compile the template above into a function with dim replaced
 by 2 everywhere, i.e. it will compile the function as if it were defined
 as
 @code
-  void make_grid (Triangulation<2> &amp;triangulation)
+  void make_grid (Triangulation<2> &triangulation)
   {
     GridGenerator::hyper_cube (triangulation, -1, 1);
   };
@@ -89,7 +89,7 @@ The same can be done with member variables. Consider the following
 function, which might in turn call the above one:
 @code
   template <int dim>
-  void make_grid_and_dofs (Triangulation<dim> &amp;triangulation)
+  void make_grid_and_dofs (Triangulation<dim> &triangulation)
   {
     make_grid (triangulation);
 

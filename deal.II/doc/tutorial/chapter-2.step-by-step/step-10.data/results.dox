@@ -1,27 +1,27 @@
 <a name="Results"></a>
 <h1>Results</h1>
 
-<p>
+
 The program performs two tasks, the first being to generate a
 visualization of the mapped domain, the second to compute pi by the
 two methods described. Let us first take a look at the generated
 graphics. They are generated in Gnuplot format, and can be viewed with
 the commands
-<pre>
+@code
 set data style lines
 set size 0.721, 1
 set nokey
 plot [-1:1][-1:1] "ball0_mapping_q1.dat"
-</pre>
+@endcode
 or using one of the other filenames. The second line makes sure that
 the aspect ratio of the generated output is actually 1:1, i.e. a
 circle is drawn as a circle on your screen, rather than as an
 ellipse. The third line switches off the key in the graphic, as that
 will only print information (the filename) which is not that important
 right now.
-</p>
 
-<p>
+
+
 The following table shows the triangulated computational domain for
 Q1, Q2, and Q3 mappings, for the original coarse grid (left), and a
 once uniformly refined grid (right). If your browser does not display
@@ -29,28 +29,28 @@ these pictures in acceptable quality, view them one by one.
 <table "width=80%" align="center">
   <tr>
     <td>
-      <img src="step-10.data/ball_mapping_q1_ref0.jpg" alt="Q1 mapping, coarse grid" height="300">
+      @image html step-10.ball_mapping_q1_ref0.png
     </td>
     <td>
-      <img src="step-10.data/ball_mapping_q1_ref1.jpg" alt="Q1 mapping, once refined grid" height="300">
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <img src="step-10.data/ball_mapping_q2_ref0.jpg" alt="Q2 mapping, coarse grid" height="300">
-    </td>
-    <td>
-      <img src="step-10.data/ball_mapping_q2_ref1.jpg" alt="Q2 mapping, once refined grid" height="300">
+      @image html step-10.ball_mapping_q1_ref1.png
     </td>
   </tr>
 
   <tr>
     <td>
-      <img src="step-10.data/ball_mapping_q3_ref0.jpg" alt="Q3 mapping, coarse grid" height="300">
+      @image html step-10.ball_mapping_q2_ref0.png
     </td>
     <td>
-      <img src="step-10.data/ball_mapping_q3_ref1.jpg" alt="Q3 mapping, once refined grid" height="300">
+      @image html step-10.ball_mapping_q2_ref1.png
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      @image html step-10.ball_mapping_q3_ref0.png
+    </td>
+    <td>
+      @image html step-10.ball_mapping_q3_ref1.png
     </td>
   </tr>
 </table>
@@ -62,13 +62,13 @@ with dashed lines the exact circle:
 <table "width=80%" align="center">
   <tr>
     <td>
-      <img src="step-10.data/quarter-q1.jpg" alt="Q1 mapping, coarse grid" height="300">
+      @image html step-10.quarter-q1.png
     </td>
     <td>
-      <img src="step-10.data/quarter-q2.jpg" alt="Q2 mapping, coarse grid" height="300">
+      @image html step-10.quarter-q2.png
     </td>
     <td>
-      <img src="step-10.data/quarter-q3.jpg" alt="Q3 mapping, coarse grid" height="300">
+      @image html step-10.quarter-q3.png
     </td>
   </tr>
 </table>
@@ -82,12 +82,12 @@ only on cells at the boundary. Higher order mappings are therefore
 usually not noticably slower than lower order ones, because the
 additional computations are only performed on a small subset of all
 cells.
-</p>
 
-<p>
+
+
 The second purpose of the program was to compute the value of pi to
 good accuracy. This is the output of this part of the program:
-<pre>
+@code
 Computation of Pi by the area:
 ==============================
 Degree = 1
@@ -164,31 +164,31 @@ cells         eval.pi         error
 320     3.1415926540544636      4.6467e-10      6.00
 1280    3.1415926535970535      7.2602e-12      6.00
 5120    3.1415926535899010      1.0805e-13      6.07
-</pre>
-</p>
+@endcode
 
-<p>
+
+
 One of the immediate observations from the output is that in all cases
 the values converge quickly to the true value of
-pi=3.141592653589793238462643. Note that for the Q<sub>4</sub> mapping, the last
+$\pi=3.141592653589793238462643$. Note that for the $Q_4$ mapping, the last
 number is correct to 13 digits in both computations, which is already
-quite a lot. However, also note that for the Q<sub>1</sub> mapping, even on the
+quite a lot. However, also note that for the $Q_1$ mapping, even on the
 finest grid the accuracy is significantly worse than on the coarse
-grid for a Q<sub>4</sub> mapping!
-</p>
+grid for a $Q_4$ mapping!
 
-<p>
+
+
 The last column of the output shows the convergence order, in powers
-of the mesh width <it>h</it>. In the introduction, we had stated that
-the convergence order for a <it>Q<sub>p</sub></it> mapping should be
-<it>h<sup>p+1</sup></it>. However, in the example shown, the Q<sub>2</sub> and Q<sub>4</sub>
-mappings show a convergence order of <it>h<sup>p+2</sup></it>! This at
+of the mesh width $h$. In the introduction, we had stated that
+the convergence order for a $Q_p$ mapping should be
+$h^{p+1}$. However, in the example shown, the $Q_2$ and $Q_4$
+mappings show a convergence order of $h^{p+2}$! This at
 first surprising fact is readily explained by the particular boundary
 we have chosen in this example. In fact, the circle is described by the function
-<it>sqrt(1-x<sup>2</sup>)</it>, which has the series expansion 
-<it>1-x<sup>2</sup>/2-x<sup>4</sup>/8-x<sup>6</sup>/16+...</it>
-around <it>x=0</it>. Thus, for the quadratic mapping where the
+$\sqrt{1-x^2}$, which has the series expansion 
+$1-x^2/2-x^4/8-x^6/16+\ldots$
+around $x=0$. Thus, for the quadratic mapping where the
 truncation error of the quadratic approximation should be cubic, there
 is no such term but only a quartic one, which raises the convergence
-order to 4, instead of 3. The same happens for the Q<sub>4</sub> mapping.
-</p>
+order to 4, instead of 3. The same happens for the $Q_4$ mapping.
+

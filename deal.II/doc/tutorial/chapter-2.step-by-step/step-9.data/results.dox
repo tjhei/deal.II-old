@@ -1,12 +1,11 @@
 <a name="Results"></a>
 <h1>Results</h1>
 
-<p>
+
 The results of this program are not particularly spectacular. They
 consist of the console output, some grid files, and the solution on
 the finest grid. First for the console output:
-<code>
-<pre>
+@code
 Cycle 0:
    Number of active cells:       256
    Number of degrees of freedom: 289
@@ -25,31 +24,27 @@ Cycle 4:
 Cycle 5:
    Number of active cells:       26002
    Number of degrees of freedom: 30035
-</pre>
-</code>
+@endcode
 As can be seen, quite a number of cells is used on the finest level to
 resolve the features of the solution. The final grid showing this is
 displayed in the following picture:
-</p>
 
-<p align="center">
-  <img src="step-9.data/final-grid.gif" alt="final grid" width="50%">
-</p>
 
-<p>
+@image html step-9.grid.png
+
+
+
 The structure of the grid will be understandable by looking at the
 solution itself:
-</p>
 
-<p align="center">
-  <img src="step-9.data/final-solution.jpeg" alt="final solution" width="50%">
-</p>
 
-<p>
+@image html step-9.solution.png
+
+
+
 Note that the solution is created by that part that is transported
 along the wiggled advection field from the left and lower boundaries
 to the top right, and the part that is created by the source in the
 lower left corner, and the results of which are also transported
 along. The grid shown above is well-adapted to resolve these
 features. 
-</p>

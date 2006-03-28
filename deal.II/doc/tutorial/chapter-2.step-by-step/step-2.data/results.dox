@@ -34,18 +34,21 @@ indicated positions in the matrix tell us which shape functions can
 and which can't couple, if the equation is a local, i.e. differential
 one): 
 <TABLE WIDTH="60%" ALIGN="center">
-<tr>
-<td ALIGN="center">
-@image html sparsity_pattern_1.jpg
-<br>
-<a href="step-2.data/sparsity_pattern_1.jpg">(Click here for larger version)</a>
-</td>
-<td ALIGN="center">
-@image html sparsity_pattern_2.jpg
-<br>
-<a href="step-2.data/sparsity_pattern_2.jpg">(Click here for larger version)</a>
-</td>
-</tr>
+  <tr>
+    <td ALIGN="center">
+      @image html sparsity_pattern_1.jpg
+      <br>
+      <a href="step-2.data/sparsity_pattern_1.jpg">(Click here for larger
+      version)</a> 
+    </td>
+
+    <td ALIGN="center">
+      @image html sparsity_pattern_2.jpg
+      <br>
+      <a href="step-2.data/sparsity_pattern_2.jpg">(Click here for larger
+      version)</a> 
+    </td>
+  </tr>
 </table>
 
 The different regions in the left picture represent the degrees of

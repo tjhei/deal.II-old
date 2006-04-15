@@ -6,3 +6,4 @@ Makefile
 header.html
 header.tex
 doxygen.log
+*.png

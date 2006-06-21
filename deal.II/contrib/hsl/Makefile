@@ -1,5 +1,5 @@
 # $Id$
-# Copyright (C) 2001, 2002, 2003, 2004 by Wolfgang Bangerth
+# Copyright (C) 2001, 2002, 2003, 2004, 2006 by Wolfgang Bangerth
 
 
 D = ../..
@@ -20,13 +20,21 @@ o-files     = $(f-files:source/%.f=$(LIBDIR)/contrib/hsl/%.$(OBJEXT))
 
 
 
+
+# rules
+lib: $(LIBDIR)/libhsl$(lib-suffix) $(LIBDIR)/bin/detached_ma27$(EXEEXT)
+
+
+
 $(LIBDIR)/contrib/hsl/%.$(OBJEXT) :
 	@echo =====hsl==============optimized==$(MT)== $(<F)
 	@$(F77) $(F77FLAGS.o) -c $< -o $@
 
 
-# rules
-lib: $(LIBDIR)/libhsl$(lib-suffix) $(LIBDIR)/bin/detached_ma27$(EXEEXT)
+$(LIBDIR)/contrib/hsl/detached_ma27.$(OBJEXT) : source/detached_ma27.cc \
+						include/hsl/hsl.h
+	@echo =====hsl==============optimized==$(MT)== $(<F)
+	@$(CXX) $(CXXFLAGS.g) -c $< -o $@
 
 
 $(LIBDIR)/libhsl$(static-lib-suffix): $(forward-declarations) $(o-files)
@@ -45,10 +53,12 @@ $(LIBDIR)/libhsl$(shared-lib-suffix): $(forward-declarations) $(o-files)
 # rule to make the program that runs an MA27 solver detached from the
 # main program, and communicates through a pipe. since this program
 # has actually nothing much to do, compile it in debug mode
-$(LIBDIR)/bin/detached_ma27$(EXEEXT): source/detached_ma27.cc include/hsl/hsl.h \
-				$(LIBDIR)/libhsl$(lib-suffix)
+$(LIBDIR)/bin/detached_ma27$(EXEEXT):  \
+				$(LIBDIR)/contrib/hsl/detached_ma27.$(OBJEXT) \
+                                -lhsl \
+				$(lib-base.o)
 	@echo =====hsl=========================$(MT)== Making   $(@F)
-	@$(CXX) $(CXXFLAGS.g) $< -o $@ $(LIBDIR)/libhsl$(lib-suffix) $(lib-base.o) $(F77LIBS) -lpthread $(LIBS)
+	@$(CXX) $(CXXFLAGS.g) $^ -o $@ $(F77LIBS) -lpthread $(LIBS)
 
 
 

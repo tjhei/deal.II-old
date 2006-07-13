@@ -3,7 +3,7 @@
 print "<a name=\"CommProg\"></a>\n";
 print "<h1> The commented program</h1>\n";
 
-# ignore comments at the start of the program. this includes CVS
+# ignore comments at the start of the program. this includes subversion
 # tags and copyright notices.
 $_ = <>;
 while ( m!^/[/\*]!  ||  m!\s*\*! || m/^$/ ) {

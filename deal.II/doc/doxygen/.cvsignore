@@ -1,9 +1,0 @@
-base lac deal.II
-*.tag
-options.dox
-LaTeX
-Makefile
-header.html
-header.tex
-doxygen.log
-*.png

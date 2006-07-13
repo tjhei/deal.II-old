@@ -1,6 +1,0 @@
-*.o *.go *.exe Makefile.dep *.gnuplot *.gmv *.eps
-step-3
-solution.gpl
-*.ii
-*.ti
-ii_files

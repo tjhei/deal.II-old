@@ -10,18 +10,7 @@ DEAL::u const
 DEAL::Construct C
 DEAL::Construct D
 DEAL::Destruct D
---------------------------------------------------------
-An error occurred in file <subscriptor.cc> in function
-    virtual Subscriptor::~Subscriptor()
-The violated condition was: 
-    counter == 0
-The name and call sequence of the exception was:
-    ExcInUse(counter, object_info->name(), infostring)
-Additional Information: 
-Object of class 4Test is still used by 1 other objects.
-  from Subscriber Test R
---------------------------------------------------------
-DEAL::Abort!!!
+DEAL::ExcInUse(counter, object_info->name(), infostring)
 DEAL::Destruct C
 DEAL::Destruct B
 DEAL::Destruct A

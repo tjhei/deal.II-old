@@ -127,14 +127,7 @@ $(example-doxygen):
          fi | \
 	  $(PERL) -pi -e 's#(src|SRC|href|HREF)=\"([-a-zA-Z0-9]+.data)#\1=\"../../tutorial/chapter-2.step-by-step/\2#g; s/(href|HREF)=.step-(\d+)/href=\"step_\2/g;' >> $@
 	@cat generated/$(call get_basename, $@)_prog.dox >> $@
-	@if test -f $D/examples/$(call get_basename, $@)/doc/results.dox ; then \
-	    cat $D/examples/$(call get_basename, $@)/doc/results.dox ; \
-	 else \
-	    echo "@htmlonly" ; \
-	    cat $D/examples/$(call get_basename, $@)/doc/results.html ; \
-	    echo "@endhtmlonly" ; \
-         fi | \
-	  $(PERL) -pi -e 's#(src|SRC|href|HREF)=\"([-a-zA-Z0-9]+.data)#\1=\"../../tutorial/chapter-2.step-by-step/\2#g; s/(href|HREF)=.step-(\d+)/href=\"step_\2/g;' >> $@
+	@cat $D/examples/$(call get_basename, $@)/doc/results.dox >> $@
 	@cat generated/$(call get_basename, $@)_plain.dox >> $@
 	@echo " */" >> $@
 
@@ -168,7 +161,7 @@ Makefile.dep: $(shell echo $D/examples/*/*.cc) Makefile
 		echo doxygen/$$i.h : generated/$${i}_prog.dox generated/$${i}_plain.dox \
 				generated/$${i}_toc.combined \
 				$D/examples/$$i/doc/intro.`if test -f $D/examples/$$i/doc/intro.dox ; then echo dox ; else echo html ; fi` \
-				$D/examples/$$i/doc/results.`if test -f $D/examples/$$i/doc/results.dox ; then echo dox ; else echo html ; fi` \
+				$D/examples/$$i/doc/results.dox \
  ; \
 	 done \
 	> $@

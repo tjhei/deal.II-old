@@ -14,8 +14,6 @@ gen-example-names = $(addprefix generated/, $(example-names))
 
 # names of commented program files, plain files, and tocs for the commented
 # and commented and plain versions of the program as well as a combined one
-example-prog       = $(addsuffix _prog.html,$(gen-example-names))
-example-plain      = $(addsuffix _plain.html,$(gen-example-names))
 example-toc-prog   = $(addsuffix _toc.prog,$(gen-example-names))
 example-toc-plain  = $(addsuffix _toc.plain,$(gen-example-names))
 example-toc        = $(addsuffix _toc.combined,$(gen-example-names))
@@ -38,26 +36,6 @@ get_basename = $(shell echo $(1) | $(PERL) -pi -e 's/(generated|doxygen).//g; s/
 
 
 all: $(example-doxygen)
-
-
-$(example-prog):
-	@echo ================== Making $@
-	@cat $D/examples/$(call get_basename, $@)/*.cc \
-	  | $(PERL) program2html \
-	  > $@
-
-
-$(example-plain):
-	@echo ================== Making $@
-	@echo "<a name=\"PlainProg\"></a>" > $@
-	@echo "<h1> The plain program</h1>" >> $@
-	@echo "<p>" >> $@
-	@echo "(If you are looking at a locally installed deal.II version, then the" >> $@
-	@echo "program can be found at <i>" >> $@
-	@echo $D/examples/$(call get_basename,$@)/*.cc | $(PERL) -pi -e 's!/! /!g;' >> $@
-	@echo "</i>. Otherwise, this is only" >> $@
-	@echo "the path on some remote server.) </p>" >> $@
-	@cat $D/examples/$(call get_basename, $@)/*.cc | $(PERL) program2plain >> $@
 
 
 $(example-toc-prog):
@@ -139,7 +117,7 @@ validate-xrefs:
 
 
 clean:
-	-rm -f $(example-prog) $(example-plain) $(example-toc) \
+	-rm -f $(example-toc) \
 		$(example-toc-prog)  $(example-toc-plain) \
 		$(example-dox-prog) $(example-dox-plain) $(example-doxygen)
 	-rm -f Makefile.dep

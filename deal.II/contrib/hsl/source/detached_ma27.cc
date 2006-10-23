@@ -2,7 +2,7 @@
 //    $Id$
 //    Version: $Name$
 //
-//    Copyright (C) 2002, 2003 by the deal.II authors
+//    Copyright (C) 2002, 2003, 2006 by the deal.II authors
 //
 //    This file is subject to QPL and may not be  distributed
 //    without copyright and license information. Please refer
@@ -37,6 +37,7 @@
 #include <sys/errno.h>
 
 
+DEAL_II_NAMESPACE_OPEN
 
 /**
  * Namespace implementing a number of functions that are used to
@@ -232,10 +233,13 @@ void get (T *t, const size_t N, const char *debug_info)
     record_communication<T> (CommunicationsLog::get, N, count, debug_info);
 }
 
+DEAL_II_NAMESPACE_CLOSE
 
 
 int main () 
 {
+  using namespace dealii;
+  
                                    // first action is to get the pid
                                    // of the master process, so that
                                    // we can check whether it is still

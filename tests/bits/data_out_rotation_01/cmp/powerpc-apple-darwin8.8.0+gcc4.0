@@ -669,6 +669,7 @@ LOOKUP_TABLE default
 2 2
 [deal.II intermediate format graphics data]
 [written by deal.II 5.3.pre]
+[Version: 2]
 2
 node_data
 cell_data
@@ -4783,6 +4784,7 @@ LOOKUP_TABLE default
 3 3
 [deal.II intermediate format graphics data]
 [written by deal.II 5.3.pre]
+[Version: 2]
 2
 node_data
 cell_data
@@ -5683,6 +5685,7 @@ LOOKUP_TABLE default
 2 2
 [deal.II intermediate format graphics data]
 [written by deal.II 5.3.pre]
+[Version: 2]
 2
 node_data
 cell_data
@@ -9797,6 +9800,7 @@ LOOKUP_TABLE default
 3 3
 [deal.II intermediate format graphics data]
 [written by deal.II 5.3.pre]
+[Version: 2]
 2
 node_data
 cell_data
@@ -10697,6 +10701,7 @@ LOOKUP_TABLE default
 2 2
 [deal.II intermediate format graphics data]
 [written by deal.II 5.3.pre]
+[Version: 2]
 2
 node_data
 cell_data
@@ -14811,6 +14816,7 @@ LOOKUP_TABLE default
 3 3
 [deal.II intermediate format graphics data]
 [written by deal.II 5.3.pre]
+[Version: 2]
 2
 node_data
 cell_data
@@ -15711,6 +15717,7 @@ LOOKUP_TABLE default
 2 2
 [deal.II intermediate format graphics data]
 [written by deal.II 5.3.pre]
+[Version: 2]
 2
 node_data
 cell_data
@@ -19825,6 +19832,7 @@ LOOKUP_TABLE default
 3 3
 [deal.II intermediate format graphics data]
 [written by deal.II 5.3.pre]
+[Version: 2]
 2
 node_data
 cell_data
@@ -20725,6 +20733,7 @@ LOOKUP_TABLE default
 2 2
 [deal.II intermediate format graphics data]
 [written by deal.II 5.3.pre]
+[Version: 2]
 2
 node_data
 cell_data
@@ -24839,6 +24848,7 @@ LOOKUP_TABLE default
 3 3
 [deal.II intermediate format graphics data]
 [written by deal.II 5.3.pre]
+[Version: 2]
 2
 node_data
 cell_data
@@ -25739,6 +25749,7 @@ LOOKUP_TABLE default
 2 2
 [deal.II intermediate format graphics data]
 [written by deal.II 5.3.pre]
+[Version: 2]
 2
 node_data
 cell_data
@@ -29853,6 +29864,7 @@ LOOKUP_TABLE default
 3 3
 [deal.II intermediate format graphics data]
 [written by deal.II 5.3.pre]
+[Version: 2]
 2
 node_data
 cell_data
@@ -34150,6 +34162,7 @@ LOOKUP_TABLE default
 3 3
 [deal.II intermediate format graphics data]
 [written by deal.II 5.3.pre]
+[Version: 2]
 3
 node_data_0
 node_data_1

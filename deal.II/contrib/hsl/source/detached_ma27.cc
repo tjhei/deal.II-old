@@ -2,7 +2,7 @@
 //    $Id$
 //    Version: $Name$
 //
-//    Copyright (C) 2002, 2003, 2006 by the deal.II authors
+//    Copyright (C) 2002, 2003, 2006, 2007 by the deal.II authors
 //
 //    This file is subject to QPL and may not be  distributed
 //    without copyright and license information. Please refer
@@ -39,81 +39,6 @@
 
 DEAL_II_NAMESPACE_OPEN
 
-/**
- * Namespace implementing a number of functions that are used to
- * record the communication between master and detached
- * processes. This is mainly for debugging purposes.
- */
-namespace CommunicationsLog
-{
-                                   /**
-                                    * Type denoting the direction of a
-                                    * recorder communication.
-                                    */
-  enum Direction { put, get };
-  
-                                   /**
-                                    * One record of a recorded
-                                    * communication.
-                                    */
-  struct Record 
-  {
-      Direction             direction;
-      const std::type_info* type;
-      unsigned int          count;
-      unsigned int          scheduled_bytes;
-      unsigned int          completed_bytes;
-      std::string           description;
-  };
-
-                                   /**
-                                    * The elements of a recorder
-                                    * communication
-                                    */
-  std::list<Record> communication_log;
-
-  
-                                   /**
-                                    * Record a sent or received
-                                    * message
-                                    */
-  template <typename T>
-  void record_communication (const Direction    direction,
-                             const unsigned int count,
-                             const unsigned int completed_bytes,
-                             const std::string &descr)
-  {
-    Record record = {direction, &typeid(T), count,
-                     sizeof(T)*count, completed_bytes, descr};
-    communication_log.push_back (record);
-  }
-
-
-                                   /**
-                                    * List all the communication that
-                                    * has happened.
-                                    */
-  void list_communication () 
-  {
-    std::cerr << "------------------------------" << std::endl
-              << "Communiction log history:" << std::endl;
-    
-    for (std::list<Record>::const_iterator i=communication_log.begin();
-         i!=communication_log.end(); ++i)
-      std::cerr << "-- " << getpid() << ' '
-                << (i->direction == put ? "put" : "get")
-                << " "
-                << i->count << " objects of type "
-                << i->type->name()
-                << ", " << i->completed_bytes
-                << " of " << i->scheduled_bytes
-                << " bytes completed, description="
-                << i->description
-                << std::endl;
-    std::cerr << "------------------------------" << std::endl;
-  }
-}
-
 
 
 /**
@@ -124,7 +49,6 @@ void die (const std::string &text, const pid_t pid)
   sleep (rand()%5 + getpid()%5);
   std::cerr << "----- detached_ma27(" << pid << "): " << text
             << std::endl;
-  CommunicationsLog::list_communication ();
   abort ();
 }
 
@@ -140,7 +64,6 @@ void die (const std::string &text, const T1 t1, const T2 t2, const pid_t pid)
   std::cerr << "----- detached_ma27(" << pid << "): " << text
             << " code1=" << t1 << ", code2=" << t2
             << std::endl;
-  CommunicationsLog::list_communication ();
   abort ();
 }
 
@@ -183,7 +106,7 @@ void monitor_parent_liveness (const pid_t master_pid,
  * Put a certain number of objects to the output stream.
  */
 template <typename T>
-void put (const T *t, const size_t N, const char *debug_info)
+void put (const T *t, const size_t N, const char * /*debug_info*/)
 {
   unsigned int count = 0;
   while (count < sizeof(T)*N)
@@ -199,11 +122,9 @@ void put (const T *t, const size_t N, const char *debug_info)
         die ("error on client side in 'put'", ret, errno, getpid());
 
       count += ret;
-    };
+    }
   
   fflush (NULL);
-  CommunicationsLog::
-    record_communication<T> (CommunicationsLog::put, N, count, debug_info);
 }
 
 
@@ -212,7 +133,7 @@ void put (const T *t, const size_t N, const char *debug_info)
  * Read a certain number of objects from the input stream.
  */
 template <typename T>
-void get (T *t, const size_t N, const char *debug_info)
+void get (T *t, const size_t N, const char * /*debug_info*/)
 {
   unsigned int count = 0;
   while (count < sizeof(T)*N)
@@ -227,10 +148,7 @@ void get (T *t, const size_t N, const char *debug_info)
         die ("error on client side in 'get'", ret, errno, getpid());
       else
         count += ret;
-    };
-  
-  CommunicationsLog::
-    record_communication<T> (CommunicationsLog::get, N, count, debug_info);
+    }
 }
 
 DEAL_II_NAMESPACE_CLOSE

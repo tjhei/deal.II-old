@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* UMFPACK Copyright (c) Timothy A. Davis, CISE,                              */
 /* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
@@ -101,7 +101,8 @@ GLOBAL void UMFPACK_report_info
     /* print umfpack version */
     /* ---------------------------------------------------------------------- */
 
-    PRINTF (("\n%s, Info:\n", UMFPACK_VERSION)) ;
+    PRINTF  (("UMFPACK V%d.%d.%d (%s), Info:\n", UMFPACK_MAIN_VERSION,
+	UMFPACK_SUB_VERSION, UMFPACK_SUBSUB_VERSION, UMFPACK_DATE)) ;
 
 #ifndef NDEBUG
     PRINTF ((
@@ -119,7 +120,7 @@ GLOBAL void UMFPACK_report_info
 #endif
 #ifdef DLONG
     PRINTF (("    matrix entry defined as:          double\n")) ;
-    PRINTF (("    Int (generic integer) defined as: long\n")) ;
+    PRINTF (("    Int (generic integer) defined as: UF_long\n")) ;
 #endif
 #ifdef ZINT
     PRINTF (("    matrix entry defined as:          double complex\n")) ;
@@ -127,27 +128,20 @@ GLOBAL void UMFPACK_report_info
 #endif
 #ifdef ZLONG
     PRINTF (("    matrix entry defined as:          double complex\n")) ;
-    PRINTF (("    Int (generic integer) defined as: long\n")) ;
+    PRINTF (("    Int (generic integer) defined as: UF_long\n")) ;
 #endif
 
     /* ---------------------------------------------------------------------- */
     /* print compile-time options */
     /* ---------------------------------------------------------------------- */
 
-    PRINTF (("    BLAS library used:                ")) ;
+    PRINTF (("    BLAS library used: ")) ;
 
-#if defined (USE_NO_BLAS)
+#ifdef NBLAS
     PRINTF (("none.  UMFPACK will be slow.\n")) ;
-#elif defined (USE_C_BLAS)
-    PRINTF (("C-BLAS.\n")) ;
-#elif defined (USE_MATLAB_BLAS)
-    PRINTF (("built-in MATLAB BLAS.\n")) ;
-#elif defined (USE_SUNPERF_BLAS)
-    PRINTF (("Sun Performance Library BLAS.\n")) ;
-#elif defined (USE_SCSL_BLAS)
-    PRINTF (("SGI SCSL BLAS.\n")) ;
-#elif defined (USE_FORTRAN_BLAS)
-    PRINTF (("Fortran BLAS.\n")) ;
+#else
+    PRINTF (("Fortran BLAS.  size of BLAS integer: "ID"\n",
+	(Int) (sizeof (BLAS_INT)))) ;
 #endif
 
     PRINTF (("    MATLAB:                           ")) ;
@@ -155,7 +149,7 @@ GLOBAL void UMFPACK_report_info
     PRINTF (("yes.\n")) ;
 #else
 #ifdef MATHWORKS
-    PRINTF (("yes (using internal ut* routines).\n")) ;
+    PRINTF (("yes.\n")) ;
 #else
     PRINTF (("no.\n")) ;
 #endif
@@ -193,7 +187,7 @@ GLOBAL void UMFPACK_report_info
 
     PRINT_INFO ("    size of int:                      "ID" bytes\n",
 	(Int) Info [UMFPACK_SIZE_OF_INT]) ;
-    PRINT_INFO ("    size of long:                     "ID" bytes\n",
+    PRINT_INFO ("    size of UF_long:                  "ID" bytes\n",
 	(Int) Info [UMFPACK_SIZE_OF_LONG]) ;
     PRINT_INFO ("    size of pointer:                  "ID" bytes\n",
 	(Int) Info [UMFPACK_SIZE_OF_POINTER]) ;
@@ -494,13 +488,15 @@ GLOBAL void UMFPACK_report_info
     PRINT_INFO ("    numeric factorization wallclock time (sec):    %.2f\n",
 	twnum) ;
 
-    if (tnum > 0 && fnum > 0)
+#define TMIN 0.001
+
+    if (tnum > TMIN && fnum > 0)
     {
 	PRINT_INFO (
 	   "    numeric factorization mflops (CPU time):       %.2f\n",
 	   1e-6 * fnum / tnum) ;
     }
-    if (twnum > 0 && fnum > 0)
+    if (twnum > TMIN && fnum > 0)
     {
 	PRINT_INFO (
 	   "    numeric factorization mflops (wallclock):      %.2f\n",
@@ -509,12 +505,12 @@ GLOBAL void UMFPACK_report_info
 
     ttot = EMPTY ;
     ftot = fnum ;
-    if (tsym >= 0 && tnum >= 0)
+    if (tsym >= TMIN && tnum >= 0)
     {
 	ttot = tsym + tnum ;
 	PRINT_INFO ("    symbolic + numeric CPU time (sec):             %.2f\n",
 	    ttot) ;
-	if (ftot > 0 && ttot > 0)
+	if (ftot > 0 && ttot > TMIN)
 	{
 	    PRINT_INFO (
 		"    symbolic + numeric mflops (CPU time):          %.2f\n",
@@ -523,12 +519,12 @@ GLOBAL void UMFPACK_report_info
     }
 
     twtot = EMPTY ;
-    if (twsym >= 0 && twnum >= 0)
+    if (twsym >= TMIN && twnum >= TMIN)
     {
 	twtot = twsym + twnum ;
 	PRINT_INFO ("    symbolic + numeric wall clock time (sec):      %.2f\n",
 	    twtot) ;
-	if (ftot > 0 && twtot > 0)
+	if (ftot > 0 && twtot > TMIN)
 	{
 	    PRINT_INFO (
 		"    symbolic + numeric mflops (wall clock):        %.2f\n",
@@ -558,13 +554,13 @@ GLOBAL void UMFPACK_report_info
 	tsolve) ;
     PRINT_INFO ("    solve wall clock time (sec):                   %.2f\n",
 	twsolve) ;
-    if (fsolve > 0 && tsolve > 0)
+    if (fsolve > 0 && tsolve > TMIN)
     {
 	PRINT_INFO (
 	    "    solve mflops (CPU time):                       %.2f\n",
 	    1e-6 * fsolve / tsolve) ;
     }
-    if (fsolve > 0 && twsolve > 0)
+    if (fsolve > 0 && twsolve > TMIN)
     {
 	PRINT_INFO (
 	    "    solve mflops (wall clock time):                %.2f\n",
@@ -578,15 +574,15 @@ GLOBAL void UMFPACK_report_info
 	"\n    total symbolic + numeric + solve flops:        %.5e\n", ftot) ;
     }
 
-    if (tsolve >= 0)
+    if (tsolve >= TMIN)
     {
-	if (ttot >= 0 && ftot >= 0)
+	if (ttot >= TMIN && ftot >= 0)
 	{
 	    ttot += tsolve ;
 	    PRINT_INFO (
 		"    total symbolic + numeric + solve CPU time:     %.2f\n",
 		ttot) ;
-	    if (ftot > 0 && ttot > 0)
+	    if (ftot > 0 && ttot > TMIN)
 	    {
 		PRINT_INFO (
 		"    total symbolic + numeric + solve mflops (CPU): %.2f\n",
@@ -595,15 +591,15 @@ GLOBAL void UMFPACK_report_info
 	}
     }
 
-    if (twsolve >= 0)
+    if (twsolve >= TMIN)
     {
-	if (twtot >= 0 && ftot >= 0)
+	if (twtot >= TMIN && ftot >= 0)
 	{
 	    twtot += tsolve ;
 	    PRINT_INFO (
 		"    total symbolic+numeric+solve wall clock time:  %.2f\n",
 		twtot) ;
-	    if (ftot > 0 && twtot > 0)
+	    if (ftot > 0 && twtot > TMIN)
 	    {
 		PRINT_INFO (
 		"    total symbolic+numeric+solve mflops(wallclock) %.2f\n",

@@ -1,36 +1,24 @@
-% umfpack_simple:  a simple demo of UMFPACK
+%UMFPACK_SIMPLE a simple demo
 %
-% UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
-% All Rights Reserved.  Type umfpack_details for License.
+% Example:
+%   umfpack_simple
+%
+% Copyright 1995-2007 by Timothy A. Davis.
 %
 % UMFPACK License:
 %
 %     Your use or distribution of UMFPACK or any modified version of
-%     UMFPACK implies that you agree to this License.
-%
-%     THIS MATERIAL IS PROVIDED AS IS, WITH ABSOLUTELY NO WARRANTY
-%     EXPRESSED OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
-%
-%     Permission is hereby granted to use or copy this program, provided
-%     that the Copyright, this License, and the Availability of the original
-%     version is retained on all copies.  User documentation of any code that
-%     uses UMFPACK or any modified version of UMFPACK code must cite the
-%     Copyright, this License, the Availability note, and "Used by permission."
-%     Permission to modify the code and to distribute modified code is granted,
-%     provided the Copyright, this License, and the Availability note are
-%     retained, and a notice that the code was modified is included.  This
-%     software was developed with support from the National Science Foundation,
-%     and is provided to you free of charge.
-%
+%     UMFPACK implies that you agree to this License.  UMFPACK is
+%     is free software; you can redistribute it and/or
+%     modify it under the terms of the GNU Lesser General Public
+%     License as published by the Free Software Foundation; either
+%     version 2.1 of the License, or (at your option) any later version.
+
 % Availability: http://www.cise.ufl.edu/research/sparse/umfpack
 %
-% See also: umfpack, umfpack_details
+% See also: umfpack, umfpack2, umfpack_details
 
 help umfpack_simple
-i = input ('Hit enter to agree to the above License: ', 's') ;
-if (~isempty (i))
-    error ('terminating') ;
-end
 
 format short
 
@@ -40,21 +28,25 @@ A = [
  0 -1 -3  2  0
  0  0  1  0  0
  0  4  2  0  1
-]
+] ;
+fprintf ('A = \n') ; disp (A) ;
 
 A = sparse (A) ;
 
-b = [8 45 -3 3 19]'
+b = [8 45 -3 3 19]' ;
+fprintf ('b = \n') ; disp (b) ;
 
 fprintf ('Solution to Ax=b via UMFPACK:\n') ;
-fprintf ('x1 = umfpack (A, ''\\'', b)\n') ;
+fprintf ('x1 = umfpack2 (A, ''\\'', b)\n') ;
 
-x1 = umfpack (A, '\', b)
+x1 = umfpack2 (A, '\', b) ;
+fprintf ('x1 = \n') ; disp (x1) ;
 
 fprintf ('Solution to Ax=b via MATLAB:\n') ;
 fprintf ('x2 = A\\b\n') ;
 
-x2 = A\b
+x2 = A\b ;
+fprintf ('x2 = \n') ; disp (x2) ;
 
 fprintf ('norm (x1-x2) should be small: %g\n', norm (x1-x2)) ;
 

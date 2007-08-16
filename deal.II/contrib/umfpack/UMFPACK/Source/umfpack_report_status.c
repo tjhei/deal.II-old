@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* UMFPACK Copyright (c) Timothy A. Davis, CISE,                              */
 /* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
@@ -51,7 +51,8 @@ GLOBAL void UMFPACK_report_status
     PRINTF6 (("%s", UMFPACK_LICENSE_PART1)) ;
     PRINTF6 (("%s", UMFPACK_LICENSE_PART2)) ;
     PRINTF6 (("%s", UMFPACK_LICENSE_PART3)) ;
-    PRINTF  (("%s: ", UMFPACK_VERSION)) ;
+    PRINTF  (("UMFPACK V%d.%d.%d (%s): ", UMFPACK_MAIN_VERSION,
+	UMFPACK_SUB_VERSION, UMFPACK_SUBSUB_VERSION, UMFPACK_DATE)) ;
 
     switch (status)
     {

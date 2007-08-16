@@ -3,9 +3,9 @@
 /* ========================================================================= */
 
 /* ------------------------------------------------------------------------- */
-/* AMD Version 1.1 (Jan. 21, 2004), Copyright (c) 2004 by Timothy A. Davis,  */
-/* Patrick R. Amestoy, and Iain S. Duff.  See ../README for License.         */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.           */
+/* AMD, Copyright (c) Timothy A. Davis,					     */
+/* Patrick R. Amestoy, and Iain S. Duff.  See ../README.txt for License.     */
+/* email: davis at cise.ufl.edu    CISE Department, Univ. of Florida.        */
 /* web: http://www.cise.ufl.edu/research/sparse/amd                          */
 /* ------------------------------------------------------------------------- */
 
@@ -24,6 +24,9 @@ GLOBAL void AMD_info
 {
     double n, ndiv, nmultsubs_ldl, nmultsubs_lu, lnz, lnzd ;
 
+    PRINTF (("\nAMD version %d.%d.%d, %s, results:\n",
+	AMD_MAIN_VERSION, AMD_SUB_VERSION, AMD_SUBSUB_VERSION, AMD_DATE)) ;
+
     if (!Info)
     {
 	return ;
@@ -37,9 +40,7 @@ GLOBAL void AMD_info
     lnzd = (n >= 0 && lnz >= 0) ? (n + lnz) : (-1) ;
 
     /* AMD return status */
-    PRINTF ((
-	"\namd:  approximate minimum degree ordering, results:\n"
-	"    status: ")) ;
+    PRINTF (("    status: ")) ;
     if (Info [AMD_STATUS] == AMD_OK)
     {
 	PRINTF (("OK\n")) ;
@@ -51,6 +52,10 @@ GLOBAL void AMD_info
     else if (Info [AMD_STATUS] == AMD_INVALID)
     {
 	PRINTF (("invalid matrix\n")) ;
+    }
+    else if (Info [AMD_STATUS] == AMD_OK_BUT_JUMBLED)
+    {
+	PRINTF (("OK, but jumbled\n")) ;
     }
     else
     {

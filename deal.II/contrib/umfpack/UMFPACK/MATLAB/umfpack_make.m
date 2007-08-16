@@ -1,115 +1,54 @@
-function umfpack_make
-% UMFPACK_MAKE
+function umfpack_make (lapack)
+%UMFPACK_MAKE to compile umfpack2 for use in MATLAB
 %
-% Compiles the UMFPACK mexFunction and then runs a simple demo.
+% Compiles the umfpack2 mexFunction and then runs a simple demo.
 %
-% See also: umfpack, umfpack_details, umfpack_report, umfpack_demo, and
-% umfpack_simple.
+% Example:
+%   umfpack_make				% use default LAPACK and BLAS
+%   umfpack_make ('lcc_lib/libmwlapack.lib')	% try this if umfpack_make fails
 %
-% UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
-% All Rights Reserved.  Type umfpack_details for License.
+% See also: umfpack, umfpack2, umfpack_details, umfpack_report, umfpack_demo,
+% and umfpack_simple.
 
-help umfpack_make
+% Copyright 1995-2007 by Timothy A. Davis.
 
-fprintf ('\n--------------------------------------------------------------\n') ;
-fprintf ('Now compiling the UMFPACK and AMD mexFunctions.\n') ;
-fprintf ('--------------------------------------------------------------\n') ;
+details = 0 ;
 
-try
-    % ispc does not appear in MATLAB 5.3
-    pc = ispc ;
-catch
-    % if ispc fails, assume we aren't on a Windows PC.
-    pc = 0 ;
+d = '' ;
+if (~isempty (strfind (computer, '64')))
+    d = ' -largeArrayDims' ;
 end
 
-obj = 'o' ;
-blas_lib = '' ;
+[v,pc] = getversion ;
+fprintf ('Compiling UMFPACK for MATLAB Version %g\n', v) ;
+
 if (pc)
     obj = 'obj' ;
+else
+    obj = 'o' ;
 end
+
+kk = 0 ;
 
 %-------------------------------------------------------------------------------
 % BLAS option
 %-------------------------------------------------------------------------------
 
-msg = [ ...
-    '\nUsing the BLAS is faster, but might not compile correctly.\n', ...
-    'If you get an error stating that dgemm, dgemv, dger, zgemm,\n', ...
-    'zgemv, and/or zger are not defined, then recompile without the\n', ...
-    'BLAS.  You can ignore warnings that these routines are implicitly\n', ...
-    'declared.\n\nPlease select one of the following options: \n', ...
-    '   1:  attempt to compile with the BLAS (default)\n', ...
-    '   2:  do not use the BLAS\n'] ;
-fprintf (msg) ;
-blas = input (': ') ;
-if (isempty (blas))
-    blas = 1 ;
-end
-if (blas == 1)
-    % try to link to MATLAB's built-in BLAS
-    blas = '' ;
+if (nargin < 1)
     if (pc)
-        % the default lcc compiler needs this library to access the BLAS
-        blas_lib = ' libmwlapack.lib' ;
-        msg = [ ...
-        '\nCheck to see if you have a file called libmwlapack.lib in the\n', ...
-        '<matlab>\\extern\\lib\\win32\\lcc\\ directory, where <matlab> is ', ...
-        'the\ndirectory where MATLAB is installed.  If a file of that ', ...
-        'name is already\nthere, then you don''t have to do anything.  ', ...
-        'Otherwise, you must first\ncopy the libmwlapack.lib file from ', ...
-        'the umfpack\\lcc_lib\\ directory to the\n', ...
-        '<matlab>\\extern\\lib\\win32\\lcc\\ directory.  Next, type\n\n', ...
-        '    mex -setup\n\n', ...
-        'at the MATLAB prompt, and ask MATLAB to select the lcc compiler.  ',...
-        'You can skip\nall of this if you have already done it, or have ', ...
-        'configured mex to use\na different compiler.  If you are using ', ...
-        'Norton anti-virus software on Windows\n98SE, then you need to ', ...
-        'exit MATLAB, turn off virus checking, and restart MATLAB\n', ...
-        'before you can use the mex command or compile UMFPACK.\n', ...
-        'You may also need to turn off virus checking in other cases.\n', ...
-        '\nHit enter to continue, or type control-C if you do not wish to '] ;
-        fprintf (msg) ;
-        input ('proceed: ') ;
-    end
-    fprintf ('\nUsing the BLAS (recommended).\n') ;
-else
-    % No BLAS
-    fprintf ('\nNot using the BLAS.  UMFPACK will be slow.\n') ;
-    blas = ' -DNBLAS' ;
-end
-
-%-------------------------------------------------------------------------------
-% -DNUTIL option (using utMalloc or mxMalloc)
-%-------------------------------------------------------------------------------
-
-utils = '' ;
-
-if (~pc)
-    msg = [ ...
-    '--------------------------------------------------------------\n', ...
-    '\nUMFPACK uses MATLAB''s memory allocation routines.  The internal', ...
-    '\nutMalloc, utFree, and utRealloc allow for better use of memory,', ...
-    '\nbut they are internal utility routines that are not documented.\n', ...
-    'Thus, they might not always work.  Using mxMalloc, mxFree, and\n', ...
-    'mxRealloc works, but UMFPACK might run out of memory when solving\n', ...
-    'problems that it could otherwise solve.  Try using the default.\n', ...
-    'If you get an error stating that utMalloc, utFree, and/or\n', ...
-    'utRealloc are not defined, then recompile with the mx* routines.\n', ...
-    '\nPlease select one of the following options:\n', ...
-    '    1:  attempt to use the ut* routines (default)\n', ...
-    '    2:  use the standard mx* routines\n'] ;
-    fprintf (msg) ;
-    utils = input (': ') ;
-    if (isempty (utils))
-	utils = 1 ;
-    end
-    if (utils == 2)
-        fprintf ('\nNot using utMalloc, utFree, or utRealloc\n') ;
-        utils = ' -DNUTIL' ;
+	if (v < 6.5)
+	    % MATLAB 6.1 and earlier: use the version supplied here
+	    lapack = 'lcc_lib/libmwlapack.lib' ;
+	    fprintf ('Using %s.  If this fails with dgemm and others\n',lapack);
+	    fprintf ('undefined, then edit umfpack_make.m and modify the') ;
+	    fprintf (' statement:\nlapack = ''%s'' ;\n', lapack) ;
+	else
+	    lapack = 'libmwlapack.lib' ;
+	end
     else
-        fprintf ('\nUsing utMalloc, utFree, and utRealloc\n') ;
-        utils = '' ;
+	% For other systems, mex should find lapack on its own, but this has
+	% been broken in MATLAB R2007a; the following is now required.
+	lapack = '-lmwlapack' ;
     end
 end
 
@@ -119,49 +58,41 @@ end
 
 posix = '' ;
 
-if (~pc)
-    msg = [ ...
-    '--------------------------------------------------------------\n', ...
-    '\nUMFPACK can use the POSIX routines sysconf () and times ()\n', ...
-    'to provide CPU time and wallclock time statistics.  If you do not\n', ...
-    'have a POSIX-compliant operating system, then UMFPACK won''t\n', ...
-    'compile.  If you don''t know which option to pick, try the\n', ...
-    'default.  If you get an error saying that sysconf and/or times\n', ...
-    'are not defined, then recompile with the non-POSIX option.\n', ...
-    '\nPlease select one of the following options:\n', ...
-    '    1:  use POSIX sysconf and times routines (default)\n', ...
-    '    2:  do not use POSIX routines\n'] ;
-    fprintf (msg) ;
-    posix = input (': ') ;
-    if (isempty (posix))
-	posix = 1 ;
-    end
-    if (posix == 2)
-        fprintf ('\nNot using POSIX sysconf and times routines.\n') ;
-        posix = ' -DNPOSIX' ;
-    else
-        fprintf ('\nUsing POSIX sysconf and times routines.\n') ;
-        posix = '' ;
-    end
-end
+% if (~pc)
+%     msg = [ ...
+%    '--------------------------------------------------------------\n', ...
+%    '\nUMFPACK can use the POSIX routines sysconf () and times ()\n', ...
+%    'to provide CPU time and wallclock time statistics.  If you do not\n', ...
+%    'have a POSIX-compliant operating system, then UMFPACK won''t\n', ...
+%    'compile.  If you don''t know which option to pick, try the\n', ...
+%    'default.  If you get an error saying that sysconf and/or times\n', ...
+%    'are not defined, then recompile with the non-POSIX option.\n', ...
+%    '\nPlease select one of the following options:\n', ...
+%    '    1:  use POSIX sysconf and times routines (default)\n', ...
+%    '    2:  do not use POSIX routines\n'] ;
+%    fprintf (msg) ;
+%    posix = str2num (input (': ', 's')) ;
+%    if (isempty (posix))
+%	posix = 1 ;
+%    end
+%    if (posix == 2)
+%        fprintf ('\nNot using POSIX sysconf and times routines.\n') ;
+%        posix = ' -DNPOSIX' ;
+%    else
+%        fprintf ('\nUsing POSIX sysconf and times routines.\n') ;
+%        posix = '' ;
+%    end
+% end
 
 %-------------------------------------------------------------------------------
 % mex command
 %-------------------------------------------------------------------------------
 
-umfdir = sprintf ('..%sSource%s', filesep, filesep) ;
-amddir = sprintf ('..%s..%sAMD%sSource%s', filesep, filesep, filesep, filesep) ;
-incdir = sprintf ( ...
-' -I..%sInclude -I..%sSource -I..%s..%sAMD%sInclude -I..%s..%sAMD%sSource', ...
-filesep,filesep,  filesep, filesep, filesep, filesep, filesep, filesep) ;
-
-mx = sprintf ('mex -inline -O%s%s%s%s', blas, utils, posix, incdir) ;
-msg = [ ...
-    '--------------------------------------------------------------\n', ...
-    '\nCompile options:\n%s\nNow compiling.  Please wait.\n'] ;
-fprintf (msg, mx) ;
-
-% The following is adapted from GNUmakefile
+umfdir = '../Source/' ;
+amddir = '../../AMD/Source/' ;
+incdir = ' -I../Include -I../Source -I../../AMD/Include -I../../UFconfig' ;
+mx = sprintf ('mex -O%s%s%s ', posix, incdir, d) ;
+% fprintf ('compile options:\n%s\n', mx) ;
 
 %-------------------------------------------------------------------------------
 % source files
@@ -189,8 +120,8 @@ umfint = { 'analyze', 'apply_order', 'colamd', 'free', 'fsize', ...
 	'singletons' } ;
 
 % non-user-callable and user-callable amd_*.[ch] files (int versions only):
-amd = { 'aat', '1', '2', 'dump', 'postorder', 'post_tree', 'defaults', ...
-        'order', 'control', 'info', 'valid', 'preprocess' } ;
+amdsrc = { 'aat', '1', '2', 'dump', 'postorder', 'post_tree', 'defaults', ...
+        'order', 'control', 'info', 'valid', 'preprocess', 'global' } ;
 
 % user-callable umfpack_*.[ch] files (real/complex):
 user = { 'col_to_triplet', 'defaults', 'free_numeric', ...
@@ -204,20 +135,21 @@ user = { 'col_to_triplet', 'defaults', 'free_numeric', ...
 	'load_numeric', 'save_numeric', 'load_symbolic', 'save_symbolic' } ;
 
 % user-callable umfpack_*.[ch], only one version
-generic = { 'timer', 'tictoc' } ;
+generic = { 'timer', 'tictoc', 'global' } ;
 
 M = cell (0) ;
 
 %-------------------------------------------------------------------------------
-% Create the umfpack and amd mexFunctions for MATLAB (int versions only)
+% Create the umfpack2 and amd2 mexFunctions for MATLAB (int versions only)
 %-------------------------------------------------------------------------------
 
 for k = 1:length(umfint)
-    M = make (M, '%s -DDINT -c %sumf_%s.c', 'umf_%s.%s', 'umf_%s_%s.%s', ...
-        mx, umfint {k}, umfint {k}, 'm', obj, umfdir) ;
+    [M, kk] = make (M, '%s -DDLONG -c %sumf_%s.c', 'umf_%s.%s', ...
+	'umf_%s_%s.%s', mx, umfint {k}, umfint {k}, 'm', obj, umfdir, ...
+	kk, details) ;
 end
 
-rules = { [mx ' -DDINT'] , [mx ' -DZINT'] } ;
+rules = { [mx ' -DDLONG'] , [mx ' -DZLONG'] } ;
 kinds = { 'md', 'mz' } ;
 
 for what = 1:2
@@ -225,69 +157,80 @@ for what = 1:2
     rule = rules {what} ;
     kind = kinds {what} ;
 
-    M = make (M, '%s -DCONJUGATE_SOLVE -c %sumf_%s.c', 'umf_%s.%s', ...
-        'umf_%s_%s.%s', rule, 'ltsolve', 'lhsolve', kind, obj, umfdir) ;
+    [M, kk] = make (M, '%s -DCONJUGATE_SOLVE -c %sumf_%s.c', 'umf_%s.%s', ...
+        'umf_%s_%s.%s', rule, 'ltsolve', 'lhsolve', kind, obj, umfdir, ...
+	kk, details) ;
 
-    M = make (M, '%s -DCONJUGATE_SOLVE -c %sumf_%s.c', 'umf_%s.%s', ...
-        'umf_%s_%s.%s', rule, 'utsolve', 'uhsolve', kind, obj, umfdir) ;
+    [M, kk] = make (M, '%s -DCONJUGATE_SOLVE -c %sumf_%s.c', 'umf_%s.%s', ...
+        'umf_%s_%s.%s', rule, 'utsolve', 'uhsolve', kind, obj, umfdir, ...
+	kk, details) ;
 
-    M = make (M, '%s -DDO_MAP -c %sumf_%s.c', 'umf_%s.%s', ...
-        'umf_%s_%s_map_nox.%s', rule, 'triplet', 'triplet', kind, obj, umfdir) ;
+    [M, kk] = make (M, '%s -DDO_MAP -c %sumf_%s.c', 'umf_%s.%s', ...
+        'umf_%s_%s_map_nox.%s', rule, 'triplet', 'triplet', kind, obj, ...
+	umfdir, kk, details) ;
 
-    M = make (M, '%s -DDO_VALUES -c %sumf_%s.c', 'umf_%s.%s', ...
-        'umf_%s_%s_nomap_x.%s', rule, 'triplet', 'triplet', kind, obj, umfdir) ;
+    [M, kk] = make (M, '%s -DDO_VALUES -c %sumf_%s.c', 'umf_%s.%s', ...
+        'umf_%s_%s_nomap_x.%s', rule, 'triplet', 'triplet', kind, obj, ...
+	umfdir, kk, details) ;
 
-    M = make (M, '%s -c %sumf_%s.c', 'umf_%s.%s',  ...
+    [M, kk] = make (M, '%s -c %sumf_%s.c', 'umf_%s.%s',  ...
         'umf_%s_%s_nomap_nox.%s', rule, 'triplet', 'triplet', kind, obj, ...
-	umfdir) ;
+	umfdir, kk, details) ;
 
-    M = make (M, '%s -DDO_MAP -DDO_VALUES -c %sumf_%s.c', 'umf_%s.%s', ...
-        'umf_%s_%s_map_x.%s', rule, 'triplet', 'triplet', kind, obj, umfdir) ;
+    [M, kk] = make (M, '%s -DDO_MAP -DDO_VALUES -c %sumf_%s.c', 'umf_%s.%s', ...
+        'umf_%s_%s_map_x.%s', rule, 'triplet', 'triplet', kind, obj, ...
+	umfdir, kk, details) ;
 
-    M = make (M, '%s -DFIXQ -c %sumf_%s.c', 'umf_%s.%s', ...
-	'umf_%s_%s_fixq.%s', rule, 'assemble', 'assemble', kind, obj, umfdir) ;
+    [M, kk] = make (M, '%s -DFIXQ -c %sumf_%s.c', 'umf_%s.%s', ...
+	'umf_%s_%s_fixq.%s', rule, 'assemble', 'assemble', kind, obj, ...
+	umfdir, kk, details) ;
 
-    M = make (M, '%s -DDROP -c %sumf_%s.c', 'umf_%s.%s', ...
-	'umf_%s_%s_drop.%s', rule, 'store_lu', 'store_lu', kind, obj, umfdir) ;
+    [M, kk] = make (M, '%s -DDROP -c %sumf_%s.c', 'umf_%s.%s', ...
+	'umf_%s_%s_drop.%s', rule, 'store_lu', 'store_lu', kind, obj, ...
+	umfdir, kk, details) ;
 
     for k = 1:length(umfch)
-        M = make (M, '%s -c %sumf_%s.c', 'umf_%s.%s', 'umf_%s_%s.%s', ...
-            rule, umfch {k}, umfch {k}, kind, obj, umfdir) ;
+        [M, kk] = make (M, '%s -c %sumf_%s.c', 'umf_%s.%s', 'umf_%s_%s.%s', ...
+            rule, umfch {k}, umfch {k}, kind, obj, umfdir, kk, details) ;
     end
 
-    M = make (M, '%s -DWSOLVE -c %sumfpack_%s.c', 'umfpack_%s.%s', ...
-        'umfpack_%s_w%s.%s', rule, 'solve', 'solve', kind, obj, umfdir) ;
+    [M, kk] = make (M, '%s -DWSOLVE -c %sumfpack_%s.c', 'umfpack_%s.%s', ...
+        'umfpack_%s_w%s.%s', rule, 'solve', 'solve', kind, obj, umfdir, ...
+	kk, details) ;
 
     for k = 1:length(user)
-        M = make (M, '%s -c %sumfpack_%s.c', 'umfpack_%s.%s', ...
-            'umfpack_%s_%s.%s', rule, user {k}, user {k}, kind, obj, umfdir) ;
+        [M, kk] = make (M, '%s -c %sumfpack_%s.c', 'umfpack_%s.%s', ...
+            'umfpack_%s_%s.%s', rule, user {k}, user {k}, kind, obj, ...
+	    umfdir, kk, details) ;
     end
 end
 
 for k = 1:length(generic)
-    M = make (M, '%s -c %sumfpack_%s.c', 'umfpack_%s.%s', ...
-	'umfpack_%s_%s.%s', mx, generic {k}, generic {k}, 'm', obj, umfdir) ;
+    [M, kk] = make (M, '%s -c %sumfpack_%s.c', 'umfpack_%s.%s', ...
+	'umfpack_%s_%s.%s', mx, generic {k}, generic {k}, 'm', obj, ...
+	umfdir, kk, details) ;
 end
 
 %----------------------------------------
 % AMD routines (int only)
 %----------------------------------------
 
-for k = 1:length(amd)
-    M = make (M, '%s -DDINT -c %samd_%s.c', 'amd_%s.%s', 'amd_%s_%s.%s', ...
-        mx, amd {k}, amd {k}, 'm', obj, amddir) ;
+for k = 1:length(amdsrc)
+    [M, kk] = make (M, '%s -DDLONG -c %samd_%s.c', 'amd_%s.%s', ...
+	'amd_%s_%s.%s', mx, amdsrc {k}, amdsrc {k}, 'm', obj, amddir, ...
+	kk, details) ;
 end
 
 %----------------------------------------
-% compile the umfpack mexFunction
+% compile the umfpack2 mexFunction
 %----------------------------------------
 
-C = sprintf ('%s -output umfpack umfpackmex.c', mx) ;
+C = sprintf ('%s -output umfpack2 umfpackmex.c', mx) ;
 for i = 1:length (M)
-    C = [C ' ' (M {i})] ;
+    C = [C ' ' (M {i})] ;   %#ok
 end
-C = [C ' ' blas_lib] ;
-cmd (C) ;
+C = [C ' ' lapack] ;
+kk = cmd (C, kk, details) ;
 
 %----------------------------------------
 % delete the object files
@@ -301,56 +244,83 @@ end
 % compile the luflop mexFunction
 %----------------------------------------
 
-cmd (sprintf ('%s -output luflop luflopmex.c', mx)) ;
+cmd (sprintf ('%s -output luflop luflopmex.c', mx), kk, details) ;
 
-fprintf ('\n\nCompilation has completed.  Now trying the umfpack_simple demo.\n');
-umfpack_simple
+fprintf ('\nUMFPACK successfully compiled\n') ;
 
-%-------------------------------------------------------------------------------
-% rmfile:  delete a file, but only if it exists
+%===============================================================================
+% end of umfpack_make
+%===============================================================================
+
+
 %-------------------------------------------------------------------------------
 
 function rmfile (file)
-if (length (dir (file)) > 0)
+% rmfile:  delete a file, but only if it exists
+if (length (dir (file)) > 0)						    %#ok
     delete (file) ;
 end
 
 %-------------------------------------------------------------------------------
-% cpfile:  copy the src file to the filename dst, overwriting dst if it exists
-%-------------------------------------------------------------------------------
 
 function cpfile (src, dst)
+% cpfile:  copy the src file to the filename dst, overwriting dst if it exists
 rmfile (dst)
-if (length (dir (src)) == 0)
-    help umfpack_make
-    error (sprintf ('File does not exist: %s\n', src)) ;
+if (length (dir (src)) == 0)	%#ok
+    fprintf ('File does not exist: %s\n', src) ;
+    error ('File does not exist') ;
 end
 copyfile (src, dst) ;
 
 %-------------------------------------------------------------------------------
-% mvfile:  move the src file to the filename dst, overwriting dst if it exists
-%-------------------------------------------------------------------------------
 
 function mvfile (src, dst)
+% mvfile:  move the src file to the filename dst, overwriting dst if it exists
 cpfile (src, dst) ;
 rmfile (src) ;
 
 %-------------------------------------------------------------------------------
-% cmd:  display and execute a command
-%-------------------------------------------------------------------------------
 
-function cmd (s)
-fprintf ('.') ;
+function kk = cmd (s, kk, details)
+%CMD: evaluate a command, and either print it or print a "."
+if (details)
+    fprintf ('%s\n', s) ;
+else
+    if (mod (kk, 60) == 0)
+	fprintf ('\n') ;
+    end
+    kk = kk + 1 ;
+    fprintf ('.') ;
+end
 eval (s) ;
 
 %-------------------------------------------------------------------------------
-% make:  execute a "make" command for a source file
-%-------------------------------------------------------------------------------
 
-function M = make (M, s, src, dst, rule, file1, file2, kind, obj, srcdir)
-cmd (sprintf (s, rule, srcdir, file1)) ;
+function [M, kk] = make (M, s, src, dst, rule, file1, file2, kind, obj, ...
+    srcdir, kk, details)
+% make:  execute a "make" command for a source file
+kk = cmd (sprintf (s, rule, srcdir, file1), kk, details) ;
 src = sprintf (src, file1, obj) ;
 dst = sprintf (dst, kind, file2, obj) ;
 mvfile (src, dst) ;
 M {end + 1} = dst ;
 
+
+%-------------------------------------------------------------------------------
+function [v,pc] = getversion
+% determine the MATLAB version, and return it as a double.
+% only the primary and secondary version numbers are kept.
+% MATLAB 7.0.4 becomes 7.0, version 6.5.2 becomes 6.5, etc.
+v = version ;
+t = find (v == '.') ;
+if (length (t) > 1)
+    v = v (1:(t(2)-1)) ;
+end
+v = str2double (v) ;
+try
+    % ispc does not appear in MATLAB 5.3
+    pc = ispc ;
+catch
+    % if ispc fails, assume we are on a Windows PC if it's not unix
+    pc = ~isunix ;
+end

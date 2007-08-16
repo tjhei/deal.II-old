@@ -13,7 +13,7 @@
 \begin{document}
 %------------------------------------------------------------------------------
 
-\title{AMD Version 1.1 User Guide}
+\title{AMD Version 2.2 User Guide}
 \author{Patrick R. Amestoy\thanks{ENSEEIHT-IRIT,
 2 rue Camichel 31017 Toulouse, France.
 email: amestoy@enseeiht.fr.  http://www.enseeiht.fr/$\sim$amestoy.}
@@ -34,7 +34,7 @@ http://www.numerical.rl.ac.uk/people/isd/isd.html.
 This work was supported by the EPSRC under grant GR/R46441.
 }}
 
-\date{January 29, 2004}
+\date{May 31, 2007}
 \maketitle
 
 %------------------------------------------------------------------------------
@@ -47,29 +47,41 @@ A MATLAB interface is included.
 \end{abstract}
 %------------------------------------------------------------------------------
 
-Technical report TR-04-002, CISE Department, University of Florida,
-Gainesville, FL, 2004.
+Technical report TR-04-002 (revised), CISE Department, University of Florida,
+Gainesville, FL, 2007.
 
-AMD Version 1.1 (Jan. 21, 2004), Copyright\copyright 2004 by Timothy A.
+AMD Version 2.2, Copyright\copyright 2007 by Timothy A.
 Davis, Patrick R. Amestoy, and Iain S. Duff.  All Rights Reserved.
+AMD is available under alternate licences; contact T. Davis for details.
 
 {\bf AMD License:}
     Your use or distribution of AMD or any modified version of
     AMD implies that you agree to this License.
 
-    THIS MATERIAL IS PROVIDED AS IS, WITH ABSOLUTELY NO WARRANTY
-    EXPRESSED OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
 
-    Permission is hereby granted to use or copy this program, provided
-    that the Copyright, this License, and the Availability of the original
-    version is retained on all copies.  User documentation of any code that
-    uses AMD or any modified version of AMD code must cite the
-    Copyright, this License, the Availability note, and ``Used by permission.''
-    Permission to modify the code and to distribute modified code is granted,
-    provided the Copyright, this License, and the Availability note are
-    retained, and a notice that the code was modified is included.  This
-    software was developed with support from the National Science Foundation,
-    and is provided to you free of charge.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
+    USA
+
+    Permission is hereby granted to use or copy this program under the
+    terms of the GNU LGPL, provided that the Copyright, this License,
+    and the Availability of the original version is retained on all copies.
+    User documentation of any code that uses this code or any modified
+    version of this code must cite the Copyright, this License, the
+    Availability note, and "Used by permission." Permission to modify
+    the code and to distribute modified code is granted, provided the
+    Copyright, this License, and the Availability note are retained,
+    and a notice that the code was modified is included.
 
 {\bf Availability:}
     http://www.cise.ufl.edu/research/sparse/amd
@@ -90,7 +102,8 @@ Davis, Patrick R. Amestoy, and Iain S. Duff.  All Rights Reserved.
 
 AMD is a set of routines for preordering a sparse matrix prior to
 numerical factorization.  It uses an approximate minimum degree ordering
-algorithm \cite{AmestoyDavisDuff96} to find a permutation matrix $\m{P}$
+algorithm \cite{AmestoyDavisDuff96,AmestoyDavisDuff04}
+to find a permutation matrix $\m{P}$
 so that the Cholesky factorization $\m{PAP}\tr=\m{LL}\tr$ has fewer
 (often much fewer) nonzero entries than the Cholesky factorization of $\m{A}$.
 The algorithm is typically much faster than other ordering methods
@@ -160,8 +173,8 @@ see \cite{GeorgeLiu89}.
 \section{Availability}
 %------------------------------------------------------------------------------
 
-In addition to appearing as a Collected Algorithm of the ACM,
-AMD Version 1.1 is available at http://www.cise.ufl.edu/research/sparse.
+In addition to appearing as a Collected Algorithm of the ACM, \newline
+AMD is available at http://www.cise.ufl.edu/research/sparse.
 The Fortran version is available as the routine {\tt MC47} in HSL
 (formerly the Harwell Subroutine Library) \cite{hsl:2002}.
 
@@ -169,8 +182,13 @@ The Fortran version is available as the routine {\tt MC47} in HSL
 \section{Using AMD in MATLAB}
 %------------------------------------------------------------------------------
 
-To use AMD in MATLAB, you must first compile the AMD mexFunction.
-Just type {\tt make} in the Unix system shell, while in the {\tt AMD}
+The MATLAB function {\tt amd} is now a built-in function in MATLAB 7.3
+(R2006b).  The built-in {\tt amd} and the {\tt amd2} function provided here
+differ in how the optional parameters are passed
+(the 2nd input parameter).
+
+To use AMD2 in MATLAB, you must first compile the AMD2 mexFunction.
+Just type {\tt make} in the Unix system shell, while in the {\tt AMD/MATLAB}
 directory.  You can also type {\tt amd\_make} in MATLAB, while in the
 {\tt AMD/MATLAB} directory.  Place the {\tt AMD/MATLAB} directory in your
 MATLAB path.  This can be done on any system with MATLAB, including Windows.
@@ -189,7 +207,8 @@ diagonal, such as the statement {\tt [L,U,P] = lu (A (p,p), 0.1)}.
 Type {\tt help lu} for more details.
 The statement {\tt [L,U,P,Q] = lu (A (p,p))} in MATLAB 6.5 is
 not suitable, however, because it uses UMFPACK Version 4.0 and thus
-does not attempt to select pivots from the diagonal.  UMFPACK Version 4.1
+does not attempt to select pivots from the diagonal.
+UMFPACK Version 4.1 in MATLAB 7.0 and later
 uses several strategies, including a symmetric pivoting strategy, and
 will give you better results if you want to factorize an unsymmetric matrix
 of this type.  Refer to the UMFPACK User Guide for more details, at
@@ -198,7 +217,7 @@ http://www.cise.ufl.edu/research/sparse/umfpack.
 The AMD mexFunction is much faster than the built-in MATLAB symmetric minimum
 degree ordering methods, SYMAMD and SYMMMD.  Its ordering quality is
 comparable to SYMAMD, and better than SYMMMD
-\cite{DavisGilbertLarimoreNg00pending}.
+\cite{DavisGilbertLarimoreNg04}.
 
 An optional input argument can be used to modify the control parameters for
 AMD (aggressive absorption, dense row/column handling, and printing of
@@ -213,7 +232,7 @@ type {\tt help amd} in the MATLAB command window.
 \label{Cversion}
 %------------------------------------------------------------------------------
 
-The C-callable AMD library consists of five user-callable routines and one
+The C-callable AMD library consists of seven user-callable routines and one
 include file.  There are two versions of each of the routines, with
 {\tt int} and {\tt long} integers.
 The routines with prefix
@@ -249,8 +268,11 @@ The following routines are fully described in Section~\ref{Primary}:
     and the number of floating-point operations required for Cholesky and LU
     factorizations (which are returned in the {\tt Info} array).
     The user's input matrix is not modified.
-    It returns {\tt AMD\_OK} if successful, {\tt AMD\_INVALID} if
-    the matrix is invalid, or {\tt AMD\_OUT\_OF\_MEMORY} if out of memory.
+    It returns {\tt AMD\_OK} if successful,
+    {\tt AMD\_OK\_BUT\_JUMBLED} if successful (but the matrix had unsorted
+    and/or duplicate row indices),
+    {\tt AMD\_INVALID} if the matrix is invalid,
+    {\tt AMD\_OUT\_OF\_MEMORY} if out of memory.
 
 \item {\tt amd\_defaults}
 ({\tt long} version: {\tt amd\_l\_defaults})
@@ -287,21 +309,34 @@ The following routines are fully described in Section~\ref{Primary}:
     }
     Prints a description of the statistics computed by AMD, and their values.
 
-\item {\tt amd\_preprocess}
-({\tt long} version: {\tt amd\_l\_info})
+\item {\tt amd\_valid}
+({\tt long} version: {\tt amd\_valid})
     {\footnotesize
     \begin{verbatim}
     #include "amd.h"
-    int n, Ap [n+1], Ai [nz], Rp [n+1], Ri [nz] ;
-    int result = amd_preprocess (n, Ap, Ai, Rp, Ri) ;
+    int n, Ap [n+1], Ai [nz] ;
+    int result = amd_valid (n, n, Ap, Ai) ;
     \end{verbatim}
     }
-    Removes duplicate entries and sorts each column of its input $\m{A}$,
-    and returns the nonzero pattern of the transpose, $\m{R}=\m{A}\tr$.
-    It returns the transpose because this is the simplest way to sort
-    a matrix and remove duplicate entries.  Either $\m{A}$ or $\m{A}\tr$
-    can be passed to {\tt amd\_order} with little effect on the
-    ordering (except for minor tie-breaking changes).
+    Returns {\tt AMD\_OK} or {\tt AMD\_OK\_BUT\_JUMBLED}
+    if the matrix is valid as input to {\tt amd\_order};
+    the latter is returned if the matrix has unsorted and/or duplicate
+    row indices in one or more columns. 
+    Returns {\tt AMD\_INVALID} if the matrix cannot be passed to
+    {\tt amd\_order}.
+    For {\tt amd\_order}, the matrix must
+    also be square.  The first two arguments are the number of rows and the
+    number of columns of the matrix.  For its use in AMD, these must both
+    equal {\tt n}.
+
+\item {\tt amd\_2}
+({\tt long} version: {\tt amd\_l2})
+    AMD ordering kernel.  It is faster than {\tt amd\_order}, and
+    can be called by the user, but it is difficult to use.
+    It does not check its inputs for errors.
+    It does not require the columns of its input matrix to be sorted,
+    but it destroys the matrix on output.  Additional workspace must be passed.
+    Refer to the source file {\tt AMD/Source/amd\_2.c} for a description.
 
 \end{itemize}
 
@@ -312,8 +347,12 @@ representation consists of two arrays: {\tt Ap} of size {\tt n+1} and {\tt Ai}
 of size {\tt nz}.  The row indices of entries in column {\tt j} are stored in
     {\tt Ai[Ap[j]} $\ldots$ {\tt Ap[j+1]-1]}.
 For {\tt amd\_order},
-no duplicate row indices may be present, and the row indices in any given
-column must be sorted in ascending order.
+if duplicate row indices are present, or if the row indices in any given
+column are not sorted in ascending order, then {\tt amd\_order} creates
+an internal copy of the matrix with sorted rows and no duplicate entries,
+and orders the copy.  This adds slightly to the time and memory usage of
+{\tt amd\_order}, but is not an error condition.
+
 The matrix is 0-based, and thus
 row indices must be in the range {\tt 0} to {\tt n-1}.
 The first entry {\tt Ap[0]} must be zero.
@@ -321,29 +360,20 @@ The total number of entries in the matrix is thus {\tt nz = Ap[n]}.
 
 The matrix must be square, but it does not need to be symmetric.
 The {\tt amd\_order} routine constructs the nonzero pattern of
-$\m{B} = \m{A}+\m{A}\tr$ (without forming $\m{A}\tr$ explicitly),
+$\m{B} = \m{A}+\m{A}\tr$ (without forming $\m{A}\tr$ explicitly if
+$\m{A}$ has sorted columns and no duplicate entries),
 and then orders the matrix $\m{B}$.  Thus, either the
 lower triangular part of $\m{A}$, the upper triangular part,
 or any combination may be passed.  The transpose $\m{A}\tr$ may also be
 passed to {\tt amd\_order}.
 The diagonal entries may be present, but are ignored.
 
-The input to {\tt amd\_order} must have sorted columns because it uses
-an in-place algorithm to construct $\m{A}+\m{A}\tr$ without first constructing
-$\m{A}\tr$.  This saves memory, but places an additional restriction on
-the input.  If the input matrix has columns with unsorted and/or duplicate
-row indices, it is not valid as input to {\tt amd\_order}.  To handle this
-case, the {\tt amd\_preprocess} routine is provided.  It sorts, transposes,
-and removes duplicate entries from its input matrix, returning its result
-as another compressed-column matrix $\m{R}$ which can then be passed to
-{\tt amd\_order}.
-
 %------------------------------------------------------------------------------
 \subsection{Control parameters}
 \label{control_param}
 %------------------------------------------------------------------------------
 
-Control parameters are set an optional {\tt Control} array.
+Control parameters are set in an optional {\tt Control} array.
 It is optional in the sense that if
 a {\tt NULL} pointer is passed for the {\tt Control} input argument,
 then default control parameters are used.
@@ -365,7 +395,8 @@ entries are never considered ``dense.''
 controls whether or not to use
 aggressive absorption, in which a prior element is absorbed into the current
 element if it is a subset of the current element, even if it is not
-adjacent to the current pivot element (refer to \cite{AmestoyDavisDuff96}
+adjacent to the current pivot element (refer
+to \cite{AmestoyDavisDuff96,AmestoyDavisDuff04}
 for more details).  The default value is nonzero,
 which means that aggressive absorption will be performed.  This nearly always
 leads to a better ordering (because the approximate degrees are more
@@ -459,13 +490,13 @@ The matrix $\m{A}$ is {\tt n}-by-{\tt n} with {\tt nz} entries.
 {\footnotesize
 \begin{verbatim}
 #include "amd.h"
-int n, status, Ap [n+1], Ai [nz], P [n], Rp [n+1], Ri [nz] ;
+int n, status, Ap [n+1], Ai [nz], P [n] ;
 double Control [AMD_CONTROL], Info [AMD_INFO] ;
 amd_defaults (Control) ;
 status = amd_order (n, Ap, Ai, P, Control, Info) ;
 amd_control (Control) ;
 amd_info (Info) ;
-amd_preprocess (n, Ap, Ai, Rp, Ri) ;
+status = amd_valid (n, n, Ap, Ai) ;
 \end{verbatim}
 }
 
@@ -475,13 +506,13 @@ arguments become {\tt long}:
 {\footnotesize
 \begin{verbatim}
 #include "amd.h"
-long n, status, Ap [n+1], Ai [nz], P [n], Rp [n+1], Ri [nz] ;
+long n, status, Ap [n+1], Ai [nz], P [n] ;
 double Control [AMD_CONTROL], Info [AMD_INFO] ;
 amd_l_defaults (Control) ;
 status = amd_l_order (n, Ap, Ai, P, Control, Info) ;
 amd_l_control (Control) ;
 amd_l_info (Info) ;
-amd_l_preprocess (n, Ap, Ai, Rp, Ri) ;
+status = amd_l_valid (n, n, Ap, Ai) ;
 \end{verbatim}
 }
 
@@ -659,9 +690,8 @@ primary {\tt Source} directory.
 The following discussion assumes you have the {\tt make} program, either in
 Unix, or in Windows with Cygwin.
 
-System-dependent configurations are in the {\tt AMD/Make}
-directory.  You can edit the {\tt Make.include}
-file in that directory to customize the compilation.  The default
+System-dependent configurations are in the {\tt ../UFconfig/UFconfig.mk}
+file.  You can edit that file to customize the compilation.  The default
 settings will work on most systems.
 Sample configuration files are provided
 for Linux, Sun Solaris, SGI IRIX, IBM AIX, and the DEC/Compaq Alpha.
@@ -669,12 +699,10 @@ for Linux, Sun Solaris, SGI IRIX, IBM AIX, and the DEC/Compaq Alpha.
 To compile and install the C-callable AMD library,
 go to the {\tt AMD} directory and type {\tt make}.
 The library will be placed in {\tt AMD/Lib/libamd.a}.
-Two demo programs of the AMD ordering routine will be compiled and tested in
+Three demo programs of the AMD ordering routine will be compiled and tested in
 the {\tt AMD/Demo} directory.
 The outputs of these demo programs will then be compared with output
-files in the distribution.  The AMD mexFunction for
-use in MATLAB will also be compiled.  If you do not have MATLAB
-type {\tt make lib} instead.
+files in the distribution.
 
 To compile and install the Fortran-callable AMD library,
 go to the {\tt AMD} directory and type {\tt make fortran}.
@@ -683,32 +711,10 @@ A demo program will be compiled and tested in the {\tt AMD/Demo} directory.
 The output will be compared with an output file in the distribution.
 
 Typing {\tt make clean} will remove all but the final compiled libraries
-and demo programs.  Typing {\tt make purge} removes all files not in the
-original distribution.
-If you compile AMD and then later change the {\tt Make.include}
-file or your system-specific configuration file such as {\tt Make.linux},
+and demo programs.  Typing {\tt make purge} or {\tt make distclean}
+removes all files not in the original distribution.
+If you compile AMD and then later change the {\tt ../UFconfig/UFconfig.mk} file
 then you should type {\tt make purge} and then {\tt make} to recompile.
-
-Here are the various parameters that you can control in your
-{\tt Make.include} file:
-
-\begin{itemize}
-\item {\tt CC = } your C compiler, such as {\tt cc}.
-\item {\tt RANLIB = } your system's {\tt ranlib} program, if needed.
-\item {\tt CFLAGS = } optimization flags, such as {\tt -O}.
-\item {\tt LIB = } your libraries, such as {\tt -lm} or {\tt -lblas}.
-\item {\tt RM =} the command to delete a file.
-\item {\tt MV =} the command to rename a file.
-\item {\tt MEX =} the command to compile a MATLAB mexFunction.
-\item {\tt F77 =} the command to compile a Fortran program (optional).
-\item {\tt F77FLAGS =} the Fortran compiler flags (optional).
-\item {\tt F77LIB =} the Fortran libraries (optional).
-\end{itemize}
-
-The {\tt Make.include} includes some definitions regarding the BLAS.
-This is so that AMD and UMFPACK (which requires AMD) can share
-the same configuration files.  If you wish to use AMD only, then
-you can ignore any references to the BLAS (the -DNBLAS compile flag).
 
 When you compile your program that uses the C-callable AMD library,
 you need to add the {\tt AMD/Lib/libamd.a} library
@@ -718,39 +724,45 @@ files.   To compile a Fortran program that calls the Fortran AMD library,
 you need to add the {\tt AMD/Lib/libamdf77.a} library.
 See {\tt AMD/Demo/Makefile} for an example.
 
-If all you want to use is the AMD mexFunction in MATLAB, you can skip
+If all you want to use is the AMD2 mexFunction in MATLAB, you can skip
 the use of the {\tt make} command entirely.  Simply type
 {\tt amd\_make} in MATLAB while in the {\tt AMD/MATLAB} directory.
 This works on any system with MATLAB, including Windows.
+Alternately, type {\tt make} in the {\tt AMD/MATLAB} directory,
+or just use the built-in {\tt amd} in MATLAB 7.3 or later.
+
+If you have MATLAB 7.2 or earlier, you must first edit UFconfig/UFconfig.h to
+remove the "-largeArrayDims" option from the MEX command, prior to
+{\tt make mex} or {\tt make} in the MATLAB directory
+(or just use {\tt amd\_make.m} inside MATLAB.
 
 If you are including AMD as a subset of a larger library and do not want
 to link the C standard I/O library, or if you simply do not need to use
 them, you can safely remove the {\tt amd\_control.c} and {\tt amd\_info.c}
 files.  Similarly, if you use default parameters (or define your
 own {\tt Control} array), then you can exclude the {\tt amd\_defaults.c}
-file.  The {\tt amd\_preprocess.c} file is optional as well, if you
-can ensure that the input matrix to {\tt amd\_order} is always sorted
-and has no duplicate entries.
+file.
 Each of these files contains the user-callable routines of the same
 name.  None of these auxiliary routines are directly called by
 {\tt amd\_order}.
 The {\tt amd\_dump.c} file contains debugging routines
 that are neither used nor compiled unless debugging is enabled.
 The {\tt amd\_internal.h} file must be edited to enable debugging;
-refer to the instructions in that file.  Thus, it too can be excluded
-if compiled into a larger production program or library.
+refer to the instructions in that file.
 The bare minimum files required to use just {\tt amd\_order} are
-{\tt amd.h} in the {\tt Include} directory,
+{\tt amd.h} and {\tt amd\_internal.h}
+in the {\tt Include} directory,
 and
 {\tt amd\_1.c},
 {\tt amd\_2.c},
 {\tt amd\_aat.c},
+{\tt amd\_global.c},
 {\tt and\_order.c},
 {\tt amd\_postorder.c},
 {\tt amd\_post\_tree.c},
-{\tt amd\_valid.c},
+{\tt amd\_preprocess.c},
 and
-{\tt amd\_internal.h},
+{\tt amd\_valid.c}
 in the {\tt Source} directory.
 
 %------------------------------------------------------------------------------
@@ -765,14 +777,15 @@ and gives details on their use.
 
 {\footnotesize
 \begin{verbatim}
+
 /* ========================================================================= */
 /* === AMD:  approximate minimum degree ordering =========================== */
 /* ========================================================================= */
 
 /* ------------------------------------------------------------------------- */
-/* AMD Version 1.1 (Jan. 21, 2004), Copyright (c) 2004 by Timothy A. Davis,  */
-/* Patrick R. Amestoy, and Iain S. Duff.  See ../README for License.         */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.           */
+/* AMD Version 2.2, Copyright (c) 2007 by Timothy A. Davis,                  */
+/* Patrick R. Amestoy, and Iain S. Duff.  See ../README.txt for License.     */
+/* email: davis at cise.ufl.edu    CISE Department, Univ. of Florida.        */
 /* web: http://www.cise.ufl.edu/research/sparse/amd                          */
 /* ------------------------------------------------------------------------- */
 
@@ -780,7 +793,7 @@ and gives details on their use.
  * factorization of P*A*P' has fewer nonzeros and takes less work than the
  * Cholesky factorization of A.  If A is not symmetric, then it performs its
  * ordering on the matrix A+A'.  Two sets of user-callable routines are
- * provided, one for "int" integers and the other for "long" integers.
+ * provided, one for int integers and the other for UF_long integers.
  *
  * The method is based on the approximate minimum degree algorithm, discussed
  * in Amestoy, Davis, and Duff, "An approximate degree ordering algorithm",
@@ -803,7 +816,20 @@ and gives details on their use.
 #ifndef AMD_H
 #define AMD_H
 
-int amd_order (             /* returns 0 if OK, negative value if error */
+/* make it easy for C++ programs to include AMD */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* get the definition of size_t: */
+#include <stddef.h>
+
+/* define UF_long */
+#include "UFconfig.h"
+
+int amd_order               /* returns AMD_OK, AMD_OK_BUT_JUMBLED,
+                             * AMD_INVALID, or AMD_OUT_OF_MEMORY */
+(
     int n,                  /* A is n-by-n.  n must be >= 0. */
     const int Ap [ ],       /* column pointers for A, of size n+1 */
     const int Ai [ ],       /* row indices of A, of size nz = Ap [n] */
@@ -812,11 +838,12 @@ int amd_order (             /* returns 0 if OK, negative value if error */
     double Info [ ]         /* output Info statistics, of size AMD_INFO */
 ) ;
 
-long amd_l_order (          /* see above for description of arguments */
-    long n,
-    const long Ap [ ],
-    const long Ai [ ],
-    long P [ ],
+UF_long amd_l_order         /* see above for description of arguments */
+(
+    UF_long n,
+    const UF_long Ap [ ],
+    const UF_long Ai [ ],
+    UF_long P [ ],
     double Control [ ],
     double Info [ ]
 ) ;
@@ -824,15 +851,15 @@ long amd_l_order (          /* see above for description of arguments */
 /* Input arguments (not modified):
  *
  *      n: the matrix A is n-by-n.
- *      Ap: an int/long array of size n+1, containing the column pointers of A.
- *      Ai: an int/long array of size nz, containing the row indices of A,
+ *      Ap: an int/UF_long array of size n+1, containing column pointers of A.
+ *      Ai: an int/UF_long array of size nz, containing the row indices of A,
  *          where nz = Ap [n].
  *      Control:  a double array of size AMD_CONTROL, containing control
  *          parameters.  Defaults are used if Control is NULL.
  *
  * Output arguments (not defined on input):
  *
- *      P: an int/long array of size n, containing the output permutation. If
+ *      P: an int/UF_long array of size n, containing the output permutation. If
  *          row i is the kth pivot row, then P [k] = i.  In MATLAB notation,
  *          the reordered matrix is A (P,P).
  *      Info: a double array of size AMD_INFO, containing statistical
@@ -840,8 +867,15 @@ long amd_l_order (          /* see above for description of arguments */
  *
  * On input, the matrix A is stored in column-oriented form.  The row indices
  * of nonzero entries in column j are stored in Ai [Ap [j] ... Ap [j+1]-1].
- * The row indices must appear in ascending order in each column, and there
- * must not be any duplicate entries.  Row indices must be in the range 0 to
+ *
+ * If the row indices appear in ascending order in each column, and there
+ * are no duplicate entries, then amd_order is slightly more efficient in
+ * terms of time and memory usage.  If this condition does not hold, a copy
+ * of the matrix is created (where these conditions do hold), and the copy is
+ * ordered.  This feature is new to v2.0 (v1.2 and earlier required this
+ * condition to hold for the input matrix).
+ * 
+ * Row indices must be in the range 0 to
  * n-1.  Ap [0] must be zero, and thus nz = Ap [n] is the number of nonzeros
  * in A.  The array Ap is of size n+1, and the array Ai is of size nz = Ap [n].
  * The matrix does not need to be symmetric, and the diagonal does not need to
@@ -851,17 +885,12 @@ long amd_l_order (          /* see above for description of arguments */
  * pattern of the matrix A is the same as that used internally by MATLAB.
  * If you wish to use a more flexible input structure, please see the
  * umfpack_*_triplet_to_col routines in the UMFPACK package, at
- * http://www.cise.ufl.edu/research/sparse/umfpack, or use the amd_preprocess
- * routine discussed below.
+ * http://www.cise.ufl.edu/research/sparse/umfpack.
  *
  * Restrictions:  n >= 0.  Ap [0] = 0.  Ap [j] <= Ap [j+1] for all j in the
- *      range 0 to n-1.  nz = Ap [n] >= 0.  For all j in the range 0 to n-1,
- *      and for all p in the range Ap [j] to Ap [j+1]-2, Ai [p] < Ai [p+1] must
- *      hold.  Ai [0..nz-1] must be in the range 0 to n-1.  To avoid integer
- *      overflow, (2.4*nz + 8*n) < INT_MAX / sizeof (int) for must hold for the
- *      "int" version. (2.4*nz + 8*n) < LONG_MAX / sizeof (long) must hold
- *      for the "long" version.  Finally, Ai, Ap, and P must not be NULL.  If
- *      any of these restrictions are not met, AMD returns AMD_INVALID.
+ *      range 0 to n-1.  nz = Ap [n] >= 0.  Ai [0..nz-1] must be in the range 0
+ *      to n-1.  Finally, Ai, Ap, and P must not be NULL.  If any of these
+ *      restrictions are not met, AMD returns AMD_INVALID.
  *
  * AMD returns:
  *
@@ -872,6 +901,9 @@ long amd_l_order (          /* see above for description of arguments */
  *
  *      AMD_INVALID if the input arguments n, Ap, Ai are invalid, or if P is
  *          NULL.
+ *
+ *      AMD_OK_BUT_JUMBLED if the matrix had unsorted columns, and/or duplicate
+ *          entries, but was otherwise valid.
  *
  * The AMD routine first forms the pattern of the matrix A+A', and then
  * computes a fill-reducing ordering, P.  If P [k] = i, then row/column i of
@@ -911,7 +943,7 @@ long amd_l_order (          /* see above for description of arguments */
  * condition.
  * 
  *      Info [AMD_STATUS]:  the return value of AMD, either AMD_OK,
- *          AMD_OUT_OF_MEMORY, or AMD_INVALID.
+ *          AMD_OK_BUT_JUMBLED, AMD_OUT_OF_MEMORY, or AMD_INVALID.
  *
  *      Info [AMD_N]: n, the size of the input matrix
  *
@@ -973,104 +1005,101 @@ long amd_l_order (          /* see above for description of arguments */
  */    
 
 /* ------------------------------------------------------------------------- */
-/* AMD preprocess */
+/* direct interface to AMD */
 /* ------------------------------------------------------------------------- */
 
-/* amd_preprocess: sorts, removes duplicate entries, and transposes the
- * nonzero pattern of a column-form matrix A, to obtain the matrix R.
- *
- * Alternatively, you can consider this routine as constructing a row-form
- * matrix from a column-form matrix.  Duplicate entries are allowed in A (and
- * removed in R). The columns of R are sorted.  Checks its input A for errors.
- *
- * On input, A can have unsorted columns, and can have duplicate entries.
- * Ap [0] must still be zero, and Ap must be monotonically nondecreasing.
- * Row indices must be in the range 0 to n-1.
- *
- * On output, if this routine returns AMD_OK, then the matrix R is a valid
- * input matrix for AMD_order.  It has sorted columns, with no duplicate
- * entries in each column.  Since AMD_order operates on the matrix A+A', it
- * can just as easily use A or A', so the transpose has no significant effect
- * (except for minor tie-breaking, which can lead to a minor effect in the
- * quality of the ordering).  As an example, compare the output of amd_demo.c
- * and amd_demo2.c.
- *
- * This routine transposes A to get R because that's the simplest way to
- * sort and remove duplicate entries from a matrix.
- *
- * Allocates 2*n integer work arrays, and free's them when done.
- *
- * If you wish to call amd_order, but do not know if your matrix has unsorted
- * columns or duplicate entries, then you can use the following code, which is
- * fairly efficient.  amd_order will not allocate any internal matrix until
- * it checks that the input matrix is valid, so the method below is memory-
- * efficient as well.  This code snippet assumes that Rp and Ri are already
- * allocated, and are the same size as Ap and Ai respectively.
+/* amd_2 is the primary AMD ordering routine.  It is not meant to be
+ * user-callable because of its restrictive inputs and because it destroys
+ * the user's input matrix.  It does not check its inputs for errors, either.
+ * However, if you can work with these restrictions it can be faster than
+ * amd_order and use less memory (assuming that you can create your own copy
+ * of the matrix for AMD to destroy).  Refer to AMD/Source/amd_2.c for a
+ * description of each parameter. */
 
-    result = amd_order (n, p, Ap, Ai, Control, Info) ;
-    if (result == AMD_INVALID)
-    {
-        if (amd_preprocess (n, Ap, Ai, Rp, Ri) == AMD_OK)
-        {
-            result = amd_order (n, p, Rp, Ri, Control, Info) ;
-        }
-    }
-
- * amd_preprocess will still return AMD_INVALID if any row index in Ai is out
- * of range or if the Ap array is invalid.  These errors are not corrected by
- * amd_preprocess since they represent a more serious error that should be
- * flagged with the AMD_INVALID error code.
- */ 
-
-int amd_preprocess
+void amd_2
 (
     int n,
-    const int Ap [ ],
-    const int Ai [ ],
-    int Rp [ ],
-    int Ri [ ]
+    int Pe [ ],
+    int Iw [ ],
+    int Len [ ],
+    int iwlen,
+    int pfree,
+    int Nv [ ],
+    int Next [ ], 
+    int Last [ ],
+    int Head [ ],
+    int Elen [ ],
+    int Degree [ ],
+    int W [ ],
+    double Control [ ],
+    double Info [ ]
 ) ;
 
-long amd_l_preprocess
+void amd_l2
 (
-    long n,
-    const long Ap [ ],
-    const long Ai [ ],
-    long Rp [ ],
-    long Ri [ ]
+    UF_long n,
+    UF_long Pe [ ],
+    UF_long Iw [ ],
+    UF_long Len [ ],
+    UF_long iwlen,
+    UF_long pfree,
+    UF_long Nv [ ],
+    UF_long Next [ ], 
+    UF_long Last [ ],
+    UF_long Head [ ],
+    UF_long Elen [ ],
+    UF_long Degree [ ],
+    UF_long W [ ],
+    double Control [ ],
+    double Info [ ]
 ) ;
 
-/* Input arguments (not modified):
+/* ------------------------------------------------------------------------- */
+/* amd_valid */
+/* ------------------------------------------------------------------------- */
+
+/* Returns AMD_OK or AMD_OK_BUT_JUMBLED if the matrix is valid as input to
+ * amd_order; the latter is returned if the matrix has unsorted and/or
+ * duplicate row indices in one or more columns.  Returns AMD_INVALID if the
+ * matrix cannot be passed to amd_order.  For amd_order, the matrix must also
+ * be square.  The first two arguments are the number of rows and the number
+ * of columns of the matrix.  For its use in AMD, these must both equal n.
  *
- *      n: the matrix A is n-by-n.
- *      Ap: an int/long array of size n+1, containing the column pointers of A.
- *      Ai: an int/long array of size nz, containing the row indices of A,
- *          where nz = Ap [n].
- *      The nonzero pattern of column j of A is in Ai [Ap [j] ... Ap [j+1]-1].
- *      Ap [0] must be zero, and Ap [j] <= Ap [j+1] must hold for all j in the
- *      range 0 to n-1.  Row indices in Ai must be in the range 0 to n-1.
- *      The row indices in any one column need not be sorted, and duplicates
- *      may exist.
- *
- * Output arguments (not defined on input):
- *
- *      Rp: an int/long array of size n+1, containing the column pointers of R.
- *      Ri: an int/long array of size rnz, containing the row indices of R,
- *          where rnz = Rp [n].  Note that Rp [n] will be less than Ap [n] if
- *          duplicates appear in A.  In general, Rp [n] <= Ap [n].
- *      The data structure for R is the same as A, except that each column of
- *      R contains sorted row indices, and no duplicates appear in any column.
- *
- * amd_preprocess returns:
- *
- *      AMD_OK if the matrix A is valid and sufficient memory can be allocated
- *          to perform the preprocessing.
- *
- *      AMD_OUT_OF_MEMORY if not enough memory can be allocated.
- *
- *      AMD_INVALID if the input arguments n, Ap, Ai are invalid, or if Rp or
- *          Ri are NULL.
+ * NOTE: this routine returned TRUE/FALSE in v1.2 and earlier.
  */
+
+int amd_valid
+(
+    int n_row,              /* # of rows */
+    int n_col,              /* # of columns */
+    const int Ap [ ],       /* column pointers, of size n_col+1 */
+    const int Ai [ ]        /* row indices, of size Ap [n_col] */
+) ;
+
+UF_long amd_l_valid
+(
+    UF_long n_row,
+    UF_long n_col,
+    const UF_long Ap [ ],
+    const UF_long Ai [ ]
+) ;
+
+/* ------------------------------------------------------------------------- */
+/* AMD memory manager and printf routines */
+/* ------------------------------------------------------------------------- */
+
+/* The user can redefine these to change the malloc, free, and printf routines
+ * that AMD uses. */
+
+#ifndef EXTERN
+#define EXTERN extern
+#endif
+
+EXTERN void *(*amd_malloc) (size_t) ;               /* pointer to malloc */
+EXTERN void (*amd_free) (void *) ;                  /* pointer to free */
+EXTERN void *(*amd_realloc) (void *, size_t) ;      /* pointer to realloc */
+EXTERN void *(*amd_calloc) (size_t, size_t) ;       /* pointer to calloc */
+EXTERN int (*amd_printf) (const char *, ...) ;      /* pointer to printf */
 
 /* ------------------------------------------------------------------------- */
 /* AMD Control and Info arrays */
@@ -1120,12 +1149,51 @@ void amd_l_info     (double Info [ ]) ;
 /* ------------------------------------------------------------------------- */
 
 #define AMD_OK 0                /* success */
-#define AMD_OUT_OF_MEMORY -1    /* malloc failed */
+#define AMD_OUT_OF_MEMORY -1    /* malloc failed, or problem too large */
 #define AMD_INVALID -2          /* input arguments are not valid */
+#define AMD_OK_BUT_JUMBLED 1    /* input matrix is OK for amd_order, but
+    * columns were not sorted, and/or duplicate entries were present.  AMD had
+    * to do extra work before ordering the matrix.  This is a warning, not an
+    * error.  */
 
+/* ========================================================================== */
+/* === AMD version ========================================================== */
+/* ========================================================================== */
+
+/* AMD Version 1.2 and later include the following definitions.
+ * As an example, to test if the version you are using is 1.2 or later:
+ *
+ * #ifdef AMD_VERSION
+ *      if (AMD_VERSION >= AMD_VERSION_CODE (1,2)) ...
+ * #endif
+ *
+ * This also works during compile-time:
+ *
+ *      #if defined(AMD_VERSION) && (AMD_VERSION >= AMD_VERSION_CODE (1,2))
+ *          printf ("This is version 1.2 or later\n") ;
+ *      #else
+ *          printf ("This is an early version\n") ;
+ *      #endif
+ *
+ * Versions 1.1 and earlier of AMD do not include a #define'd version number.
+ */
+
+#define AMD_DATE "May 31, 2007"
+#define AMD_VERSION_CODE(main,sub) ((main) * 1000 + (sub))
+#define AMD_MAIN_VERSION 2
+#define AMD_SUB_VERSION 2
+#define AMD_SUBSUB_VERSION 0
+#define AMD_VERSION AMD_VERSION_CODE(AMD_MAIN_VERSION,AMD_SUB_VERSION)
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
 #endif
 \end{verbatim}
 }
+
 
 %------------------------------------------------------------------------------
 \newpage

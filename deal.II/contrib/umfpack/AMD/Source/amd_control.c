@@ -3,9 +3,9 @@
 /* ========================================================================= */
 
 /* ------------------------------------------------------------------------- */
-/* AMD Version 1.1 (Jan. 21, 2004), Copyright (c) 2004 by Timothy A. Davis,  */
-/* Patrick R. Amestoy, and Iain S. Duff.  See ../README for License.         */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.           */
+/* AMD, Copyright (c) Timothy A. Davis,					     */
+/* Patrick R. Amestoy, and Iain S. Duff.  See ../README.txt for License.     */
+/* email: davis at cise.ufl.edu    CISE Department, Univ. of Florida.        */
 /* web: http://www.cise.ufl.edu/research/sparse/amd                          */
 /* ------------------------------------------------------------------------- */
 
@@ -35,8 +35,9 @@ GLOBAL void AMD_control
 	aggressive = AMD_DEFAULT_AGGRESSIVE ;
     }
 
-    PRINTF (("\namd:  approximate minimum degree ordering, parameters:\n"
-	"    dense row parameter: %g\n", alpha)) ;
+    PRINTF (("\nAMD version %d.%d.%d, %s: approximate minimum degree ordering\n"
+	"    dense row parameter: %g\n", AMD_MAIN_VERSION, AMD_SUB_VERSION,
+	AMD_SUBSUB_VERSION, AMD_DATE, alpha)) ;
 
     if (alpha < 0)
     {
@@ -52,10 +53,12 @@ GLOBAL void AMD_control
 
     if (aggressive)
     {
-	PRINTF (("    aggressive absorption:  yes\n\n")) ;
+	PRINTF (("    aggressive absorption:  yes\n")) ;
     }
     else
     {
-	PRINTF (("    aggressive absorption:  no\n\n")) ;
+	PRINTF (("    aggressive absorption:  no\n")) ;
     }
+
+    PRINTF (("    size of AMD integer: %d\n\n", sizeof (Int))) ;
 }

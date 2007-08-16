@@ -66,7 +66,7 @@ INC = ../Include/umfpack.h \
 	$(addsuffix .h,$(UMFINT)) \
 	$(addprefix ../Include/, $(addsuffix .h,$(USER))) \
 	$(addprefix ../Include/, $(addsuffix .h,$(GENERIC))) \
-	../../AMD/Source/amd_internal.h ../../AMD/Include/amd.h
+	../../AMD/Include/amd_internal.h ../../AMD/Include/amd.h
 
 #-------------------------------------------------------------------------------
 # object files for each version

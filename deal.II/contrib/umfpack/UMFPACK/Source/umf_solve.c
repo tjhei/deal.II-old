@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* UMFPACK Copyright (c) Timothy A. Davis, CISE,                              */
 /* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
@@ -21,6 +21,9 @@
     Uses the sparse backward error method of Arioli, Demmel, and Duff
     (Solving sparse linear systems with sparse backward error, SIAM J. Matrix
     Analysis and Applic., vol 10, pp. 165-190).
+
+    Added on option that allows the complex A and X to be split differently
+    than B, Oct 10, 2005.  Contributed by David Bateman.
 */
 
 #include "umf_internal.h"
@@ -79,7 +82,8 @@ GLOBAL Int UMF_solve
     double *Z2, *Y, *B2, *Rs ;
     Int *Rperm, *Cperm, i, n, p, step, j, nz, status, p2, do_scale ;
 #ifdef COMPLEX
-    Int split ;
+    Int AXsplit ;
+    Int Bsplit ;
 #endif
 #ifndef NRECIPROCAL
     Int do_recip = Numeric->do_recip ;
@@ -141,7 +145,7 @@ GLOBAL Int UMF_solve
 	    return (UMFPACK_ERROR_argument_missing) ;
 	}
 	/* A, B, and X in split format if Az, Bz, and Xz present */
-	split = SPLIT (Az) && SPLIT (Bz) && SPLIT (Xz) ;
+	AXsplit = SPLIT (Az) || SPLIT(Xz);
 	Z = (Entry *) (SolveWork + 4*n) ;	/* Entry Z [0..n-1] */
 	S = (Entry *) (SolveWork + 6*n) ;	/* Entry S [0..n-1] */
 	Y = (double *) (SolveWork + 8*n) ;	/* double Y [0..n-1] */
@@ -150,10 +154,12 @@ GLOBAL Int UMF_solve
     }
     else
     {
-	/* A is ignored, only  look at X and B for split/packed cases */
-	split = SPLIT (Bz) && SPLIT (Xz) ;
+      /* A is ignored, only  look at X for split/packed cases */
+      AXsplit = SPLIT(Xz);
     }
-    if (split)
+    Bsplit = SPLIT (Bz);
+
+    if (AXsplit)
     {
 	X = (Entry *) (SolveWork + 2*n) ;	/* Entry X [0..n-1] */
     }
@@ -209,7 +215,7 @@ GLOBAL Int UMF_solve
 	    for (p = 0 ; p < p2 ; p++)
 	    {
 		/* Y [Ai [p]] += ABS (Ax [p]) ; */
-	        ASSIGN (aij, Ax, Az, p, split) ;
+	        ASSIGN (aij, Ax, Az, p, AXsplit) ;
 		ABS (d, aij) ;
 		Y [Ai [p]] += d ;
 	    }
@@ -219,7 +225,7 @@ GLOBAL Int UMF_solve
 	    for (i = 0 ; i < n ; i++)
 	    {
 		/* B2 [i] = ABS (B [i]) ; */
-		ASSIGN (bi, Bx, Bz, i, split) ;
+		ASSIGN (bi, Bx, Bz, i, Bsplit) ;
 		ABS (B2 [i], bi) ;
 	    }
 
@@ -276,7 +282,7 @@ GLOBAL Int UMF_solve
 			/* multiply by the scale factors */
 			for (i = 0 ; i < n ; i++)
 			{
-			    ASSIGN (X [i], Bx, Bz, i, split) ;
+			    ASSIGN (X [i], Bx, Bz, i, Bsplit) ;
 			    SCALE (X [i], Rs [i]) ;
 			}
 		    }
@@ -286,7 +292,7 @@ GLOBAL Int UMF_solve
 			/* divide by the scale factors */
 			for (i = 0 ; i < n ; i++)
 			{
-			    ASSIGN (X [i], Bx, Bz, i, split) ;
+			    ASSIGN (X [i], Bx, Bz, i, Bsplit) ;
 			    SCALE_DIV (X [i], Rs [i]) ;
 			}
 		    }
@@ -302,7 +308,7 @@ GLOBAL Int UMF_solve
 		    for (i = 0 ; i < n ; i++)
 		    {
 			/* W [i] = B [Rperm [i]] ; */
-			ASSIGN (W [i], Bx, Bz, Rperm [i], split) ;
+			ASSIGN (W [i], Bx, Bz, Rperm [i], Bsplit) ;
 		    }
 		}
 	    }
@@ -311,7 +317,7 @@ GLOBAL Int UMF_solve
 		for (i = 0 ; i < n ; i++)
 		{
 		    /* Z [i] = B [i] ; */
-		    ASSIGN (Z [i], Bx, Bz, i, split) ;
+		    ASSIGN (Z [i], Bx, Bz, i, Bsplit) ;
 		}
 		flops += MULTSUB_FLOPS * nz ;
 		for (i = 0 ; i < n ; i++)
@@ -321,7 +327,7 @@ GLOBAL Int UMF_solve
 		    for (p = Ap [i] ; p < p2 ; p++)
 		    {
 			/* Z [Ai [p]] -= Ax [p] * xi ; */
-			ASSIGN (aij, Ax, Az, p, split) ;
+			ASSIGN (aij, Ax, Az, p, AXsplit) ;
 			MULT_SUB (Z [Ai [p]], aij, xi) ;
 		    }
 		}
@@ -390,7 +396,7 @@ GLOBAL Int UMF_solve
 		for (i = 0 ; i < n ; i++)
 		{
 		    /* W [i] = B [i] ; */
-		    ASSIGN (W [i], Bx, Bz, i, split) ;
+		    ASSIGN (W [i], Bx, Bz, i, Bsplit) ;
 		    Z2 [i] = 0. ;
 		}
 		flops += (MULT_FLOPS + DECREMENT_FLOPS + ABS_FLOPS + 1) * nz ;
@@ -403,7 +409,7 @@ GLOBAL Int UMF_solve
 			i = Ai [p] ;
 
 			/* axx = Ax [p] * xj ; */
-			ASSIGN (aij, Ax, Az, p, split) ;
+			ASSIGN (aij, Ax, Az, p, AXsplit) ;
 			MULT (axx, aij, xj) ;
 
 			/* W [i] -= axx ; */
@@ -493,7 +499,7 @@ GLOBAL Int UMF_solve
 			    /* yi += ABS (Ax [p]) * Rs [Ai [p]] ; */
 			    /* note that abs (aij) is the same as
 			     * abs (conj (aij)) */
-			    ASSIGN (aij, Ax, Az, p, split) ;
+			    ASSIGN (aij, Ax, Az, p, AXsplit) ;
 			    ABS (d, aij) ;
 			    yi += (d * Rs [Ai [p]]) ;
 			}
@@ -513,7 +519,7 @@ GLOBAL Int UMF_solve
 			    /* yi += ABS (Ax [p]) / Rs [Ai [p]] ; */
 			    /* note that abs (aij) is the same as
 			     * abs (conj (aij)) */
-			    ASSIGN (aij, Ax, Az, p, split) ;
+			    ASSIGN (aij, Ax, Az, p, AXsplit) ;
 			    ABS (d, aij) ;
 			    yi += (d / Rs [Ai [p]]) ;
 			}
@@ -534,7 +540,7 @@ GLOBAL Int UMF_solve
 			/* yi += ABS (Ax [p]) ; */
 			/* note that abs (aij) is the same as
 			 * abs (conj (aij)) */
-			ASSIGN (aij, Ax, Az, p, split) ;
+			ASSIGN (aij, Ax, Az, p, AXsplit) ;
 			ABS (d, aij) ;
 			yi += d ;
 		    }
@@ -546,7 +552,7 @@ GLOBAL Int UMF_solve
 	    for (i = 0 ; i < n ; i++)
 	    {
 		/* B2 [i] = ABS (B [i]) ; */
-		ASSIGN (bi, Bx, Bz, i, split) ;
+		ASSIGN (bi, Bx, Bz, i, Bsplit) ;
 		ABS (B2 [i], bi) ;
 	    }
 
@@ -568,7 +574,7 @@ GLOBAL Int UMF_solve
 		for (i = 0 ; i < n ; i++)
 		{
 		    /* W [i] = B [Cperm [i]] ; */
-		    ASSIGN (W [i], Bx, Bz, Cperm [i], split) ;
+		    ASSIGN (W [i], Bx, Bz, Cperm [i], Bsplit) ;
 		}
 	    }
 	    else
@@ -577,7 +583,7 @@ GLOBAL Int UMF_solve
 		for (i = 0 ; i < n ; i++)
 		{
 		    /* Z [i] = B [i] ; */
-		    ASSIGN (Z [i], Bx, Bz, i, split) ;
+		    ASSIGN (Z [i], Bx, Bz, i, Bsplit) ;
 		}
 		flops += MULTSUB_FLOPS * nz ;
 		for (i = 0 ; i < n ; i++)
@@ -587,7 +593,7 @@ GLOBAL Int UMF_solve
 		    for (p = Ap [i] ; p < p2 ; p++)
 		    {
 			/* zi -= conjugate (Ax [p]) * X [Ai [p]] ; */
-			ASSIGN (aij, Ax, Az, p, split) ;
+			ASSIGN (aij, Ax, Az, p, Bsplit) ;
 			MULT_SUB_CONJ (zi, X [Ai [p]], aij) ;
 		    }
 		    Z [i] = zi ;
@@ -696,13 +702,13 @@ GLOBAL Int UMF_solve
 		for (i = 0 ; i < n ; i++)
 		{
 		    /* wi = B [i] ; */
-		    ASSIGN (wi, Bx, Bz, i, split) ;
+		    ASSIGN (wi, Bx, Bz, i, Bsplit) ;
 		    z2i = 0. ;
 		    p2 = Ap [i+1] ;
 		    for (p = Ap [i] ; p < p2 ; p++)
 		    {
 			/* axx = conjugate (Ax [p]) * X [Ai [p]] ; */
-			ASSIGN (aij, Ax, Az, p, split) ;
+			ASSIGN (aij, Ax, Az, p, AXsplit) ;
 			MULT_CONJ (axx, X [Ai [p]], aij) ;
 
 			/* wi -= axx ; */
@@ -766,7 +772,7 @@ GLOBAL Int UMF_solve
 			    /* yi += ABS (Ax [p]) * Rs [Ai [p]] ; */
 			    /* note that A.' is the array transpose,
 			     * so no conjugate */
-			    ASSIGN (aij, Ax, Az, p, split) ;
+			    ASSIGN (aij, Ax, Az, p, AXsplit) ;
 			    ABS (d, aij) ;
 			    yi += (d * Rs [Ai [p]]) ;
 			}
@@ -786,7 +792,7 @@ GLOBAL Int UMF_solve
 			    /* yi += ABS (Ax [p]) / Rs [Ai [p]] ; */
 			    /* note that A.' is the array transpose,
 			     * so no conjugate */
-			    ASSIGN (aij, Ax, Az, p, split) ;
+			    ASSIGN (aij, Ax, Az, p, AXsplit) ;
 			    ABS (d, aij) ;
 			    yi += (d / Rs [Ai [p]]) ;
 			}
@@ -807,7 +813,7 @@ GLOBAL Int UMF_solve
 			/* yi += ABS (Ax [p]) */
 			/* note that A.' is the array transpose,
 			 * so no conjugate */
-			ASSIGN (aij, Ax, Az, p, split) ;
+			ASSIGN (aij, Ax, Az, p, AXsplit) ;
 			ABS (d, aij) ;
 			yi += d ;
 		    }
@@ -819,7 +825,7 @@ GLOBAL Int UMF_solve
 	    for (i = 0 ; i < n ; i++)
 	    {
 		/* B2 [i] = ABS (B [i]) ; */
-		ASSIGN (bi, Bx, Bz, i, split) ;
+		ASSIGN (bi, Bx, Bz, i, Bsplit) ;
 		ABS (B2 [i], bi) ;
 	    }
 
@@ -841,7 +847,7 @@ GLOBAL Int UMF_solve
 		for (i = 0 ; i < n ; i++)
 		{
 		    /* W [i] = B [Cperm [i]] ; */
-		    ASSIGN (W [i], Bx, Bz, Cperm [i], split) ;
+		    ASSIGN (W [i], Bx, Bz, Cperm [i], Bsplit) ;
 		}
 	    }
 	    else
@@ -850,7 +856,7 @@ GLOBAL Int UMF_solve
 		for (i = 0 ; i < n ; i++)
 		{
 		    /* Z [i] = B [i] ; */
-		    ASSIGN (Z [i], Bx, Bz, i, split) ;
+		    ASSIGN (Z [i], Bx, Bz, i, Bsplit) ;
 		}
 		flops += MULTSUB_FLOPS * nz ;
 		for (i = 0 ; i < n ; i++)
@@ -860,7 +866,7 @@ GLOBAL Int UMF_solve
 		    for (p = Ap [i] ; p < p2 ; p++)
 		    {
 			/* zi -= Ax [p] * X [Ai [p]] ; */
-			ASSIGN (aij, Ax, Az, p, split) ;
+			ASSIGN (aij, Ax, Az, p, AXsplit) ;
 			MULT_SUB (zi, aij, X [Ai [p]]) ;
 		    }
 		    Z [i] = zi ;
@@ -969,13 +975,13 @@ GLOBAL Int UMF_solve
 		for (i = 0 ; i < n ; i++)
 		{
 		    /* wi = B [i] ; */
-		    ASSIGN (wi, Bx, Bz, i, split) ;
+		    ASSIGN (wi, Bx, Bz, i, Bsplit) ;
 		    z2i = 0. ;
 		    p2 = Ap [i+1] ;
 		    for (p = Ap [i] ; p < p2 ; p++)
 		    {
 			/* axx = Ax [p] * X [Ai [p]] ; */
-			ASSIGN (aij, Ax, Az, p, split) ;
+			ASSIGN (aij, Ax, Az, p, AXsplit) ;
 			MULT (axx, aij, X [Ai [p]]) ;
 
 			/* wi -= axx ; */
@@ -1011,7 +1017,7 @@ GLOBAL Int UMF_solve
 	for (i = 0 ; i < n ; i++)
 	{
 	    /* X [i] = B [Rperm [i]] ; */
-	    ASSIGN (X [i], Bx, Bz, Rperm [i], split) ;
+	    ASSIGN (X [i], Bx, Bz, Rperm [i], Bsplit) ;
 	}
 	flops = UMF_lsolve (Numeric, X, Pattern) ;
 	status = UMFPACK_OK ;
@@ -1027,7 +1033,7 @@ GLOBAL Int UMF_solve
 	for (i = 0 ; i < n ; i++)
 	{
 	    /* X [i] = B [i] ; */
-	    ASSIGN (X [i], Bx, Bz, i, split) ;
+	    ASSIGN (X [i], Bx, Bz, i, Bsplit) ;
 	}
 	flops = UMF_lsolve (Numeric, X, Pattern) ;
 	status = UMFPACK_OK ;
@@ -1043,7 +1049,7 @@ GLOBAL Int UMF_solve
 	for (i = 0 ; i < n ; i++)
 	{
 	    /* W [i] = B [i] ; */
-	    ASSIGN (W [i], Bx, Bz, i, split) ;
+	    ASSIGN (W [i], Bx, Bz, i, Bsplit) ;
 	}
 	flops = UMF_lhsolve (Numeric, W, Pattern) ;
 	for (i = 0 ; i < n ; i++)
@@ -1063,7 +1069,7 @@ GLOBAL Int UMF_solve
 	for (i = 0 ; i < n ; i++)
 	{
 	    /* W [i] = B [i] ; */
-	    ASSIGN (W [i], Bx, Bz, i, split) ;
+	    ASSIGN (W [i], Bx, Bz, i, Bsplit) ;
 	}
 	flops = UMF_ltsolve (Numeric, W, Pattern) ;
 	for (i = 0 ; i < n ; i++)
@@ -1083,7 +1089,7 @@ GLOBAL Int UMF_solve
 	for (i = 0 ; i < n ; i++)
 	{
 	    /* X [i] = B [i] ; */
-	    ASSIGN (X [i], Bx, Bz, i, split) ;
+	    ASSIGN (X [i], Bx, Bz, i, Bsplit) ;
 	}
 	flops = UMF_lhsolve (Numeric, X, Pattern) ;
 	status = UMFPACK_OK ;
@@ -1099,7 +1105,7 @@ GLOBAL Int UMF_solve
 	for (i = 0 ; i < n ; i++)
 	{
 	    /* X [i] = B [i] ; */
-	    ASSIGN (X [i], Bx, Bz, i, split) ;
+	    ASSIGN (X [i], Bx, Bz, i, Bsplit) ;
 	}
 	flops = UMF_ltsolve (Numeric, X, Pattern) ;
 	status = UMFPACK_OK ;
@@ -1115,7 +1121,7 @@ GLOBAL Int UMF_solve
 	for (i = 0 ; i < n ; i++)
 	{
 	    /* W [i] = B [i] ; */
-	    ASSIGN (W [i], Bx, Bz, i, split) ;
+	    ASSIGN (W [i], Bx, Bz, i, Bsplit) ;
 	}
 	flops = UMF_usolve (Numeric, W, Pattern) ;
 	for (i = 0 ; i < n ; i++)
@@ -1134,7 +1140,7 @@ GLOBAL Int UMF_solve
 	for (i = 0 ; i < n ; i++)
 	{
 	    /* X [i] = B [i] ; */
-	    ASSIGN (X [i], Bx, Bz, i, split) ;
+	    ASSIGN (X [i], Bx, Bz, i, Bsplit) ;
 	}
 	flops = UMF_usolve (Numeric, X, Pattern) ;
 
@@ -1149,7 +1155,7 @@ GLOBAL Int UMF_solve
 	for (i = 0 ; i < n ; i++)
 	{
 	    /* X [i] = B [Cperm [i]] ; */
-	    ASSIGN (X [i], Bx, Bz, Cperm [i], split) ;
+	    ASSIGN (X [i], Bx, Bz, Cperm [i], Bsplit) ;
 	}
 	flops = UMF_uhsolve (Numeric, X, Pattern) ;
 
@@ -1164,7 +1170,7 @@ GLOBAL Int UMF_solve
 	for (i = 0 ; i < n ; i++)
 	{
 	    /* X [i] = B [Cperm [i]] ; */
-	    ASSIGN (X [i], Bx, Bz, Cperm [i], split) ;
+	    ASSIGN (X [i], Bx, Bz, Cperm [i], Bsplit) ;
 	}
 	flops = UMF_utsolve (Numeric, X, Pattern) ;
 
@@ -1179,7 +1185,7 @@ GLOBAL Int UMF_solve
 	for (i = 0 ; i < n ; i++)
 	{
 	    /* X [i] = B [i] ; */
-	  ASSIGN (X [i], Bx, Bz, i, split) ;
+	  ASSIGN (X [i], Bx, Bz, i, Bsplit) ;
 	}
 	flops = UMF_uhsolve (Numeric, X, Pattern) ;
 
@@ -1194,7 +1200,7 @@ GLOBAL Int UMF_solve
 	for (i = 0 ; i < n ; i++)
 	{
 	    /* X [i] = B [i] ; */
-	    ASSIGN (X [i], Bx, Bz, i, split) ;
+	    ASSIGN (X [i], Bx, Bz, i, Bsplit) ;
 	}
 	flops = UMF_utsolve (Numeric, X, Pattern) ;
 
@@ -1206,7 +1212,7 @@ GLOBAL Int UMF_solve
 
 #ifdef COMPLEX
     /* copy the solution back, from Entry X [ ] to double Xx [ ] and Xz [ ] */
-    if (split)
+    if (AXsplit)
     {
 	for (i = 0 ; i < n ; i++)
 	{

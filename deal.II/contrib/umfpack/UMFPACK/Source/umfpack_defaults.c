@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* UMFPACK Copyright (c) Timothy A. Davis, CISE,                              */
 /* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
@@ -63,7 +63,7 @@ GLOBAL void UMFPACK_defaults
     /* compile-time settings: cannot be modified at run-time */
     /* ---------------------------------------------------------------------- */
 
-#ifdef USE_NO_BLAS
+#ifdef NBLAS
     /* do not use the BLAS - use in-line C code instead */
     Control [UMFPACK_COMPILED_WITH_BLAS] = 0 ;
 #else
@@ -72,18 +72,14 @@ GLOBAL void UMFPACK_defaults
 #endif
 
 #ifdef MATLAB_MEX_FILE
-    /* use mxMalloc, mxFree, mxRealloc, and mexPrintf */
-    /* use mxAssert if debugging is enabled */
+    /* compiled as a MATLAB mexFunction */ 
     Control [UMFPACK_COMPILED_FOR_MATLAB] = 1 ;
 #else
 #ifdef MATHWORKS
-    /* use internal utMalloc, utFree, utRealloc, and utPrintf routines. */
-    /* use utDivideComplex and utFdlibm_hypot for complex version. */
-    /* use utAssert if debugging is enabled. */
+    /* compiled for internal use in MATLAB */ 
     Control [UMFPACK_COMPILED_FOR_MATLAB] = 2 ;
 #else
-    /* use ANSI C malloc, free, realloc, and print */
-    /* use ANSI C assert if debugging is enabled */
+    /* use ANSI C malloc, free, realloc, and printf */
     Control [UMFPACK_COMPILED_FOR_MATLAB] = 0 ;
 #endif
 #endif

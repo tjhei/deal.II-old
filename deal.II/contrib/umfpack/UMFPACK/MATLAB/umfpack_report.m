@@ -1,10 +1,11 @@
 function umfpack_report (Control, Info)
-% UMFPACK_REPORT
+%UMFPACK_REPORT prints optional control settings and statistics
 %
+%   Example:
 %       umfpack_report (Control, Info) ;
 %
-% Prints the current Control settings for umfpack, and the statistical
-% information returned by umfpack in the Info array.  If Control is
+% Prints the current Control settings for umfpack2, and the statistical
+% information returned by umfpack2 in the Info array.  If Control is
 % an empty matrix, then the default control settings are printed.
 %
 % Control is 20-by-1, and Info is 90-by-1.  Not all entries are used.
@@ -17,11 +18,10 @@ function umfpack_report (Control, Info)
 %       umfpack_report ;                print the default control parameters
 %                                       and an empty Info array.
 %
-% See also umfpack, umfpack_make, umfpack_details,
+% See also umfpack, umfpack2, umfpack_make, umfpack_details,
 % umfpack_demo, and umfpack_simple.
 
-% UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
-% All Rights Reserved.  Type umfpack_details for License.
+% Copyright 1995-2007 by Timothy A. Davis.
 
 %-------------------------------------------------------------------------------
 % get inputs, use defaults if input arguments not present
@@ -35,7 +35,7 @@ if (nargin < 2)
     Info = [] ;
 end
 if (isempty (Control))
-    Control = umfpack ;
+    Control = umfpack2 ;
 end
 if (isempty (Info))
     Info = [ 0 (-ones (1, 89)) ] ;
@@ -45,7 +45,7 @@ end
 % control settings
 %-------------------------------------------------------------------------------
 
-fprintf ('\nUMFPACK Version 4.4:  Control settings:\n\n') ;
+fprintf ('\nUMFPACK:  Control settings:\n\n') ;
 fprintf ('    Control (1): print level: %d\n', Control (1)) ;
 fprintf ('    Control (2): dense row parameter:    %g\n', Control (2)) ;
 fprintf ('       "dense" rows have    > max (16, (%g)*16*sqrt(n_col)) entries\n', Control (2)) ;
@@ -102,12 +102,8 @@ if (Control (10) == 1)
     fprintf ('    Control (10): compiled for MATLAB\n') ;
 elseif (Control (10) == 2)
     fprintf ('    Control (10): compiled for MATLAB\n') ;
-    fprintf ('        Uses internal utMalloc, utFree, utRealloc, utPrintf\n') ;
-    fprintf ('        utDivideComplex, and utFdlibm_hypot routines.\n') ;
 else
     fprintf ('    Control (10): not compiled for MATLAB\n') ;
-    fprintf ('        Uses ANSI C malloc, free, realloc, and printf\n') ;
-    fprintf ('        instead of mxMalloc, mxFree, mxRealloc, and mexPrintf.\n') ;
     fprintf ('        Printing will be in terms of 0-based matrix indexing,\n') ;
     fprintf ('        not 1-based as is expected in MATLAB.  Diary output may\n') ;
     fprintf ('        not be properly recorded.\n') ;
@@ -127,13 +123,6 @@ if (Control (12) == 1)
     fprintf ('        ###########################################\n') ;
     fprintf ('        ### This will be exceedingly slow! ########\n') ;
     fprintf ('        ###########################################\n') ;
-    if (Control (10) == 1)
-        fprintf ('        Uses mxAssert.\n') ;
-    elseif (Control (10) == 2)
-        fprintf ('        Uses utAssert.\n') ;
-    else
-        fprintf ('        Uses ANSI C assert instead of mxAssert.\n') ;
-    end
 else
     fprintf ('    Control (12): compiled for normal operation (no debugging)\n') ;
 end
@@ -163,7 +152,7 @@ elseif (status == -5)
     fprintf ('ERROR    required argument is missing\n') ;
 elseif (status == -6)
     fprintf ('ERROR    n <= 0\n') ;
-elseif (status <= -7 & status >= -12 | status == -14)
+elseif (status <= -7 & status >= -12 | status == -14)			    %#ok
     fprintf ('ERROR    matrix A is corrupted\n') ;
 elseif (status == -13)
     fprintf ('ERROR    invalid system\n') ;
@@ -184,7 +173,7 @@ fprintf ('    Info (17): %d, # of columns of A\n', Info (17)) ;
 fprintf ('    Info (3): %d, nnz (A)\n', Info (3)) ;
 fprintf ('    Info (4): %d, Unit size, in bytes, for memory usage reported below\n', Info (4)) ;
 fprintf ('    Info (5): %d, size of int (in bytes)\n', Info (5)) ;
-fprintf ('    Info (6): %d, size of long (in bytes)\n', Info (6)) ;
+fprintf ('    Info (6): %d, size of UF_long (in bytes)\n', Info (6)) ;
 fprintf ('    Info (7): %d, size of pointer (in bytes)\n', Info (7)) ;
 fprintf ('    Info (8): %d, size of numerical entry (in bytes)\n', Info (8)) ;
 
@@ -192,7 +181,7 @@ fprintf ('\n  Pivots with zero Markowitz cost removed to obtain submatrix S:\n')
 fprintf ('    Info (57): %d, # of pivots with one entry in pivot column\n', Info (57)) ;
 fprintf ('    Info (58): %d, # of pivots with one entry in pivot row\n', Info (58)) ;
 fprintf ('    Info (59): %d, # of rows/columns in submatrix S (if square)\n', Info (59)) ;
-fprintf ('    Info (60): %d ') ;
+fprintf ('    Info (60): ') ;
 if (Info (60) > 0)
     fprintf ('submatrix S square and diagonal preserved\n') ;
 elseif (Info  (60) == 0)
@@ -279,7 +268,7 @@ fprintf ('    Info (64): %d, integer indices in compressed pattern of L and U\n'
 fprintf ('    Info (65): %d, numerical values stored in L and U\n', Info (65)) ;
 fprintf ('    Info (66): %.2f, numeric factorization CPU time (seconds)\n', Info (66)) ;
 fprintf ('    Info (76): %.2f, numeric factorization wall clock time (seconds)\n', Info (76)) ;
-if (Info (66) > 0.05 & Info (43) > 0)
+if (Info (66) > 0.05 & Info (43) > 0)					    %#ok
 fprintf ('    mflops in numeric factorization phase: %.2f\n', 1e-6 * Info (43) / Info (66)) ;
 end
 fprintf ('    Info (67): %d, nnz (diag (U))\n', Info (67)) ;
@@ -317,6 +306,7 @@ fprintf ('\n    Info (88:90): unused\n\n') ;
 %-------------------------------------------------------------------------------
 
 function prstrat (fmt, strategy)
+% prstrat print the ordering strategy
 fprintf (fmt, strategy) ;
 if (strategy == 1)
     fprintf ('(unsymmetric)\n') ;
@@ -332,13 +322,14 @@ elseif (strategy == 3)
     fprintf ('        Q = AMD (A+A''), Q not refined during numeric factorization,\n') ;
     fprintf ('        and diagonal pivoting (P=Q'') attempted.\n') ;
 else
-    strategy = 0 ;
+    % strategy = 0 ;
     fprintf ('(auto)\n') ;
 end
 
 %-------------------------------------------------------------------------------
 
 function yes_no (s)
+% yes_no print yes or no
 if (s == 0)
     fprintf ('(no)\n') ;
 else

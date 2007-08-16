@@ -2,15 +2,20 @@
 # AMD Makefile for compiling on Unix systems (for GNU or original make)
 #------------------------------------------------------------------------------
 
-all: dist
+default: dist
 
-include ../Make/Make.include
+include ../../UFconfig/UFconfig.mk
 
 #------------------------------------------------------------------------------
 # Remove all but the files in the original distribution
 #------------------------------------------------------------------------------
 
-purge: clean
+clean:
+	- $(RM) $(CLEAN)
+
+purge: distclean
+
+distclean: clean
 	- $(RM) *.aux *.bbl *.blg *.log *.toc
 
 #------------------------------------------------------------------------------

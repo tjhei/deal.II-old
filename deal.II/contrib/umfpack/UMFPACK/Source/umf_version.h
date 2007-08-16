@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* UMFPACK Copyright (c) Timothy A. Davis, CISE,                              */
 /* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
@@ -12,8 +12,8 @@
    Define routine names, depending on version being compiled.
 
    DINT:	double precision, int's as integers
-   DLONG:	double precision, long's as integers
-   ZLONG:	complex double precision, long's as integers
+   DLONG:	double precision, UF_long's as integers
+   ZLONG:	complex double precision, UF_long's as integers
    ZINT:	complex double precision, int's as integers
 */
 
@@ -28,7 +28,7 @@
 #endif
 
 /* -------------------------------------------------------------------------- */
-/* integer type (Int is int or long) now defined in amd_internal.h */
+/* integer type (Int is int or UF_long) now defined in amd_internal.h */
 /* -------------------------------------------------------------------------- */
 
 #if defined (DLONG) || defined (ZLONG)
@@ -60,15 +60,7 @@ SCALAR_IS_LTZERO(x):
     This is (x < 0) if the compiler is IEEE 754 compliant.
 */
 
-#if defined (MATHWORKS)
-
-/* The MathWorks has their own macros in util.h that handle NaN's properly. */
-#define SCALAR_IS_NAN(x)	(utIsNaN (x))
-#define SCALAR_IS_ZERO(x)	(utEQZero (x))
-#define SCALAR_IS_NONZERO(x)	(utNEZero (x))
-#define SCALAR_IS_LTZERO(x)	(utLTZero (x))
-
-#elif defined (UMF_WINDOWS)
+#if defined (UMF_WINDOWS) && !defined (MATHWORKS)
 
 /* Yes, this is exceedingly ugly.  Blame Microsoft, which hopelessly */
 /* violates the IEEE 754 floating-point standard in a bizarre way. */
@@ -138,7 +130,6 @@ SCALAR_IS_LTZERO(x):
 #define MULT_SUB(c,a,b)		    { (c) -= (a) * (b) ; }
 #define MULT_SUB_CONJ(c,a,b)	    { (c) -= (a) * (b) ; }
 #define DIV(c,a,b)		    { (c) = (a) / (b) ; }
-#define RECIPROCAL(c)		    { (c) = 1.0 / (c) ; }
 #define DIV_CONJ(c,a,b)		    { (c) = (a) / (b) ; }
 #define APPROX_ABS(s,a)		    { (s) = SCALAR_ABS (a) ; }
 #define ABS(s,a)		    { (s) = SCALAR_ABS (a) ; }
@@ -359,105 +350,21 @@ typedef struct
 
 /* -------------------------------------------------------------------------- */
 
-/* c = a/b, be careful to avoid underflow and overflow */
-#ifdef MATHWORKS
+/* c = a/b, using function pointer */
 #define DIV(c,a,b) \
 { \
-    (void) utDivideComplex ((a).Real, (a).Imag, (b).Real, (b).Imag, \
+    (void) umfpack_divcomplex ((a).Real, (a).Imag, (b).Real, (b).Imag, \
 	&((c).Real), &((c).Imag)) ; \
 }
-#else
-/* This uses ACM Algo 116, by R. L. Smith, 1962. */
-/* c can be the same variable as a or b. */
-/* Ignore NaN case for double relop br>=bi. */
-#define DIV(c,a,b) \
-{ \
-    double r, den, ar, ai, br, bi ; \
-    br = (b).Real ; \
-    bi = (b).Imag ; \
-    ar = (a).Real ; \
-    ai = (a).Imag ; \
-    if (SCALAR_ABS (br) >= SCALAR_ABS (bi)) \
-    { \
-	r = bi / br ; \
-	den = br + r * bi ; \
-	(c).Real = (ar + ai * r) / den ; \
-	(c).Imag = (ai - ar * r) / den ; \
-    } \
-    else \
-    { \
-	r = br / bi ; \
-	den = r * br + bi ; \
-	(c).Real = (ar * r + ai) / den ; \
-	(c).Imag = (ai * r - ar) / den ; \
-    } \
-}
-#endif
 
 /* -------------------------------------------------------------------------- */
 
-/* c = 1/c, be careful to avoid underflow and overflow */
-/* Not used if MATHWORKS is defined. */
-/* This uses ACM Algo 116, by R. L. Smith, 1962. */
-/* Ignore NaN case for double relop cr>=ci. */
-#define RECIPROCAL(c) \
-{ \
-    double r, den, cr, ci ; \
-    cr = (c).Real ; \
-    ci = (c).Imag ; \
-    if (SCALAR_ABS (cr) >= SCALAR_ABS (ci)) \
-    { \
-	r = ci / cr ; \
-	den = cr + r * ci ; \
-	(c).Real = 1.0 / den ; \
-	(c).Imag = - r / den ; \
-    } \
-    else \
-    { \
-	r = cr / ci ; \
-	den = r * cr + ci ; \
-	(c).Real = r / den ; \
-	(c).Imag = - 1.0 / den ; \
-    } \
-}
-
-
-/* -------------------------------------------------------------------------- */
-
-/* c = a/conjugate(b), be careful to avoid underflow and overflow */
-#ifdef MATHWORKS
+/* c = a/conjugate(b), using function pointer */
 #define DIV_CONJ(c,a,b) \
 { \
-    (void) utDivideComplex ((a).Real, (a).Imag, (b).Real, (-(b).Imag), \
+    (void) umfpack_divcomplex ((a).Real, (a).Imag, (b).Real, (-(b).Imag), \
 	&((c).Real), &((c).Imag)) ; \
 }
-#else
-/* This uses ACM Algo 116, by R. L. Smith, 1962. */
-/* c can be the same variable as a or b. */
-/* Ignore NaN case for double relop br>=bi. */
-#define DIV_CONJ(c,a,b) \
-{ \
-    double r, den, ar, ai, br, bi ; \
-    br = (b).Real ; \
-    bi = (b).Imag ; \
-    ar = (a).Real ; \
-    ai = (a).Imag ; \
-    if (SCALAR_ABS (br) >= SCALAR_ABS (bi)) \
-    { \
-	r = (-bi) / br ; \
-	den = br - r * bi ; \
-	(c).Real = (ar + ai * r) / den ; \
-	(c).Imag = (ai - ar * r) / den ; \
-    } \
-    else \
-    { \
-	r = br / (-bi) ; \
-	den =  r * br - bi; \
-	(c).Real = (ar * r + ai) / den ; \
-	(c).Imag = (ai * r - ar) / den ; \
-    } \
-}
-#endif
 
 /* -------------------------------------------------------------------------- */
 
@@ -469,45 +376,11 @@ typedef struct
 
 /* -------------------------------------------------------------------------- */
 
-/* exact absolute value, s = sqrt (a.real^2 + amag^2) */
-#ifdef MATHWORKS
+/* exact absolute value, s = sqrt (a.real^2 + a.imag^2) */
 #define ABS(s,a) \
 { \
-    (s) = utFdlibm_hypot ((a).Real, (a).Imag) ; \
+    (s) = umfpack_hypot ((a).Real, (a).Imag) ; \
 }
-#else
-/* Ignore NaN case for the double relops ar>=ai and ar+ai==ar. */
-#define ABS(s,a) \
-{ \
-    double r, ar, ai ; \
-    ar = SCALAR_ABS ((a).Real) ; \
-    ai = SCALAR_ABS ((a).Imag) ; \
-    if (ar >= ai) \
-    { \
-	if (ar + ai == ar) \
-	{ \
-	    (s) = ar ; \
-	} \
-	else \
-	{ \
-	    r = ai / ar ; \
-	    (s) = ar * sqrt (1.0 + r*r) ; \
-	} \
-    } \
-    else \
-    { \
-	if (ai + ar == ai) \
-	{ \
-	    (s) = ai ; \
-	} \
-	else \
-	{ \
-	    r = ar / ai ; \
-	    (s) = ai * sqrt (1.0 + r*r) ; \
-	} \
-    } \
-}
-#endif
 
 /* -------------------------------------------------------------------------- */
 
@@ -656,7 +529,7 @@ typedef struct
 #endif
 
 /* -------------------------------------------------------------------------- */
-/* Double precision, with long's as integers */
+/* Double precision, with UF_long's as integers */
 /* -------------------------------------------------------------------------- */
 
 #ifdef DLONG
@@ -886,7 +759,7 @@ typedef struct
 #endif
 
 /* -------------------------------------------------------------------------- */
-/* Complex double precision, with long's as integers */
+/* Complex double precision, with UF_long's as integers */
 /* -------------------------------------------------------------------------- */
 
 #ifdef ZLONG

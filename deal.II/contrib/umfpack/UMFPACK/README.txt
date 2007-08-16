@@ -1,58 +1,76 @@
-UMFPACK Version 4.4:  a set of routines solving sparse linear systems via LU
-    factorization.  Requires two other packages:  the BLAS (dense matrix
-    operations) and AMD (sparse matrix minimum degree ordering).  Includes
-    a C-callable and MATLAB interface, and a basic FORTRAN 77 interface to
-    a subset of the C-callable routines.
+UMFPACK Version 5.0.2:  a set of routines solving sparse linear systems via LU
+    factorization.  Requires three other packages:  the BLAS (dense matrix
+    operations), AMD (sparse matrix minimum degree ordering), and UFconfig.
+    Includes a C-callable and MATLAB interface, and a basic FORTRAN 77
+    interface to a subset of the C-callable routines.  Requires AMD Version
+    2.0 or later.
+
+The AMD, UFconfig, and UMFPACK directories must all reside in the same parent
+directory.
 
 Quick start (Unix, or Windows with Cygwin):
 
     To compile, test, and install both UMFPACK and AMD, the UMFPACK and AMD
     directories must be in the same parent directory.  To configure, edit
-    UMFPACK/Make/Make.include and AMD/Make/Make.include (otherwise the BLAS
-    will not be used, and UMFPACK will be slow).  cd to this directory (UMFPACK)
-    and type "make" (or "make lib" if you do not have MATLAB).  To compile and
-    run a demo program for Harwell/Boeing matrices, type "make hb".  To compile
-    a FORTRAN main program that calls the 32-bit C-callable UMFPACK library,
-    type "make fortran".  When done, type "make clean" to remove unused *.o
-    files (keeps the compiled libraries and demo programs).  See the User Guide
-    (Doc/UserGuide.pdf), or UMFPACK/Make/Make.include, for more details
-    (including options for compiling 64-bit mode).
+    the UFconfig/UFconfig.mk file (otherwise, you may get warnings that the
+    BLAS (dgemm, etc) are not found).  You may use UMFPACK_CONFIG = -DNBLAS in
+    the UFconfig/UFconfig.mk file, to avoid using the BLAS, but UMFPACK will be
+    slow.  Next, cd to this directory (UMFPACK) and type "make".  To compile
+    and run a FORTRAN demo program for Harwell/Boeing matrices, type "make hb".
+    To compile a FORTRAN main program that calls the 32-bit C-callable UMFPACK
+    library, type "make fortran".  When done, type "make clean" to remove
+    unused *.o files (keeps the compiled libraries and demo programs).  See
+    the User Guide (Doc/UserGuide.pdf), or ../UFconfig/UFconfig.mk for more
+    details (including options for compiling in 64-bit mode).
 
 Quick start (for MATLAB users):
 
     To compile, test, and install the UMFPACK mexFunction, cd to the
     UMFPACK/MATLAB directory and type umfpack_make at the MATLAB prompt.
-    This works on any system supported by MATLAB.
+
+    NOTE: DO NOT ATTEMPT TO USE THIS CODE IN 64-BIT MATLAB (v7.3).
+    It is not yet ported to that version of MATLAB.
 
 --------------------------------------------------------------------------------
 
-UMFPACK Version 4.4 (Jan. 28, 2005),  Copyright (c) 2005 by Timothy A.
-Davis.  All Rights Reserved.
+UMFPACK, Copyright (c) 1995-2006 by Timothy A.  Davis.  All Rights Reserved.
+UMFPACK is available under alternate licences; contact T. Davis for details.
 
 UMFPACK License:
 
     Your use or distribution of UMFPACK or any modified version of
     UMFPACK implies that you agree to this License.
 
-    THIS MATERIAL IS PROVIDED AS IS, WITH ABSOLUTELY NO WARRANTY
-    EXPRESSED OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
 
-    Permission is hereby granted to use or copy this program, provided
-    that the Copyright, this License, and the Availability of the original
-    version is retained on all copies.  User documentation of any code that
-    uses UMFPACK or any modified version of UMFPACK code must cite the
-    Copyright, this License, the Availability note, and "Used by permission."
-    Permission to modify the code and to distribute modified code is granted,
-    provided the Copyright, this License, and the Availability note are
-    retained, and a notice that the code was modified is included.  This
-    software was developed with support from the National Science Foundation,
-    and is provided to you free of charge.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
+    USA
+
+    Permission is hereby granted to use or copy this program under the
+    terms of the GNU LGPL, provided that the Copyright, this License,
+    and the Availability of the original version is retained on all copies.
+    User documentation of any code that uses this code or any modified
+    version of this code must cite the Copyright, this License, the
+    Availability note, and "Used by permission." Permission to modify
+    the code and to distribute modified code is granted, provided the
+    Copyright, this License, and the Availability note are retained,
+    and a notice that the code was modified is included.
 
 Availability:
 
     http://www.cise.ufl.edu/research/sparse/umfpack
 
-    UMFPACK (including versions 2.2.1 and earlier, in Fortran) is available at
+    UMFPACK (including versions 2.2.1 and earlier, in FORTRAN) is available at
     http://www.cise.ufl.edu/research/sparse.  MA38 is available in the Harwell
     Subroutine Library.  This version of UMFPACK includes a modified form of
     COLAMD Version 2.0, originally released on Jan. 31, 2000, also available at
@@ -67,7 +85,8 @@ Availability:
 
 Refer to ../AMD/README for the License for AMD, which is a separate
 package for ordering sparse matrices that is required by UMFPACK.
-UMFPACK v4.4 can use either AMD v1.0 or v1.1.
+UMFPACK v4.5 cannot use AMD v1.1 or earlier.  UMFPACK 5.0
+requires AMD v2.0 or later.
 
 --------------------------------------------------------------------------------
 
@@ -82,8 +101,7 @@ Description:
     with a MATLAB (Version 6.0 or later) interface.
 
     For best performance, UMFPACK requires an optimized BLAS library.  It can
-    also be compiled without any BLAS at all.  UMFPACK requires AMD Version 1.0
-    or Version 1.1
+    also be compiled without any BLAS at all.  UMFPACK requires AMD Version 2.0.
 
 Authors:
 
@@ -137,7 +155,6 @@ Files and directories in the UMFPACK distribution:
     ----------------------------------------------------------------------------
 
     Doc		documentation
-    Make	for compiling UMFPACK (a symbolic link to ../AMD/Make)
     Source	primary source code
     Include	include files for use in your code that calls UMFPACK
     Demo	demo programs.  also serves as test of the UMFPACK installation.
@@ -169,18 +186,10 @@ Files and directories in the UMFPACK distribution:
     UserGuide.pdf		User Guide (PDF)
 
     ----------------------------------------------------------------------------
-    Make directory: for compiling the UMFPACK library (Lib/libumfpack.a)
-    ----------------------------------------------------------------------------
-
-    This is a symbolic link to the ../AMD/Make directory.  Refer to the
-    ../AMD/README file for a list of its contents.
-
-    ----------------------------------------------------------------------------
     Source directory:
     ----------------------------------------------------------------------------
 
-    GNUmakefile			a nice Makefile, for GNU make
-    Makefile			an ugly Unix Makefile (for older make's)
+    cholmod_blas.h		an exact copy of CHOLMOD/Include/cholmod_blas.h
 
     umfpack_col_to_triplet.c	convert col form to triplet
     umfpack_defaults.c		set Control defaults
@@ -215,7 +224,7 @@ Files and directories in the UMFPACK distribution:
 
     umf_config.h		configuration file (BLAS, memory, timer)
     umf_internal.h		definitions internal to UMFPACK
-    umf_version.h		version definitions (int/long, real/complex)
+    umf_version.h		version definitions (int/UF_long, real/complex)
 
     umf_2by2.[ch]
     umf_analyze.[ch]		symbolic factorization of A'*A
@@ -325,17 +334,17 @@ Files and directories in the UMFPACK distribution:
     umfpack_zl_demo.sed		for creating umfpack_zl_demo.c
 
     umfpack_di_demo.c		a full demo (real/int version)
-    umfpack_dl_demo.c		a full demo (real/long version)
+    umfpack_dl_demo.c		a full demo (real/UF_long version)
     umfpack_zi_demo.c		a full demo (complex/int version)
-    umfpack_zl_demo.c		a full demo (complex/long version)
+    umfpack_zl_demo.c		a full demo (complex/UF_long version)
 
-    umfpack_di_demo.out		umfpack_di_demo output, unmodified Make.include
-    umfpack_dl_demo.out		umfpack_dl_demo output, unmodified Make.include
-    umfpack_zi_demo.out		umfpack_zi_demo output, unmodified Make.include
-    umfpack_zl_demo.out		umfpack_zl_demo output, unmodified Make.include
+    umfpack_di_demo.out		umfpack_di_demo output
+    umfpack_dl_demo.out		umfpack_dl_demo output
+    umfpack_zi_demo.out		umfpack_zi_demo output
+    umfpack_zl_demo.out		umfpack_zl_demo output
 
     umf4.c			a demo (real/int) for Harwell/Boeing matrices
-    umf4.out			output of "make hb", unmodified Make.include
+    umf4.out			output of "make hb"
     HB				directory of sample Harwell/Boeing matrices
     readhb.f			reads HB matrices, keeps zero entries
     readhb_nozeros.f		reads HB matrices, removes zero entries
@@ -391,4 +400,6 @@ Files and directories in the UMFPACK distribution:
     Lib directory:  libumfpack.a library placed here
     ----------------------------------------------------------------------------
 
+    GNUmakefile			a nice Makefile, for GNU make
+    Makefile			an ugly Unix Makefile (for older make's)
     libumfpack.def		UMPFACK definitions for Windows

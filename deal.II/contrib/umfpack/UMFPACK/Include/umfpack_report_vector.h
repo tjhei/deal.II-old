@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* UMFPACK Copyright (c) Timothy A. Davis, CISE,                              */
 /* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
@@ -15,9 +15,9 @@ int umfpack_di_report_vector
     const double Control [UMFPACK_CONTROL]
 ) ;
 
-long umfpack_dl_report_vector
+UF_long umfpack_dl_report_vector
 (
-    long n,
+    UF_long n,
     const double X [ ],
     const double Control [UMFPACK_CONTROL]
 ) ;
@@ -29,9 +29,9 @@ int umfpack_zi_report_vector
     const double Control [UMFPACK_CONTROL]
 ) ;
 
-long umfpack_zl_report_vector
+UF_long umfpack_zl_report_vector
 (
-    long n,
+    UF_long n,
     const double Xx [ ], const double Xz [ ],
     const double Control [UMFPACK_CONTROL]
 ) ;
@@ -44,10 +44,10 @@ double int Syntax:
     double *X, Control [UMFPACK_CONTROL] ;
     status = umfpack_di_report_vector (n, X, Control) ;
 
-double long Syntax:
+double UF_long Syntax:
 
     #include "umfpack.h"
-    long n, status ;
+    UF_long n, status ;
     double *X, Control [UMFPACK_CONTROL] ;
     status = umfpack_dl_report_vector (n, X, Control) ;
 
@@ -58,10 +58,10 @@ complex int Syntax:
     double *Xx, *Xz, Control [UMFPACK_CONTROL] ;
     status = umfpack_zi_report_vector (n, Xx, Xz, Control) ;
 
-complex long Syntax:
+complex UF_long Syntax:
 
     #include "umfpack.h"
-    long n, status ;
+    UF_long n, status ;
     double *Xx, *Xz, Control [UMFPACK_CONTROL] ;
     status = umfpack_zl_report_vector (n, Xx, Xz, Control) ;
 
@@ -107,7 +107,7 @@ Arguments:
 	when passed to umfpack_*_report_vector (this is untested, however).
 	This is the "merged" form of the complex vector X.
 
-	Note that all complex routines in UMFPACK V4.4 use this same
+	Note that all complex routines in UMFPACK V4.4 and later use this same
 	strategy for their complex arguments.  The split format is useful for
 	MATLAB, which holds its real and imaginary parts in seperate arrays.
 	The packed format is compatible with the intrinsic double _Complex

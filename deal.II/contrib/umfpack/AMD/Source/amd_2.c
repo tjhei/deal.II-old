@@ -3,9 +3,9 @@
 /* ========================================================================= */
 
 /* ------------------------------------------------------------------------- */
-/* AMD Version 1.1 (Jan. 21, 2004), Copyright (c) 2004 by Timothy A. Davis,  */
-/* Patrick R. Amestoy, and Iain S. Duff.  See ../README for License.         */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.           */
+/* AMD, Copyright (c) Timothy A. Davis,					     */
+/* Patrick R. Amestoy, and Iain S. Duff.  See ../README.txt for License.     */
+/* email: davis at cise.ufl.edu    CISE Department, Univ. of Florida.        */
 /* web: http://www.cise.ufl.edu/research/sparse/amd                          */
 /* ------------------------------------------------------------------------- */
 
@@ -15,6 +15,30 @@
  */
 
 #include "amd_internal.h"
+
+/* ========================================================================= */
+/* === clear_flag ========================================================== */
+/* ========================================================================= */
+
+static Int clear_flag (Int wflg, Int wbig, Int W [ ], Int n)
+{
+    Int x ;
+    if (wflg < 2 || wflg >= wbig)
+    {
+	for (x = 0 ; x < n ; x++)
+	{
+	    if (W [x] != 0) W [x] = 1 ;
+	}
+	wflg = 2 ;
+    }
+    /*  at this point, W [0..n-1] < wflg holds */
+    return (wflg) ;
+}
+
+
+/* ========================================================================= */
+/* === AMD_2 =============================================================== */
+/* ========================================================================= */
 
 GLOBAL void AMD_2
 (
@@ -42,7 +66,7 @@ GLOBAL void AMD_2
 {
 
 /*
- * Given a representation of the nonzero pattern of a symmetric matrix, A, 
+ * Given a representation of the nonzero pattern of a symmetric matrix, A,
  * (excluding the diagonal) perform an approximate minimum (UMFPACK/MA38-style)
  * degree ordering to compute a pivot order such that the introduction of
  * nonzeros (fill-in) in the Cholesky factors A = LL' is kept low.  At each
@@ -50,15 +74,15 @@ GLOBAL void AMD_2
  * upper-bound on the external degree.  This routine can optionally perform
  * aggresive absorption (as done by MC47B in the Harwell Subroutine
  * Library).
- * 
+ *
  * The approximate degree algorithm implemented here is the symmetric analog of
  * the degree update algorithm in MA38 and UMFPACK (the Unsymmetric-pattern
  * MultiFrontal PACKage, both by Davis and Duff).  The routine is based on the
  * MA27 minimum degree ordering algorithm by Iain Duff and John Reid.
- * 
+ *
  * This routine is a translation of the original AMDBAR and MC47B routines,
  * in Fortran, with the following modifications:
- * 
+ *
  * (1) dense rows/columns are removed prior to ordering the matrix, and placed
  *	last in the output order.  The presence of a dense row/column can
  *	increase the ordering time by up to O(n^2), unless they are removed
@@ -96,8 +120,8 @@ GLOBAL void AMD_2
  *	ouput.  Many of these functions are also provided by the Fortran
  *	Harwell Subroutine Library routine MC47A.
  *
- * (6) both "int" and "long" versions are provided.  In the descriptions below
- *	and integer is and "int" or "long", depending on which version is
+ * (6) both int and UF_long versions are provided.  In the descriptions below
+ *	and integer is and int or UF_long depending on which version is
  *	being used.
 
  **********************************************************************
@@ -172,7 +196,7 @@ GLOBAL void AMD_2
  * ----------------------------------------------------------------------------
  * INPUT ARGUMENTS (unaltered):
  * ----------------------------------------------------------------------------
- 
+
  * n:  The matrix order.  Restriction:  n >= 1.
  *
  * iwlen:  The size of the Iw array.  On input, the matrix is stored in
@@ -436,7 +460,7 @@ GLOBAL void AMD_2
 
     Int deg, degme, dext, lemax, e, elenme, eln, i, ilast, inext, j,
 	jlast, jnext, k, knt1, knt2, knt3, lenj, ln, me, mindeg, nel, nleft,
-	nvi, nvj, nvpiv, slenme, wbig, we, wflg, wnvi, x, ok, ndense, ncmpa,
+	nvi, nvj, nvpiv, slenme, wbig, we, wflg, wnvi, ok, ndense, ncmpa,
 	dense, aggressive ;
 
     unsigned Int hash ;	    /* unsigned, so that hash % n is well defined.*/
@@ -471,8 +495,8 @@ GLOBAL void AMD_2
  * nvj:		the number of variables in a supervariable j (= Nv [j])
  * nvpiv:	number of pivots in current element
  * slenme:	number of variables in variable list of pivotal variable
- * wbig:	= INT_MAX - n for the "int" version, LONG_MAX - n for the
- *		    "long" version.  wflg is not allowed to be >= wbig.
+ * wbig:	= INT_MAX - n for the int version, UF_long_max - n for the
+ *		    UF_long version.  wflg is not allowed to be >= wbig.
  * we:		W [e]
  * wflg:	used for flagging the W array.  See description of Iw.
  * wnvi:	wflg - Nv [i]
@@ -552,19 +576,10 @@ GLOBAL void AMD_2
     dmax = 1 ;
     me = EMPTY ;
 
-    wflg = 2 ;
     mindeg = 0 ;
     ncmpa = 0 ;
     nel = 0 ;
-    lemax = 0 ;		/* this is called dmax in the Fortran version */
-
-#ifdef TEST_FOR_INTEGER_OVERFLOW
-    /* for testing only */
-    wbig = 3*n ;
-#else
-    /* normal operation */
-    wbig = Int_MAX - n ;
-#endif
+    lemax = 0 ;
 
     /* get control parameters */
     if (Control != (double *) NULL)
@@ -577,10 +592,11 @@ GLOBAL void AMD_2
 	alpha = AMD_DEFAULT_DENSE ;
 	aggressive = AMD_DEFAULT_AGGRESSIVE ;
     }
+    /* Note: if alpha is NaN, this is undefined: */
     if (alpha < 0)
     {
-	/* no dense rows/columns */
-	dense = n ;
+	/* only remove completely dense rows/columns */
+	dense = n-2 ;
     }
     else
     {
@@ -588,14 +604,15 @@ GLOBAL void AMD_2
     }
     dense = MAX (16, dense) ;
     dense = MIN (n,  dense) ;
-    AMD_DEBUG1 (("AMD (debug), alpha %g, aggr. "ID"\n", alpha, aggressive)) ;
+    AMD_DEBUG1 (("\n\nAMD (debug), alpha %g, aggr. "ID"\n",
+	alpha, aggressive)) ;
 
     for (i = 0 ; i < n ; i++)
     {
 	Last [i] = EMPTY ;
 	Head [i] = EMPTY ;
 	Next [i] = EMPTY ;
-	/* if seperate Hhead array is used for hash buckets: *
+	/* if separate Hhead array is used for hash buckets: *
 	Hhead [i] = EMPTY ;
 	*/
 	Nv [i] = 1 ;
@@ -605,10 +622,14 @@ GLOBAL void AMD_2
     }
 
 #ifndef NDEBUG
-    AMD_DEBUG1 (("\n======Nel "ID"\n", nel)) ;
+    AMD_DEBUG1 (("\n======Nel "ID" initial\n", nel)) ;
     AMD_dump (n, Pe, Iw, Len, iwlen, pfree, Nv, Next, Last,
 		Head, Elen, Degree, W, -1) ;
 #endif
+
+    /* initialize wflg */
+    wbig = Int_MAX - n ;
+    wflg = clear_flag (0, wbig, W, n) ;
 
     /* --------------------------------------------------------------------- */
     /* initialize degree lists and eliminate dense and empty rows */
@@ -616,7 +637,6 @@ GLOBAL void AMD_2
 
     ndense = 0 ;
 
-    /* for (i = n-1 ; i >= 0 ; i--) */
     for (i = 0 ; i < n ; i++)
     {
 	deg = Degree [i] ;
@@ -680,8 +700,11 @@ GLOBAL void AMD_2
 
 #ifndef NDEBUG
 	AMD_DEBUG1 (("\n======Nel "ID"\n", nel)) ;
-	if (AMD_debug >= 2) AMD_dump (n, Pe, Iw, Len, iwlen, pfree, Nv, Next,
-	    Last, Head, Elen, Degree, W, nel) ;
+	if (AMD_debug >= 2)
+	{
+	    AMD_dump (n, Pe, Iw, Len, iwlen, pfree, Nv, Next,
+		    Last, Head, Elen, Degree, W, nel) ;
+	}
 #endif
 
 /* ========================================================================= */
@@ -761,7 +784,7 @@ GLOBAL void AMD_2
 		    /* store i in new list */
 		    /* ----------------------------------------------------- */
 
-                    /* flag i as being in Lme by negating Nv [i] */
+		    /* flag i as being in Lme by negating Nv [i] */
 		    degme += nvi ;
 		    Nv [i] = -nvi ;
 		    Iw [++pme2] = i ;
@@ -781,7 +804,7 @@ GLOBAL void AMD_2
 		    }
 		    else
 		    {
-                        /* i is at the head of the degree list */
+			/* i is at the head of the degree list */
 			ASSERT (Degree [i] >= 0 && Degree [i] < n) ;
 			Head [Degree [i]] = inext ;
 		    }
@@ -812,7 +835,7 @@ GLOBAL void AMD_2
 		}
 		else
 		{
-                    /* search the elements in me. */
+		    /* search the elements in me. */
 		    e = Iw [p++] ;
 		    ASSERT (e >= 0 && e < n) ;
 		    pj = Pe [e] ;
@@ -856,17 +879,17 @@ GLOBAL void AMD_2
 
 			    Pe [me] = p ;
 			    Len [me] -= knt1 ;
-                            /* check if nothing left of supervariable me */
+			    /* check if nothing left of supervariable me */
 			    if (Len [me] == 0) Pe [me] = EMPTY ;
 			    Pe [e] = pj ;
 			    Len [e] = ln - knt2 ;
-                            /* nothing left of element e */
+			    /* nothing left of element e */
 			    if (Len [e] == 0) Pe [e] = EMPTY ;
 
 			    ncmpa++ ;	/* one more garbage collection */
 
-                            /* store first entry of each object in Pe */
-                            /* FLIP the first entry in each object */
+			    /* store first entry of each object in Pe */
+			    /* FLIP the first entry in each object */
 			    for (j = 0 ; j < n ; j++)
 			    {
 				pn = Pe [j] ;
@@ -878,7 +901,7 @@ GLOBAL void AMD_2
 				}
 			    }
 
-                            /* psrc/pdst point to source/destination */
+			    /* psrc/pdst point to source/destination */
 			    psrc = 0 ;
 			    pdst = 0 ;
 			    pend = pme1 - 1 ;
@@ -901,7 +924,7 @@ GLOBAL void AMD_2
 				}
 			    }
 
-                            /* move the new partially-constructed element */
+			    /* move the new partially-constructed element */
 			    p1 = pdst ;
 			    for (psrc = pme1 ; psrc <= pfree-1 ; psrc++)
 			    {
@@ -919,7 +942,7 @@ GLOBAL void AMD_2
 			/* store i in new list */
 			/* ------------------------------------------------- */
 
-                        /* flag i as being in Lme by negating Nv [i] */
+			/* flag i as being in Lme by negating Nv [i] */
 			degme += nvi ;
 			Nv [i] = -nvi ;
 			Iw [pfree++] = i ;
@@ -940,7 +963,7 @@ GLOBAL void AMD_2
 			}
 			else
 			{
-                            /* i is at the head of the degree list */
+			    /* i is at the head of the degree list */
 			    ASSERT (Degree [i] >= 0 && Degree [i] < n) ;
 			    Head [Degree [i]] = inext ;
 			}
@@ -949,8 +972,8 @@ GLOBAL void AMD_2
 
 		if (e != me)
 		{
-                    /* set tree pointer and flag to indicate element e is
-                     * absorbed into new element me (the parent of e is me) */
+		    /* set tree pointer and flag to indicate element e is
+		     * absorbed into new element me (the parent of e is me) */
 		    AMD_DEBUG1 ((" Element "ID" => "ID"\n", e, me)) ;
 		    Pe [e] = FLIP (me) ;
 		    W [e] = 0 ;
@@ -964,14 +987,14 @@ GLOBAL void AMD_2
 	/* me has now been converted into an element in Iw [pme1..pme2] */
 	/* ----------------------------------------------------------------- */
 
-        /* degme holds the external degree of new element */
+	/* degme holds the external degree of new element */
 	Degree [me] = degme ;
 	Pe [me] = pme1 ;
 	Len [me] = pme2 - pme1 + 1 ;
 	ASSERT (Pe [me] >= 0 && Pe [me] < iwlen) ;
 
 	Elen [me] = FLIP (nvpiv + degme) ;
-        /* FLIP (Elen (me)) is now the degree of pivot (including
+	/* FLIP (Elen (me)) is now the degree of pivot (including
 	 * diagonal part). */
 
 #ifndef NDEBUG
@@ -987,14 +1010,7 @@ GLOBAL void AMD_2
 	/* With the current value of wflg, wflg+n must not cause integer
 	 * overflow */
 
-	if (wflg >= wbig)
-	{
-	    for (x = 0 ; x < n ; x++)
-	    {
-		if (W [x] != 0) W [x] = 1 ;
-	    }
-	    wflg = 2 ;
-	}
+	wflg = clear_flag (wflg, wbig, W, n) ;
 
 /* ========================================================================= */
 /* COMPUTE (W [e] - wflg) = |Le\Lme| FOR ALL ELEMENTS */
@@ -1007,7 +1023,7 @@ GLOBAL void AMD_2
 	 * for each element e that appears in any supervariable in Lme.  The
 	 * notation Le refers to the pattern (list of supervariables) of a
 	 * previous element e, where e is not yet absorbed, stored in
-	 * Iw [Pe [e] + 1 ... Pe [e] + Iw [Pe [e]]].  The notation Lme
+	 * Iw [Pe [e] + 1 ... Pe [e] + Len [e]].  The notation Lme
 	 * refers to the pattern of the current element (stored in
 	 * Iw [pme1..pme2]).   If aggressive absorption is enabled, and
 	 * (W [e] - wflg) becomes zero, then the element e will be absorbed
@@ -1023,7 +1039,7 @@ GLOBAL void AMD_2
 	    AMD_DEBUG3 ((""ID" Elen "ID": \n", i, eln)) ;
 	    if (eln > 0)
 	    {
-                /* note that Nv [i] has been negated to denote i in Lme: */
+		/* note that Nv [i] has been negated to denote i in Lme: */
 		nvi = -Nv [i] ;
 		ASSERT (nvi > 0 && Pe [i] >= 0 && Pe [i] < iwlen) ;
 		wnvi = wflg - nvi ;
@@ -1035,14 +1051,14 @@ GLOBAL void AMD_2
 		    AMD_DEBUG4 (("    e "ID" we "ID" ", e, we)) ;
 		    if (we >= wflg)
 		    {
-                        /* unabsorbed element e has been seen in this loop */
+			/* unabsorbed element e has been seen in this loop */
 			AMD_DEBUG4 (("    unabsorbed, first time seen")) ;
 			we -= nvi ;
 		    }
 		    else if (we != 0)
 		    {
-                        /* e is an unabsorbed element */
-                        /* this is the first we have seen e in all of Scan 1 */
+			/* e is an unabsorbed element */
+			/* this is the first we have seen e in all of Scan 1 */
 			AMD_DEBUG4 (("    unabsorbed")) ;
 			we = Degree [e] + wnvi ;
 		    }
@@ -1080,7 +1096,7 @@ GLOBAL void AMD_2
 	    /* scan the element list associated with supervariable i */
 	    /* ------------------------------------------------------------- */
 
-            /* UMFPACK/MA38-style approximate degree: */
+	    /* UMFPACK/MA38-style approximate degree: */
 	    if (aggressive)
 	    {
 		for (p = p1 ; p <= p2 ; p++)
@@ -1132,7 +1148,7 @@ GLOBAL void AMD_2
 		}
 	    }
 
-            /* count the number of elements in i (including me): */
+	    /* count the number of elements in i (including me): */
 	    Elen [i] = pn - p1 + 1 ;
 
 	    /* ------------------------------------------------------------- */
@@ -1151,8 +1167,8 @@ GLOBAL void AMD_2
 		nvj = Nv [j] ;
 		if (nvj > 0)
 		{
-                    /* j is unabsorbed, and not in Lme. */
-                    /* add to degree and add to new list */
+		    /* j is unabsorbed, and not in Lme. */
+		    /* add to degree and add to new list */
 		    deg += nvj ;
 		    Iw [pn++] = j ;
 		    hash += j ;
@@ -1165,7 +1181,7 @@ GLOBAL void AMD_2
 	    /* update the degree and check for mass elimination */
 	    /* ------------------------------------------------------------- */
 
-	    /* with aggressive absorption, deg==0 is identical to the 
+	    /* with aggressive absorption, deg==0 is identical to the
 	     * Elen [i] == 1 && p3 == pn test, below. */
 	    ASSERT (IMPLIES (aggressive, (deg==0) == (Elen[i]==1 && p3==pn))) ;
 
@@ -1173,7 +1189,7 @@ GLOBAL void AMD_2
 	    {
 
 		/* --------------------------------------------------------- */
-	        /* mass elimination */
+		/* mass elimination */
 		/* --------------------------------------------------------- */
 
 		/* There is nothing left of this node except for an edge to
@@ -1213,8 +1229,8 @@ GLOBAL void AMD_2
 		/* update the upper-bound degree of i */
 		/* --------------------------------------------------------- */
 
-                /* the following degree does not yet include the size
-                 * of the current element, which is added later: */
+		/* the following degree does not yet include the size
+		 * of the current element, which is added later: */
 
 		Degree [i] = MIN (Degree [i], deg) ;
 
@@ -1222,13 +1238,13 @@ GLOBAL void AMD_2
 		/* add me to the list for i */
 		/* --------------------------------------------------------- */
 
-                /* move first supervariable to end of list */
+		/* move first supervariable to end of list */
 		Iw [pn] = Iw [p3] ;
-                /* move first element to end of element part of list */
+		/* move first element to end of element part of list */
 		Iw [p3] = Iw [p1] ;
-                /* add new element, me, to front of list. */
+		/* add new element, me, to front of list. */
 		Iw [p1] = me ;
-                /* store the new length of the list in Len [i] */
+		/* store the new length of the list in Len [i] */
 		Len [i] = pn - p1 + 1 ;
 
 		/* --------------------------------------------------------- */
@@ -1258,7 +1274,7 @@ GLOBAL void AMD_2
 		    Last [j] = i ;
 		}
 
-		/* if a seperate Hhead array is used: *
+		/* if a separate Hhead array is used: *
 		Next [i] = Hhead [hash] ;
 		Hhead [hash] = i ;
 		*/
@@ -1273,18 +1289,11 @@ GLOBAL void AMD_2
 	/* Clear the counter array, W [...], by incrementing wflg. */
 	/* ----------------------------------------------------------------- */
 
-        /* make sure that wflg+n does not cause integer overflow */
+	/* make sure that wflg+n does not cause integer overflow */
 	lemax =  MAX (lemax, degme) ;
 	wflg += lemax ;
-	if (wflg >= wbig)
-	{
-	    for (x = 0 ; x < n ; x++)
-	    {
-		if (W [x] != 0) W [x] = 1 ;
-	    }
-	    wflg = 2 ;
-	}
-        /*  at this point, W [0..n-1] < wflg holds */
+	wflg = clear_flag (wflg, wbig, W, n) ;
+	/*  at this point, W [0..n-1] < wflg holds */
 
 /* ========================================================================= */
 /* SUPERVARIABLE DETECTION */
@@ -1298,7 +1307,7 @@ GLOBAL void AMD_2
 	    AMD_DEBUG2 (("Consider i "ID" nv "ID"\n", i, Nv [i])) ;
 	    if (Nv [i] < 0)
 	    {
-                /* i is a principal variable in Lme */
+		/* i is a principal variable in Lme */
 
 		/* ---------------------------------------------------------
 		 * examine all hash buckets with 2 or more variables.  We do
@@ -1306,7 +1315,7 @@ GLOBAL void AMD_2
 		 * the pattern Lme of the current element, me
 		 * --------------------------------------------------------- */
 
-                /* let i = head of hash bucket, and empty the hash bucket */
+		/* let i = head of hash bucket, and empty the hash bucket */
 		ASSERT (Last [i] >= 0 && Last [i] < n) ;
 		hash = Last [i] ;
 
@@ -1330,7 +1339,7 @@ GLOBAL void AMD_2
 		    Last [j] = EMPTY ;
 		}
 
-		/* if seperate Hhead array is used: *
+		/* if separate Hhead array is used: *
 		i = Hhead [hash] ;
 		Hhead [hash] = EMPTY ;
 		*/
@@ -1351,7 +1360,7 @@ GLOBAL void AMD_2
 		    eln = Elen [i] ;
 		    ASSERT (ln >= 0 && eln >= 0) ;
 		    ASSERT (Pe [i] >= 0 && Pe [i] < iwlen) ;
-                    /* do not flag the first element in the list (me) */
+		    /* do not flag the first element in the list (me) */
 		    for (p = Pe [i] + 1 ; p <= Pe [i] + ln - 1 ; p++)
 		    {
 			ASSERT (Iw [p] >= 0 && Iw [p] < n) ;
@@ -1378,7 +1387,7 @@ GLOBAL void AMD_2
 			ASSERT (Len [j] >= 0 && Elen [j] >= 0) ;
 			ASSERT (Pe [j] >= 0 && Pe [j] < iwlen) ;
 			ok = (Len [j] == ln) && (Elen [j] == eln) ;
-                        /* skop the first element in the list (me) */
+			/* skip the first element in the list (me) */
 			for (p = Pe [j] + 1 ; ok && p <= Pe [j] + ln - 1 ; p++)
 			{
 			    ASSERT (Iw [p] >= 0 && Iw [p] < n) ;
@@ -1442,8 +1451,8 @@ GLOBAL void AMD_2
 	    AMD_DEBUG3 (("Restore i "ID" "ID"\n", i, nvi)) ;
 	    if (nvi > 0)
 	    {
-                /* i is a principal variable in Lme */
-                /* restore Nv [i] to signify that i is principal */
+		/* i is a principal variable in Lme */
+		/* restore Nv [i] to signify that i is principal */
 		Nv [i] = nvi ;
 
 		/* --------------------------------------------------------- */
@@ -1488,11 +1497,11 @@ GLOBAL void AMD_2
 
 	AMD_DEBUG2 (("ME = "ID" DONE\n", me)) ;
 	Nv [me] = nvpiv ;
-        /* save the length of the list for the new element me */
+	/* save the length of the list for the new element me */
 	Len [me] = p - pme1 ;
 	if (Len [me] == 0)
 	{
-            /* there is nothing left of the current pivot element */
+	    /* there is nothing left of the current pivot element */
 	    /* it is a root of the assembly tree */
 	    Pe [me] = EMPTY ;
 	    W [me] = 0 ;
@@ -1593,6 +1602,10 @@ GLOBAL void AMD_2
 	Info [AMD_STATUS] = AMD_OK ;
     }
 
+/* ========================================================================= */
+/* POST-ORDERING */
+/* ========================================================================= */
+
 /* -------------------------------------------------------------------------
  * Variables at this point:
  *
@@ -1617,9 +1630,15 @@ GLOBAL void AMD_2
  * No other scalars needed (pfree, iwlen, etc.)
  * ------------------------------------------------------------------------- */
 
+    /* restore Pe */
     for (i = 0 ; i < n ; i++)
     {
 	Pe [i] = FLIP (Pe [i]) ;
+    }
+
+    /* restore Elen, for output information, and for postordering */
+    for (i = 0 ; i < n ; i++)
+    {
 	Elen [i] = FLIP (Elen [i]) ;
     }
 
@@ -1810,7 +1829,7 @@ GLOBAL void AMD_2
 	    }
 	}
     }
-    ASSERT (nel == n) ; 
+    ASSERT (nel == n) ;
 
     AMD_DEBUG2 (("\n\nPerm:\n")) ;
     for (i = 0 ; i < n ; i++)

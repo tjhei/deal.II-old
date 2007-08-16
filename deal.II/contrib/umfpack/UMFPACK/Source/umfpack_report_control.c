@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* UMFPACK Copyright (c) Timothy A. Davis, CISE,                              */
 /* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
@@ -32,7 +32,8 @@ GLOBAL void UMFPACK_report_control
 	return ;
     }
 
-    PRINTF (("\n%s, Control:\n\n", UMFPACK_VERSION)) ;
+    PRINTF  (("UMFPACK V%d.%d.%d (%s), Control:\n", UMFPACK_MAIN_VERSION,
+	UMFPACK_SUB_VERSION, UMFPACK_SUBSUB_VERSION, UMFPACK_DATE)) ;
 
     /* ---------------------------------------------------------------------- */
     /* run-time options */
@@ -47,7 +48,7 @@ GLOBAL void UMFPACK_report_control
 #endif
 #ifdef DLONG
     PRINTF (("    Matrix entry defined as: double\n")) ;
-    PRINTF (("    Int (generic integer) defined as: long\n")) ;
+    PRINTF (("    Int (generic integer) defined as: UF_long\n")) ;
 #endif
 #ifdef ZINT
     PRINTF (("    Matrix entry defined as: double complex\n")) ;
@@ -55,7 +56,7 @@ GLOBAL void UMFPACK_report_control
 #endif
 #ifdef ZLONG
     PRINTF (("    Matrix entry defined as: double complex\n")) ;
-    PRINTF (("    Int (generic integer) defined as: long\n")) ;
+    PRINTF (("    Int (generic integer) defined as: UF_long\n")) ;
 #endif
 
     /* ---------------------------------------------------------------------- */
@@ -303,39 +304,22 @@ GLOBAL void UMFPACK_report_control
     PRINTF (("    "ID": BLAS library used:  ",
 	(Int) INDEX (UMFPACK_COMPILED_WITH_BLAS))) ;
 
-#if defined (USE_NO_BLAS)
+#ifdef NBLAS
     PRINTF (("none.  UMFPACK will be slow.\n")) ;
-#elif defined (USE_C_BLAS)
-    PRINTF (("C-BLAS.\n")) ;
-#elif defined (USE_MATLAB_BLAS)
-    PRINTF (("built-in MATLAB BLAS (ATLAS).\n")) ;
-#elif defined (USE_SUNPERF_BLAS)
-    PRINTF (("Sun Performance Library BLAS.\n")) ;
-#elif defined (USE_SCSL_BLAS)
-    PRINTF (("SGI SCSL BLAS.\n")) ;
-#elif defined (USE_FORTRAN_BLAS)
-    PRINTF (("Fortran BLAS.\n")) ;
+#else
+    PRINTF (("Fortran BLAS.  size of BLAS integer: "ID"\n",
+	(Int) (sizeof (BLAS_INT)))) ;
 #endif
 
 #ifdef MATLAB_MEX_FILE
-#ifdef NUTIL
-    PRINTF (("    "ID": compiled for MATLAB"
-    " (uses mxMalloc, mxFree, mxRealloc, and mexPrintf)\n",
+    PRINTF (("    "ID": compiled for MATLAB\n",
 	(Int) INDEX (UMFPACK_COMPILED_FOR_MATLAB))) ;
-#else
-    PRINTF (("    "ID": compiled for MATLAB"
-    " (uses utMalloc, utFree, utRealloc, and mexPrintf)\n",
-	(Int) INDEX (UMFPACK_COMPILED_FOR_MATLAB))) ;
-#endif
 #else
 #ifdef MATHWORKS
-    PRINTF (("    "ID": compiled for MATLAB, using internal utility routines\n"
-    "    (uses utMalloc, utFree, utRealloc, and utPrintf)\n",
+    PRINTF (("    "ID": compiled for MATLAB\n",
 	(Int) INDEX (UMFPACK_COMPILED_FOR_MATLAB))) ;
-    PRINTF (("    (complex version uses utDivideComplex, utFdlibm_hypot)\n")) ;
 #else
-    PRINTF (("    "ID": compiled for ANSI C"
-    " (uses malloc, free, realloc, and printf)\n",
+    PRINTF (("    "ID": compiled for ANSI C\n",
 	(Int) INDEX (UMFPACK_COMPILED_FOR_MATLAB))) ;
 #endif
 #endif
@@ -363,24 +347,15 @@ GLOBAL void UMFPACK_report_control
 "**** Debugging enabled (UMFPACK will be exceedingly slow!) *****************\n"
 "    "ID": compiled with debugging enabled. ",
 	(Int) INDEX (UMFPACK_COMPILED_IN_DEBUG_MODE))) ;
-#ifdef MATLAB_MEX_FILE
-    PRINTF (("Uses mxAssert.\n")) ;
-#else
-#ifdef MATHWORKS
-    PRINTF (("Uses utAssert.\n")) ;
-#else
-    PRINTF (("Uses ANSI C assert.\n")) ;
-#endif
-#endif
 #else
     PRINTF (("    "ID": compiled for normal operation (debugging disabled)\n",
 	(Int) INDEX (UMFPACK_COMPILED_IN_DEBUG_MODE))) ;
 #endif
 
     PRINTF (("    computer/operating system: %s\n", UMFPACK_ARCHITECTURE)) ;
-    PRINTF (("    size of int: %g long: %g Int: %g pointer: %g"
+    PRINTF (("    size of int: %g UF_long: %g Int: %g pointer: %g"
 	" double: %g Entry: %g (in bytes)\n\n", (double) sizeof (int),
-	(double) sizeof (long), (double) sizeof (Int),
+	(double) sizeof (UF_long), (double) sizeof (Int),
 	(double) sizeof (void *), (double) sizeof (double),
 	(double) sizeof (Entry))) ;
 }

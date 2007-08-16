@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* UMFPACK Copyright (c) Timothy A. Davis, CISE,                              */
 /* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
@@ -18,6 +18,17 @@
 
 #ifndef UMFPACK_H
 #define UMFPACK_H
+
+/* -------------------------------------------------------------------------- */
+/* Make it easy for C++ programs to include UMFPACK */
+/* -------------------------------------------------------------------------- */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* define UF_long */
+#include "UFconfig.h"
 
 /* -------------------------------------------------------------------------- */
 /* size of Info and Control arrays */
@@ -76,39 +87,88 @@
 #include "umfpack_timer.h"
 #include "umfpack_tictoc.h"
 
+/* AMD */
+#include "../../AMD/Include/amd.h"
+
+/* global function pointers */
+#include "umfpack_global.h"
+
 /* -------------------------------------------------------------------------- */
 /* Version, copyright, and license */
 /* -------------------------------------------------------------------------- */
 
-#define UMFPACK_VERSION "UMFPACK V4.4 (Jan. 28, 2005)"
+#define UMFPACK_VERSION "UMFPACK V5.1.0 (May 31, 2007)"
 
 #define UMFPACK_COPYRIGHT \
-"UMFPACK:  Copyright (c) 2005 by Timothy A. Davis.  All Rights Reserved.\n"
+"UMFPACK:  Copyright (c) 2005-2006 by Timothy A. Davis.  All Rights Reserved.\n"
 
 #define UMFPACK_LICENSE_PART1 \
 "\nUMFPACK License:\n" \
 "\n" \
+"   UMFPACK is available under alternate licenses,\n" \
+"   contact T. Davis for details.\n" \
+"\n" \
 "   Your use or distribution of UMFPACK or any modified version of\n" \
 "   UMFPACK implies that you agree to this License.\n" \
 "\n" \
-"   THIS MATERIAL IS PROVIDED AS IS, WITH ABSOLUTELY NO WARRANTY\n" \
-"   EXPRESSED OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.\n"
+"   This library is free software; you can redistribute it and/or\n" \
+"   modify it under the terms of the GNU Lesser General Public\n" \
+"   License as published by the Free Software Foundation; either\n" \
+"   version 2.1 of the License, or (at your option) any later version.\n" \
+"\n" \
+"   This library is distributed in the hope that it will be useful,\n" \
+"   but WITHOUT ANY WARRANTY; without even the implied warranty of\n" \
+"   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\n" \
+"   Lesser General Public License for more details.\n" \
+"\n" \
+"   You should have received a copy of the GNU Lesser General Public\n" \
+"   License along with this library; if not, write to the Free Software\n" \
+"   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301\n" \
+"   USA\n" \
+
 #define UMFPACK_LICENSE_PART2 \
 "\n" \
-"   Permission is hereby granted to use or copy this program, provided\n" \
-"   that the Copyright, this License, and the Availability of the original\n" \
-"   version is retained on all copies.  User documentation of any code that\n" \
-"   uses UMFPACK or any modified version of UMFPACK code must cite the\n" \
-"   Copyright, this License, the Availability note, and \"Used by permission.\"\n"
+"   Permission is hereby granted to use or copy this program under the\n" \
+"   terms of the GNU LGPL, provided that the Copyright, this License,\n" \
+"   and the Availability of the original version is retained on all copies.\n" \
+"   User documentation of any code that uses this code or any modified\n" \
+"   version of this code must cite the Copyright, this License, the\n" \
+"   Availability note, and \"Used by permission.\" Permission to modify\n" \
+"   the code and to distribute modified code is granted, provided the\n" \
+"   Copyright, this License, and the Availability note are retained,\n" \
+"   and a notice that the code was modified is included.\n"
+
 #define UMFPACK_LICENSE_PART3 \
-"   Permission to modify the code and to distribute modified code is granted,\n" \
-"   provided the Copyright, this License, and the Availability note are\n" \
-"   retained, and a notice that the code was modified is included.  This\n" \
-"   software was developed with support from the National Science Foundation,\n" \
-"   and is provided to you free of charge.\n" \
 "\n" \
 "Availability: http://www.cise.ufl.edu/research/sparse/umfpack\n" \
 "\n"
+
+/* UMFPACK Version 4.5 and later will include the following definitions.
+ * As an example, to test if the version you are using is 4.5 or later:
+ *
+ * #ifdef UMFPACK_VER
+ *	if (UMFPACK_VER >= UMFPACK_VER_CODE (4,5)) ...
+ * #endif
+ *
+ * This also works during compile-time:
+ *
+ *	#if defined(UMFPACK_VER) && (UMFPACK >= UMFPACK_VER_CODE (4,5))
+ *	    printf ("This is version 4.5 or later\n") ;
+ *	#else
+ *	    printf ("This is an early version\n") ;
+ *	#endif
+ *
+ * Versions 4.4 and earlier of UMFPACK do not include a #define'd version
+ * number, although they do include the UMFPACK_VERSION string, defined
+ * above.
+ */
+
+#define UMFPACK_DATE "May 31, 2007"
+#define UMFPACK_VER_CODE(main,sub) ((main) * 1000 + (sub))
+#define UMFPACK_MAIN_VERSION 5
+#define UMFPACK_SUB_VERSION 1
+#define UMFPACK_SUBSUB_VERSION 0
+#define UMFPACK_VER UMFPACK_VER_CODE(UMFPACK_MAIN_VERSION,UMFPACK_SUB_VERSION)
 
 /* -------------------------------------------------------------------------- */
 /* contents of Info */
@@ -128,7 +188,7 @@
 
 /* computed in UMFPACK_*symbolic: */
 #define UMFPACK_SIZE_OF_INT 4		/* sizeof (int) */
-#define UMFPACK_SIZE_OF_LONG 5		/* sizeof (long) */
+#define UMFPACK_SIZE_OF_LONG 5		/* sizeof (UF_long) */
 #define UMFPACK_SIZE_OF_POINTER 6	/* sizeof (void *) */
 #define UMFPACK_SIZE_OF_ENTRY 7		/* sizeof (Entry), real or complex */
 #define UMFPACK_NDENSE_ROW 8		/* number of dense rows */
@@ -370,5 +430,9 @@
 
 /* Integer constants are used for status and solve codes instead of enum */
 /* to make it easier for a Fortran code to call UMFPACK. */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* UMFPACK_H */

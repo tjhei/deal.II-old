@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* UMFPACK Copyright (c) Timothy A. Davis, CISE,                              */
 /* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
@@ -300,18 +300,6 @@ GLOBAL Int UMF_create_element
     for (j = 0 ; j < fncols ; j++)
     {
 	copy_column (fnrows, Fcol, C) ;
-#if 0
-#ifdef USE_NO_BLAS
-	copy_column (fnrows, Fcol, C) ;
-#else
-	could also use BLAS-COPY (fnrows, Fcol, C) here, but it is typically
-	not as fast as the inlined copy_column subroutine, above.
-#endif
-	for (i = 0 ; i < fnrows ; i++)
-	{
-	    C [i] = Fcol [i] ;
-	}
-#endif
 	Fcol += fnr_curr ;
 	C += fnrows ;
     }

@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* UMFPACK Copyright (c) Timothy A. Davis, CISE,                              */
 /* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
@@ -54,8 +54,14 @@
 #define UMF_ALPHA
 #define UMFPACK_ARCHITECTURE "Compaq Alpha"
 
-#elif defined (__WIN32) || defined (_WIN32) || defined (_win32) || defined (__win32) || defined (WIN32)
+#elif defined (_WIN32) || defined (WIN32)
+#if defined (__MINGW32__)
+#define UMF_MINGW
+#elif defined (__CYGWIN32__)
+#define UMF_CYGWIN
+#else
 #define UMF_WINDOWS
+#endif
 #define UMFPACK_ARCHITECTURE "Microsoft Windows"
 
 #elif defined (__hppa) || defined (__hpux) || defined (MHPUX) || defined (ARCH_HPUX)
@@ -83,12 +89,21 @@
 /* AMD include file */
 /* -------------------------------------------------------------------------- */
 
-/* stdio.h, stdlib.h, limits.h, and math.h, NDEBUG definition,
- * assert.h, and MATLAB include files */
+/* stdio.h, stdlib.h, limits.h, and math.h, NDEBUG definition, assert.h */
 #include "amd_internal.h"
 
 /* -------------------------------------------------------------------------- */
-/* Real/complex and int/long definitions, double relops */
+/* MATLAB include files */
+/* -------------------------------------------------------------------------- */
+
+/* only used when compiling the UMFPACK mexFunction */
+#ifdef MATLAB_MEX_FILE
+#include "matrix.h"
+#include "mex.h"
+#endif
+
+/* -------------------------------------------------------------------------- */
+/* Real/complex and int/UF_long definitions, double relops */
 /* -------------------------------------------------------------------------- */
 
 #include "umf_version.h"
@@ -185,61 +200,15 @@
 /* Memory allocator */
 /* -------------------------------------------------------------------------- */
 
-/* The MATLAB mexFunction uses MATLAB's memory manager, while the C-callable
- * AMD library uses the ANSI C malloc, free, and realloc routines.  To use
- * the mx* memory allocation routines, use -DNUTIL when compiling.
+/* See AMD/Source/amd_global.c and AMD/Source/amd.h for the
+ * definition of the memory allocator used by UMFPACK.  Versions 4.4 and
+ * earlier had their memory allocator definitions here.   Other global
+ * function pointers for UMFPACK are located in umf_global.c.
+ *
+ * The MATLAB mexFunction uses MATLAB's memory manager and mexPrintf, while the
+ * C-callable AMD library uses the ANSI C malloc, free, realloc, and printf
+ * routines.
  */
-
-#undef ALLOCATE
-#undef FREE
-#undef REALLOC
-
-#ifdef MATLAB_MEX_FILE
-
-#ifdef NUTIL
-
-/* These functions simply terminate the mexFunction if they fail to allocate
- * memory.  That's too restrictive for UMFPACK. */
-#define ALLOCATE mxMalloc
-#define FREE mxFree
-#define REALLOCATE mxRealloc
-
-#else
-
-/* Use internal MATLAB memory allocation routines, used by built-in MATLAB
- * functions.  These are not documented, but are available for use.  Their
- * prototypes are in util.h, but that file is not provided to the MATLAB user.
- * The advantage of using these routines is that they return NULL if out of
- * memory, instead of terminating the mexFunction.  UMFPACK attempts to allocate
- * extra space for "elbow room", and then reduces its request if the memory is
- * not available.  That strategy doesn't work with the mx* routines.
- */
-void *utMalloc (size_t size) ;
-void utFree (void *p) ;
-void *utRealloc (void *p, size_t size) ;
-#define ALLOCATE utMalloc
-#define FREE utFree
-#define REALLOCATE utRealloc
-
-#endif
-#else
-#ifdef MATHWORKS
-
-/* Compiling as a built-in routine.  Since out-of-memory conditions are checked
- * after every allocation, we can use ut* routines here. */
-#define ALLOCATE utMalloc
-#define FREE utFree
-#define REALLOCATE utRealloc
-
-#else
-
-/* use the ANSI C memory allocation routines */
-#define ALLOCATE malloc
-#define FREE free
-#define REALLOCATE realloc
-
-#endif
-#endif
 
 /* -------------------------------------------------------------------------- */
 /* Memory space definitions */
@@ -749,8 +718,13 @@ typedef struct	/* SymbolicType */
 
 /* for testing out-of-memory conditions: */
 #define UMF_TCOV_TEST
-GLOBAL extern int umf_fail, umf_fail_lo, umf_fail_hi ;
-GLOBAL extern int umf_realloc_fail, umf_realloc_lo, umf_realloc_hi ;
+
+#ifndef EXTERN
+#define EXTERN extern
+#endif
+
+GLOBAL EXTERN int umf_fail, umf_fail_lo, umf_fail_hi ;
+GLOBAL EXTERN int umf_realloc_fail, umf_realloc_lo, umf_realloc_hi ;
 
 /* for testing malloc count: */
 #define UMF_MALLOC_COUNT

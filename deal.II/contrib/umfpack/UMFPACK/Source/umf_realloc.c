@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* UMFPACK Copyright (c) Timothy A. Davis, CISE,                              */
 /* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
@@ -56,8 +56,8 @@ GLOBAL void *UMF_realloc
     DEBUG0 (("UMF_realloc: "ID" n_objects "ID"  size_of_object "ID"\n",
 	(Int) p, n_objects, (Int) size_of_object)) ;
 
-    /* see umf_config.h for the memory allocator selection */
-    p2 = REALLOCATE (p, size) ;
+    /* see AMD/Source/amd_global.c for the memory allocator selection */
+    p2 = amd_realloc (p, size) ;
 
 #if defined (UMF_MALLOC_COUNT) || !defined (NDEBUG)
     /* If p didn't exist on input, and p2 exists, then a new object has been

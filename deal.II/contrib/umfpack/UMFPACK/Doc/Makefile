@@ -5,9 +5,9 @@
 # UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
 # All Rights Reserved.  See ../Doc/License for License.
 
-all: dist
+default: dist
 
-include ../Make/Make.include
+include ../../UFconfig/UFconfig.mk
 
 #-------------------------------------------------------------------------------
 # Remove all but the files in the original distribution
@@ -18,6 +18,9 @@ include ../Make/Make.include
 purge: clean
 	- $(RM) *.aux *.bbl *.blg *.log *.toc
 	- $(RM) UserGuide.tex
+
+clean:
+	- $(RM) $(CLEAN)
 
 #-------------------------------------------------------------------------------
 # Create the User Guide and Quick Start Guide
@@ -39,7 +42,7 @@ USER = $(UMFPACKW) $(UMFPACK)
 
 SRC = $(addprefix ../Include/, $(addsuffix .h,$(USER))) ../Demo/umfpack_simple.c
 
-UserGuide.pdf:  UserGuide.stex UserGuide.sed1 UserGuide.sed2 $(SRC)
+UserGuide.pdf:  UserGuide.stex UserGuide.sed1 UserGuide.sed2 $(SRC) UserGuide.bib
 	sed -f UserGuide.sed1 < UserGuide.stex | sed -f UserGuide.sed2 \
 	    | expand -8 > UserGuide.tex
 	pdflatex UserGuide

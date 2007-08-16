@@ -3,9 +3,9 @@
 /* ========================================================================= */
 
 /* ------------------------------------------------------------------------- */
-/* AMD Version 1.1 (Jan. 21, 2004), Copyright (c) 2004 by Timothy A. Davis,  */
-/* Patrick R. Amestoy, and Iain S. Duff.  See ../README for License.         */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.           */
+/* AMD, Copyright (c) Timothy A. Davis,					     */
+/* Patrick R. Amestoy, and Iain S. Duff.  See ../README.txt for License.     */
+/* email: davis at cise.ufl.edu    CISE Department, Univ. of Florida.        */
 /* web: http://www.cise.ufl.edu/research/sparse/amd                          */
 /* ------------------------------------------------------------------------- */
 
@@ -40,7 +40,10 @@ GLOBAL void AMD_debug_init ( char *s )
 	fscanf (f, ID, &AMD_debug) ;
 	fclose (f) ;
     }
-    if (AMD_debug >= 0) printf ("%s: AMD_debug_init, D= "ID"\n", s, AMD_debug);
+    if (AMD_debug >= 0)
+    {
+	printf ("%s: AMD_debug_init, D= "ID"\n", s, AMD_debug) ;
+    }
 }
 
 /* ========================================================================= */
@@ -73,6 +76,7 @@ GLOBAL void AMD_dump (
 
     if (AMD_debug < 0) return ;
     ASSERT (pfree <= iwlen) ;
+    AMD_DEBUG3 (("\nAMD dump, pfree: "ID"\n", pfree)) ;
     for (i = 0 ; i < n ; i++)
     {
 	pe = Pe [i] ;
@@ -107,7 +111,7 @@ GLOBAL void AMD_dump (
 		p = pe ;
 		AMD_DEBUG3 (("   e/s: ")) ;
 		if (elen == 0) AMD_DEBUG3 ((" : ")) ;
-		ASSERT (pe < pfree) ;
+		ASSERT (pe + len <= pfree) ;
 		for (k = 0 ; k < len ; k++)
 		{
 		    j = Iw [p] ;
@@ -134,7 +138,7 @@ GLOBAL void AMD_dump (
 		ASSERT (nv > 0 && pe >= 0) ;
 		p = pe ;
 		AMD_DEBUG3 ((" : ")) ;
-		ASSERT (pe < pfree) ;
+		ASSERT (pe + len <= pfree) ;
 		for (k = 0 ; k < len ; k++)
 		{
 		    j = Iw [p] ;
@@ -156,10 +160,10 @@ GLOBAL void AMD_dump (
 	{
 	    if (Head [deg] == EMPTY) continue ;
 	    ilast = EMPTY ;
-	    AMD_DEBUG3 ((ID": ", deg)) ;
+	    AMD_DEBUG3 ((ID": \n", deg)) ;
 	    for (i = Head [deg] ; i != EMPTY ; i = Next [i])
 	    {
-		AMD_DEBUG3 ((" "ID" : next "ID" last "ID" deg "ID"\n",
+		AMD_DEBUG3 (("   "ID" : next "ID" last "ID" deg "ID"\n",
 		    i, Next [i], Last [i], Degree [i])) ;
 		ASSERT (i >= 0 && i < n && ilast == Last [i] &&
 		    deg == Degree [i]) ;

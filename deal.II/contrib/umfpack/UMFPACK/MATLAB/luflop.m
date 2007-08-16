@@ -1,6 +1,7 @@
-function f = luflop (L, U)
-%LUFLOP
+function f = luflop (L, U)						    %#ok
+%LUFLOP given L and U, computes # of flops required to compute them
 %
+% Example:
 % f = luflop (L, U)
 %
 % Given an LU factorization, compute how many flops took to compute it.  This
@@ -16,9 +17,10 @@ function f = luflop (L, U)
 % Note: the above expression has a subtle undercount when exact numerical
 % cancelation occurs.  Try [L,U,P] = lu (sparse (ones (10))) and then
 % luflop (L,U).
+%
+% See also LU
 
-% UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.
-% All Rights Reserved.  Type umfpack_details for License.
+% Copyright 1995-2007 by Timothy A. Davis.
 
 help luflop
 error ('luflop mexFunction not found!  Use umfpack_make to compile luflop.') ;

@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* UMFPACK Copyright (c) Timothy A. Davis, CISE,                              */
 /* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
@@ -18,13 +18,13 @@ int umfpack_di_get_lunz
     void *Numeric
 ) ;
 
-long umfpack_dl_get_lunz
+UF_long umfpack_dl_get_lunz
 (
-    long *lnz,
-    long *unz,
-    long *n_row,
-    long *n_col,
-    long *nz_udiag,
+    UF_long *lnz,
+    UF_long *unz,
+    UF_long *n_row,
+    UF_long *n_col,
+    UF_long *nz_udiag,
     void *Numeric
 ) ;
 
@@ -38,13 +38,13 @@ int umfpack_zi_get_lunz
     void *Numeric
 ) ;
 
-long umfpack_zl_get_lunz
+UF_long umfpack_zl_get_lunz
 (
-    long *lnz,
-    long *unz,
-    long *n_row,
-    long *n_col,
-    long *nz_udiag,
+    UF_long *lnz,
+    UF_long *unz,
+    UF_long *n_row,
+    UF_long *n_col,
+    UF_long *nz_udiag,
     void *Numeric
 ) ;
 
@@ -53,29 +53,33 @@ double int Syntax:
 
     #include "umfpack.h"
     void *Numeric ;
-    int status, lnz, unz, n_row, n_col ;
-    status = umfpack_di_get_lunz (&lnz, &unz, &n_row, &n_col, Numeric) ;
+    int status, lnz, unz, n_row, n_col, nz_udiag ;
+    status = umfpack_di_get_lunz (&lnz, &unz, &n_row, &n_col, &nz_udiag,
+	Numeric) ;
 
-double long Syntax:
+double UF_long Syntax:
 
     #include "umfpack.h"
     void *Numeric ;
-    long status, lnz, unz, n_row, n_col ;
-    status = umfpack_dl_get_lunz (&lnz, &unz, &n_row, &n_col, Numeric) ;
+    UF_long status, lnz, unz, n_row, n_col, nz_udiag ;
+    status = umfpack_dl_get_lunz (&lnz, &unz, &n_row, &n_col, &nz_udiag,
+	Numeric) ;
 
 complex int Syntax:
 
     #include "umfpack.h"
     void *Numeric ;
-    int status, lnz, unz, n_row, n_col ;
-    status = umfpack_zi_get_lunz (&lnz, &unz, &n_row, &n_col, Numeric) ;
+    int status, lnz, unz, n_row, n_col, nz_udiag ;
+    status = umfpack_zi_get_lunz (&lnz, &unz, &n_row, &n_col, &nz_udiag,
+	Numeric) ;
 
-complex long Syntax:
+complex UF_long Syntax:
 
     #include "umfpack.h"
     void *Numeric ;
-    long status, lnz, unz, n_row, n_col ;
-    status = umfpack_zl_get_lunz (&lnz, &unz, &n_row, &n_col, Numeric) ;
+    UF_long status, lnz, unz, n_row, n_col, nz_udiag ;
+    status = umfpack_zl_get_lunz (&lnz, &unz, &n_row, &n_col, &nz_udiag,
+	Numeric) ;
 
 Purpose:
 

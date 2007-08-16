@@ -2,11 +2,14 @@
 # UMFPACK GNUmakefile for the UMFPACK MATLAB mexFunction (GNU "make" only)
 #-------------------------------------------------------------------------------
 
-all: umfpack luflop
+default: umfpack2 luflop
 
-include ../Make/Make.include
+include ../../UFconfig/UFconfig.mk
 
-MX = $(MEX) -I../Include -I../Source -I../../AMD/Include -I../../AMD/Source
+I =  -I../Include -I../Source -I../../AMD/Include -I../../UFconfig
+
+MX = $(MEX) $(I)
+    
 
 #-------------------------------------------------------------------------------
 # source files
@@ -28,25 +31,25 @@ UMFCH = umf_assemble umf_blas3_update \
 	umf_valid_symbolic umf_grow_front umf_start_front umf_2by2 \
 	umf_store_lu umf_scale
 
-# non-user-callable umf_*.[ch] files, int/long versions only (no real/complex):
+# non-user-callable umf_*.[ch] files, int/UF_long versions only (no real/complex):
 UMFINT = umf_analyze umf_apply_order umf_colamd umf_free umf_fsize \
 	umf_is_permutation umf_malloc umf_realloc umf_report_perm \
 	umf_singletons
 
-# non-user-callable and user-callable amd_*.[ch] files (int/long versions only):
+# non-user-callable and user-callable amd_*.[ch] files (int/UF_long versions only):
 AMD = amd_aat amd_1 amd_2 amd_dump amd_postorder amd_post_tree amd_defaults \
-	amd_order amd_control amd_info amd_valid amd_preprocess
+	amd_order amd_control amd_info amd_valid amd_preprocess amd_global
 
 # non-user-callable, created from umf_ltsolve.c, umf_utsolve.c,
-# umf_triplet.c, and umf_assemble.c , with int/long and real/complex versions:
+# umf_triplet.c, and umf_assemble.c , with int/UF_long and real/complex versions:
 UMF_CREATED = umf_lhsolve umf_uhsolve umf_triplet_map_nox \
 	umf_triplet_nomap_x umf_triplet_nomap_nox umf_triplet_map_x \
 	umf_assemble_fixq umf_store_lu_drop
 
-# non-user-callable, int/long and real/complex versions:
+# non-user-callable, int/UF_long and real/complex versions:
 UMF = $(UMF_CREATED) $(UMFCH)
 
-# user-callable umfpack_*.[ch] files (int/long and real/complex):
+# user-callable umfpack_*.[ch] files (int/UF_long and real/complex):
 UMFPACK = umfpack_col_to_triplet umfpack_defaults umfpack_free_numeric \
 	umfpack_free_symbolic umfpack_get_numeric umfpack_get_lunz \
 	umfpack_get_symbolic umfpack_get_determinant umfpack_numeric \
@@ -59,19 +62,20 @@ UMFPACK = umfpack_col_to_triplet umfpack_defaults umfpack_free_numeric \
 	umfpack_load_symbolic umfpack_save_symbolic
 
 # user-callable, created from umfpack_solve.c (umfpack_wsolve.h exists, though):
-# with int/long and real/complex versions:
+# with int/UF_long and real/complex versions:
 UMFPACKW = umfpack_wsolve
 
 USER = $(UMFPACKW) $(UMFPACK)
 
-# user-callable, only one version for int/long, real/complex, *.[ch] files:
-GENERIC = umfpack_timer umfpack_tictoc
+# user-callable, only one version for int/UF_long, real/complex, *.[ch] files:
+GENERIC = umfpack_timer umfpack_tictoc umfpack_global
 
 #-------------------------------------------------------------------------------
 # include files:
 #-------------------------------------------------------------------------------
 
-AMDH = ../../AMD/Source/amd_internal.h ../../AMD/Include/amd.h
+AMDH = ../../AMD/Include/amd_internal.h ../../AMD/Include/amd.h \
+    ../../UFconfig/UFconfig.h
 
 INC1 = umf_config.h umf_version.h umf_internal.h umf_triplet.h
 
@@ -97,18 +101,18 @@ MEXUMFPACK = $(MEXI) $(MEXDI) $(MEXZI) $(MEXGN)
 
 # Note that mex has no "-o" option, thus the need for $(MV) commands.
 # If it did, then the rules would be much simpler:
-#	$(MX) -DDINT -c $< -o $@
+#	$(MX) -DDLONG -c $< -o $@
 
 #----------------------------------------
 # integer-only routines (no real/complex):
 #----------------------------------------
 
 amd_m_%.o: ../../AMD/Source/amd_%.c $(AMDH)
-	$(MX) -DDINT -c $<
+	$(MX) -DDLONG -c $<
 	- $(MV) amd_$*.o $@
 
 umf_m_%.o: ../Source/umf_%.c $(INC)
-	$(MX) -DDINT -c $<
+	$(MX) -DDLONG -c $<
 	- $(MV) umf_$*.o $@
 
 #----------------------------------------
@@ -116,43 +120,43 @@ umf_m_%.o: ../Source/umf_%.c $(INC)
 #----------------------------------------
 
 umf_md_%.o: ../Source/umf_%.c $(INC)
-	$(MX) -DDINT -c $<
+	$(MX) -DDLONG -c $<
 	- $(MV) umf_$*.o $@
 
 umf_md_%hsolve.o: ../Source/umf_%tsolve.c $(INC)
-	$(MX) -DDINT -DCONJUGATE_SOLVE -c $<
+	$(MX) -DDLONG -DCONJUGATE_SOLVE -c $<
 	- $(MV) umf_$*tsolve.o $@
 
 umf_md_triplet_map_x.o: ../Source/umf_triplet.c $(INC)
-	$(MX) -DDINT -DDO_MAP -DDO_VALUES -c $<
+	$(MX) -DDLONG -DDO_MAP -DDO_VALUES -c $<
 	- $(MV) umf_triplet.o $@
 
 umf_md_triplet_map_nox.o: ../Source/umf_triplet.c $(INC)
-	$(MX) -DDINT -DDO_MAP -c $<
+	$(MX) -DDLONG -DDO_MAP -c $<
 	- $(MV) umf_triplet.o $@
 
 umf_md_triplet_nomap_x.o: ../Source/umf_triplet.c $(INC)
-	$(MX) -DDINT -DDO_VALUES -c $<
+	$(MX) -DDLONG -DDO_VALUES -c $<
 	- $(MV) umf_triplet.o $@
 
 umf_md_triplet_nomap_nox.o: ../Source/umf_triplet.c $(INC)
-	$(MX) -DDINT -c $<
+	$(MX) -DDLONG -c $<
 	- $(MV) umf_triplet.o $@
 
 umf_md_assemble_fixq.o: ../Source/umf_assemble.c $(INC)
-	$(MX) -DDINT -DFIXQ -c $<
+	$(MX) -DDLONG -DFIXQ -c $<
 	- $(MV) umf_assemble.o $@
 
 umf_md_store_lu_drop.o: ../Source/umf_store_lu.c $(INC)
-	$(MX) -DDINT -DDROP -c $<
+	$(MX) -DDLONG -DDROP -c $<
 	- $(MV) umf_store_lu.o $@
 
 umfpack_md_wsolve.o: ../Source/umfpack_solve.c $(INC)
-	$(MX) -DDINT -DWSOLVE -c $<
+	$(MX) -DDLONG -DWSOLVE -c $<
 	- $(MV) umfpack_solve.o $@
 
 umfpack_md_%.o: ../Source/umfpack_%.c $(INC)
-	$(MX) -DDINT -c $<
+	$(MX) -DDLONG -c $<
 	- $(MV) umfpack_$*.o $@
 
 #----------------------------------------
@@ -160,43 +164,43 @@ umfpack_md_%.o: ../Source/umfpack_%.c $(INC)
 #----------------------------------------
 
 umf_mz_%.o: ../Source/umf_%.c $(INC)
-	$(MX) -DZINT -c $<
+	$(MX) -DZLONG -c $<
 	- $(MV) umf_$*.o $@
 
 umf_mz_%hsolve.o: ../Source/umf_%tsolve.c $(INC)
-	$(MX) -DZINT -DCONJUGATE_SOLVE -c $<
+	$(MX) -DZLONG -DCONJUGATE_SOLVE -c $<
 	- $(MV) umf_$*tsolve.o $@
 
 umf_mz_triplet_map_x.o: ../Source/umf_triplet.c $(INC)
-	$(MX) -DZINT -DDO_MAP -DDO_VALUES -c $<
+	$(MX) -DZLONG -DDO_MAP -DDO_VALUES -c $<
 	- $(MV) umf_triplet.o $@
 
 umf_mz_triplet_map_nox.o: ../Source/umf_triplet.c $(INC)
-	$(MX) -DZINT -DDO_MAP -c $<
+	$(MX) -DZLONG -DDO_MAP -c $<
 	- $(MV) umf_triplet.o $@
 
 umf_mz_triplet_nomap_x.o: ../Source/umf_triplet.c $(INC)
-	$(MX) -DZINT -DDO_VALUES -c $<
+	$(MX) -DZLONG -DDO_VALUES -c $<
 	- $(MV) umf_triplet.o $@
 
 umf_mz_triplet_nomap_nox.o: ../Source/umf_triplet.c $(INC)
-	$(MX) -DZINT -c $<
+	$(MX) -DZLONG -c $<
 	- $(MV) umf_triplet.o $@
 
 umf_mz_assemble_fixq.o: ../Source/umf_assemble.c $(INC)
-	$(MX) -DZINT -DFIXQ -c $<
+	$(MX) -DZLONG -DFIXQ -c $<
 	- $(MV) umf_assemble.o $@
 
 umf_mz_store_lu_drop.o: ../Source/umf_store_lu.c $(INC)
-	$(MX) -DZINT -DDROP -c $<
+	$(MX) -DZLONG -DDROP -c $<
 	- $(MV) umf_store_lu.o $@
 
 umfpack_mz_wsolve.o: ../Source/umfpack_solve.c $(INC)
-	$(MX) -DZINT -DWSOLVE -c $<
+	$(MX) -DZLONG -DWSOLVE -c $<
 	- $(MV) umfpack_solve.o $@
 
 umfpack_mz_%.o: ../Source/umfpack_%.c $(INC)
-	$(MX) -DZINT -c $<
+	$(MX) -DZLONG -c $<
 	- $(MV) umfpack_$*.o $@
 
 #----------------------------------------
@@ -211,12 +215,16 @@ umfpack_m_tictoc.o: ../Source/umfpack_tictoc.c $(INC)
 	$(MX) -c $<
 	- $(MV) umfpack_tictoc.o $@
 
+umfpack_m_global.o: ../Source/umfpack_global.c $(INC)
+	$(MX) -c $<
+	- $(MV) umfpack_global.o $@
+
 #----------------------------------------
 # umfpack mexFunction
 #----------------------------------------
 
-umfpack: umfpackmex.c $(MEXUMFPACK) $(MEXAMD)
-	$(MX) -output umfpack umfpackmex.c $(MEXUMFPACK) $(MEXAMD)
+umfpack2: umfpackmex.c $(MEXUMFPACK) $(MEXAMD)
+	$(MX) -output umfpack2 umfpackmex.c $(MEXUMFPACK) $(MEXAMD)
 
 luflop: luflopmex.c
 	$(MX) -output luflop luflopmex.c
@@ -226,4 +234,7 @@ luflop: luflopmex.c
 #-------------------------------------------------------------------------------
 
 purge: clean
-	- $(RM) *.mex* *.dll
+	- $(RM) *.mex*
+
+clean:
+	- $(RM) $(CLEAN)

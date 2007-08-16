@@ -20,8 +20,8 @@
 \author{Timothy A. Davis \\
 Dept. of Computer and Information Science and Engineering \\
 Univ. of Florida, Gainesville, FL}
-\title{UMFPACK Version 4.4 User Guide}
-\date{Jan. 28, 2005}
+\title{UMFPACK Version 5.1 User Guide}
+\date{May 31, 2007}
 \maketitle
 
 %-------------------------------------------------------------------------------
@@ -38,26 +38,38 @@ Univ. of Florida, Gainesville, FL}
 
 Technical Report TR-04-003 (revised)
 
-UMFPACK Version 4.4 (Jan. 28, 2005), Copyright\copyright 2005 by Timothy A.
-Davis.  All Rights Reserved.
+UMFPACK Version 5.1, Copyright\copyright 1995-2006 by Timothy A. Davis.
+All Rights Reserved.
+UMFPACK is available under alternate licences; contact T. Davis for details.
 
 {\bf UMFPACK License:}
     Your use or distribution of UMFPACK or any modified version of
     UMFPACK implies that you agree to this License.
 
-    THIS MATERIAL IS PROVIDED AS IS, WITH ABSOLUTELY NO WARRANTY
-    EXPRESSED OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
 
-    Permission is hereby granted to use or copy this program, provided
-    that the Copyright, this License, and the Availability of the original
-    version is retained on all copies.  User documentation of any code that
-    uses UMFPACK or any modified version of UMFPACK code must cite the
-    Copyright, this License, the Availability note, and ``Used by permission.''
-    Permission to modify the code and to distribute modified code is granted,
-    provided the Copyright, this License, and the Availability note are
-    retained, and a notice that the code was modified is included.  This
-    software was developed with support from the National Science Foundation,
-    and is provided to you free of charge.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
+    USA
+
+    Permission is hereby granted to use or copy this program under the
+    terms of the GNU LGPL, provided that the Copyright, this License,
+    and the Availability of the original version is retained on all copies.
+    User documentation of any code that uses this code or any modified
+    version of this code must cite the Copyright, this License, the
+    Availability note, and "Used by permission." Permission to modify
+    the code and to distribute modified code is granted, provided the
+    Copyright, this License, and the Availability note are retained,
+    and a notice that the code was modified is included.
 
 {\bf Availability:}
     http://www.cise.ufl.edu/research/sparse/umfpack
@@ -83,7 +95,7 @@ Davis.  All Rights Reserved.
 %-------------------------------------------------------------------------------
 
 UMFPACK\footnote{Pronounced with two syllables: umph-pack}
-Version 4.4 is a set of routines for solving systems of linear
+Version 5.0 is a set of routines for solving systems of linear
 equations, $\m{Ax}=\m{b}$, when $\m{A}$ is sparse and unsymmetric.  It is based
 on the Unsymmetric-pattern MultiFrontal method \cite{DavisDuff97,DavisDuff99}.
 UMFPACK factorizes
@@ -257,13 +269,13 @@ http://www.cise.ufl.edu/tech-reports.
 %-------------------------------------------------------------------------------
 
 In addition to appearing as a Collected Algorithm of the ACM,
-UMFPACK Version 4.4 is available at http://www.cise.ufl.edu/research/sparse.
-Version 4.3 is included as a built-in routine in MATLAB
-7.1.  Version 4.0 (in MATLAB 6.5)
+UMFPACK is available at http://www.cise.ufl.edu/research/sparse.
+It is included as a built-in routine in MATLAB.
+Version 4.0 (in MATLAB 6.5)
 does not have the symmetric or 2-by-2 strategies and it takes
 less advantage of the level-3
 BLAS \cite{DaydeDuff99,ACM679a,ATLAS,GotoVandeGeijn02}.
-Version 4.4 (and v4.3 through v4.1) tend to be much faster than Version 4.0,
+Versions 5.0 through v4.1 tend to be much faster than Version 4.0,
 particularly on unsymmetric matrices with mostly symmetric
 nonzero pattern (such as finite element and circuit simulation matrices).
 Version 3.0 and following make
@@ -283,6 +295,43 @@ Subroutine Library.
 %-------------------------------------------------------------------------------
 
 A detailed list of changes is in the {\tt ChangeLog} file.
+
+%-------------------------------------------------------------------------------
+\subsection{Version 5.1.0}
+%-------------------------------------------------------------------------------
+
+Port of MATLAB interface to 64-bit MATLAB.
+
+%-------------------------------------------------------------------------------
+\subsection{Version 5.0.3}
+%-------------------------------------------------------------------------------
+
+Renamed the MATLAB function to {\tt umfpack2}, so as not to confict with
+itself (the MATLAB built-in version of UMFPACK).
+
+%-------------------------------------------------------------------------------
+\subsection{Version 5.0}
+%-------------------------------------------------------------------------------
+
+Changed {\tt long} to {\tt UF\_long}, controlled by the {\tt UFconfig.h}
+file.  A {\tt UF\_long} is normally just {\tt long}, except on the Windows 64
+(WIN64) platform.  In that case, it becomes {\tt \_\_int64}.
+
+%-------------------------------------------------------------------------------
+\subsection{Version 4.6}
+%-------------------------------------------------------------------------------
+
+Added additional options to {\tt umf\_solve.c}.
+
+%-------------------------------------------------------------------------------
+\subsection{Version 4.5}
+%-------------------------------------------------------------------------------
+
+Added function pointers for malloc, calloc, realloc, free, printf, hypot,
+and complex divisiion, so that these functions can be redefined at run-time.
+Added a version number so you can determine the
+version of UMFPACK at run time or compile time.  UMFPACK requires AMD v2.0
+or later.
 
 %-------------------------------------------------------------------------------
 \subsection{Version 4.4}
@@ -382,7 +431,7 @@ or MATLAB user:
 %-------------------------------------------------------------------------------
 
 The easiest way to use UMFPACK is within MATLAB.  Version 4.3 is a built-in
-routine in MATLAB 7.1, and is used in {\tt x = A}$\backslash${\tt b} when
+routine in MATLAB 7.0.4, and is used in {\tt x = A}$\backslash${\tt b} when
 {\tt A} is sparse, square, unsymmetric (or symmetric but not positive definite),
 and with nonzero entries that are not confined in a narrow band.
 It is also used for the {\tt [L,U,P,Q] = lu (A)} usage of {\tt lu}.
@@ -621,14 +670,7 @@ and uses less memory.   If the space is not large enough during factorization,
 it is increased via {\tt mxRealloc}.
 
 However, {\tt mxMalloc} and {\tt mxRealloc} abort the {\tt umfpack} mexFunction
-if they fail, so this strategy does not work in MATLAB.  The strategy works fine
-when {\tt malloc} or the internal memory allocator {\tt utMalloc} are used
-instead, since those routines return {\tt NULL} on failure, and do not terminate
-the mexFunction.  The {\tt umfpack} mexFunction can be compiled to use
-{\tt utMalloc}, but this is an internal undocumented utility routine in MATLAB,
-and thus using {\tt utMalloc} might not always be successful.
-To use the documented {\tt mxMalloc} routine instead, compile the
-mexFunction with the {\tt -DNUTIL} flag enabled.
+if they fail, so this strategy does not work in MATLAB.
 
 To compute the determinant with UMFPACK:
 
@@ -651,9 +693,9 @@ include file.  All but three of the routines come in four versions, with
 different sizes of integers and for real or complex floating-point numbers:
 \begin{enumerate}
 \item {\tt umfpack\_di\_*}: real double precision, {\tt int} integers.
-\item {\tt umfpack\_dl\_*}: real double precision, {\tt long} integers.
+\item {\tt umfpack\_dl\_*}: real double precision, {\tt UF\_long} integers.
 \item {\tt umfpack\_zi\_*}: complex double precision, {\tt int} integers.
-\item {\tt umfpack\_zl\_*}: complex double precision, {\tt long} integers.
+\item {\tt umfpack\_zl\_*}: complex double precision, {\tt UF\_long} integers.
 \end{enumerate}
 where {\tt *} denotes the specific name of one of the routines.
 Routine names beginning with {\tt umf\_} are internal to the package,
@@ -663,7 +705,7 @@ The other three routines are the same for all four versions.
 
 In addition, the C-callable AMD library distributed with UMFPACK
 includes 4 user-callable routines (in two versions with {\tt int} and
-{\tt long} integers) and one include file.  Refer to the AMD documentation
+{\tt UF\_long} integers) and one include file.  Refer to the AMD documentation
 for more details.
 
 Use only one version for any one problem; do not attempt to use one version
@@ -672,7 +714,7 @@ to analyze the matrix and another version to factorize the matrix, for example.
 The notation {\tt umfpack\_di\_*} refers to all user-callable routines
 for the real double precision and {\tt int} integer case.  The notation
 {\tt umfpack\_*\_numeric}, for example, refers all four versions
-(real/complex, int/long) of a single operation
+(real/complex, int/UF\_long) of a single operation
 (in this case numeric factorization).
 
 %-------------------------------------------------------------------------------
@@ -681,7 +723,7 @@ for the real double precision and {\tt int} integer case.  The notation
 
 The {\tt umfpack\_di\_*} and {\tt umfpack\_zi\_*} routines use {\tt int} integer
 arguments; those starting with {\tt umfpack\_dl\_} or {\tt umfpack\_zl\_}
-use {\tt long} integer arguments.  If you compile UMFPACK in the standard
+use {\tt UF\_long} integer arguments.  If you compile UMFPACK in the standard
 ILP32 mode (32-bit {\tt int}'s, {\tt long}'s, and pointers) then the versions
 are essentially identical.  You will be able to solve problems using up to 2GB
 of memory.  If you compile UMFPACK in the standard LP64 mode, the size of an
@@ -696,7 +738,7 @@ architectures, and are not portable.  UMFPACK and AMD should be compiled
 in the same mode.
 If you compile UMFPACK and AMD in the LP64 mode,
 be sure to add {\tt -DLP64} to the compilation command.  See the examples in
-{\tt Make.alpha}, {\tt Make.sgi}, and {\tt Make.solaris}.
+the {\tt UFconfig/UFconfig.mk} file.
 
 %-------------------------------------------------------------------------------
 \subsection{Real and complex floating-point}
@@ -794,12 +836,12 @@ with {\tt nz} entries.  For the {\tt int} version of UMFPACK:
 \end{verbatim}
 }
 
-For the {\tt long} version of UMFPACK:
+For the {\tt UF\_long} version of UMFPACK:
 
 {\footnotesize
 \begin{verbatim}
-     long Ap [n+1] ;
-     long Ai [nz] ;
+     UF_long Ap [n+1] ;
+     UF_long Ai [nz] ;
      double Ax [nz] ;
 \end{verbatim}
 }
@@ -973,12 +1015,12 @@ four arrays.  For the {\tt int} version of UMFPACK:
 \end{verbatim}
 }
 
-For the {\tt long} version:
+For the {\tt UF\_long} version:
 
 {\footnotesize
 \begin{verbatim}
-     long Ti [nz] ;
-     long Tj [nz] ;
+     UF_long Ti [nz] ;
+     UF_long Tj [nz] ;
      double Tx [nz] ;
 \end{verbatim}
 }
@@ -1057,10 +1099,9 @@ however.  Refer to the discussion of
 on how to compute these operations in your own code.
 The only primary matrix operation not provided by UMFPACK is the
 multiplication of two sparse matrices \cite{Gustavson78}.
-A future package under development (as of Jan. 2005), CHOLMOD,
-will provide many of these matrix operations, which
+The CHOLMOD provides many of these matrix operations, which
 can then be used in conjunction with UMFPACK.
-Watch my web page for details.
+See my web page for details.
 
 %-------------------------------------------------------------------------------
 \subsection{Getting the contents of opaque objects}
@@ -1255,7 +1296,7 @@ Two new timing routines are provided in UMFPACK Version 4.1 and following,
 {\tt sysconf} and {\tt times} routines to find both the CPU time
 and wallclock time.
 These three routines are the only user-callable
-routine that is identical in all four {\tt int}/{\tt long}, real/complex
+routine that is identical in all four {\tt int}/{\tt UF\_long}, real/complex
 versions (there is no {\tt umfpack\_di\_timer} routine, for example).
 
 %-------------------------------------------------------------------------------
@@ -1465,7 +1506,7 @@ In this case, no {\tt Symbolic} or {\tt Numeric} object was created.
 \item {\tt UMFPACK\_ERROR\_internal\_error},  (-911):  
     An internal error has occurred, of unknown cause.  This is either a bug
     in UMFPACK, or the result of a memory overrun from your program.
-    Try modifying the file {\tt AMD/Source/amd\_internal.h} and adding
+    Try modifying the file {\tt AMD/Include/amd\_internal.h} and adding
     the statement {\tt \#undef NDEBUG}, to enable the debugging mode.
     Recompile UMFPACK and rerun your program.
     A failed assertion might occur which
@@ -1514,13 +1555,15 @@ values, and calling sequences of the routines in one category.  Variables with
 the same name as those already listed in a prior category have the same size
 and type.
 
-The real, {\tt long} integer {\tt umfpack\_dl\_*} routines are
+The real, {\tt UF\_long} integer {\tt umfpack\_dl\_*} routines are
 identical to the real, {\tt int} routines, except that {\tt \_di\_} is replaced
-with {\tt \_dl\_} in the name, and all {\tt int} arguments become {\tt long}.
-Similarly, the complex, {\tt long} integer {\tt umfpack\_zl\_*} routines are
+with {\tt \_dl\_} in the name, and all {\tt int} arguments become
+{\tt UF\_long}.
+Similarly, the complex, {\tt UF\_long} integer {\tt umfpack\_zl\_*} routines are
 identical to the complex, {\tt int} routines, except that {\tt \_zi\_} is
 replaced
-with {\tt \_zl\_} in the name, and all {\tt int} arguments become {\tt long}.
+with {\tt \_zl\_} in the name, and all {\tt int} arguments become
+{\tt UF\_long}.
 Only the real and complex {\tt int} versions are listed in the synopsis below.
 
 The matrix $\m{A}$ is {\tt m}-by-{\tt n} with {\tt nz} entries.
@@ -1806,7 +1849,7 @@ UMFPACK makes use of the AMD ordering package for its symmetric ordering
 strategy.  You may also use these four user-callable routines in your own C
 programs.  You need to include the {\tt amd.h} file only if you make direct
 calls to the AMD routines themselves.  The {\tt int} versions are summarized
-below; {\tt long} versions are also available.  Refer to the AMD User Guide
+below; {\tt UF\_long} versions are also available.  Refer to the AMD User Guide
 for more information, or to the file {\tt amd.h} which documents these routines.
 
 {\footnotesize
@@ -1955,7 +1998,7 @@ Access to the complex routines in UMFPACK is provided by the interface
 routines in {\tt umf4\_f77zwrapper.c}.  The following is a synopsis
 of each routine.  All the arguments are the same as the real versions,
 except {\tt Az}, {\tt xz}, and {\tt bz} are the imaginary parts of
-the matrix, solution, and right-hand-side, respectively.  The
+the matrix, solution, and right-hand side, respectively.  The
 {\tt Ax}, {\tt x}, and {\tt b} are the real parts.
 
 {\footnotesize
@@ -1993,23 +2036,17 @@ Unix, or in Windows with Cygwin\footnote{www.cygwin.com}.
 You can skip this section and go to next one if all you want to use is
 the UMFPACK and AMD mexFunctions in MATLAB.
 
-You will need to install both UMFPACK v4.4 and AMD v1.1 (or AMD v1.0) to use UMFPACK.
+You will need to install both UMFPACK v5.0 and AMD v2.0 to use UMFPACK.
 The {\tt UMFPACK} and {\tt AMD} subdirectories must be placed side-by-side
 within the same directory.  AMD is a stand-alone package that
 is required by UMFPACK.  UMFPACK can be compiled without the
 BLAS \cite{DaydeDuff99,ACM679a,ATLAS,GotoVandeGeijn02},
 but your performance will be much less than what it should be.
 
-System-dependent configurations are in the {\tt AMD/Make}
-and {\tt UMFPACK/Make} directories (the \newline
-{\tt UMFPACK/Make} directory is actually
-just a symbolic link to {\tt AMD/Make}\footnote{Windows might not extract
-the symbolic link {\tt UMFPACK/Make} correctly.  If it doesn't, simply
-create the {\tt UMFPACK/Make} folder by copying it from {\tt AMD/Make}.}).
-You can edit the {\tt Make.include}
-files in either of those directories to customize the compilation.  The default
+System-dependent configurations are in the {\tt UFconfig/UFconfig.mk}
+file.  The default
 settings will work on most systems, except that UMFPACK will be compiled so
-that it does not use the BLAS.  Sample configuration files are provided
+that it does not use the BLAS.  Sample configurations are provided
 for Linux, Sun Solaris, SGI IRIX, IBM AIX, and the DEC/Compaq Alpha.
 
 To compile and install both packages,
@@ -2021,74 +2058,67 @@ compiled and tested in the {\tt UMFPACK/Demo} directory.
 The outputs of these demo programs will then be compared with output
 files in the distribution.  Expect to see a few differences, such as
 residual norms, compile-time control settings, and perhaps memory usage
-differences.  The AMD and UMFPACK mexFunctions for
-use in MATLAB will also be compiled.  If you do not have MATLAB 6.0 or
-later, type {\tt make lib} instead.
+differences.
 
-If you have the GNU version of {\tt make}, the {\tt Source/GNUmakefile} and
+To use {\tt make} to compile the MATLAB mexFunctions for MATLAB
+and AMD, you can either type {\tt make mex} in the UMFPACK directory.
+You may first need to edit the {\tt UFconfig/UFconfig.mk} file to
+modify the definition of the {\tt MEX}, if you have a version of MATLAB
+older than Version 7.2.  Remove the {\tt -largeArrayDims} definition.
+If you use the MATLAB command {\tt umfpack\_make} in the MATLAB directory,
+then this case is handled for you automatically.
+
+If you have the GNU version of {\tt make}, the {\tt Lib/GNUmakefile} and
 {\tt MATLAB/GNUmakefile} files are used.  These are much more concise than
 what the ``old'' version of {\tt make} can handle.  If you do not have
-GNU {\tt make}, the {\tt Source/Makefile} and {\tt MATLAB/Makefile} files
+GNU {\tt make}, the {\tt Lib/Makefile} and {\tt MATLAB/Makefile} files
 are used instead.  Each UMFPACK source file is compiled into four
-versions ({\tt double} / complex, and {\tt int} / {\tt long}).  A proper
+versions ({\tt double} / complex, and {\tt int} / {\tt UF\_long}).  A proper
 old-style {\tt Makefile} is cumbersome in this case, so these two
 {\tt Makefile}'s have been constructed by brute force.  They ignore
 dependencies, and simply compile everything.  I highly recommend using GNU
 {\tt make} if you wish to modify UMFPACK.
 
-If you compile UMFPACK and AMD and then later change the {\tt Make.include}
-file or your system-specific configuration file such as {\tt Make.linux},
+If you compile UMFPACK and AMD and then later change the
+{\tt UFconfig/UFconfig.mk} file
 then you should type {\tt make purge} and then {\tt make} to recompile.
 
 Here are the various parameters that you can control in your
-{\tt Make.include} file:
+{\tt UFconfig/UFconfig.mk} file:
 
 \begin{itemize}
 \item {\tt CC = } your C compiler, such as {\tt cc}.
 \item {\tt RANLIB = } your system's {\tt ranlib} program, if needed.
 \item {\tt CFLAGS = } optimization flags, such as {\tt -O}.
-    Add {\tt -DLP64} if you are compiling in 64-bit mode
-    (32 bit {\tt int}'s, 64 bit {\tt long}'s, and 64 bit pointers).
-\item {\tt CONFIG = } configuration settings for the BLAS, memory allocation
-    routines, and timing routines.
+\item {\tt UMFPACK\_CONFIG = } configuration settings for the BLAS,
+    memory allocation routines, and timing routines.
 \item {\tt LIB = } your libraries, such as {\tt -lm} or {\tt -lblas}.
 \item {\tt RM =} the command to delete a file.
 \item {\tt MV =} the command to rename a file.
 \item {\tt MEX =} the command to compile a MATLAB mexFunction.
     If you are using MATLAB 5, you need to add {\tt -DNBLAS} and
-    {\tt -DNUTIL} to this command.  An example is provided in
-    the {\tt Make/Make.include} file.
+    {\tt -DNUTIL} to this command.
 \item {\tt F77 =} the command to compile a Fortran program (optional).
 \item {\tt F77FLAGS =} the Fortran compiler flags (optional).
 \item {\tt F77LIB =} the Fortran libraries (optional).
 \end{itemize}
 
-The {\tt CONFIG} string can include combinations of the following;
+The {\tt UMFPACK\_CONFIG} string can include combinations of the following;
 most deal with how the BLAS are called:
 \begin{itemize}
 \item {\tt -DNBLAS} if you do not have any BLAS at all.
-\item {\tt -DCBLAS} if you have the C-BLAS \cite{ATLAS}.
 \item {\tt -DNSUNPERF} if you are on Solaris but do not have the Sun
     Performance Library (for the BLAS).
-\item {\tt -DNSCSL} if you on SGI IRIX but do not have the SCSL BLAS library.
-\item {\tt -DLONGBLAS} if your BLAS can take {\tt long} integer input
-    arguments.  If not defined, then the {\tt umfpack\_*l\_*} versions of
-    UMFPACK that use {\tt long} integers do not call the BLAS.
-    This flag is set internally when using the Sun Performance BLAS
-    or SGI's SCSL BLAS (both have 64-bit versions of the BLAS).
-\item Options for controlling how C calls the Fortran BLAS:
-    {\tt -DBLAS\_BY\_VALUE}, {\tt -DBLAS\_NO\_UNDERSCORE},
-    and {\tt -DBLAS\_CHAR\_ARG}.  These are set automatically for Windows,
+\item {\tt -DLONGBLAS} if your BLAS takes non-{\tt int} integer arguments.
+\item {\tt -DBLAS\_INT = } the integer used by the BLAS.
+
+\item {\tt -DBLAS\_NO\_UNDERSCORE}
+    for controlling how C calls the Fortran BLAS.
+    This is set automatically for Windows,
     Sun Solaris, SGI Irix, Red Hat Linux, Compaq Alpha, and
-    AIX (the IBM RS 6000).  They are ignored if you are using
-    the C-BLAS interface to the BLAS.
+    AIX (the IBM RS 6000).
+
 \item {\tt -DGETRUSAGE} if you have the {\tt getrusage} function.
-\item {\tt -DNUTIL} if you wish to compile the MATLAB-callable
-    UMFPACK mexFunction with the {\tt mxMalloc}, {\tt mxRealloc}
-    and {\tt mxFree} routines, instead of the undocumented (but
-    superior) {\tt utMalloc}, {\tt utRealloc}, and {\tt utFree}
-    routines.  The default is to use the {\tt ut*} routines on
-    Unix, and the {\tt mx*} routines on Windows.
 \item {\tt -DNPOSIX} if you do not have the POSIX-compliant
     {\tt sysconf} and {\tt times} routines used by
     {\tt umfpack\_tic} and {\tt umfpack\_toc}.
@@ -2150,11 +2180,12 @@ program, unless you directly call AMD routines.  You only need the
 statement, as described in Section~\ref{Synopsis}.
 
 If you would like to compile both 32-bit and 64-bit versions of the libraries,
-you will need to do it in two steps.  Modify your {\tt Make/Make.<arch>}
+you will need to do it in two steps.  Modify your {\tt UFconfig/UFconfig.mk}
 file, and select the 32-bit option.  Type {\tt make} in the {\tt UMFPACK}
 directory, which creates the {\tt UMFPACK/Lib/libumfpack.a} and
 {\tt AMD/Lib/libamd.a} libraries.  Rename those two files.  Edit your
-{\tt Make/Make.<arch>} and select the 64-bit option.   Type {\tt make purge},
+{\tt UFconfig/UFconfig.mk} file and select the 64-bit option.
+Type {\tt make purge},
 and then {\tt make}, and you will create the 64-bit libraries.
 You can use the same {\tt umfpack.h} include file for both 32-bit and
 64-bit versions.  Simply link your program with the appropriate 32-bit
@@ -2181,13 +2212,13 @@ to compile the stand-alone AMD mexFunction (this is not required to
 compile the UMFPACK mexFunction).  This works on any computer with MATLAB,
 including Windows.
 
-You will be prompted to select several configuration options, including
-whether or not to use the BLAS.
-MATLAB 5.3 (or earlier) does not include the BLAS, so you either have to
-compile UMFPACK without the BLAS (UMFPACK will be slow), or modify your
-{\tt <matlab>/bin/mexopts.sh} by adding your BLAS library
-to the {\tt CLIBS} string,
-where {\tt <matlab>} is the directory in which MATLAB is installed.
+% You will be prompted to select several configuration options, including
+% whether or not to use the BLAS.
+% MATLAB 5.3 (or earlier) does not include the BLAS, so you either have to
+% compile UMFPACK without the BLAS (UMFPACK will be slow), or modify your
+% {\tt <matlab>/bin/mexopts.sh} by adding your BLAS library
+% to the {\tt CLIBS} string,
+% where {\tt <matlab>} is the directory in which MATLAB is installed.
 
 If you are using Windows and the {\tt lcc} compiler bundled with
 MATLAB 6.1, then you may need to copy the
@@ -2264,11 +2295,15 @@ all of these warnings.
 \label{Future}
 %-------------------------------------------------------------------------------
 
-Here are a few features that are not in UMFPACK Version 4.4, in no particular
+Here are a few features that are not in the current version of UMFPACK,
+in no particular
 order.  They may appear in a future release of UMFPACK.  If you are interested,
 let me know and I could consider including them:
 
 \begin{enumerate}
+
+\item Remove the restriction that the column-oriented form be given with
+    sorted columns.  This has already been done in AMD Version 2.0.
 
 \item Future versions may have different default {\tt Control} parameters.
     Future versions may return more statistics in the {\tt Info} array, and
@@ -2286,10 +2321,12 @@ let me know and I could consider including them:
     solver that could be used to write a MATLAB mexFunction
     {\tt x = lu\_refine (A, b, L, U, P, Q, R)} that gives MATLAB access
     to the iterative refinement algorithm with sparse backward error
-    analysis.  It would also be easier to handle sparse right-hand-sides
+    analysis.  It would also be easier to handle sparse right-hand sides
     in this data structure, and end up with good asymptotic run-time
     in this case
     (particularly for $\m{Lx}=\m{b}$; see \cite{GilbertPeierls88}).
+    See also CSparse and 
+    CXSparse for software for handling sparse right-hand sides.
 
 \item Complex absolute value computations could be
     based on FDLIBM (see \newline
@@ -2302,6 +2339,8 @@ let me know and I could consider including them:
 \item The solve routines could handle multiple right-hand sides, and sparse
     right-hand sides.  See {\tt umfpack\_solve} for the MATLAB version
     of this feature.
+    See also CSparse and 
+    CXSparse for software for handling sparse right-hand sides.
 
 \item An option to redirect the error and diagnostic output.
 
@@ -2312,15 +2351,8 @@ let me know and I could consider including them:
     to C and included in UMFPACK.  This would result in better performance
     for matrices from circuit simulation and
     chemical process engineering.  See {\tt umfpack\_btf.m} for the MATLAB
-    version of this feature.  An upcoming package (KLU) will include
-    this feature.
-
-\item The ability to use user-provided {\tt malloc}, {\tt free}, and
-    {\tt realloc} memory allocation routines.  Note that UMFPACK makes very
-    few calls to these routines.  You can do this at compile-time by
-    modifying the definitions of {\tt ALLOCATE}, {\tt FREE}, and
-    {\tt REALLOCATE} in the file {\tt umf\_internal.h}.  Be sure to document
-    your changes carefully when you change UMFPACK source code.
+    version of this feature.  KLU includes this feature.
+    See also {\tt cs\_dmperm} in CSparse and CXSparse.
 
 \item The ability to use user-provided work arrays, so that {\tt malloc},
     {\tt free}, and {\tt realloc} realloc are not called.  The
@@ -2334,6 +2366,8 @@ let me know and I could consider including them:
     time proportional to the number of nonzeros in the upper bound of $\m{U}$.
     The method used in UMFPACK exploits super-columns, however, so this
     bound is rarely reached.
+    See {\tt cs\_counts} in CSparse and CXSparse,
+    and {\tt cholmod\_analyze} in CHOLMOD.
 
 \item Other basic sparse matrix operations, such as sparse matrix
     multiplication, could be included.
@@ -2356,7 +2390,7 @@ let me know and I could consider including them:
 
 The include files are the same for all four versions of
 UMFPACK.  The generic integer type is {\tt Int}, which is an {\tt int} or
-{\tt long}, depending on which version of UMFPACK you are using.
+{\tt UF\_long}, depending on which version of UMFPACK you are using.
 
 \subsection{umfpack\_*\_symbolic}
 

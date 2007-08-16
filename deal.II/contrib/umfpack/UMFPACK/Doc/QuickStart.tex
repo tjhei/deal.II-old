@@ -18,8 +18,8 @@
 \author{Timothy A. Davis \\
 Dept. of Computer and Information Science and Engineering \\
 Univ. of Florida, Gainesville, FL}
-\title{UMFPACK Version 4.4 Quick Start Guide}
-\date{Jan. 28, 2005}
+\title{UMFPACK Version 5.1 Quick Start Guide}
+\date{May 31, 2007}
 \maketitle
 
 %-------------------------------------------------------------------------------
@@ -35,8 +35,8 @@ Univ. of Florida, Gainesville, FL}
 \end{abstract}
 %-------------------------------------------------------------------------------
 
-UMFPACK Version 4.4 (Jan. 28, 2005), Copyright\copyright 2005 by Timothy A.
-Davis.  All Rights Reserved.  Refer to the UMFPACK User Guide
+UMFPACK Version 5.1, Copyright\copyright 1995-2006 by Timothy A. Davis.
+All Rights Reserved.  Refer to the UMFPACK User Guide
 for the License. See \newline
 http://www.cise.ufl.edu/research/sparse/umfpack
 for the code and full documentation.
@@ -52,8 +52,8 @@ or non-singular, and real or complex (or any combination).  Only square
 matrices $\m{A}$ can be used to solve $\m{Ax}=\m{b}$ or related systems.
 Rectangular matrices can only be factorized.
 
-UMFPACK Version 4.3 is a built-in routine in MATLAB 7.1, used by the forward and
-backslash operator, and the {\tt lu} routine.  MATLAB 6.5 used Version 4.0.
+UMFPACK is a built-in routine in MATLAB used by the forward and
+backslash operator, and the {\tt lu} routine.
 The following is a short
 introduction to Unix users of the C interface of UMFPACK.
 
@@ -234,19 +234,17 @@ for more details.
 \label{Install}
 %-------------------------------------------------------------------------------
 
-You will need to install both UMFPACK v4.4 and AMD v1.1 (or AMD v1.0) to use UMFPACK.
+You will need to install both UMFPACK v5.1 and AMD v2.2 to use UMFPACK.
+Note that UMFPACK v5.1 cannot use AMD v1.2 or earlier.
 The {\tt UMFPACK} and {\tt AMD} subdirectories must be placed side-by-side
 within the same parent directory.  AMD is a stand-alone package that
 is required by UMFPACK.  UMFPACK can be compiled without the
 BLAS but your performance will be much less than what it should be.
 
-System-dependent configurations are in the {\tt AMD/Make}
-and {\tt UMFPACK/Make} directories
-(Note that {\tt UMFPACK/Make} is a symbolic link to {\tt AMD/Make}).
-You can edit the {\tt Make.include}
-file in those directories to customize the compilation.  The default
-settings will work on most systems, except that UMFPACK will be compiled so
-that it does not use the BLAS.  Sample configuration files are provided
+System-dependent configurations are in the {\tt UFconfig/UFconfig.mk}
+file.  The default
+settings will work on most systems, except for the BLAS definition.
+Sample configurations are provided
 for Linux, Sun Solaris, SGI IRIX, IBM AIX, and the DEC/Compaq Alpha.
 
 To compile and install both packages,
@@ -258,23 +256,29 @@ compiled and tested in the {\tt UMFPACK/Demo} directory.
 The outputs of these demo programs will then be compared with output
 files in the distribution.  Expect to see a few differences, such as
 residual norms, compile-time control settings, and perhaps memory usage
-differences.  The AMD and MATLAB mexFunctions for
-use in MATLAB will also be compiled.  If you do not have MATLAB,
-type {\tt make lib} instead.
+differences.
 
-If you compile UMFPACK and AMD and then later change the {\tt Make.include}
-file or your system-specific configuration file such as {\tt Make.linux},
+To use {\tt make} to compile the MATLAB mexFunctions for MATLAB
+and AMD, you can either type {\tt make mex} in the UMFPACK directory.
+You may first need to edit the {\tt UFconfig/UFconfig.mk} file to
+modify the definition of the {\tt MEX}, if you have a version of MATLAB
+older than Version 7.2.  Remove the {\tt -largeArrayDims} definition.
+If you use the MATLAB command {\tt umfpack\_make} in the MATLAB directory,
+then this case is handled for you automatically.
+
+If you compile UMFPACK and AMD and then later change the
+{\tt UFconfig/UFconfig.mk} file
 then you should type {\tt make purge} and then {\tt make} to recompile.
 
 Here are the various parameters that you can control in your
-{\tt Make.include} file:
+{\tt UFconfig/UFconfig.mk} file:
 
 \begin{itemize}
 \item {\tt CC = } your C compiler, such as {\tt cc}.
 \item {\tt RANLIB = } your system's {\tt ranlib} program, if needed.
 \item {\tt CFLAGS = } optimization flags, such as {\tt -O}.
-\item {\tt CONFIG = } configuration settings, for the BLAS, memory allocation
-    routines, and timing routines.
+\item {\tt UMFPACK\_CONFIG = } configuration settings, for the BLAS,
+    memory allocation routines, and timing routines.
 \item {\tt LIB = } your libraries, such as {\tt -lm} or {\tt -lblas}.
 \item {\tt RM =} the command to delete a file.
 \item {\tt MV =} the command to rename a file.
@@ -284,29 +288,22 @@ Here are the various parameters that you can control in your
 \item {\tt F77LIB =} the Fortran libraries (optional).
 \end{itemize}
 
-The {\tt CONFIG} string can include combinations of the following;
+The {\tt UMFPACK\_CONFIG} string can include combinations of the following;
 most deal with how the BLAS are called:
 \begin{itemize}
 \item {\tt -DNBLAS} if you do not have any BLAS at all.
-\item {\tt -DCBLAS} if you have the C-BLAS.
 \item {\tt -DNSUNPERF} if you are on Solaris but do not have the Sun
     Performance Library.
-\item {\tt -DNSCSL} if you on SGI IRIX but do not have the SCSL BLAS library.
-\item {\tt -DLONGBLAS} if your BLAS can take {\tt long} integer input
-    arguments.
-\item Options for controlling how C calls the Fortran BLAS:
-    {\tt -DBLAS\_BY\_VALUE}, {\tt -DBLAS\_NO\_UNDERSCORE},
-    and {\tt -DBLAS\_CHAR\_ARG}.  These are set automatically for Windows,
+\item {\tt -DLONGBLAS} if your BLAS takes non-{\tt int} integer arguments.
+\item {\tt -DBLAS\_INT = } the integer used by the BLAS.
+
+\item {\tt -DBLAS\_NO\_UNDERSCORE}
+    for controlling how C calls the Fortran BLAS.
+    This is set automatically for Windows,
     Sun Solaris, SGI Irix, Red Hat Linux, Compaq Alpha, and
     AIX (the IBM RS 6000).
+
 \item {\tt -DGETRUSAGE} if you have the {\tt getrusage} function.
-\item {\tt -DLP64} if you are compiling in the LP64 model (32 bit {\tt int}'s,
-    64 bit {\tt long}'s, and 64 bit pointers).
-\item {\tt -DNUTIL} if you wish to compile the MATLAB-callable
-    UMFPACK mexFunction with the {\tt mxMalloc}, {\tt mxRealloc}
-    and {\tt mxFree} routines, instead of the undocumented (but
-    superior) {\tt utMalloc}, {\tt utRealloc}, and {\tt utFree}
-    routines.
 \item {\tt -DNPOSIX} if you do not have the POSIX-compliant
     {\tt sysconf} and {\tt times} routines.
 \item {\tt -DNRECIPROCAL} controls a trade-off between speed and accuracy.
@@ -369,12 +366,12 @@ Returns:
 
 Arguments:
 
-    Int n_row ;         Input argument, not modified.
-    Int n_col ;         Input argument, not modified.
+    int n_row ;         Input argument, not modified.
+    int n_col ;         Input argument, not modified.
 
         A is an n_row-by-n_col matrix.  Restriction: n_row > 0 and n_col > 0.
 
-    Int Ap [n_col+1] ;  Input argument, not modified.
+    int Ap [n_col+1] ;  Input argument, not modified.
 
         Ap is an integer array of size n_col+1.  On input, it holds the
         "pointers" for the column form of the sparse matrix A.  Column j of
@@ -384,7 +381,7 @@ Arguments:
         total number of entries in the pattern of the matrix A.  nz must be
         greater than or equal to zero.
 
-    Int Ai [nz] ;       Input argument, not modified, of size nz = Ap [n_col].
+    int Ai [nz] ;       Input argument, not modified, of size nz = Ap [n_col].
 
         The nonzero pattern (row indices) for column j is stored in
         Ai [(Ap [j]) ... (Ap [j+1]-1)].  The row indices in a given column j
@@ -611,13 +608,13 @@ Returns:
 
 Arguments:
 
-    Int Ap [n_col+1] ;  Input argument, not modified.
+    int Ap [n_col+1] ;  Input argument, not modified.
 
         This must be identical to the Ap array passed to umfpack_di_symbolic.
         The value of n_col is what was passed to umfpack_di_symbolic (this is
         held in the Symbolic object).
 
-    Int Ai [nz] ;       Input argument, not modified, of size nz = Ap [n_col].
+    int Ai [nz] ;       Input argument, not modified, of size nz = Ap [n_col].
 
         This must be identical to the Ai array passed to umfpack_di_symbolic.
 
@@ -840,7 +837,7 @@ Returns:
 
 Arguments:
 
-    Int sys ;           Input argument, not modified.
+    int sys ;           Input argument, not modified.
 
         Defines which system to solve.  (') is the linear algebraic transpose.
 
@@ -866,8 +863,8 @@ Arguments:
         For the other values of the sys argument, iterative refinement is not
         performed (Control [UMFPACK_IRSTEP], Ap, Ai, and Ax are ignored).
 
-    Int Ap [n+1] ;      Input argument, not modified.
-    Int Ai [nz] ;       Input argument, not modified.
+    int Ap [n+1] ;      Input argument, not modified.
+    int Ai [nz] ;       Input argument, not modified.
     double Ax [nz] ;    Input argument, not modified.
 
         If iterative refinement is requested (Control [UMFPACK_IRSTEP] >= 1,

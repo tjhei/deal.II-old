@@ -3,9 +3,9 @@
 /* ========================================================================= */
 
 /* ------------------------------------------------------------------------- */
-/* AMD Version 1.1 (Jan. 21, 2004), Copyright (c) 2004 by Timothy A. Davis,  */
-/* Patrick R. Amestoy, and Iain S. Duff.  See ../README for License.         */
-/* email: davis@cise.ufl.edu    CISE Department, Univ. of Florida.           */
+/* AMD, Copyright (c) Timothy A. Davis,					     */
+/* Patrick R. Amestoy, and Iain S. Duff.  See ../README.txt for License.     */
+/* email: davis at cise.ufl.edu    CISE Department, Univ. of Florida.        */
 /* web: http://www.cise.ufl.edu/research/sparse/amd                          */
 /* ------------------------------------------------------------------------- */
 
@@ -15,12 +15,17 @@
 
 #include "amd_internal.h"
 
+/* ========================================================================= */
+/* === AMD defaults ======================================================== */
+/* ========================================================================= */
+
 GLOBAL void AMD_defaults
 (
     double Control [ ]
 )
 {
     Int i ;
+
     if (Control != (double *) NULL)
     {
 	for (i = 0 ; i < AMD_CONTROL ; i++)

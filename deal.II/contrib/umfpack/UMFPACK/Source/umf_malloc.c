@@ -3,7 +3,7 @@
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* UMFPACK Version 4.4, Copyright (c) 2005 by Timothy A. Davis.  CISE Dept,   */
+/* UMFPACK Copyright (c) Timothy A. Davis, CISE,                              */
 /* Univ. of Florida.  All Rights Reserved.  See ../Doc/License for License.   */
 /* web: http://www.cise.ufl.edu/research/sparse/umfpack                       */
 /* -------------------------------------------------------------------------- */
@@ -72,8 +72,8 @@ GLOBAL void *UMF_malloc
     }
     size *= size_of_object ;
 
-    /* see umf_config.h for the memory allocator selection */
-    p = ALLOCATE (size) ;
+    /* see AMD/Source/amd_global.c for the memory allocator selection */
+    p = amd_malloc (size) ;
 
     DEBUG0 ((ID"\n", (Int) p)) ;
 

@@ -10,7 +10,7 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
+// $Source: /cvsroot/boost/boost/boost/mpl/aux_/config/eti.hpp,v $
 // $Date$
 // $Revision$
 

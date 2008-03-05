@@ -10,7 +10,7 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
+// $Source: /cvsroot/boost/boost/boost/mpl/aux_/template_arity_fwd.hpp,v $
 // $Date$
 // $Revision$
 

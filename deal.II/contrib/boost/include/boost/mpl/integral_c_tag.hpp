@@ -10,7 +10,7 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
+// $Source: /cvsroot/boost/boost/boost/mpl/integral_c_tag.hpp,v $
 // $Date$
 // $Revision$
 

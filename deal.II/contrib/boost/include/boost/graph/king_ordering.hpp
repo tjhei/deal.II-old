@@ -63,7 +63,7 @@ namespace boost {
         //heap the vertices already there
         std::make_heap(rbegin, rend, boost::bind<bool>(comp, _2, _1));
 
-        int i = 0;
+        unsigned int i = 0;
         
         for(i = index_begin; i != Qptr->size(); ++i){
           colors[get(vertex_map, (*Qptr)[i])] = 1;
@@ -168,7 +168,7 @@ namespace boost {
         int parent_location = Qptr->size() - heap_parent_location; 
 
         bool valid = (heap_parent_location != 0 && child_location > index_begin + offset && 
-                      parent_location < Qptr->size());
+                      parent_location < static_cast<signed int>(Qptr->size()));
 
         while(valid && comp((*Qptr)[child_location], (*Qptr)[parent_location])){
           

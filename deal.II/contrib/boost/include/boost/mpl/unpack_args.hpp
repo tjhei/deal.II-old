@@ -111,7 +111,7 @@ BOOST_MPL_AUX_PASS_THROUGH_LAMBDA_SPEC(1, unpack_args)
 
 ///// iteration, depth == 1
 
-#elif BOOST_PP_ITERATION_DEPTH() == 1
+#elif BOOST_PP_ITERATION_DEPTH == 1
 
 #   define i_ BOOST_PP_FRAME_ITERATION(1)
 

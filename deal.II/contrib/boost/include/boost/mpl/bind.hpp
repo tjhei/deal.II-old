@@ -361,7 +361,7 @@ BOOST_MPL_AUX_TEMPLATE_ARITY_SPEC(
 
 ///// iteration, depth == 1
 
-#elif BOOST_PP_ITERATION_DEPTH() == 1
+#elif BOOST_PP_ITERATION_DEPTH == 1
 
 #   define i_ BOOST_PP_FRAME_ITERATION(1)
 
@@ -528,7 +528,7 @@ struct bind_chooser<i_>
 
 ///// iteration, depth == 2
 
-#elif BOOST_PP_ITERATION_DEPTH() == 2
+#elif BOOST_PP_ITERATION_DEPTH == 2
 
 #   define j_ BOOST_PP_FRAME_ITERATION(2)
 #   if !defined(BOOST_MPL_CFG_NO_UNNAMED_PLACEHOLDER_SUPPORT)

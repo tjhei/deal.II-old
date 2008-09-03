@@ -2,7 +2,7 @@
 //    $Id$
 //    Version: $Name$
 //
-//    Copyright (C) 2002, 2003, 2006, 2007 by the deal.II authors
+//    Copyright (C) 2002, 2003, 2006, 2007, 2008 by the deal.II authors
 //
 //    This file is subject to QPL and may not be  distributed
 //    without copyright and license information. Please refer
@@ -86,17 +86,19 @@ void monitor_parent_liveness (const pid_t master_pid,
     {
       int ret = kill (master_pid, 0);
       if (ret != 0)
-        if ((ret == -1) && (errno == ESRCH))
-          die ("Master process seems to have died!", primary_pid);
-        else
-          die ("Unspecified error while checking for other process!",
-               ret, errno, primary_pid);
-
+	{
+	  if ((ret == -1) && (errno == ESRCH))
+	    die ("Master process seems to have died!", primary_pid);
+	  else
+	    die ("Unspecified error while checking for other process!",
+		 ret, errno, primary_pid);
+	}
+      
                                        // ok, master still running,
                                        // take a little rest and then
                                        // ask again
       sleep (10);
-    };
+    }
 }
 
 

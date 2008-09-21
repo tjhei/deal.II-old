@@ -32,7 +32,8 @@
 
 #if defined(__GNUC__) && defined( __arm__ )
 #  include <boost/detail/spinlock_gcc_arm.hpp>
-#elif defined(__GNUC__) && ( __GNUC__ * 100 + __GNUC_MINOR__ >= 401 )
+#elif defined(__GNUC__) && ( __GNUC__ * 100 + __GNUC_MINOR__ >= 401 ) \
+   && ( !defined(__INTEL_COMPILER) || defined(__ia64) )
 #  include <boost/detail/spinlock_sync.hpp>
 #elif defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__CYGWIN__)
 #  include <boost/detail/spinlock_w32.hpp>

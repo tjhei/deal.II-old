@@ -1,5 +1,5 @@
 # $Id$
-# Copyright (C) 2001, 2002, 2003, 2004, 2006 by Wolfgang Bangerth
+# Copyright (C) 2001, 2002, 2003, 2004, 2006, 2008 by Wolfgang Bangerth
 
 
 D = ../..
@@ -42,11 +42,11 @@ $(LIBDIR)/libhsl$(static-lib-suffix): $(forward-declarations) $(o-files)
 	@$(AR) ru $@ $(o-files)
 	@$(RANLIB) $@
 
-# link the object files to a shared library. since this is not C++,
-# simply use the C compiler, rather than $(SHLIBLD)
+# link the object files to a shared library.
 $(LIBDIR)/libhsl$(shared-lib-suffix): $(forward-declarations) $(o-files)
 	@echo =====hsl==============optimized==$(MT)== Linking library:   $(@F)
-	@$(SHLIBLD) $(LDFLAGS) -shared -o $@ $(o-files) $(F77LIBS)
+	@$(SHLIBLD) $(LDFLAGS) -shared -o $(LIBDIR)/$(call DEAL_II_SHLIB_NAME,hsl) $(call DEAL_II_ADD_SONAME,hsl) $(o-files) $(F77LIBS)
+	@ln -f -s $(LIBDIR)/$(call DEAL_II_SHLIB_NAME,hsl) $@
 
 
 

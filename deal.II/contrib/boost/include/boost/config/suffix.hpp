@@ -267,11 +267,15 @@
 // Note that this is for backwards compatibility only.
 //
 #  ifndef BOOST_HAS_SLIST
+#    ifndef BOOST_NO_SLIST
 #     define BOOST_NO_SLIST
+#    endif
 #  endif
 
 #  ifndef BOOST_HAS_HASH
+#    ifndef BOOST_NO_HASH
 #     define BOOST_NO_HASH
+#    endif
 #  endif
 
 //

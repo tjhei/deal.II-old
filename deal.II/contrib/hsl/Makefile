@@ -46,7 +46,7 @@ $(LIBDIR)/libhsl$(static-lib-suffix): $(forward-declarations) $(o-files)
 $(LIBDIR)/libhsl$(shared-lib-suffix): $(forward-declarations) $(o-files)
 	@echo =====hsl==============optimized==$(MT)== Linking library:   $(@F)
 	@$(SHLIBLD) $(LDFLAGS) -shared -o $(LIBDIR)/$(call DEAL_II_SHLIB_NAME,hsl) $(call DEAL_II_ADD_SONAME,hsl) $(o-files) $(F77LIBS)
-	@ln -f -s $(LIBDIR)/$(call DEAL_II_SHLIB_NAME,hsl) $@
+	@ln -f -s $(call DEAL_II_SHLIB_NAME,hsl) $@
 
 
 

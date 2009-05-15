@@ -6,14 +6,6 @@ D = ../..
 
 include $D/common/Make.global_options
 
-ifneq ($(with-multithreading),no)
-  MT = MT
-else
-  MT = ==
-endif
-
-
-
 # get lists of files we need
 f-files     = $(shell a="`echo source/*.f`"; if test "$$a" != "source/*.f" ; then echo $$a ; fi)
 o-files     = $(f-files:source/%.f=$(LIBDIR)/contrib/hsl/%.$(OBJEXT))

@@ -11,13 +11,6 @@ endif
 # rules
 lib: AMD UMFPACK
 
-ifneq ($(with-multithreading),no)
-  MT = MT
-else
-  MT = ==
-endif
-
-
 
 AMD:
 	cd AMD/Source ; $(MAKE) all

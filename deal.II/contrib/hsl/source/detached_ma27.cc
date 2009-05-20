@@ -2,7 +2,7 @@
 //    $Id$
 //    Version: $Name$
 //
-//    Copyright (C) 2002, 2003, 2006, 2007, 2008 by the deal.II authors
+//    Copyright (C) 2002, 2003, 2006, 2007, 2008, 2009 by the deal.II authors
 //
 //    This file is subject to QPL and may not be  distributed
 //    without copyright and license information. Please refer
@@ -12,7 +12,6 @@
 //----------------------------  detached_ma27.cc  ---------------------------
 
 #include <base/config.h>
-#include <base/thread_management.h>
 #include <hsl/hsl.h>
 
 #include <vector>
@@ -78,10 +77,19 @@ void die (const std::string &text, const T1 t1, const T2 t2, const pid_t pid)
  * parent. if the return value is non-null, then kill couldn't find out
  * about the parent process, so it is apparently gone
  */
-extern "C"
-void monitor_parent_liveness (const pid_t master_pid,
-                              const pid_t primary_pid) 
+struct MonitorData
 {
+    const pid_t master_pid;
+    const pid_t primary_pid;
+};
+
+
+extern "C"
+void * monitor_parent_liveness (void *monitor_data) 
+{
+  const pid_t master_pid = ((MonitorData*)monitor_data)->master_pid;
+  const pid_t primary_pid = ((MonitorData*)monitor_data)->primary_pid;
+  
   while (true)
     {
       int ret = kill (master_pid, 0);
@@ -99,6 +107,8 @@ void monitor_parent_liveness (const pid_t master_pid,
                                        // ask again
       sleep (10);
     }
+
+  return 0;
 }
 
 
@@ -172,7 +182,9 @@ int main ()
                                    // be kill when we exit the main
                                    // program, but part from that we
                                    // create it detached
-  Threads::spawn (&monitor_parent_liveness)(master_pid, getpid());
+  static MonitorData monitor_data = { master_pid, getpid() };
+  pthread_t thread;
+  pthread_create (&thread, 0, &monitor_parent_liveness, &monitor_data);
   
                                    // then go into the action loop...
   unsigned int N, NZ, NSTEPS, LA, MAXFRT, LIW;

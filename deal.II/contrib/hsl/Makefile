@@ -1,5 +1,5 @@
 # $Id$
-# Copyright (C) 2001, 2002, 2003, 2004, 2006, 2008 by Wolfgang Bangerth
+# Copyright (C) 2001, 2002, 2003, 2004, 2006, 2008, 2009 by Wolfgang Bangerth
 
 
 D = ../..
@@ -47,8 +47,7 @@ $(LIBDIR)/libhsl$(shared-lib-suffix): $(forward-declarations) $(o-files)
 # has actually nothing much to do, compile it in debug mode
 $(LIBDIR)/bin/detached_ma27$(EXEEXT):  \
 				$(LIBDIR)/contrib/hsl/detached_ma27.$(OBJEXT) \
-                                -lhsl \
-				$(lib-base.o)
+                                -lhsl
 	@echo =====hsl=========================$(MT)== Making   $(@F)
 	@$(CXX) $(CXXFLAGS.g) $^ -o $@ $(F77LIBS) -lpthread $(LIBS)
 

@@ -36,7 +36,7 @@ DEBUG_SUFFIX=$(findstring _debug,_$(cfg))
 #------------------------------------------------------------
 # Define static pattern rules dealing with .cpp source files
 #------------------------------------------------------------
-$(warning CONFIG: cfg=$(cfg) arch=$(arch) compiler=$(compiler) os=$(tbb_os) runtime=$(runtime))
+# $(warning CONFIG: cfg=$(cfg) arch=$(arch) compiler=$(compiler) os=$(tbb_os) runtime=$(runtime))
 
 default_tbb: $(TBB.DLL)
 .PHONY: default_tbb tbbvars clean
@@ -103,7 +103,8 @@ include $(tbb_root)/build/common_rules.inc
 
 ifneq (,$(TBB.DEF))
 tbb.def: $(TBB.DEF)
-	$(CMD) "$(CPLUS) $(PREPROC_ONLY) $(TBB.DEF) $(INCLUDES) $(filter $(DEFINE_KEY)%,$(CPLUS_FLAGS)) >tbb.def 2>$(NUL) || exit 0"
+	@echo "=====tbb=========================MT== $(cfg)/$@"
+	@$(CMD) "$(CPLUS) $(PREPROC_ONLY) $(TBB.DEF) $(INCLUDES) $(filter $(DEFINE_KEY)%,$(CPLUS_FLAGS)) >tbb.def 2>$(NUL) || exit 0"
 
 LIB_LINK_FLAGS += $(EXPORT_KEY)tbb.def
 $(TBB.DLL): tbb.def
@@ -111,11 +112,13 @@ endif
 
 $(TBB.DLL): BUILDING_LIBRARY = $(TBB.DLL)
 $(TBB.DLL): $(TBB.OBJ) $(TBB.RES) tbbvars $(TBB_NO_VERSION.DLL)
-	$(LIB_LINK_CMD) $(LIB_OUTPUT_KEY)$(TBB.DLL) $(TBB.OBJ) $(TBB.RES) $(LIB_LINK_LIBS) $(LIB_LINK_FLAGS)
+	@echo "=====tbb=========================MT== $(cfg)/$@"
+	@$(LIB_LINK_CMD) $(LIB_OUTPUT_KEY)$(TBB.DLL) $(TBB.OBJ) $(TBB.RES) $(LIB_LINK_LIBS) $(LIB_LINK_FLAGS)
 
 ifneq (,$(TBB_NO_VERSION.DLL))
 $(TBB_NO_VERSION.DLL):
-	echo "INPUT ($(TBB.DLL))" > $(TBB_NO_VERSION.DLL)
+	@echo "=====tbb=========================MT== $(cfg)/$@"
+	@echo "INPUT ($(TBB.DLL))" > $(TBB_NO_VERSION.DLL)
 endif
 
 #clean:

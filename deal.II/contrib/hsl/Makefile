@@ -47,7 +47,7 @@ $(LIBDIR)/libhsl$(shared-lib-suffix): $(forward-declarations) $(o-files)
 # has actually nothing much to do, compile it in debug mode
 $(LIBDIR)/bin/detached_ma27$(EXEEXT):  \
 				$(LIBDIR)/contrib/hsl/detached_ma27.$(OBJEXT) \
-                                -lhsl
+				$(LIBDIR)/libhsl$(lib-suffix)
 	@echo =====hsl=========================$(MT)== Making   $(@F)
 	@$(CXX) $(CXXFLAGS.g) $^ -o $@ $(F77LIBS) -lpthread $(LIBS)
 

@@ -1909,7 +1909,7 @@ void Governor::sign_on(GenericScheduler* s) {
 void Governor::sign_off(GenericScheduler* s) {
     if( s->is_registered ) {
 #if __TBB_TASK_SCHEDULER_AUTO_INIT && USE_PTHREAD
-        __TBB_ASSERT( theTLS.get()==s || !s->is_worker() && !theTLS.get(), "attempt to unregister a wrong scheduler instance" );
+      __TBB_ASSERT( theTLS.get()==s || (!s->is_worker() && !theTLS.get()), "attempt to unregister a wrong scheduler instance" );
 #else
         __TBB_ASSERT( theTLS.get()==s, "attempt to unregister a wrong scheduler instance" );
 #endif /* __TBB_TASK_SCHEDULER_AUTO_INIT && USE_PTHREAD */
@@ -2852,7 +2852,9 @@ inline task** GenericScheduler::lock_task_pool( ArenaSlot* victim_arena_slot ) c
         backoff.pause();
     }
     __TBB_ASSERT( victim_task_pool == EmptyTaskPool || 
-                  victim_arena_slot->task_pool == LockedTaskPool && victim_task_pool != LockedTaskPool, 
+                  ((victim_arena_slot->task_pool == LockedTaskPool)
+		   &&
+		   (victim_task_pool != LockedTaskPool)), 
                   "not really locked victim's task pool?" );
     return victim_task_pool;
 } // GenericScheduler::lock_task_pool
@@ -3136,7 +3138,7 @@ inline task* GenericScheduler::get_mailbox_task() {
     task* result = NULL;
     while( task_proxy* t = inbox.pop() ) {
         intptr tat = __TBB_load_with_acquire(t->task_and_tag);
-        __TBB_ASSERT( tat==task_proxy::mailbox_bit || tat==(tat|3)&&tat!=3, NULL );
+        __TBB_ASSERT( tat==task_proxy::mailbox_bit || (tat==(tat|3)&&tat!=3), NULL );
         if( tat!=task_proxy::mailbox_bit && __TBB_CompareAndSwapW( &t->task_and_tag, task_proxy::pool_bit, tat )==tat ) {
             // Successfully grabbed the task, and left pool seeker with job of freeing the proxy.
             ITT_NOTIFY( sync_acquired, inbox.outbox() );

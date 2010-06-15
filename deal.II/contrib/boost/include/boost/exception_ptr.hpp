@@ -90,6 +90,9 @@ boost
             {
             }
 
+	    virtual ~exception_ptr () throw()
+	      {}
+
         operator unspecified_bool_type() const
             {
             return _empty() ? 0 : &exception_ptr::bad_alloc_;

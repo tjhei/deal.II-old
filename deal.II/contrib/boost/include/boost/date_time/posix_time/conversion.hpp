@@ -6,7 +6,7 @@
  * Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
  * Author: Jeff Garland, Bart Garst
- * $Date: 2009-09-28 14:10:02 -0400 (Mon, 28 Sep 2009) $
+ * $Date: 2010-01-10 14:17:23 -0500 (Sun, 10 Jan 2010) $
  */
 
 #include <boost/date_time/posix_time/ptime.hpp>
@@ -43,7 +43,7 @@ namespace posix_time {
   //! Convert a time_duration to a tm structure truncating any fractional seconds and zeroing fields for date components
   inline
   std::tm to_tm(const boost::posix_time::time_duration& td) {
-    std::tm timetm = std::tm();
+    std::tm timetm = {};
     timetm.tm_hour = date_time::absolute_value(td.hours());
     timetm.tm_min = date_time::absolute_value(td.minutes());
     timetm.tm_sec = date_time::absolute_value(td.seconds());

@@ -32,11 +32,13 @@
 #include <boost/iostreams/detail/adapter/range_adapter.hpp>
 #include <boost/iostreams/detail/char_traits.hpp>
 #include <boost/iostreams/detail/ios.hpp> // failure.
+#include <boost/iostreams/detail/error.hpp>
 #include <boost/iostreams/operations.hpp>
 #include <boost/iostreams/device/back_inserter.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
 #include <boost/iostreams/pipeline.hpp>     
-#include <boost/iostreams/putback.hpp>         
+#include <boost/iostreams/putback.hpp>
+#include <boost/throw_exception.hpp>
 
 // Must come last.
 #if defined(BOOST_MSVC)
@@ -417,7 +419,7 @@ public:
             if (state_ == s_header) {
                 int c = boost::iostreams::get(peek);
                 if (traits_type::is_eof(c)) {
-                    throw gzip_error(gzip::bad_header);
+                    boost::throw_exception(gzip_error(gzip::bad_header));
                 } else if (traits_type::would_block(c)) {
                     break;
                 }
@@ -437,19 +439,19 @@ public:
                         state_ = s_footer;
                     }
                 } catch (const zlib_error& e) {
-                    throw gzip_error(e);
+                    boost::throw_exception(gzip_error(e));
                 }
             } else { // state_ == s_footer
                 int c = boost::iostreams::get(peek);
                 if (traits_type::is_eof(c)) {
-                    throw gzip_error(gzip::bad_footer);
+                    boost::throw_exception(gzip_error(gzip::bad_footer));
                 } else if (traits_type::would_block(c)) {
                     break;
                 }
                 footer_.process(c);
                 if (footer_.done()) {
                     if (footer_.crc() != this->crc())
-                        throw gzip_error(gzip::bad_crc);
+                        boost::throw_exception(gzip_error(gzip::bad_crc));
                     int c = boost::iostreams::get(peek);
                     if (traits_type::is_eof(c)) {
                         state_ = s_done;
@@ -482,7 +484,7 @@ public:
             state_ = s_start;
             header_.reset();
             footer_.reset();
-            throw gzip_error(e);
+            boost::throw_exception(gzip_error(e));
         }
         state_ = s_start;
     }
@@ -530,10 +532,11 @@ private:
         {
             if (offset_) {
                 putback_[--offset_] = c;
-                return true;
             } else {
-                return boost::iostreams::putback(src_, c);
+                boost::throw_exception(
+                    boost::iostreams::detail::bad_putback());
             }
+            return true;
         }
         void putback(const string_type& s)
         {

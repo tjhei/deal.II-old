@@ -53,8 +53,8 @@ namespace date_time {
     public:
 #if defined(BOOST_DATE_TIME_HAS_REENTRANT_STD_FUNCTIONS)
       //! requires a pointer to a user created std::tm struct
-      inline
-      static std::tm* localtime(const std::time_t* t, std::tm* result)
+      static
+      inline std::tm* localtime(const std::time_t* t, std::tm* result)
       {
         // localtime_r() not in namespace std???
         result = localtime_r(t, result);
@@ -63,8 +63,8 @@ namespace date_time {
         return result;
       }
       //! requires a pointer to a user created std::tm struct
-      inline
-      static std::tm* gmtime(const std::time_t* t, std::tm* result)
+      static
+      inline std::tm* gmtime(const std::time_t* t, std::tm* result)
       {
         // gmtime_r() not in namespace std???
         result = gmtime_r(t, result);
@@ -79,8 +79,8 @@ namespace date_time {
 #pragma warning(disable : 4996) // disable depricated localtime/gmtime warning on vc8
 #endif // _MSC_VER >= 1400
       //! requires a pointer to a user created std::tm struct
-      inline
-      static std::tm* localtime(const std::time_t* t, std::tm* result)
+      static
+      inline std::tm* localtime(const std::time_t* t, std::tm* result)
       {
         result = std::localtime(t);
         if (!result)
@@ -88,8 +88,8 @@ namespace date_time {
         return result;
       }
       //! requires a pointer to a user created std::tm struct
-      inline
-      static std::tm* gmtime(const std::time_t* t, std::tm* result)
+      static
+      inline std::tm* gmtime(const std::time_t* t, std::tm* result)
       {
         result = std::gmtime(t);
         if (!result)

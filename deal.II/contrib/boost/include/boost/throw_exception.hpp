@@ -71,7 +71,7 @@ void throw_exception( std::exception const & e ); // user defined
 
 inline void throw_exception_assert_compatibility( std::exception const & ) { }
 
-template<class E> BOOST_ATTRIBUTE_NORETURN inline void throw_exception( E const & e )
+template<class E> inline BOOST_ATTRIBUTE_NORETURN void throw_exception( E const & e )
 {
     //All boost exceptions are required to derive from std::exception,
     //to ensure compatibility with BOOST_NO_EXCEPTIONS.

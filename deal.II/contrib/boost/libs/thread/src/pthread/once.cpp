@@ -3,7 +3,9 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying 
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#define __STDC_CONSTANT_MACROS
+#ifndef __STDC_CONSTANT_MACROS
+#  define __STDC_CONSTANT_MACROS
+#endif
 #include <boost/thread/once.hpp>
 #include <boost/assert.hpp>
 #include <pthread.h>

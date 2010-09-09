@@ -1,9 +1,0 @@
-
-DEAL::Size 32 Unknowns 961
-DEAL::Solver type: N6dealii16SolverRichardsonINS_13TrilinosWrappers6VectorEEE
-DEAL:Richardson::Starting value 31.00
-DEAL:Richardson::Failure step 10000 value nan
-DEAL::Iterative method reported convergence failure in step 10000 with residual nan
-DEAL::Solver stopped after 10000 iterations
-DEAL::GrowingVectorMemory:Overall allocated vectors: 2
-DEAL::GrowingVectorMemory:Maximum allocated vectors: 2

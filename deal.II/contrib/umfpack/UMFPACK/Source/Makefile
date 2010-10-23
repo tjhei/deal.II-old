@@ -84,11 +84,11 @@ GN = $(addprefix $D/lib/contrib/umfpack/, $(addsuffix .$(OBJEXT), $(subst umfpac
 
 $D/lib/contrib/umfpack/umf_i_%.$(OBJEXT): umf_%.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_l_%.$(OBJEXT): umf_%.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -c $< -o $@
 
 #-------------------------------------------------------------------------------
 # compile each routine in the DI version
@@ -96,43 +96,43 @@ $D/lib/contrib/umfpack/umf_l_%.$(OBJEXT): umf_%.c $(INC)
 
 $D/lib/contrib/umfpack/umf_di_%.$(OBJEXT): umf_%.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_di_%hsolve.$(OBJEXT): umf_%tsolve.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -DCONJUGATE_SOLVE -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -DCONJUGATE_SOLVE -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_di_triplet_map_x.$(OBJEXT): umf_triplet.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -DDO_MAP -DDO_VALUES -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -DDO_MAP -DDO_VALUES -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_di_triplet_map_nox.$(OBJEXT): umf_triplet.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -DDO_MAP -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -DDO_MAP -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_di_triplet_nomap_x.$(OBJEXT): umf_triplet.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -DDO_VALUES -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -DDO_VALUES -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_di_triplet_nomap_nox.$(OBJEXT): umf_triplet.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_di_assemble_fixq.$(OBJEXT): umf_assemble.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -DFIXQ -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -DFIXQ -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_di_store_lu_drop.$(OBJEXT): umf_store_lu.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -DDROP -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -DDROP -c $< -o $@
 
 $D/lib/contrib/umfpack/umfpack_di_wsolve.$(OBJEXT): umfpack_solve.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -DWSOLVE -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -DWSOLVE -c $< -o $@
 
 $D/lib/contrib/umfpack/umfpack_di_%.$(OBJEXT): umfpack_%.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDINT -c $< -o $@
 
 #-------------------------------------------------------------------------------
 # compile each routine in the DL version
@@ -140,43 +140,43 @@ $D/lib/contrib/umfpack/umfpack_di_%.$(OBJEXT): umfpack_%.c $(INC)
 
 $D/lib/contrib/umfpack/umf_dl_%.$(OBJEXT): umf_%.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_dl_%hsolve.$(OBJEXT): umf_%tsolve.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -DCONJUGATE_SOLVE -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -DCONJUGATE_SOLVE -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_dl_triplet_map_x.$(OBJEXT): umf_triplet.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -DDO_MAP -DDO_VALUES -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -DDO_MAP -DDO_VALUES -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_dl_triplet_map_nox.$(OBJEXT): umf_triplet.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -DDO_MAP -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -DDO_MAP -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_dl_triplet_nomap_x.$(OBJEXT): umf_triplet.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -DDO_VALUES -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -DDO_VALUES -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_dl_triplet_nomap_nox.$(OBJEXT): umf_triplet.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_dl_assemble_fixq.$(OBJEXT): umf_assemble.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -DFIXQ -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -DFIXQ -c $< -o $@
 
 $D/lib/contrib/umfpack/umf_dl_store_lu_drop.$(OBJEXT): umf_store_lu.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -DDROP -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -DDROP -c $< -o $@
 
 $D/lib/contrib/umfpack/umfpack_dl_wsolve.$(OBJEXT): umfpack_solve.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -DWSOLVE -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -DWSOLVE -c $< -o $@
 
 $D/lib/contrib/umfpack/umfpack_dl_%.$(OBJEXT): umfpack_%.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -DDLONG -c $< -o $@
 
 #-------------------------------------------------------------------------------
 # Create the generic routines (GN) using a generic rule
@@ -184,7 +184,7 @@ $D/lib/contrib/umfpack/umfpack_dl_%.$(OBJEXT): umfpack_%.c $(INC)
 
 $D/lib/contrib/umfpack/umfpack_gn_%.$(OBJEXT): umfpack_%.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -I../../AMD/Include -I../../AMD/Source -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -I../../AMD/Include -I../../AMD/Source -c $< -o $@
 
 #-------------------------------------------------------------------------------
 # Create the libumfpack.a library

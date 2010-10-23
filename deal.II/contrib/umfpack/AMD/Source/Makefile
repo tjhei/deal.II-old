@@ -26,15 +26,15 @@ AMDL = $(addprefix $D/lib/contrib/umfpack/, $(addsuffix .$(OBJEXT), $(subst amd_
 
 $D/lib/contrib/umfpack/amd_i_%.$(OBJEXT): amd_%.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -DDINT -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -DDINT -c $< -o $@
 
 $D/lib/contrib/umfpack/amd_l_%.$(OBJEXT): amd_%.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -DDLONG -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -DDLONG -c $< -o $@
 
 $D/lib/contrib/umfpack/amd_global.$(OBJEXT): amd_global.c $(INC)
 	@echo =====umfpack==========optimized====== $(<F)
-	@$(CC) $(CFLAGS) -I../Include -c $< -o $@
+	@$(CC) $(CFLAGS.o) -I../Include -c $< -o $@
 
 
 all: $(AMDI) $(AMDL) $D/lib/contrib/umfpack/amd_global.$(OBJEXT)

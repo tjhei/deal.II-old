@@ -1,5 +1,5 @@
 # $Id$
-# Copyright (C) 2001, 2002, 2003, 2004, 2006, 2008, 2009 by Wolfgang Bangerth
+# Copyright (C) 2001, 2002, 2003, 2004, 2006, 2008, 2009, 2010 by Wolfgang Bangerth
 
 
 D = ../..
@@ -54,7 +54,9 @@ $(LIBDIR)/bin/detached_ma27$(EXEEXT):  \
 
 
 clean:
-	-rm -f *~ lib/lib* lib/o/*.$(OBJEXT) lib/Makefile.dep
+	-rm -f $(LIBDIR)/contrib/hsl/*.$(OBJEXT) $(LIBDIR)/libhsl$(lib-suffix) \
+		$(LIBDIR)/bin/detached_ma27$(EXEEXT) \
+		Makefile.dep
 
 
 

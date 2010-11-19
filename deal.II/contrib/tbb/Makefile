@@ -2,7 +2,7 @@
 # the system and compiler names etc. rename them to something that's a bit more
 # predictable for the downstream make files.
 tbb:
-	@cd tbb22_20090809oss ; $(MAKE) tbb tbb_build_dir=$D/lib/contrib/tbb
+	@cd tbb30_104oss ; $(MAKE) tbb tbb_build_dir=$D/lib/contrib/tbb
 	@rm -f $D/lib/libtbb*
 	@for i in $D/lib/contrib/tbb/*_debug/libtbb_debug* ; do \
 	    ln -s -f $$i $D/lib/`echo $$i | $(PERL) -pi -e 's#.*/##g;'` ; done

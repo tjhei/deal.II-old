@@ -57,13 +57,16 @@ CONLY ?= $(CPLUS)
 
 # The most generic rules
 %.$(OBJ): %.cpp
-	$(CPLUS) $(COMPILE_ONLY) $(CPLUS_FLAGS) $(CXX_ONLY_FLAGS) $(CXX_WARN_SUPPRESS) $(INCLUDES) $<
+	@echo "=====tbb=========================MT== $(cfg)/$(<F)"
+	@$(CPLUS) $(COMPILE_ONLY) $(CPLUS_FLAGS) $(CXX_ONLY_FLAGS) $(CXX_WARN_SUPPRESS) $(INCLUDES) $<
 
 %.$(OBJ): %.c
-	$(CONLY) $(COMPILE_ONLY) $(C_FLAGS) $(INCLUDES) $<
+	@echo "=====tbb=========================MT== $(cfg)/$(<F)"
+	@$(CONLY) $(COMPILE_ONLY) $(C_FLAGS) $(INCLUDES) $<
 
 %.$(OBJ): %.asm
-	$(ASM) $(ASM_FLAGS) $<
+	@echo "=====tbb=========================MT== $(cfg)/$(<F)"
+	@$(ASM) $(ASM_FLAGS) $<
 
 %.$(OBJ): %.s
 	cpp <$< | grep -v '^#' >$*.tmp
@@ -90,14 +93,17 @@ ifeq (1,$(TBB_NOSTRICT))
 # The files below need the -strict-ansi flag downgraded to -ansi to compile
 
 $(KNOWN_NOSTRICT): %.$(OBJ): %.cpp
-	$(CPLUS) $(COMPILE_ONLY) $(CPLUS_FLAGS_NOSTRICT) $(CXX_ONLY_FLAGS) $(CXX_WARN_SUPPRESS) $(INCLUDES) $<
+	@echo "=====tbb=========================MT== $(cfg)/$(<F)"
+	@$(CPLUS) $(COMPILE_ONLY) $(CPLUS_FLAGS_NOSTRICT) $(CXX_ONLY_FLAGS) $(CXX_WARN_SUPPRESS) $(INCLUDES) $<
 endif
 
 $(KNOWN_WARNINGS): %.$(OBJ): %.cpp
-	$(CPLUS) $(COMPILE_ONLY) $(subst $(WARNING_KEY),,$(CPLUS_FLAGS)) $(CXX_ONLY_FLAGS) $(INCLUDES) $<
+	@echo "=====tbb=========================MT== $(cfg)/$(<F)"
+	@$(CPLUS) $(COMPILE_ONLY) $(subst $(WARNING_KEY),,$(CPLUS_FLAGS)) $(CXX_ONLY_FLAGS) $(INCLUDES) $<
 
 tbb_misc.$(OBJ): tbb_misc.cpp version_string.tmp
-	$(CPLUS) $(COMPILE_ONLY) $(CPLUS_FLAGS) $(CXX_ONLY_FLAGS) $(INCLUDE_KEY). $(INCLUDES) $<
+	@echo "=====tbb=========================MT== $(cfg)/$(<F)"
+	@$(CPLUS) $(COMPILE_ONLY) $(CPLUS_FLAGS) $(CXX_ONLY_FLAGS) $(INCLUDE_KEY). $(INCLUDES) $<
 
 tbb_misc.E: tbb_misc.cpp version_string.tmp
 	$(CPLUS) $(CPLUS_FLAGS) $(CXX_ONLY_FLAGS) $(INCLUDE_KEY). $(INCLUDES) $(PREPROC_ONLY) $< >$@
@@ -112,12 +118,14 @@ $(TBB.MANIFEST):
 	cl /nologo $(C_FLAGS) tbbmanifest.c
 
 version_string.tmp: $(TBB.MANIFEST)
-	$(MAKE_VERSIONS)
-	cmd /C "echo #define TBB_MANIFEST 1 >> version_string.tmp"
+	@echo "=====tbb=========================MT== $(cfg)/$@"
+	@$(MAKE_VERSIONS)
+	@cmd /C "echo #define TBB_MANIFEST 1 >> version_string.tmp"
 
 else
 version_string.tmp:
-	$(MAKE_VERSIONS)
+	@echo "=====tbb=========================MT== $(cfg)/$@"
+	@$(MAKE_VERSIONS)
 endif
 
 

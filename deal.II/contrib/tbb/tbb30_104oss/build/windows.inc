@@ -50,7 +50,7 @@ CWD=$(shell cmd /C echo %CD%)
 RM=cmd /C del /Q /F
 RD=cmd /C rmdir
 MD=cmd /c mkdir
-SLASH=\\
+SLASH=/
 NUL = nul
 
 OBJ = obj

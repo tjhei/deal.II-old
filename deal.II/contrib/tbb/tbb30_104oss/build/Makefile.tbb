@@ -110,7 +110,8 @@ $(TBB.DLL): tbb.def
 endif
 
 tbbvars.sh:
-	$(MAKE_TBBVARS)
+	@echo "=====tbb=========================MT== $(cfg)/$@"
+	@$(MAKE_TBBVARS)
 
 $(TBB.DLL): BUILDING_LIBRARY = $(TBB.DLL)
 $(TBB.DLL): $(TBB.OBJ) $(TBB.RES) tbbvars.sh $(TBB_NO_VERSION.DLL)

@@ -12,6 +12,9 @@
 // implementation of basic_text_iprimitive overrides for the combination
 // of template parameters used to implement a text_iprimitive
 
+#ifndef BOOST_HEADER_GUARD_ARCHIVE_SERIALIZER_MAP_IPP
+#define BOOST_HEADER_GUARD_ARCHIVE_SERIALIZER_MAP_IPP
+
 #include <boost/config.hpp>
 #include <boost/archive/detail/archive_serializer_map.hpp>
 #include <boost/archive/detail/basic_serializer_map.hpp>
@@ -28,7 +31,7 @@ namespace detail {
 
 namespace extra_detail { // anon
     template<class Archive>
-    class map : public basic_serializer_map 
+    class map : public basic_serializer_map
     {};
 }
 
@@ -57,7 +60,7 @@ archive_serializer_map<Archive>::erase(const basic_serializer * bs){
 }
 
 template<class Archive>
-BOOST_ARCHIVE_OR_WARCHIVE_DECL(const basic_serializer *) 
+BOOST_ARCHIVE_OR_WARCHIVE_DECL(const basic_serializer *)
 archive_serializer_map<Archive>::find(
     const boost::serialization::extended_type_info & eti
 ) {
@@ -69,3 +72,5 @@ archive_serializer_map<Archive>::find(
 } // namespace detail
 } // namespace archive
 } // namespace boost
+
+#endif // BOOST_HEADER_GUARD_ARCHIVE_SERIALIZER_MAP_IPP

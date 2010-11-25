@@ -1,8 +1,0 @@
-Make.depend Makefile.depend Makefile.tests
-*.go
-*.testcase
-*.output
-T
-*.check *.OK
-*.exe
-ii_files

@@ -1,9 +1,0 @@
-*.go reference logtest tensor
-*.testcase
-*.dat *.output
-Makefile.depend
-*.check *.OK
-*.exe
-threads.cc
-Makefile.tests
-ii_files

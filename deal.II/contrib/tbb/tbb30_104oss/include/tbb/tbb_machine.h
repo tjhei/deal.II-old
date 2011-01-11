@@ -57,7 +57,7 @@ extern "C" __declspec(dllimport) int __stdcall SwitchToThread( void );
 #pragma managed(pop)
 #endif
 
-#elif __linux__ || __FreeBSD__
+#elif __linux__ || __NetBSD__ || __FreeBSD__
 
 #if __i386__
 #include "machine/linux_ia32.h"

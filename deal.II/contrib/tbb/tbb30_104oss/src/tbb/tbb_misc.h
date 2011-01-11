@@ -40,7 +40,7 @@
 #elif defined(__sun)
 #include <sys/sysinfo.h>
 #include <unistd.h>
-#elif defined(__FreeBSD__) || defined(_AIX)
+#elif defined(__NetBSD__) || defined(__FreeBSD__) || defined(_AIX)
 #include <unistd.h>
 #endif
 

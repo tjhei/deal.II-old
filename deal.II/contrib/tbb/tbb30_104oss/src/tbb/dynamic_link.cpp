@@ -37,7 +37,7 @@
     #include <malloc.h>     /* alloca */
 #else
     #include <dlfcn.h>
-#if __FreeBSD__
+#if __NetBSD__ || __FreeBSD__
     #include <stdlib.h>     /* alloca */
 #else
     #include <alloca.h>

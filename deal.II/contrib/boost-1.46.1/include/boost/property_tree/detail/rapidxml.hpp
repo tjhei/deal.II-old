@@ -259,6 +259,23 @@ namespace boost { namespace property_tree { namespace detail {namespace rapidxml
     //! \cond internal
     namespace internal
     {
+      namespace
+      {
+	inline
+	bool beyond_ascii (const char)
+	{
+	  return false;
+	}
+
+	template <typename Ch>
+	inline
+	bool beyond_ascii (const Ch c)
+	{
+	  return (c > 255);
+	}
+      }
+      
+	
 
         // Struct that contains lookup tables for the parser
         // It must be a template to allow correct linking (because it has static data members, which are defined in a header file).
@@ -314,7 +331,7 @@ namespace boost { namespace property_tree { namespace detail {namespace rapidxml
         inline size_t get_index(const Ch c)
         {
             // If not ASCII char, its sematic is same as plain 'z'
-            if (c > 255)
+	  if (beyond_ascii(c))
             {
                 return 'z';
             }

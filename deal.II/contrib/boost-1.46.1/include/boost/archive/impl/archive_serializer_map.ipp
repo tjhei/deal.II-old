@@ -12,6 +12,9 @@
 // implementation of basic_text_iprimitive overrides for the combination
 // of template parameters used to implement a text_iprimitive
 
+#ifndef BOOST_HEADER_GUARD_ARCHIVE_SERIALIZER_MAP_IPP
+#define BOOST_HEADER_GUARD_ARCHIVE_SERIALIZER_MAP_IPP
+
 #include <boost/config.hpp>
 #include <boost/archive/detail/archive_serializer_map.hpp>
 #include <boost/archive/detail/basic_serializer_map.hpp>
@@ -69,3 +72,5 @@ archive_serializer_map<Archive>::find(
 } // namespace detail
 } // namespace archive
 } // namespace boost
+
+#endif // BOOST_HEADER_GUARD_ARCHIVE_SERIALIZER_MAP_IPP

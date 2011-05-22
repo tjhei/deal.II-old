@@ -2,7 +2,7 @@
 //    $Id$
 //    Version: $Name$
 //
-//    Copyright (C) 2002, 2003, 2006, 2007, 2008, 2009 by the deal.II authors
+//    Copyright (C) 2002, 2003, 2006, 2007, 2008, 2009, 2011 by the deal.II authors
 //
 //    This file is subject to QPL and may not be  distributed
 //    without copyright and license information. Please refer
@@ -11,7 +11,7 @@
 //
 //----------------------------  detached_ma27.cc  ---------------------------
 
-#include <base/config.h>
+#include <deal.II/base/config.h>
 #include <hsl/hsl.h>
 
 #include <vector>
@@ -85,11 +85,11 @@ struct MonitorData
 
 
 extern "C"
-void * monitor_parent_liveness (void *monitor_data) 
+void * monitor_parent_liveness (void *monitor_data)
 {
   const pid_t master_pid = ((MonitorData*)monitor_data)->master_pid;
   const pid_t primary_pid = ((MonitorData*)monitor_data)->primary_pid;
-  
+
   while (true)
     {
       int ret = kill (master_pid, 0);
@@ -101,7 +101,7 @@ void * monitor_parent_liveness (void *monitor_data)
 	    die ("Unspecified error while checking for other process!",
 		 ret, errno, primary_pid);
 	}
-      
+
                                        // ok, master still running,
                                        // take a little rest and then
                                        // ask again
@@ -135,7 +135,7 @@ void put (const T *t, const size_t N, const char * /*debug_info*/)
 
       count += ret;
     }
-  
+
   fflush (NULL);
 }
 
@@ -155,7 +155,7 @@ void get (T *t, const size_t N, const char * /*debug_info*/)
         ret = read (0, reinterpret_cast<char *> (t) + count,
                     sizeof(T) * N - count);
       while ((ret<0) && (errno==EINTR));
-      
+
       if (ret < 0)
         die ("error on client side in 'get'", ret, errno, getpid());
       else
@@ -166,10 +166,10 @@ void get (T *t, const size_t N, const char * /*debug_info*/)
 DEAL_II_NAMESPACE_CLOSE
 
 
-int main () 
+int main ()
 {
   using namespace dealii;
-  
+
                                    // first action is to get the pid
                                    // of the master process, so that
                                    // we can check whether it is still
@@ -185,7 +185,7 @@ int main ()
   static MonitorData monitor_data = { master_pid, getpid() };
   pthread_t thread;
   pthread_create (&thread, 0, &monitor_parent_liveness, &monitor_data);
-  
+
                                    // then go into the action loop...
   unsigned int N, NZ, NSTEPS, LA, MAXFRT, LIW;
   int IFLAG;
@@ -196,7 +196,7 @@ int main ()
     {
       char action;
       get(&action, 1, "ACTION");
-      
+
       switch (action)
         {
           case '1':
@@ -206,7 +206,7 @@ int main ()
 
             IRN.resize (NZ);
             ICN.resize (NZ);
-            
+
             get (&IRN[0], NZ, "IRN");
             get (&ICN[0], NZ, "ICN");
             get (&LIW, 1, "LIW");
@@ -215,7 +215,7 @@ int main ()
             IW.resize (LIW);
             IKEEP.resize (3*N);
             IW1.resize (2*N);
-            
+
                                              // next call function
             HSL::MA27::ma27ad_ (&N, &NZ, &IRN[0], &ICN[0], &IW[0], &LIW,
                                 &IKEEP[0], &IW1[0], &NSTEPS, &IFLAG);
@@ -232,7 +232,7 @@ int main ()
             get (&LA, 1, "LA");
             A.resize (LA);
             get (&A[0], LA, "A");
-            
+
             HSL::MA27::ma27bd_ (&N, &NZ, &IRN[0], &ICN[0], &A[0], &LA,
                                 &IW[0], &LIW, &IKEEP[0],
                                 &NSTEPS, &MAXFRT, &IW1[0], &IFLAG);
@@ -248,13 +248,13 @@ int main ()
                 IRN.swap (tmp2);
                 IKEEP.swap (tmp3);
               };
-            
+
                                              // finally return IFLAG
             put (&IFLAG, 1, "IFLAG");
 
             break;
           };
-          
+
 
           case '3':
           {
@@ -267,11 +267,11 @@ int main ()
                                 &IW1[0], &NSTEPS);
 
             put (&rhs[0], N, "RHS");
-            
+
             break;
           };
-          
-          
+
+
           case '4':
           {
             unsigned int NRLNEC;
@@ -303,7 +303,7 @@ int main ()
             exit (0);
             break;
           };
-          
+
           default:
                 die ("Invalid action key", action,
                      static_cast<unsigned short int>(action),
@@ -317,4 +317,4 @@ int main ()
                                    // point anyway...
 }
 
-                
+

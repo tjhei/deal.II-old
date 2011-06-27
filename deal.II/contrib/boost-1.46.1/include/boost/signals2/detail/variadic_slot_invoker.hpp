@@ -80,6 +80,7 @@ namespace boost
         template<typename Func, unsigned ... indices, typename ... Args>
           R m_invoke(void *, Func &func, unsigned_meta_array<indices...>, std::tuple<Args...> args) const
         {
+	  (void)args;
           func(std::get<indices>(args)...);
           return R();
         }

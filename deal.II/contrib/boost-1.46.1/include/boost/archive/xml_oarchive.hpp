@@ -9,7 +9,7 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////8
 // xml_oarchive.hpp
 
-// (C) Copyright 2002 Robert Ramey - http://www.rrsd.com . 
+// (C) Copyright 2002 Robert Ramey - http://www.rrsd.com .
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -21,8 +21,8 @@
 #include <cstddef> // size_t
 #include <boost/config.hpp>
 #if defined(BOOST_NO_STDC_NAMESPACE)
-namespace std{ 
-    using ::size_t; 
+namespace std{
+    using ::size_t;
 } // namespace std
 #endif
 
@@ -43,7 +43,7 @@ namespace boost {
 namespace archive {
 
 template<class Archive>
-class xml_oarchive_impl : 
+class xml_oarchive_impl :
     public basic_text_oprimitive<std::ostream>,
     public basic_xml_oarchive<Archive>
 {
@@ -62,15 +62,15 @@ protected:
     void save(const T & t){
         basic_text_oprimitive<std::ostream>::save(t);
     }
-    void 
+    void
     save(const version_type & t){
-        save(static_cast<const unsigned int>(t));
+        save(static_cast<unsigned int>(t));
     }
-    void 
+    void
     save(const boost::serialization::item_version_type & t){
-        save(static_cast<const unsigned int>(t));
+        save(static_cast<unsigned int>(t));
     }
-    BOOST_ARCHIVE_DECL(void) 
+    BOOST_ARCHIVE_DECL(void)
     save(const char * t);
     #ifndef BOOST_NO_INTRINSIC_WCHAR_T
     BOOST_ARCHIVE_DECL(void)
@@ -82,7 +82,7 @@ protected:
     BOOST_ARCHIVE_DECL(void)
     save(const std::wstring &ws);
     #endif
-    BOOST_ARCHIVE_DECL(BOOST_PP_EMPTY()) 
+    BOOST_ARCHIVE_DECL(BOOST_PP_EMPTY())
     xml_oarchive_impl(std::ostream & os, unsigned int flags);
     ~xml_oarchive_impl(){}
 public:
@@ -93,7 +93,7 @@ public:
         #else
         this->basic_text_oprimitive::save_binary(
         #endif
-            address, 
+            address,
             count
         );
         this->indent_next = true;
@@ -106,7 +106,7 @@ public:
 // do not derive from this class.  If you want to extend this functionality
 // via inhertance, derived from xml_oarchive_impl instead.  This will
 // preserve correct static polymorphism.
-class xml_oarchive : 
+class xml_oarchive :
     public xml_oarchive_impl<xml_oarchive>
 {
 public:

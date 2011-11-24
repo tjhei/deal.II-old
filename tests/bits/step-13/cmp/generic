@@ -34,7 +34,7 @@ DEAL:cg::Convergence step 27 value 0
 DEAL:cg::5 Starting value 40.
 DEAL:cg::Convergence step 37 value 0
 DEAL:cg::6 Starting value 41.
-DEAL:cg::Convergence step 51 value 0
+DEAL:cg::Convergence step 52 value 0
 DEAL:cg::7 Starting value 46.
 DEAL:cg::Convergence step 68 value 0
 DEAL::
@@ -45,6 +45,6 @@ DoFs u(x_0)
 165  1.2974 
 316  1.6442 
 589  1.5221 
-1090 1.5724 
-2035 1.5622 
+1093 1.5724 
+2042 1.5627 
 DEAL::

@@ -19,6 +19,21 @@
 
 namespace boost { namespace property_tree { namespace json_parser
 {
+  namespace
+  {
+    bool is_ascii (const char)
+    {
+      return true;
+    }
+
+    template <typename Ch>
+    bool is_ascii (const Ch c)
+    {
+      return c <= 0xFF;
+    }
+  }
+
+
 
     // Create necessary escape sequences from illegal characters
     template<class Ch>
@@ -33,7 +48,7 @@ namespace boost { namespace property_tree { namespace json_parser
             // We escape everything outside ASCII, because this code can't
             // handle high unicode characters.
             if (*b == 0x20 || *b == 0x21 || (*b >= 0x23 && *b <= 0x2E) ||
-                (*b >= 0x30 && *b <= 0x5B) || (*b >= 0x5D && *b <= 0xFF))
+                (*b >= 0x30 && *b <= 0x5B) || (*b >= 0x5D && is_ascii(*b)))
                 result += *b;
             else if (*b == Ch('\b')) result += Ch('\\'), result += Ch('b');
             else if (*b == Ch('\f')) result += Ch('\\'), result += Ch('f');

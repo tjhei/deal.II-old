@@ -45,6 +45,7 @@ basic_serializer_map::insert(const basic_serializer * bs){
     // attempt to insert serializer into it's map
     const std::pair<map_type::iterator, bool> result =
         m_map.insert(bs);
+    (void)result;
     // the following is commented out - rather than being just
     // deleted as a reminder not to try this.
 

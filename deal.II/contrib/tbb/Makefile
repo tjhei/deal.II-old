@@ -1,6 +1,7 @@
-# bild the tbb libraries. they end up in directories with weird names that contain
-# the system and compiler names etc. rename them to something that's a bit more
-# predictable for the downstream make files.
+# build the tbb libraries. they end up in directories with weird names
+# that contain the system and compiler names etc. create symlinks to
+# them to something that's a bit more predictable for the downstream
+# make files.
 tbb:
 	@cd tbb30_104oss ; $(MAKE) tbb tbb_build_dir=$D/lib/contrib/tbb
 	@rm -f $D/lib/libtbb*

@@ -22,7 +22,7 @@ ADD_CUSTOM_TARGET(tbb ALL
           ${CMAKE_CURRENT_BINARY_DIR}/${libtbb_directory}/build
   )
 
-ADD_CUSTOM_TARGET(deal_ii_target_dependencies ALL DEPENDS tbb)
+ADD_DEPENDENCIES(deal_ii_target_dependencies tbb)
 
 SET(TBB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${libtbb_directory}/include)
 SET(TBB_LIBRARY ${CMAKE_INSTALL_PREFIX}/lib/libtbb.so)

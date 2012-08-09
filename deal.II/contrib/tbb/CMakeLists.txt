@@ -9,8 +9,7 @@ ADD_CUSTOM_COMMAND(
 
 ADD_CUSTOM_COMMAND(
   #
-  # TODO: This is very ugly. There should be a better way than calling to a
-  # Makefile...
+  # This makes me very, very sad:
   #
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${libtbb_directory}/build
   COMMAND "make"
@@ -23,7 +22,7 @@ ADD_CUSTOM_TARGET(tbb ALL
           ${CMAKE_CURRENT_BINARY_DIR}/${libtbb_directory}/build
   )
 
-ADD_CUSTOM_TARGET(contrib ALL DEPENDS tbb)
+ADD_CUSTOM_TARGET(deal_ii_target_dependencies ALL DEPENDS tbb)
 
 SET(TBB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${libtbb_directory}/include)
 SET(TBB_LIBRARY ${CMAKE_INSTALL_PREFIX}/lib/libtbb.so)

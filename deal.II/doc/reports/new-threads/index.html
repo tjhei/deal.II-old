@@ -10,8 +10,10 @@ A short description of the new threading scheme
 
 
 <p>
-Since the <a href="../multithreading/index.html" target="body">report on
-multithreading</a> was written in 2000, we have put in place a new
+Since the first deal.II report on
+multithreading was written in 2000 (see the list of deal.II
+publications),
+we have put in place a new
 implementation of the threading scheme (the first release to contain it is
 4.0). The new scheme can do all that you could do before, so the report is in a
 sense still valid, but it describes a syntax that is no more used. We will here
@@ -19,6 +21,14 @@ briefly describe this syntax as well as some considerations that guided us
 while implementing it. For general questions on multithreading, how programs
 that use it must look like, and for pitfalls to watch out for, please still
 refer to the report mentioned above.
+</p>
+
+<p>
+We note that since this report was written, there has been another
+incarnation of support for multicore machines, namely by using the
+Threading Building Blocks and tasks. The documentation module on
+parallel computing, available through the modules page of the deal.II
+manual, explains this new direction in more detail.
 </p>
 
 
@@ -75,7 +85,7 @@ Regarding the last point, note that any other function is called by
     obj.f(arg1, arg2);
 </pre></code>
 Ideally, the following syntax for starting any function on a new
-thread would be nice: 
+thread would be nice:
 <code><pre>
     spawn f(arg1, arg2);
     spawn obj.f(arg1,arg2);
@@ -97,7 +107,7 @@ this syntax, as well as the following points:
 <ul>
 <li>Overloading <code>spawn(</code>) so as to take unbound functions and member
 functions, whether virtual or static. Of course, every call needs to be type
-safe, i.e. the exact 
+safe, i.e. the exact
   same conversions of arguments need to be performed as in a usual call (except
   for two additional copies that are necessary).</li>
 <li><code>spawn()</code> needs to return a value that allows us to identify,
@@ -123,7 +133,7 @@ we want to be able to retrieve it once the thread has finished:
   collectively, rather than one-by-one.</li>
 </ul>
 </p>
-  
+
 <p>
 Basically, the syntax above is all you need to know. It is as simple as
 that. The rest of this text, in comparison is very much of technical nature. I
@@ -154,7 +164,7 @@ in the library; all entities that
 are not to be used by the user are placed into a namespace
 <code>internal</code>, those to be used are in a namespace
 <code>Threads</code>. The implementation uses Boost's shared_ptr. Some parts of
-the implementation parallel the 
+the implementation parallel the
 boost::function library, but they are small and taylored to the
 particular purpose at hand; in particular, they make heavy use of the
 boost::tuple library. We note that the code has in some places already evolved
@@ -185,11 +195,11 @@ threads. For POSIX threads, this class looks as follows:
         mutable volatile bool     was_joined;
         mutable boost::mutex      join_mutex;
         mutable boost::condition  join_condition;
-  
+
       public:
         thread_description_base () : was_joined (false) {};
         virtual ~thread_description_base () { /* ... */ };
-          
+
         void create (void * (*p) (void *), void *d) {
           pthread_create (&pt, 0, p, d);
         };
@@ -201,7 +211,7 @@ threads. For POSIX threads, this class looks as follows:
           if (!was_joined)
               pthread_join (pt, 0);
           was_joined = true;
-        };  
+        };
     };
 </pre></code>
 
@@ -247,7 +257,7 @@ called.
 As mentioned, there is exactly one <code>thread_description&lt;RT&gt;</code>
 object per created thread. It is accessed using <code>boost::shared_ptr</code>
 objects, and references are held from each <code>Thread&lt;RT&gt;</code> object
-for this thread as 
+for this thread as
 well as from a wrapper function on the new thread. The object is thus
 deleted, when all <code>Thread&lt;RT&gt;</code> objects for this thread have gone out of
 scope (or point to different threads) and the thread itself has
@@ -272,19 +282,19 @@ implementation:
       public:
         Thread () {};
         Thread (const boost::shared_ptr&lt;thread_description&lt;RT&gt; &gt; &td)
-          : thread_description (td) {};    
-        
+          : thread_description (td) {};
+
         void join () const { thread_description-&gt;join (); };
-    
+
         RT return_value () {
           join ();
           return thread_description-&gt;ret_val.get();
         };
-    
+
         bool operator == (const thread &t) {
           return thread_description == t.thread_description;
         };
-    
+
       private:
         boost::shared_ptr&lt;thread_description&lt;RT&gt; &gt; thread_description;
     };
@@ -313,20 +323,20 @@ template argument:
 
 <code><pre>
     template &lt;typename RT = void&gt;
-    class ThreadGroup 
+    class ThreadGroup
     {
       public:
         ThreadGroup & operator += (const Thread&lt;RT&gt; &t) {
           threads.push_back (t);
 	  return *this;
         };
-    
+
         void join_all () const {
           for (typename std::vector&lt;Thread&lt;RT&gt; &gt;::const_iterator
                  t=threads.begin(); t!=threads.end(); ++t)
             t-&gt;join ();
         };
-        
+
       private:
         std::vector&lt;Thread&lt;RT&gt; &gt; threads;
     };
@@ -334,7 +344,7 @@ template argument:
 
 <p>
 Since objects of type <code>Thread&lt;RT&gt;</code> are freely copyable, there
-is no need 
+is no need
 to provide an index operator for <code>ThreadGroup</code>; if you need to index
 its elements (for example to get at the return value), use
 <code>std::vector&lt;Thread&lt;RT&gt; &gt;</code>.
@@ -350,7 +360,7 @@ functions. We only show them for unary member functions:
     spawn (C &c, RT (C::*fun_ptr)(Arg1)) {
       return mem_fun_encapsulator&lt;RT, C, boost::tuple&lt;Arg1&gt; &gt; (c,fun_ptr);
     }
-    
+
     template &lt;typename RT, typename C, typename Arg1&gt;
     mem_fun_encapsulator&lt;RT,const C,boost::tuple&lt;Arg1&gt; &gt;
     spawn (const C &c, RT (C::*fun_ptr)(Arg1) const) {
@@ -361,9 +371,9 @@ functions. We only show them for unary member functions:
 
 <p>
 Note that we need two overloaded versions, for <code>const</code> and
-non-<code>const</code> 
+non-<code>const</code>
 member functions. Both create an intermediate object (in the
-<code>internal</code> 
+<code>internal</code>
 namespace) that will accept arguments in place of the function being
 called on the new thread, make sure a new thread is created, copy the
 arguments to the new thread's stack, and only then return. The exact
@@ -377,7 +387,7 @@ functions. One would really like to have something also for objects other than
 pointers to (member-)functions that provide an
 <code>operator()</code>. However, this doesn't seem to be possible if
 <code>operator()</code> returns something other than <code>void</code> or takes
-arguments. This 
+arguments. This
 would need some kind of typeof-operator which is not standard C++. See the
 discussion in the Open Problems section.
 </p>
@@ -407,18 +417,18 @@ looks like this:
 
     template &lt;typename RT, typename C, typename ArgList&gt;
     class mem_fun_encapsulator&lt;RT,C,ArgList,1&gt; {
-        typedef typename mem_fun_ptr&lt;RT,C,ArgList&gt;::type MemFunPtr;      
-  
+        typedef typename mem_fun_ptr&lt;RT,C,ArgList&gt;::type MemFunPtr;
+
       public:
         mem_fun_encapsulator (C &c, MemFunPtr mem_fun_ptr)
             : c (c), mem_fun_ptr(mem_fun_ptr) {};
-  
-        Thread&lt;RT&gt; 
+
+        Thread&lt;RT&gt;
         operator() (typename boost::tuples::element&lt;0,ArgList&gt;::type arg1) {
             return mem_fun_wrapper&lt;RT,C,ArgList&gt; (mem_fun_ptr, c,
                                                   boost::tie(arg1)).fire_up ();
         };
-      
+
       private:
         C         &c;
         MemFunPtr  mem_fun_ptr;
@@ -433,7 +443,7 @@ template is never used.)
 </p>
 
 <p>
-The constructor stores the two addresses. If one calls 
+The constructor stores the two addresses. If one calls
 <code><pre>
     spawn(obj, &C::f) (42);
 </pre></code>
@@ -446,7 +456,7 @@ arguments, but bind them all together with <code>boost::tie</code>, so that we n
 not have different versions of the <code>mem_fun_wrapper</code> class for different
 numbers of arguments. (However, we need a separate partial
 specialization of the <code>mem_fun_encapsulator</code> class for each number of
-function arguments.) The <code>tie_args</code> template is used to make a version 
+function arguments.) The <code>tie_args</code> template is used to make a version
 of the <code>ArgList</code> type with all reference types; it is described below.
 </p>
 
@@ -460,22 +470,22 @@ us first consider the base class that it has in common with
         Thread&lt;RT&gt; fire_up () {
           thread_descriptor
             = DescriptionPointer(new typename thread_description&lt;RT&gt;());
-  
-          boost::mutex::scoped_lock lock (mutex);        
+
+          boost::mutex::scoped_lock lock (mutex);
           thread_descriptor-&gt;create (&EntryPointClass::entry_point,
                                         (void *)this);
           condition.wait (lock);
-  
+
           return thread_descriptor;
         }
-  
+
       protected:
         typedef boost::shared_ptr&lt;thread_description&lt;RT&gt; &gt;
         DescriptionPointer;
-        
+
         DescriptionPointer thread_descriptor;
-  
-        mutable boost::mutex     mutex;    
+
+        mutable boost::mutex     mutex;
         mutable boost::condition condition;
     };
 </pre></code>
@@ -485,11 +495,11 @@ object, and calls it with a pointer to the present object, and the address of
 the starting point is <code>EntryPointClass::entry_point</code>, where
 <code>EntryPoint</code> is the name of a class that implements this thread
 starting function and is passed as a template argument to
-<code>wrapper_base</code>. 
+<code>wrapper_base</code>.
 Before it starts the new thread, it acquires a mutex and
 afterwards wait until a condition is signalled before it finishes by
 using the thread descriptor object to generate a <code>Thread&lt;RT&gt;</code>
-object. 
+object.
 </p>
 
 <p>
@@ -497,9 +507,9 @@ The magic happens in the derived class:
 <code><pre>
     template &lt;typename RT, class C, typename ArgList&gt;
     struct mem_fun_wrapper
-       : public wrapper_base&lt;RT, mem_fun_wrapper&lt;RT,C,ArgList&gt; &gt; 
+       : public wrapper_base&lt;RT, mem_fun_wrapper&lt;RT,C,ArgList&gt; &gt;
     {
-        typedef typename mem_fun_ptr&lt;RT,C,ArgList&gt;::type MemFunPtr;      
+        typedef typename mem_fun_ptr&lt;RT,C,ArgList&gt;::type MemFunPtr;
         typedef typename tie_args&lt;ArgList&gt;::type ArgReferences;
         mem_fun_wrapper (MemFunPtr            mem_fun_ptr,
                          C                   &c,
@@ -510,11 +520,11 @@ The magic happens in the derived class:
       private:
         mem_fun_wrapper ();
         mem_fun_wrapper (const mem_fun_wrapper &);
-        
+
         C            &c;
         MemFunPtr     mem_fun_ptr;
         ArgReferences args;
-        
+
         static void * entry_point (void *arg)
           {
             const wrapper_base&lt;RT&gt; *w
@@ -524,17 +534,17 @@ The magic happens in the derived class:
             MemFunPtr mem_fun_ptr = wrapper-&gt;mem_fun_ptr;
             C        &c           = wrapper-&gt;c;
             ArgList   args        = wrapper-&gt;args;
-  
+
             boost::shared_ptr&lt;thread_description&lt;RT&gt; &gt;
               thread_descriptor  = wrapper-&gt;thread_descriptor;
-            
+
             {
               boost::mutex::scoped_lock lock (wrapper-&gt;mutex);
               wrapper-&gt;condition.notify_one ();
             }
-            
+
             call (mem_fun_ptr, c, args, thread_descriptor-&gt;ret_val);
-            
+
             return 0;
           };
     };
@@ -591,7 +601,7 @@ a <code>get()<code> function that returns <code>void</code>.
 </p>
 
 <code><pre>
-    template &lt;typename RT&gt; struct return_value 
+    template &lt;typename RT&gt; struct return_value
     {
       private:
         RT value;
@@ -600,7 +610,7 @@ a <code>get()<code> function that returns <code>void</code>.
         void set (RT v) { value = v; }
     };
 
-    template &lt;typename RT&gt; struct return_value&lt;RT &&gt; 
+    template &lt;typename RT&gt; struct return_value&lt;RT &&gt;
     {
       private:
         RT * value;
@@ -642,7 +652,7 @@ number of arguments, in the usual way:
 The <code>Caller</code> class has the following member functions:
 
 <code><pre>
-    template &lt;typename RT&gt; struct Caller 
+    template &lt;typename RT&gt; struct Caller
     {
         template &lt;typename PFun, typename ArgList&gt;
         static void do_call (PFun     fun_ptr,
@@ -727,13 +737,13 @@ this, but I couldn't locate this.
     template &lt;typename Tuple&gt;
     struct tie_args_helper&lt;Tuple,1&gt;
     {
-        typedef 
+        typedef
         boost::tuple&lt;typename add_reference_to_Nth&lt;0,Tuple&gt;::type&gt;
         type;
     };
 
     template &lt;typename Tuple&gt;
-    struct tie_args 
+    struct tie_args
     {
         typedef typename tie_args_helper&lt;Tuple&gt;::type type;
     };
@@ -795,7 +805,7 @@ This only works if <code>operator()</code> satisfies the signature
 </p>
 <p>
 We could add another overload if <code>operator()</code> is
-<code>const</code>. However, what one 
+<code>const</code>. However, what one
 would like is an overload for more general signatures. Unfortunately,
 this requires that we can infer type and number of arguments and
 return type of <code>operator()</code> at the time we declare the return type of
@@ -834,7 +844,7 @@ The calling thread would then not have to copy the arguments onto its
 local stack and signal to the calling thread. It would only have to
 delete the memory after the call to the user-supplied function
 returns. Apart from replacing <code>ArgReferences</code> by
-<code>ArgList</code> in some places, 
+<code>ArgList</code> in some places,
 the scheme would basically just replace <code>*_encapsulator::operator()</code>,
 <code>fire_up</code>, and <code>thread_entry_point</code>:
 </p>
@@ -904,7 +914,7 @@ legal:
 </pre></code>
 The question, then, would be: do we want to allow conversions between
 <code>Thread&lt;double&gt;</code> and <code>Thread&lt;int&gt;</code> objects?
-And do we want to allow a 
+And do we want to allow a
 conversion from <code>Thread&lt;T&gt;</code> to <code>Thread&lt;void&gt;</code>
 (i.e.: casting away the return value)?
 </p>
@@ -919,7 +929,7 @@ different return value types into a <code>ThreadGroup</code>:
 <code><pre>
     double f1 ();
     int    f2 ();
- 
+
     ThreadTroup&lt;double&gt; tg;
     tg += spawn(f1)();
     tg += spawn(f2)();    // convert Thread&lt;int&gt; to Thread&lt;double&gt;
@@ -950,7 +960,7 @@ types in the chain into a <code>boost::tuple</code> of growing length, and writi
 a function that converts a value of the first type of this tuple to
 the second, to the third, ..., to the last type in the tuple. However,
 a plethora of internal compiler errors has scared me off doing more
-experiments in this direction. 
+experiments in this direction.
 </p>
 
 

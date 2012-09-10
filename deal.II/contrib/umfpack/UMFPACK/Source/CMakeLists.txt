@@ -164,23 +164,23 @@ ADD_LIBRARY(obj_umfpack_GENERIC OBJECT ${src_umfpack_UMFPACK})
 
 
 SET(obj_umfpack_object_files
-  $<obj_umfpack_I_UMF>
-  $<rbj_umfpack_L_UMF>
-  $<obj_umfpack_I_UMFPACK>
-  $<obj_umfpack_L_UMFPACK>
-  $<obj_umfpack_DI_TSOLVE>
-  $<obj_umfpack_DI_TRIPLET_MAP_NOX>
-  $<obj_umfpack_DI_TRIPLET_MAP_X>
-  $<obj_umfpack_DI_TRIPLET_NOMAP_X>
-  $<obj_umfpack_DI_STORE>
-  $<obj_umfpack_DI_ASSEMBLE>
-  $<obj_umfpack_DI_SOLVE>
-  $<obj_umfpack_DL_TSOLVE>
-  $<obj_umfpack_DL_TRIPLET_MAP_NOX>
-  $<obj_umfpack_DL_TRIPLET_MAP_X>
-  $<obj_umfpack_DL_TRIPLET_NOMAP_X>
-  $<obj_umfpack_DL_STORE>
-  $<obj_umfpack_DL_ASSEMBLE>
-  $<obj_umfpack_DL_SOLVE>
-  $<obj_umfpack_GENERIC>
+  $<TARGET_OBJECTS:obj_umfpack_I_UMF>
+  $<TARGET_OBJECTS:obj_umfpack_L_UMF>
+  $<TARGET_OBJECTS:obj_umfpack_I_UMFPACK>
+  $<TARGET_OBJECTS:obj_umfpack_L_UMFPACK>
+  $<TARGET_OBJECTS:obj_umfpack_DI_TSOLVE>
+  $<TARGET_OBJECTS:obj_umfpack_DI_TRIPLET_MAP_NOX>
+  $<TARGET_OBJECTS:obj_umfpack_DI_TRIPLET_MAP_X>
+  $<TARGET_OBJECTS:obj_umfpack_DI_TRIPLET_NOMAP_X>
+  $<TARGET_OBJECTS:obj_umfpack_DI_STORE>
+  $<TARGET_OBJECTS:obj_umfpack_DI_ASSEMBLE>
+  $<TARGET_OBJECTS:obj_umfpack_DI_SOLVE>
+  $<TARGET_OBJECTS:obj_umfpack_DL_TSOLVE>
+  $<TARGET_OBJECTS:obj_umfpack_DL_TRIPLET_MAP_NOX>
+  $<TARGET_OBJECTS:obj_umfpack_DL_TRIPLET_MAP_X>
+  $<TARGET_OBJECTS:obj_umfpack_DL_TRIPLET_NOMAP_X>
+  $<TARGET_OBJECTS:obj_umfpack_DL_STORE>
+  $<TARGET_OBJECTS:obj_umfpack_DL_ASSEMBLE>
+  $<TARGET_OBJECTS:obj_umfpack_DL_SOLVE>
+  $<TARGET_OBJECTS:obj_umfpack_GENERIC>
   )

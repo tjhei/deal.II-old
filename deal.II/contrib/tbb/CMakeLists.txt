@@ -1,5 +1,3 @@
-SET(libtbb_directory "tbb30_104oss")
-
 ADD_CUSTOM_COMMAND(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${libtbb_directory}
   COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -23,10 +21,6 @@ ADD_CUSTOM_TARGET(tbb ALL
   )
 
 ADD_DEPENDENCIES(deal_ii_target_dependencies tbb)
-
-SET(TBB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${libtbb_directory}/include)
-SET(TBB_LIBRARY ${CMAKE_INSTALL_PREFIX}/lib/libtbb.so)
-SET(TBB_DEBUG_LIBRARY ${CMAKE_INSTALL_PREFIX}/lib/libtbb_debug.so)
 
 INSTALL(
   DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${libtbb_directory}/include/tbb

@@ -14,7 +14,6 @@
     routine names all start with the letters "umfpack_".  Non-user-accessible
     file names and routine names all start with "umf_".
 */
-
 #ifndef _UMF_INTERNAL
 #define _UMF_INTERNAL
 
@@ -119,6 +118,7 @@
 /* -------------------------------------------------------------------------- */
 
 #include "umfpack.h"
+
 
 /* -------------------------------------------------------------------------- */
 /* for contents of Info.  This must correlate with umfpack.h */

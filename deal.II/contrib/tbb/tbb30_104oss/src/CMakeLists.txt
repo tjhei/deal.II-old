@@ -40,13 +40,6 @@ SET(src_tbb
   tbb/tbb_misc.cpp
   tbb/tbb_statistics.cpp
   tbb/tbb_thread.cpp
-  tbbmalloc/backend.cpp
-  tbbmalloc/backref.cpp
-  tbbmalloc/frontend.cpp
-  tbbmalloc/large_objects.cpp
-  tbbmalloc/proxy.cpp
-  tbbmalloc/tbb_function_replacement.cpp
-  tbbmalloc/tbbmalloc.cpp
   )
 
 ADD_LIBRARY(obj_tbb OBJECT ${src_tbb})

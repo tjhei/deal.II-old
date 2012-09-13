@@ -11,6 +11,10 @@ FILE(WRITE "${CMAKE_CURRENT_BINARY_DIR}/version_string.tmp"
   )
 
 SET(src_tbb
+  rml/client/omp_dynamic_link.cpp
+  rml/client/rml_omp.cpp
+  rml/client/rml_tbb.cpp
+  rml/server/rml_server.cpp
   tbb/arena.cpp
   tbb/cache_aligned_allocator.cpp
   tbb/concurrent_hash_map.cpp

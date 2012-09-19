@@ -68,14 +68,6 @@ IF(CMAKE_SYSTEM_NAME MATCHES "Windows")
   ADD_FLAGS(obj_tbb_COMPILE_FLAGS "-DUSE_WINTHREAD")
 ENDIF()
 
-
-#
-# We have to disable a bunch of warnings:
-#
-ENABLE_IF_SUPPORTED(obj_tbb_COMPILE_FLAGS "-Wno-parentheses")
-ENABLE_IF_SUPPORTED(obj_tbb_COMPILE_FLAGS "-Wno-long-long")
-
-
 SET_TARGET_PROPERTIES(obj_tbb PROPERTIES
   COMPILE_FLAGS ${obj_tbb_COMPILE_FLAGS})
 

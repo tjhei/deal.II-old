@@ -72,8 +72,8 @@ ENDIF()
 #
 # We have to disable a bunch of warnings:
 #
-ENABLE_IF_AVAILABLE(obj_tbb_COMPILE_FLAGS "-Wno-parentheses")
-ENABLE_IF_AVAILABLE(obj_tbb_COMPILE_FLAGS "-Wno-long-long")
+ENABLE_IF_SUPPORTED(obj_tbb_COMPILE_FLAGS "-Wno-parentheses")
+ENABLE_IF_SUPPORTED(obj_tbb_COMPILE_FLAGS "-Wno-long-long")
 
 
 SET_TARGET_PROPERTIES(obj_tbb PROPERTIES

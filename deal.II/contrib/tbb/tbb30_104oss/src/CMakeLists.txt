@@ -50,14 +50,15 @@ ADD_LIBRARY(obj_tbb OBJECT ${src_tbb})
 
 
 #
+# For debug build -DTBB_USE_DEBUG and -DTBB_DO_ASSERT=1 will be defined
+# globally by the configure script specified.
+#
+
+#
 # Add necessary definitions:
 #
 IF(NOT CMAKE_SYSTEM_NAME MATCHES "Darwin")
   ADD_FLAGS(obj_tbb_COMPILE_FLAGS "-DDO_ITT_NOTIFY")
-ENDIF()
-
-IF(CMAKE_BUILD_TYPE MATCHES "Debug")
-  ADD_FLAGS(obj_tbb_COMPILE_FLAGS "-DTBB_USE_DEBUG")
 ENDIF()
 
 IF(DEAL_II_USE_MT_POSIX)
@@ -69,5 +70,7 @@ IF(CMAKE_SYSTEM_NAME MATCHES "Windows")
 ENDIF()
 
 SET_TARGET_PROPERTIES(obj_tbb PROPERTIES
-  COMPILE_FLAGS ${obj_tbb_COMPILE_FLAGS})
+  COMPILE_FLAGS ${obj_tbb_COMPILE_FLAGS}
+  )
+
 

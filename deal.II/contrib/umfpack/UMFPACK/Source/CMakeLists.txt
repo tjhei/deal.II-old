@@ -94,93 +94,71 @@ SET(src_umfpack_UMFPACK
 # compile each int and long routine (with no real/complex version)
 #-------------------------------------------------------------------------------
 
-ADD_LIBRARY(obj_umfpack_I_UMF OBJECT ${src_umfpack_UMF})
-SET_TARGET_PROPERTIES(obj_umfpack_I_UMF PROPERTIES COMPILE_FLAGS "-DDINT")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_I_UMF OBJECT ${src_umfpack_UMF})
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_I_UMF "DINT")
 
-ADD_LIBRARY(obj_umfpack_L_UMF OBJECT ${src_umfpack_UMF})
-SET_TARGET_PROPERTIES(obj_umfpack_L_UMF PROPERTIES COMPILE_FLAGS "-DDLONG")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_L_UMF OBJECT ${src_umfpack_UMF})
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_L_UMF "DLONG")
 
-ADD_LIBRARY(obj_umfpack_I_UMFPACK OBJECT ${src_umfpack_UMFPACK})
-SET_TARGET_PROPERTIES(obj_umfpack_I_UMFPACK PROPERTIES COMPILE_FLAGS "-DDINT")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_I_UMFPACK OBJECT ${src_umfpack_UMFPACK})
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_I_UMFPACK "DINT")
 
-ADD_LIBRARY(obj_umfpack_L_UMFPACK OBJECT ${src_umfpack_UMFPACK})
-SET_TARGET_PROPERTIES(obj_umfpack_L_UMFPACK PROPERTIES COMPILE_FLAGS "-DDLONG")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_L_UMFPACK OBJECT ${src_umfpack_UMFPACK})
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_L_UMFPACK "DLONG")
 
 #-------------------------------------------------------------------------------
 # compile each routine in the DI version
 #-------------------------------------------------------------------------------
 
-ADD_LIBRARY(obj_umfpack_DI_TSOLVE OBJECT umf_ltsolve.c umf_utsolve.c)
-SET_TARGET_PROPERTIES(obj_umfpack_DI_TSOLVE PROPERTIES COMPILE_FLAGS "-DDINT -DCONJUGATE_SOLVE")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_DI_TSOLVE OBJECT umf_ltsolve.c umf_utsolve.c)
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_DI_TSOLVE "DINT" "CONJUGATE_SOLVE")
 
-ADD_LIBRARY(obj_umfpack_DI_TRIPLET_MAP_NOX OBJECT umf_triplet.c)
-SET_TARGET_PROPERTIES(obj_umfpack_DI_TRIPLET_MAP_NOX PROPERTIES COMPILE_FLAGS "-DDINT -DDO_MAP")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_DI_TRIPLET_MAP_NOX OBJECT umf_triplet.c)
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_DI_TRIPLET_MAP_NOX "DINT" "DO_MAP")
 
-ADD_LIBRARY(obj_umfpack_DI_TRIPLET_MAP_X OBJECT umf_triplet.c)
-SET_TARGET_PROPERTIES(obj_umfpack_DI_TRIPLET_MAP_X PROPERTIES COMPILE_FLAGS "-DDINT -DDO_MAP -DDO_VALUES")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_DI_TRIPLET_MAP_X OBJECT umf_triplet.c)
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_DI_TRIPLET_MAP_X "DINT" "DO_MAP" "DO_VALUES")
 
-ADD_LIBRARY(obj_umfpack_DI_TRIPLET_NOMAP_X OBJECT umf_triplet.c)
-SET_TARGET_PROPERTIES(obj_umfpack_DI_TRIPLET_NOMAP_X PROPERTIES COMPILE_FLAGS "-DDINT -DDO_VALUES")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_DI_TRIPLET_NOMAP_X OBJECT umf_triplet.c)
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_DI_TRIPLET_NOMAP_X "DINT" "DO_VALUES")
 
-ADD_LIBRARY(obj_umfpack_DI_STORE OBJECT umf_store_lu.c)
-SET_TARGET_PROPERTIES(obj_umfpack_DI_STORE PROPERTIES COMPILE_FLAGS "-DDINT -DDROP")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_DI_STORE OBJECT umf_store_lu.c)
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_DI_STORE "DINT" "DROP")
 
-ADD_LIBRARY(obj_umfpack_DI_ASSEMBLE OBJECT umf_assemble.c)
-SET_TARGET_PROPERTIES(obj_umfpack_DI_ASSEMBLE PROPERTIES COMPILE_FLAGS "-DDINT -DFIXQ")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_DI_ASSEMBLE OBJECT umf_assemble.c)
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_DI_ASSEMBLE "DINT" "FIXQ")
 
-ADD_LIBRARY(obj_umfpack_DI_SOLVE OBJECT umfpack_solve.c)
-SET_TARGET_PROPERTIES(obj_umfpack_DI_SOLVE PROPERTIES COMPILE_FLAGS "-DDINT -DWSOLVE")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_DI_SOLVE OBJECT umfpack_solve.c)
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_DI_SOLVE "DINT" "WSOLVE")
 
 #-------------------------------------------------------------------------------
 # compile each routine in the DL version
 #-------------------------------------------------------------------------------
 
-ADD_LIBRARY(obj_umfpack_DL_TSOLVE OBJECT umf_ltsolve.c umf_utsolve.c)
-SET_TARGET_PROPERTIES(obj_umfpack_DL_TSOLVE PROPERTIES COMPILE_FLAGS "-DDLONG -DCONJUGATE_SOLVE")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_DL_TSOLVE OBJECT umf_ltsolve.c umf_utsolve.c)
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_DL_TSOLVE "DLONG" "CONJUGATE_SOLVE")
 
-ADD_LIBRARY(obj_umfpack_DL_TRIPLET_MAP_NOX OBJECT umf_triplet.c)
-SET_TARGET_PROPERTIES(obj_umfpack_DL_TRIPLET_MAP_NOX PROPERTIES COMPILE_FLAGS "-DDLONG -DDO_MAP")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_DL_TRIPLET_MAP_NOX OBJECT umf_triplet.c)
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_DL_TRIPLET_MAP_NOX "DLONG" "DO_MAP")
 
-ADD_LIBRARY(obj_umfpack_DL_TRIPLET_MAP_X OBJECT umf_triplet.c)
-SET_TARGET_PROPERTIES(obj_umfpack_DL_TRIPLET_MAP_X PROPERTIES COMPILE_FLAGS "-DDLONG -DDO_MAP -DDO_VALUES")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_DL_TRIPLET_MAP_X OBJECT umf_triplet.c)
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_DL_TRIPLET_MAP_X "DLONG" "DO_MAP" "DO_VALUES")
 
-ADD_LIBRARY(obj_umfpack_DL_TRIPLET_NOMAP_X OBJECT umf_triplet.c)
-SET_TARGET_PROPERTIES(obj_umfpack_DL_TRIPLET_NOMAP_X PROPERTIES COMPILE_FLAGS "-DDLONG -DDO_VALUES")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_DL_TRIPLET_NOMAP_X OBJECT umf_triplet.c)
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_DL_TRIPLET_NOMAP_X "DLONG" "DO_VALUES")
 
-ADD_LIBRARY(obj_umfpack_DL_STORE OBJECT umf_store_lu.c)
-SET_TARGET_PROPERTIES(obj_umfpack_DL_STORE PROPERTIES COMPILE_FLAGS "-DDLONG -DDROP")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_DL_STORE OBJECT umf_store_lu.c)
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_DL_STORE "DLONG" "DROP")
 
-ADD_LIBRARY(obj_umfpack_DL_ASSEMBLE OBJECT umf_assemble.c)
-SET_TARGET_PROPERTIES(obj_umfpack_DL_ASSEMBLE PROPERTIES COMPILE_FLAGS "-DDLONG -DFIXQ")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_DL_ASSEMBLE OBJECT umf_assemble.c)
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_DL_ASSEMBLE "DLONG" "FIXQ")
 
-ADD_LIBRARY(obj_umfpack_DL_SOLVE OBJECT umfpack_solve.c)
-SET_TARGET_PROPERTIES(obj_umfpack_DL_SOLVE PROPERTIES COMPILE_FLAGS "-DDLONG -DWSOLVE")
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_DL_SOLVE OBJECT umfpack_solve.c)
+DEAL_II_ADD_DEFINITIONS(obj_umfpack_DL_SOLVE "DLONG" "WSOLVE")
 
 #-------------------------------------------------------------------------------
 # Create the generic routines (GN) using a generic rule
 #-------------------------------------------------------------------------------
 
-ADD_LIBRARY(obj_umfpack_GENERIC OBJECT ${src_umfpack_UMFPACK})
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_GENERIC OBJECT ${src_umfpack_UMFPACK})
 
-
-SET(obj_umfpack_object_files
-  $<TARGET_OBJECTS:obj_umfpack_I_UMF>
-  $<TARGET_OBJECTS:obj_umfpack_L_UMF>
-  $<TARGET_OBJECTS:obj_umfpack_I_UMFPACK>
-  $<TARGET_OBJECTS:obj_umfpack_L_UMFPACK>
-  $<TARGET_OBJECTS:obj_umfpack_DI_TSOLVE>
-  $<TARGET_OBJECTS:obj_umfpack_DI_TRIPLET_MAP_NOX>
-  $<TARGET_OBJECTS:obj_umfpack_DI_TRIPLET_MAP_X>
-  $<TARGET_OBJECTS:obj_umfpack_DI_TRIPLET_NOMAP_X>
-  $<TARGET_OBJECTS:obj_umfpack_DI_STORE>
-  $<TARGET_OBJECTS:obj_umfpack_DI_ASSEMBLE>
-  $<TARGET_OBJECTS:obj_umfpack_DI_SOLVE>
-  $<TARGET_OBJECTS:obj_umfpack_DL_TSOLVE>
-  $<TARGET_OBJECTS:obj_umfpack_DL_TRIPLET_MAP_NOX>
-  $<TARGET_OBJECTS:obj_umfpack_DL_TRIPLET_MAP_X>
-  $<TARGET_OBJECTS:obj_umfpack_DL_TRIPLET_NOMAP_X>
-  $<TARGET_OBJECTS:obj_umfpack_DL_STORE>
-  $<TARGET_OBJECTS:obj_umfpack_DL_ASSEMBLE>
-  $<TARGET_OBJECTS:obj_umfpack_DL_SOLVE>
-  $<TARGET_OBJECTS:obj_umfpack_GENERIC>
-  )

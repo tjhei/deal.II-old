@@ -46,31 +46,23 @@ SET(src_tbb
   tbb/tbb_thread.cpp
   )
 
-ADD_LIBRARY(obj_tbb OBJECT ${src_tbb})
-
-
-#
-# For debug build -DTBB_USE_DEBUG and -DTBB_DO_ASSERT=1 will be defined
-# globally by the configure script specified.
-#
+DEAL_II_ADD_LIBRARY(obj_tbb OBJECT ${src_tbb})
 
 #
 # Add necessary definitions:
 #
+SET(obj_tbb_DEFINITIONS)
 IF(NOT CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  ADD_FLAGS(obj_tbb_COMPILE_FLAGS "-DDO_ITT_NOTIFY")
+  LIST(APPEND obj_tbb_DEFINITIONS "DO_ITT_NOTIFY")
 ENDIF()
 
 IF(DEAL_II_USE_MT_POSIX)
-  ADD_FLAGS(obj_tbb_COMPILE_FLAGS "-DUSE_PTHREAD")
+  LIST(APPEND obj_tbb_DEFINITIONS "USE_PTHREAD")
 ENDIF()
 
 IF(CMAKE_SYSTEM_NAME MATCHES "Windows")
-  ADD_FLAGS(obj_tbb_COMPILE_FLAGS "-DUSE_WINTHREAD")
+  LIST(APPEND obj_tbb_DEFINITIONS "-DUSE_WINTHREAD")
 ENDIF()
 
-SET_TARGET_PROPERTIES(obj_tbb PROPERTIES
-  COMPILE_FLAGS ${obj_tbb_COMPILE_FLAGS}
-  )
-
+DEAL_II_ADD_DEFINITIONS(obj_tbb ${obj_tbb_DEFINITIONS})
 

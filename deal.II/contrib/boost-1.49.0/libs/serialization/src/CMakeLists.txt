@@ -30,4 +30,4 @@ SET(src_boost_serialization
   shared_ptr_helper.cpp
   )
 
-ADD_LIBRARY(obj_boost_serialization OBJECT ${src_boost_serialization})
+DEAL_II_ADD_LIBRARY(obj_boost_serialization OBJECT ${src_boost_serialization})

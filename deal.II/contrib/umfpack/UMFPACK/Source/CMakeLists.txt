@@ -1,6 +1,6 @@
 #
-# Logic copied from the distributed UMFPACK Makefile. (... where everything
-# is explained contrary to this... mess)
+# Logic copied from the distributed UMFPACK Makefile.
+# (... where everything is explained contrary to this... mess)
 #
 
 SET(src_umfpack_UMF
@@ -33,7 +33,10 @@ SET(src_umfpack_UMF
   umf_mem_alloc_tail_block.c
   umf_mem_free_tail_block.c
   umf_mem_init_memoryspace.c
-  umf_multicompile.c
+  #
+  # Don't ever think about including
+  # umf_multicompile.c, we do it by hand below
+  #
   umf_realloc.c
   umf_report_perm.c
   umf_report_vector.c
@@ -64,7 +67,6 @@ SET(src_umfpack_UMFPACK
   umfpack_get_lunz.c
   umfpack_get_numeric.c
   umfpack_get_symbolic.c
-  umfpack_global.c
   umfpack_load_numeric.c
   umfpack_load_symbolic.c
   umfpack_numeric.c
@@ -83,10 +85,14 @@ SET(src_umfpack_UMFPACK
   umfpack_scale.c
   umfpack_solve.c
   umfpack_symbolic.c
-  umfpack_tictoc.c
-  umfpack_timer.c
   umfpack_transpose.c
   umfpack_triplet_to_col.c
+  )
+
+SET(src_umfpack_GENERAL
+  umfpack_global.c
+  umfpack_tictoc.c
+  umfpack_timer.c
   )
 
 
@@ -160,5 +166,5 @@ DEAL_II_ADD_DEFINITIONS(obj_umfpack_DL_SOLVE "DLONG" "WSOLVE")
 # Create the generic routines (GN) using a generic rule
 #-------------------------------------------------------------------------------
 
-DEAL_II_ADD_C_LIBRARY(obj_umfpack_GENERIC OBJECT ${src_umfpack_UMFPACK})
+DEAL_II_ADD_C_LIBRARY(obj_umfpack_GENERIC OBJECT ${src_umfpack_GENERAL})
 

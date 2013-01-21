@@ -1,0 +1,28 @@
+
+DEAL::Size 4 Unknowns 9
+DEAL::Test 0
+DEAL::Residual with test vector 0:   left=0, right=0
+DEAL::Residual with test vector 1:   left=0, right=0
+DEAL::Residual with test vector 2:   left=0, right=0
+DEAL::Test 1
+DEAL::Residual with test vector 0:   left=0.295, right=0.333
+DEAL::Residual with test vector 1:   left=0.383, right=0.385
+DEAL::Residual with test vector 2:   left=0.299, right=0.285
+DEAL::Size 8 Unknowns 49
+DEAL::Test 0
+DEAL::Residual with test vector 0:   left=0, right=0
+DEAL::Residual with test vector 1:   left=0, right=0
+DEAL::Residual with test vector 2:   left=0, right=0
+DEAL::Test 1
+DEAL::Residual with test vector 0:   left=2.243, right=2.263
+DEAL::Residual with test vector 1:   left=1.707, right=1.707
+DEAL::Residual with test vector 2:   left=1.768, right=1.788
+DEAL::Size 16 Unknowns 225
+DEAL::Test 0
+DEAL::Residual with test vector 0:   left=0, right=0
+DEAL::Residual with test vector 1:   left=0, right=0
+DEAL::Residual with test vector 2:   left=0, right=0
+DEAL::Test 1
+DEAL::Residual with test vector 0:   left=5.672, right=5.683
+DEAL::Residual with test vector 1:   left=5.931, right=5.944
+DEAL::Residual with test vector 2:   left=5.988, right=5.996

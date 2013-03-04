@@ -81,7 +81,7 @@ Makefile.dep: $(f-files) Makefile
 
 
 # include all the dependencies
-include Makefile.dep
+-include Makefile.dep
 
 
 .PHONY: clean

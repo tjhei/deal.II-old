@@ -153,7 +153,7 @@ public:
    */
   bool set_boundary_values () const DEAL_II_DEPRECATED;
 
-private:
+//private:
 
   /**
    * The indices of boundary dofs for each level.
